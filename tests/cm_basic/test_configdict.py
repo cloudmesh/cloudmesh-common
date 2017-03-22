@@ -14,8 +14,8 @@ from __future__ import print_function
 import os
 import shutil
 
-from cloudmesh_client.common.ConfigDict import ConfigDict
-from cloudmesh_client.common.util import HEADING
+from cloudmesh.common.ConfigDict import ConfigDict
+from cloudmesh.common.util import HEADING
 
 
 # noinspection PyMethodMayBeStatic,PyMethodMayBeStatic,PyMethodMayBeStatic,PyPep8Naming,PyBroadException,PyBroadException
