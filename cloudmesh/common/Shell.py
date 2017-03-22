@@ -17,8 +17,8 @@ import os.path
 import platform
 import subprocess
 import zipfile
-from cloudmesh_client.shell.console import Console
-from cloudmesh_client.common.util import path_expand
+from cloudmesh.common.console import Console
+from cloudmesh.common.util import path_expand
 
 
 class SubprocessError(Exception):

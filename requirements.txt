@@ -1,2 +1,6 @@
 nosetest
 pytest
+simplejson
+yaml
+colorama
+

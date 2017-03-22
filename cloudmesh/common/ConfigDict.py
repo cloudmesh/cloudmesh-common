@@ -185,9 +185,11 @@ class ConfigDict(object):
         # print ("INIT CONFIGDICT", filename, load_order, verbose, etc)
         self.data = None
         if etc:
-            import cloudmesh_client.etc
-            load_order = [os.path.dirname(cloudmesh_client.etc.__file__)]
-
+            #import cloudmesh_client.etc
+            #load_order = [os.path.dirname(cloudmesh_client.etc.__file__)]
+            print("etc not supported")
+            sys.exit(1)
+            
         if load_order is None:
             self.load_order = [".", os.path.join("~", ".cloudmesh")]
         else:

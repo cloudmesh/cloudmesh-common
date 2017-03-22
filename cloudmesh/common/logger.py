@@ -1,8 +1,8 @@
 import logging
 import os
 
-from cloudmesh_client.common.util import grep
-from cloudmesh_client.locations import config_file
+from cloudmesh.common.util import grep
+from cloudmesh.common.locations import config_file
 
 
 # noinspection PyUnusedLocal

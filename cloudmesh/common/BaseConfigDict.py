@@ -454,6 +454,8 @@ class BaseConfigDict(OrderedDict):
 
 
 if __name__ == "__main__":
+    #TODO: etc not supported
+    # need to create copy and work with that
     config = ConfigDict({"a": "1", "b": {"c": 3}},
                         prefix="cloudmesh.debug",
                         filename="./etc/cloudmesh_debug.yaml")
