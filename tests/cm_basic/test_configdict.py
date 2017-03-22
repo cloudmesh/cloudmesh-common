@@ -24,8 +24,8 @@ class Test_configdict:
     cwd_path = os.getcwd()
 
     def setup(self):
-        os.system("cm help")
-        self.etc_yaml = os.path.join(self.cwd_path, "cloudmesh_client", "etc", "cloudmesh.yaml")
+        # os.system("cm help")
+        # self.etc_yaml = os.path.join(self.cwd_path, "cloudmesh_client", "etc", "cloudmesh.yaml")
         self.tmp_yaml = os.path.join(self.root_path, "tmp", "cloudmesh.yaml")
         self.tmp_dir = os.path.join(self.root_path, "tmp")
         pass
@@ -56,6 +56,7 @@ class Test_configdict:
         #     assert str(e).startswith("Could not find")
         """
 
+    """ do not test for etc
     def test_002_set(self):
         HEADING("testing to set a value in the dict")
         shutil.copy(self.etc_yaml, self.tmp_yaml)
@@ -69,7 +70,8 @@ class Test_configdict:
                        load_order=[self.tmp_dir],
                        verbose=True)
         assert d["cloudmesh"]["profile"]["firstname"] == "Gregor"
-
+    """
+        
     def test_003_json(self):
         HEADING("test if json is produced")
         d = ConfigDict("cloudmesh.yaml",
