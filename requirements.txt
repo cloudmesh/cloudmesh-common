@@ -1,6 +1,10 @@
-nosetest
+nose
 pytest
 simplejson
-yaml
+pyaml
 colorama
-
+psutil
+tox
+detox
+coverage
+flake8

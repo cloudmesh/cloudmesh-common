@@ -13,7 +13,7 @@ from __future__ import print_function
 
 from cloudmesh.common.Shell import Shell
 from cloudmesh.common.util import HEADING
-
+import getpass
 
 def run(command):
     parameter = command.split(" ")
@@ -34,12 +34,6 @@ class Test_shell(object):
 
     def test_001(self):
         HEADING("check if we can run help:return: ")
-        r = run("cm help")
+        r = run("whoami")
         print(r)
-        assert "Documented commands" in r
-
-        assert "banner" in r
-        assert "help" in r
-        assert "EOF" in r
-        assert "q" in r
-        assert "quit" in r
+        assert getpass.getuser() == r

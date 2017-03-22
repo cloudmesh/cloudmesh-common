@@ -25,8 +25,13 @@ def readfile(filename):
 
 #requiers = readfile ('requirements.txt')
 requiers = """
+future
+nose
+pytest
+simplejson
+pyaml
+colorama
 psutil
-pygments
 tox
 detox
 coverage
