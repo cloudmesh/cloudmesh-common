@@ -8,3 +8,4 @@ tox
 detox
 coverage
 flake8
+prettytable

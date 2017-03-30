@@ -26,6 +26,7 @@ def readfile(filename):
 #requiers = readfile ('requirements.txt')
 requiers = """
 future
+prettytable
 nose
 pytest
 simplejson
