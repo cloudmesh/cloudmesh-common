@@ -20,7 +20,8 @@ from cloudmesh.common.locations import config_file
 from cloudmesh.common.logger import LOGGER
 from cloudmesh.common.console import Console
 
-log = LOGGER(__file__)
+#Logger dependency not to be there in utility
+#log = LOGGER(__file__)
 package_dir = os.path.dirname(os.path.abspath(__file__))
 attribute_indent = 4
 
