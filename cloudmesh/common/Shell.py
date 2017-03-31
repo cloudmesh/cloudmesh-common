@@ -18,7 +18,19 @@ import platform
 import subprocess
 import zipfile
 from cloudmesh.common.console import Console
-from cloudmesh.common.util import path_expand
+#from cloudmesh.common.util import path_expand
+
+def path_expand(text):
+    """ returns a string with expanded variable.
+
+    :param text: the path to be expanded, which can include ~ and $ variables
+    :param text: string
+
+    """
+    template = Template(text)
+    result = template.substitute(os.environ)
+    result = os.path.expanduser(result)
+    return result
 
 
 class SubprocessError(Exception):

@@ -15,6 +15,7 @@ import re
 from builtins import input
 from past.builtins import basestring
 import random
+from cloudmesh.common.Shell import Shell
 
 
 @contextmanager
@@ -283,7 +284,7 @@ def get_python():
     python_version_s = '.'.join(v_string)
 
     # pip_version = pip.__version__
-    pip_version = "8.1.2"
+    pip_version = Shell.pip("--version").split()[1]
     return python_version_s, pip_version
 
 
@@ -301,9 +302,9 @@ def check_python():
         print("         We recommend you update your python")
 
     # pip_version = pip.__version__
-    pip_version = "8.1.2"
+    python_version, pip_version = get_python()
 
-    if int(pip_version.split(".")[0]) >= 7:
+    if int(pip_version.split(".")[0]) >= 9:
         print("You are running a supported version of pip: " + str(pip_version))
     else:
         print("WARNING: You are running an old version of pip: " + str(pip_version))
