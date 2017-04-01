@@ -65,9 +65,18 @@ def ordered_load(stream, Loader=yaml.Loader, object_pairs_hook=OrderedDict):
 
     # noinspection PyClassHasNoInit
     class OrderedLoader(Loader):
+        """
+        A helper class to define an Ordered Loader
+        """
         pass
 
     def construct_mapping(loader, node):
+        """
+        construct a flattened node mapping
+        :param loader: the loader
+        :param node: the node dict
+        :return: 
+        """
         loader.flatten_mapping(node)
         return object_pairs_hook(loader.construct_pairs(node))
 
@@ -93,6 +102,9 @@ def ordered_dump(data, stream=None, Dumper=yaml.Dumper, **kwds):
 
     # noinspection PyClassHasNoInit
     class OrderedDumper(Dumper):
+        """
+        A helper class to create an ordered dump
+        """
         pass
 
     def _dict_representer(dumper, data):
@@ -166,9 +178,18 @@ def read_yaml_config(filename, check=True, osreplace=True, exit=True):
 
 
 class OrderedJsonEncoder(simplejson.JSONEncoder):
+    """
+    Manage ordered Json Objects
+    """
     indent = attribute_indent
 
     def encode(self, o, depth=0):
+        """
+        encode the json object at given depth
+        :param o: the object
+        :param depth: the depth
+        :return: the json encoding
+        """
         if isinstance(o, OrderedDict):
             return "{" + ",\n ".join([self.encode(k) + ":" +
                                       self.encode(v, depth + 1)
@@ -178,6 +199,12 @@ class OrderedJsonEncoder(simplejson.JSONEncoder):
 
 
 def custom_print(data_structure, indent):
+    """
+    prints a given datastructure such as a dict or ordered dict at a given indentation level
+    :param data_structure: 
+    :param indent: 
+    :return: 
+    """
     for key, value in data_structure.items():
         print("\n%s%s:" % (' ' * attribute_indent * indent, str(key)), end=' ')
         if isinstance(value, OrderedDict):
@@ -315,7 +342,7 @@ class BaseConfigDict(OrderedDict):
                                      default_flow_style=False,
                                      indent=attribute_indent))
         elif output == "print":
-            os.write(f, custom_print(self, attribute_indent))
+            os.write(f, str(custom_print(self, attribute_indent)))
         else:
             os.write(f, self.dump())
         os.close(f)

@@ -1,11 +1,7 @@
-#
-# demo to start os command
-#
-# from subprocess import check_output
-
-# cmd = r'C:\cygwin64\bin\ps.exe'
-# output = check_output(cmd)
-# print (output)
+"""
+A convenient method to execute shell commands and return their output. Note: that thsi method requires that the 
+command be completley execute before the output is returned. FOr many activities in cloudemsh this is sufficient.
+"""
 
 from __future__ import print_function
 
@@ -37,7 +33,18 @@ def path_expand(text):
 
 
 class SubprocessError(Exception):
+    """
+    Manages the formatting of the error and stdout. 
+    THis command should not be directly called. Instead use SHell
+    """
     def __init__(self, cmd, returncode, stderr, stdout):
+        """
+        sets the error
+        :param cmd: the command executed
+        :param returncode: the return code
+        :param stderr: the stderr
+        :param stdout: the stdout
+        """
         self.cmd = cmd
         self.returncode = returncode
         self.stderr = stderr
@@ -46,6 +53,13 @@ class SubprocessError(Exception):
     def __str__(self):
 
         def indent(lines, amount, ch=' '):
+            """
+            indent the lines by multiples of ch
+            :param lines: 
+            :param amount: 
+            :param ch: 
+            :return: 
+            """
             padding = amount * ch
             return padding + ('\n' + padding).join(lines.split('\n'))
 
@@ -63,7 +77,18 @@ class SubprocessError(Exception):
 
 
 class Subprocess(object):
+    """
+    Executes a command. This class should not be directly used, but instead you should use Shell.
+    """
     def __init__(self, cmd, cwd=None, stderr=subprocess.PIPE, stdout=subprocess.PIPE, env=None):
+        """
+        execute the given command
+        :param cmd: the command
+        :param cwd: the directory in which to execute the command
+        :param stderr: the pipe for stderror
+        :param stdout: the pipe for the stdoutput
+        :param env: 
+        """
         Console.debug_msg('Running cmd: {}'.format(' '.join(map(quote, cmd))))
 
         proc = subprocess.Popen(cmd, stderr=stderr, stdout=stdout, cwd=cwd, env=env)
@@ -78,6 +103,12 @@ class Subprocess(object):
 
 
 class Shell(object):
+    """
+    The shell class allowing us to conveniently access many operating system commands. 
+    TODO: This works well on Linux and OSX, but has not been tested much on WIndows
+    """
+
+    # TODO: we have not supported cygwin for a while
     cygwin_path = 'bin'  # i copied fom C:\cygwin\bin
 
     command = {
@@ -118,167 +149,285 @@ class Shell(object):
 
     @classmethod
     def ls(cls, *args):
+        """
+        executes ls with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('ls', args)
 
     @classmethod
     def ps(cls, *args):
+        """
+        executes ps with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('ps', args)
 
     @classmethod
     def bash(cls, *args):
+        """
+        executes bash with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('bash', args)
 
     @classmethod
     def cat(cls, *args):
+        """
+        executes cat with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('cat', args)
 
     @classmethod
     def git(cls, *args):
+        """
+        executes git with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('git', args)
 
     # noinspection PyPep8Naming
     @classmethod
     def VBoxManage(cls, *args):
+        """
+        executes VboxManage with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('VBoxManage', args)
 
     @classmethod
     def blockdiag(cls, *args):
+        """
+        executes blockdiag with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('blockdiag', args)
 
     @classmethod
     def cm(cls, *args):
+        """
+        executes cm with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('cm', args)
 
     @classmethod
-    def fgmetric(cls, *args):
-        return cls.execute('fgmetric', args)
-
-    @classmethod
     def fgrep(cls, *args):
+        """
+        executes fgrep with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('fgrep', args)
 
     @classmethod
-    def gchproject(cls, *args):
-        return cls.execute('gchproject', args)
-
-    @classmethod
-    def gchuser(cls, *args):
-        return cls.execute('gchuser', args)
-
-    @classmethod
-    def glusers(cls, *args):
-        return cls.execute('glusers', args)
-
-    @classmethod
-    def gmkproject(cls, *args):
-        return cls.execute('gmkproject', args)
-
-    @classmethod
     def grep(cls, *args):
+        """
+        executes grep with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('grep', args)
 
     @classmethod
-    def gstatement(cls, *args):
-        return cls.execute('gstatement', args)
-
-    @classmethod
     def head(cls, *args):
+        """
+        executes head with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('head', args)
 
     @classmethod
     def keystone(cls, *args):
+        """
+        executes keystone with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('keystone', args)
 
     @classmethod
     def kill(cls, *args):
+        """
+        executes kill with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('kill', args)
 
     @classmethod
-    def ls(cls, *args):
-        return cls.execute('ls', args)
-
-    @classmethod
-    def mongoimport(cls, *args):
-        return cls.execute('mongoimport', args)
-
-    @classmethod
-    def mysql(cls, *args):
-        return cls.execute('mysql', args)
-
-    @classmethod
     def nosetests(cls, *args):
+        """
+        executes nosetests with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('nosetests', args)
 
     @classmethod
     def nova(cls, *args):
+        """
+        executes nova with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('nova', args)
 
     @classmethod
     def ping(cls, host=None, count=1):
+        """
+        execute ping
+        :param host: the host to ping 
+        :param count: the number of pings
+        :return: 
+        """
         return cls.execute('ping', "-c {} {}".format(count, host))
 
     @classmethod
     def pwd(cls, *args):
+        """
+        executes pwd with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('pwd', args)
 
     @classmethod
     def rackdiag(cls, *args):
+        """
+        executes rackdiag with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('rackdiag', args)
 
     @classmethod
     def rm(cls, *args):
+        """
+        executes rm with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('rm', args)
 
     @classmethod
     def rsync(cls, *args):
+        """
+        executes rsync with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('rsync', args)
 
     @classmethod
     def scp(cls, *args):
+        """
+        executes scp with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('scp', args)
 
     @classmethod
     def sort(cls, *args):
+        """
+        executes sort with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('sort', args)
 
     @classmethod
     def sh(cls, *args):
+        """
+        executes sh with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('sh', args)
 
     @classmethod
     def ssh(cls, *args):
+        """
+        executes ssh with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('ssh', args)
 
     @classmethod
     def sudo(cls, *args):
+        """
+        executes sudo with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('sudo', args)
 
     @classmethod
     def tail(cls, *args):
+        """
+        executes tail with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('tail', args)
 
     @classmethod
     def vagrant(cls, *args):
+        """
+        executes vagrant with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('vagrant', args)
 
     @classmethod
     def mongod(cls, *args):
+        """
+        executes mongod with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('mongod', args)
 
-    @classmethod
-    def grep(cls, *args):
-        return cls.execute('grep', args)
 
     @classmethod
     def dialog(cls, *args):
+        """
+        executes dialof with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('dialog', args)
 
     @classmethod
     def pip(cls, *args):
+        """
+        executes pip with the given arguments
+        :param args: 
+        :return: 
+        """
         return cls.execute('pip', args)
 
     @classmethod
     def remove_line_with(cls, lines, what):
+        """
+        returns all lines that do not contain what
+        :param lines: 
+        :param what: 
+        :return: 
+        """
         result = []
         for line in lines:
             if what not in line:
@@ -287,6 +436,12 @@ class Shell(object):
 
     @classmethod
     def find_lines_with(cls, lines, what):
+        """
+        returns all lines that contain what
+        :param lines: 
+        :param what: 
+        :return: 
+        """
         result = []
         for line in lines:
             if what in line:
@@ -294,6 +449,9 @@ class Shell(object):
         return result
 
     def __init__(cls):
+        """
+        identifies parameters for the os
+        """
         if cls.operating_system() == "windows":
             cls.find_cygwin_executables()
         else:
@@ -303,7 +461,7 @@ class Shell(object):
     @classmethod
     def find_cygwin_executables(cls):
         """
-        find the executables 
+        find the executables in cygwin
         """
         exe_paths = glob.glob(cls.cygwin_path + r'\*.exe')
         # print cls.cygwin_path
@@ -335,6 +493,11 @@ class Shell(object):
 
     @classmethod
     def which(cls, command):
+        """
+        returns the path of the command with which
+        :param command: teh command
+        :return: the path
+        """
         t = cls.ttype()
         if 'windows' in t and cls.command_exists(name):
             return cls.command['windows'][name]
@@ -348,6 +511,11 @@ class Shell(object):
 
     @classmethod
     def command_exists(cls, name):
+        """
+        returns True if the command exists
+        :param name: 
+        :return: 
+        """
         t = cls.ttype()
         if 'windows' in t:
             # only for windows
@@ -359,6 +527,10 @@ class Shell(object):
 
     @classmethod
     def list_commands(cls):
+        """
+        find all cygwin commands.
+        :return: 
+        """
         t = cls.ttype()
         if 'windows' in t:
             # only for windows
@@ -369,6 +541,10 @@ class Shell(object):
 
     @classmethod
     def operating_system(cls):
+        """
+        the name of the os
+        :return: the name of the os
+        """
         return platform.system().lower()
 
     @classmethod
@@ -453,7 +629,7 @@ class Shell(object):
             else:
                 raise
 
-    def unzip(source_filename, dest_dir):
+    def unzip(cls, source_filename, dest_dir):
         """
         unzips a file into the destination directory
         :param dest_dir: the destination directory
@@ -476,6 +652,10 @@ class Shell(object):
 
 
 def main():
+    """
+    a test that shoudl actually be added into a nosetest
+    :return: 
+    """
     shell = Shell()
 
     print(shell.terminal_type())

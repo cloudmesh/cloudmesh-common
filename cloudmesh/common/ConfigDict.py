@@ -1,3 +1,6 @@
+"""
+Manage the cloudmesh.yaml file
+"""
 from __future__ import print_function
 
 import json
@@ -15,6 +18,13 @@ from cloudmesh.common.util import path_expand
 
 
 def custom_print(data_structure, indent, attribute_indent=4):
+    """
+    prints the data structure at a given level. THis includes dicts and ordered dicts
+    :param data_structure: 
+    :param indent: 
+    :param attribute_indent: 
+    :return: 
+    """
     for key, value in data_structure.items():
         print("\n%s%s:" % (' ' * attribute_indent * indent, str(key)), end=' ')
         if isinstance(value, OrderedDict):
@@ -36,6 +46,9 @@ def ordered_dump(data, stream=None, Dumper=yaml.Dumper, **kwds):
 
     # noinspection PyClassHasNoInit
     class OrderedDumper(Dumper):
+        """
+        A helper class to print an orderd dict
+        """
         pass
 
     def _dict_representer(dumper, data):
@@ -49,7 +62,22 @@ def ordered_dump(data, stream=None, Dumper=yaml.Dumper, **kwds):
 
 # noinspection PyPep8Naming
 def dprint(OD, mode='dict', s="", indent=' ' * 4, level=0):
+    """
+    a recursive dict printer method that adds indentations
+    TODO: needs better explanation and test example
+    :param OD: the ordered dict
+    :param mode: the mode is dict
+    :param s: TODO
+    :param indent: the indentation characters. default is 4
+    :param level: the level
+    :return: 
+    """
     def is_number(s):
+        """
+        checks if the type of s is a float
+        :param s: 
+        :return: 
+        """
         try:
             float(s)
             return True
@@ -57,6 +85,11 @@ def dprint(OD, mode='dict', s="", indent=' ' * 4, level=0):
             return False
 
     def fstr(s):
+        """
+        return a string or number
+        :param s: teh string or number
+        :return: 
+        """
         return s if is_number(s) else '"%s"' % s
 
     if mode != 'dict':
@@ -83,6 +116,9 @@ def dprint(OD, mode='dict', s="", indent=' ' * 4, level=0):
 
 
 class Config(object):
+    """
+    Manage configuration files in yaml format
+    """
     @classmethod
     def check_file_for_tabs(cls, filename, verbose=True):
         """identifies if the file contains tabs and returns True if it
@@ -154,6 +190,9 @@ class Config(object):
 
 
 class ConfigDict(object):
+    """
+    Manages the content of cloudmesh.yaml as dict
+    """
     __shared_state = {}
     versions = ['4.1']
     data = {}
@@ -264,7 +303,7 @@ class ConfigDict(object):
                                      default_flow_style=False,
                                      indent=attribute_indent))
         elif output == "print":
-            os.write(f, custom_print(self, attribute_indent))
+            os.write(f, str(custom_print(self, attribute_indent)))
         else:
             os.write(f, self.dump())
         os.close(f)
@@ -380,6 +419,12 @@ class ConfigDict(object):
     # noinspection PyPep8Naming
     @classmethod
     def getUser(cls, cloud):
+        """
+        gets the username for a specified cloud.
+        TODO: works currently only for opensatck.
+        :param cloud: the name of the cloud
+        :return: 
+        """
         try:
             config = d = ConfigDict("cloudmesh.yaml")
 
@@ -404,6 +449,10 @@ class ConfigDict(object):
 
 # noinspection PyPep8Naming
 def Username():
+    """
+    returns the username as defined in the profile
+    :return: 
+    """
     d = ConfigDict("cloudmesh.yaml")
 
     if "user" not in d["cloudmesh"]["profile"]:
@@ -414,6 +463,10 @@ def Username():
 
 
 def main():
+    """
+    TODO: A test which should actually be moved into a nosetest
+    :return: 
+    """
     d = ConfigDict("cloudmesh.yaml")
     print(d, end='')
     d.info()

@@ -1,3 +1,6 @@
+"""
+Useful utility functions
+"""
 from __future__ import print_function
 
 import collections
@@ -55,6 +58,14 @@ def exponential_backoff(fn, sleeptime_s_max=30 * 60):
 
 
 def search(lines, pattern):
+    """
+    return all lines that match the pattern
+    #TODO: we need an example
+    
+    :param lines: 
+    :param pattern: 
+    :return: 
+    """
     p = pattern.replace("*", ".*")
     test = re.compile(p)
     result = []
@@ -91,6 +102,11 @@ def path_expand(text):
 
 
 def convert_from_unicode(data):
+    """
+    converts unicode data to a string
+    :param data: the data to convert
+    :return: 
+    """
     # if isinstance(data, basestring):
 
     if isinstance(data, str):
@@ -166,10 +182,10 @@ def str_banner(txt=None, c="#", debug=True):
     line = ""
     if debug:
         line += "\n"
-        line += "# " + 70 * c
+        line += "# " + str(70 * c)
         if txt is not None:
             line += "# " + txt
-            line += "# " + 70 * c
+            line += "# " + str(70 * c)
     return line
 
 
@@ -216,6 +232,14 @@ def backup_name(filename):
 
 
 def auto_create_version(class_name, version, filename="__init__.py"):
+    """
+    creates a version number in the __init__.py file.
+    it can be accessed with __version__
+    :param class_name: 
+    :param version: 
+    :param filename: 
+    :return: 
+    """
     version_filename = "{0}/{1}".format(class_name, filename)
     with open(version_filename, "r") as f:
         content = f.read()
@@ -262,6 +286,7 @@ def copy_files(files_glob, source_dir, dest_dir):
 
 
 def dict_replace(content, replacements=None):
+    # TODO: it is unclear why we have this. Describe
     if replacements is None:
         replacements = {}
     for key in replacements:
@@ -271,18 +296,33 @@ def dict_replace(content, replacements=None):
 
 
 def readfile(filename):
+    """
+    returns the content of a file
+    :param filename: the filename
+    :return: 
+    """
     with open(path_expand(filename), 'r') as f:
         content = f.read()
     return content
 
 
 def writefile(filename, content):
+    """
+    writes the content into the file
+    :param filename: the filename
+    :param content: teh content
+    :return: 
+    """
     outfile = open(path_expand(filename), 'w')
     outfile.write(content)
     outfile.close()
 
 
 def get_python():
+    """
+    returns the python and pip version
+    :return: python version, pip version
+    """
     python_version = sys.version_info[:3]
     v_string = [str(i) for i in python_version]
     python_version_s = '.'.join(v_string)
@@ -293,6 +333,10 @@ def get_python():
 
 
 def check_python():
+    """
+    checks if the python version is supported
+    :return: True if it is supported
+    """
     python_version = sys.version_info[:3]
 
     v_string = [str(i) for i in python_version]
@@ -318,6 +362,14 @@ def check_python():
 
 # Reference: http://interactivepython.org/runestone/static/everyday/2013/01/3_password.html
 def generate_password(length=8, lower=True, upper=True, number=True):
+    """
+    generates a simple password. We should not realy use this in production.
+    :param length: the length of the password
+    :param lower: True of lower case characters are allowed
+    :param upper: True if upper case characters are allowed
+    :param number: True if numbers are allowed
+    :return: 
+    """
     lletters = "abcdefghijklmnopqrstuvwxyz"
     uletters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     # This doesn't guarantee both lower and upper cases will show up

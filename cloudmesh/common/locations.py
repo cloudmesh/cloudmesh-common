@@ -1,3 +1,6 @@
+"""
+clas that specifies where we read the cloudmesh.yaml file from
+"""
 import os
 
 from cloudmesh.common.Shell import Shell
@@ -32,6 +35,11 @@ def config_file_prefix():
 
 
 def config_dir_setup(filename):
+    """
+    sets the config file and makes sure the directory exists if it has not yet been created.
+    :param filename: 
+    :return: 
+    """
     path = os.path.dirname(filename)
     if not os.path.isdir(path):
         Shell.mkdir(path)

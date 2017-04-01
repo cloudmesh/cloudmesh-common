@@ -1,3 +1,6 @@
+"""
+MAnaging ~/.ssh/config
+"""
 from __future__ import print_function
 
 import json
@@ -11,6 +14,9 @@ from cloudmesh.common.Shell import Shell
 
 # noinspection PyPep8Naming
 class ssh_config(object):
+    """
+    Managing the config in .ssh
+    """
     def __init__(self, filename=None):
         if filename is not None:
             # load
@@ -22,6 +28,10 @@ class ssh_config(object):
         self.load()
 
     def names(self):
+        """
+        The names defined in ~/.ssh/config
+        :return: the names
+        """
         found_names = []
         with open(self.filename) as f:
             content = f.readlines()
@@ -63,20 +73,41 @@ class ssh_config(object):
         self.hosts = hosts
 
     def list(self):
+        """
+        list the hosts in the config file
+        :return: 
+        """
         return list(self.hosts.keys())
 
     def __str__(self):
+        """
+        The string representing the config file
+        :return: the string representation
+        """
         return json.dumps(self.hosts, indent=4)
 
     def status(self):
-        """executes a test with the given ssh config if a login is possible"""
+        """
+        executes a test with the given ssh config if a login is possible. 
+           TODO: not yet implemented
+        """
+        pass
 
     def login(self, name):
-        """logs into the host defined by name in ssh config into an interactive shell"""
+        """
+        login to the host defines in .ssh/config by name
+        :param name: the name of the host as defined in the config file
+        :return: 
+        """
         os.system("ssh {0}".format(name))
 
     def execute(self, name, command):
-        """executes the command on the named host"""
+        """
+        execute the command on the named host
+        :param name: the name of the host in config
+        :param command: the command to be executed
+        :return: 
+        """
         if name in ["localhost"]:
             r = '\n'.join(Shell.sh("-c", command).split()[-1:])
         else:
@@ -84,9 +115,19 @@ class ssh_config(object):
         return r
 
     def local(self, command):
+        """
+        execute the command on the localhost
+        :param command: the command to execute
+        :return: 
+        """
         return self.execute("localhost", command)
 
     def username(self, host):
+        """
+        returns the username for a given hsot in the config file
+        :param host: the hostname
+        :return: the username
+        """
         if host in self.hosts:
             return self.hosts[host]["User"]
         else:
@@ -98,6 +139,15 @@ class ssh_config(object):
                  username=None,
                  force=False,
                  verbose=False):
+        """
+        adds a host to the config file with given parameters.  #TODO: make sure this is better documented
+        :param key: the key
+        :param host: the host
+        :param username: the username
+        :param force: not used
+        :param verbose: prints debug messages
+        :return: 
+        """
         data = {
             "host": host,
             "key": key,
