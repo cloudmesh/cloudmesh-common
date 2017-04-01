@@ -118,9 +118,9 @@ class Console(object):
 
         if traceflag and cls.debug:
             trace = traceback.format_exc().strip()
-            print
+            print()
             print("\n".join(str(trace).splitlines()))
-            print
+            print()
 
     @staticmethod
     def TODO(message, prefix=True, traceflag=True):
@@ -137,9 +137,9 @@ class Console(object):
         trace = traceback.format_exc().strip()
 
         if traceflag and trace != "None":
-            print
+            print()
             print("\n".join(str(trace).splitlines()))
-            print
+            print()
 
     @staticmethod
     def debug_msg(message):

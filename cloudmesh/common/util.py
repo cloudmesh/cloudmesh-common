@@ -142,7 +142,7 @@ def banner(txt=None, c="#", debug=True):
     :type c: character
     """
     if debug:
-        print
+        print()
         print("#", 70 * c)
         if txt is not None:
             print("#", txt)
