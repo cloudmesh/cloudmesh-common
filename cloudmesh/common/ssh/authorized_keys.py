@@ -1,7 +1,7 @@
 # TODO: needs nosetests
+import io
 import itertools
 import os.path
-from cStringIO import StringIO
 
 from cloudmesh.common.Shell import Subprocess
 from cloudmesh.common.util import tempdir
@@ -62,7 +62,7 @@ class AuthorizedKeys(object):
 
     def __str__(self):
 
-        sio = StringIO()
+        sio = io.StringIO()
 
         # TODO: make pythin 2 and 3 compatible
         for fingerprint in self._order.itervalues():
