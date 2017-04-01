@@ -128,7 +128,7 @@ def yn_choice(message, default='y', tries=None):
 
 
 def banner(txt=None, c="#", debug=True):
-    """prints a banner of the form with a frame of # arround the txt::
+    """prints a banner of the form with a frame of # around the txt::
 
       ############################
       # txt
@@ -150,7 +150,7 @@ def banner(txt=None, c="#", debug=True):
 
 
 def str_banner(txt=None, c="#", debug=True):
-    """prints a banner of the form with a frame of # arround the txt::
+    """prints a banner of the form with a frame of # around the txt::
 
       ############################
       # txt

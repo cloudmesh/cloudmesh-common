@@ -66,7 +66,7 @@ class AuthorizedKeys(object):
 
         sio = io.StringIO()
 
-        # TODO: make pythin 2 and 3 compatible
+        # TODO: make python 2 and 3 compatible
         # old: for fingerprint in self._order.itervalues():
 
         for fingerprint in itervalues(self._order):

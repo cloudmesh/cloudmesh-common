@@ -46,7 +46,7 @@ class Printer(object):
              show_none=""
              ):
         """
-        :param l: l is a lsit not a dict
+        :param l: l is a list not a dict
         :param order:
         :param header:
         :param output:

@@ -31,7 +31,7 @@ class Console(object):
         Console.msg("msg")
         Console.ok("Success")
 
-    One can swith the color mode off with::
+    One can switch the color mode off with::
 
         Console.color = False
         Console.error("Error")
