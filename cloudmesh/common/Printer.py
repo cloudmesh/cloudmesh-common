@@ -1,4 +1,6 @@
-"""Convenient methods and classes to print tables"""
+"""
+Convenient methods and classes to print tables.
+"""
 from __future__ import print_function
 
 import json
@@ -12,6 +14,9 @@ from cloudmesh.common.util import convert_from_unicode
 
 
 class Printer(object):
+    """
+    A simple Printer class with convenient methods to pring dictionary, tables, csv, lists
+    """
     @classmethod
     def write(cls, table,
               order=None,
@@ -20,6 +25,16 @@ class Printer(object):
               sort_keys=True,
               show_none=""
               ):
+        """
+        writes the information given in the table
+        :param table: the table of values
+        :param order: the order of the columns
+        :param header: the header for the columns
+        :param output: the format (default is table, values are raw, csv, json, yaml, dict
+        :param sort_keys: if true the table is sorted
+        :param show_none: passed alomng to the list or dict printer
+        :return: 
+        """
         if output == "raw":
             return table
         elif table is None:
@@ -249,6 +264,18 @@ class Printer(object):
                   order=None,
                   sort_keys=True,
                   output="table"):
+        """prints a attribute/key value table 
+         :param d: A a dict with dicts of the same type.
+                       Each key will be a column
+         :param order: The order in which the columns are printed.
+                       The order is specified by the key names of the dict.
+         :param header:  The Header of each of the columns
+         :type header:   A list of string
+         :param sort_keys:   Key(s) of the dict to be used for sorting.
+                             This specify the column(s) in the table for sorting.
+         :type sort_keys:    string or a tuple of string (for sorting with multiple columns)
+         """
+
         if header is None:
             header = ["Attribute", "Value"]
         if output == "table":
@@ -281,7 +308,18 @@ class Printer(object):
 
     @classmethod
     def print_list(cls, l, output='table'):
+        """
+        prints a list
+        :param l: the list
+        :param output: the output, default is a table
+        :return: 
+        """
         def dict_from_list(l):
+            """
+            returns a dict from a list for printing
+            :param l: the list
+            :return: 
+            """
             d = dict([(idx, item) for idx, item in enumerate(l)])
             return d
 
