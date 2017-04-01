@@ -33,6 +33,7 @@ def ordered_dump(data, stream=None, Dumper=yaml.Dumper, **kwds):
     :param Dumper: the dumper such as yaml.SafeDumper
     """
 
+    # noinspection PyClassHasNoInit
     class OrderedDumper(Dumper):
         pass
 

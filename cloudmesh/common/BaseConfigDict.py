@@ -62,6 +62,7 @@ def ordered_load(stream, Loader=yaml.Loader, object_pairs_hook=OrderedDict):
     :param object_pairs_hook: the ordered dict
     """
 
+    # noinspection PyClassHasNoInit
     class OrderedLoader(Loader):
         pass
 
@@ -88,6 +89,7 @@ def ordered_dump(data, stream=None, Dumper=yaml.Dumper, **kwds):
     :param Dumper: the dumper such as yaml.SafeDumper
     """
 
+    # noinspection PyClassHasNoInit
     class OrderedDumper(Dumper):
         pass
 

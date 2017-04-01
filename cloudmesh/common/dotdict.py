@@ -1,3 +1,11 @@
+"""
+A convenient dot dict class
+
+a = dotdict({"argument": "value"})
+
+print (a.argument)
+
+"""
 # noinspection PyPep8Naming
 class dotdict(dict):
     """dot.notation access to dictionary attributes"""
