@@ -8,28 +8,14 @@ from __future__ import print_function
 import errno
 import glob
 import os
-import os.path
 import platform
 import subprocess
+import sys
 import zipfile
 from pipes import quote
 
 from cloudmesh.common.console import Console
-
-
-# from cloudmesh.common.util import path_expand
-
-def path_expand(text):
-    """ returns a string with expanded variable.
-
-    :param text: the path to be expanded, which can include ~ and $ variables
-    :param text: string
-
-    """
-    template = Template(text)
-    result = template.substitute(os.environ)
-    result = os.path.expanduser(result)
-    return result
+from cloudmesh.common.util import path_expand
 
 
 class SubprocessError(Exception):
@@ -140,6 +126,48 @@ class Shell(object):
     ls = cls.execute('cmd', args...)
 
     '''
+
+    @classmethod
+    def get_python(cls):
+        """
+        returns the python and pip version
+        :return: python version, pip version
+        """
+        python_version = sys.version_info[:3]
+        v_string = [str(i) for i in python_version]
+        python_version_s = '.'.join(v_string)
+
+        # pip_version = pip.__version__
+        pip_version = Shell.pip("--version").split()[1]
+        return python_version_s, pip_version
+
+    @classmethod
+    def check_python(cls):
+        """
+        checks if the python version is supported
+        :return: True if it is supported
+        """
+        python_version = sys.version_info[:3]
+
+        v_string = [str(i) for i in python_version]
+
+        python_version_s = '.'.join(v_string)
+        if (python_version[0] == 2) and (python_version[1] >= 7) and (python_version[2] >= 9):
+
+            print("You are running a supported version of python: {:}".format(python_version_s))
+        else:
+            print("WARNING: You are running an unsupported version of python: {:}".format(python_version_s))
+            print("         We recommend you update your python")
+
+        # pip_version = pip.__version__
+        python_version, pip_version = cls.get_python()
+
+        if int(pip_version.split(".")[0]) >= 9:
+            print("You are running a supported version of pip: " + str(pip_version))
+        else:
+            print("WARNING: You are running an old version of pip: " + str(pip_version))
+            print("         We recommend you update your pip  with \n")
+            print("             pip install -U pip\n")
 
     @classmethod
     def check_output(cls, *args, **kwargs):
@@ -605,17 +633,15 @@ class Shell(object):
         return result
 
     @classmethod
-    def mkdir(cls, newdir):
-        """works the way a good mkdir should :)
-        - already exists, silently complete
-        - regular file in the way, raise an exception
-        - parent directory(ies) does not exist, make them as well
+    def mkdir(cls, directory):
         """
-        """http://code.activestate.com/recipes/82465-a-friendly-mkdir/"""
-
-        newdir = path_expand(newdir)
+        creates a directory with all its parents in ots name
+        :param directory: the path of the directory
+        :return: 
+        """
+        directory = path_expand(directory)
         try:
-            os.makedirs(newdir)
+            os.makedirs(directory)
         except OSError as e:
 
             # EEXIST (errno 17) occurs under two conditions when the path exists:
@@ -624,7 +650,7 @@ class Shell(object):
             #
             # if it is a file, this is a valid error, otherwise, all
             # is fine.
-            if e.errno == errno.EEXIST and os.path.isdir(newdir):
+            if e.errno == errno.EEXIST and os.path.isdir(directory):
                 pass
             else:
                 raise

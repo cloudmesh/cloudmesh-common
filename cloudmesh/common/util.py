@@ -10,7 +10,6 @@ import os
 import random
 import re
 import shutil
-import sys
 import tempfile
 # import pip
 import time
@@ -18,8 +17,6 @@ from contextlib import contextmanager
 from string import Template
 
 from six.moves import input
-
-from cloudmesh.common.Shell import Shell
 
 
 @contextmanager
@@ -316,48 +313,6 @@ def writefile(filename, content):
     outfile = open(path_expand(filename), 'w')
     outfile.write(content)
     outfile.close()
-
-
-def get_python():
-    """
-    returns the python and pip version
-    :return: python version, pip version
-    """
-    python_version = sys.version_info[:3]
-    v_string = [str(i) for i in python_version]
-    python_version_s = '.'.join(v_string)
-
-    # pip_version = pip.__version__
-    pip_version = Shell.pip("--version").split()[1]
-    return python_version_s, pip_version
-
-
-def check_python():
-    """
-    checks if the python version is supported
-    :return: True if it is supported
-    """
-    python_version = sys.version_info[:3]
-
-    v_string = [str(i) for i in python_version]
-
-    python_version_s = '.'.join(v_string)
-    if (python_version[0] == 2) and (python_version[1] >= 7) and (python_version[2] >= 9):
-
-        print("You are running a supported version of python: {:}".format(python_version_s))
-    else:
-        print("WARNING: You are running an unsupported version of python: {:}".format(python_version_s))
-        print("         We recommend you update your python")
-
-    # pip_version = pip.__version__
-    python_version, pip_version = get_python()
-
-    if int(pip_version.split(".")[0]) >= 9:
-        print("You are running a supported version of pip: " + str(pip_version))
-    else:
-        print("WARNING: You are running an old version of pip: " + str(pip_version))
-        print("         We recommend you update your pip  with \n")
-        print("             pip install -U pip\n")
 
 
 # Reference: http://interactivepython.org/runestone/static/everyday/2013/01/3_password.html
