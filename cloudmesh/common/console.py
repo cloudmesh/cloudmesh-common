@@ -1,3 +1,6 @@
+"""
+Printing messages in a console
+"""
 from __future__ import print_function
 
 import textwrap
@@ -10,6 +13,14 @@ colorama.init()
 
 
 def indent(text, indent=2, width=128):
+    """
+    indents the given text by the indent specified and maing it maximal width wide
+    
+    :param text: the text to print
+    :param indent: indent characters
+    :param width: the width of the text
+    :return: 
+    """
     return "\n".join(
         textwrap.wrap(text,
                       width=width,
@@ -78,10 +89,20 @@ class Console(object):
 
     @classmethod
     def set_debug(cls, on=True):
+        """
+        sets debuggin on or of
+        :param on: if on debugging is set
+        :return: 
+        """
         cls.debug = on
 
     @staticmethod
     def set_theme(color=True):
+        """
+        defines if the console messages are printed in color
+        :param color: if True its printed in color
+        :return: 
+        """
         if color:
             Console.theme = Console.theme_color
         else:
@@ -90,22 +111,45 @@ class Console(object):
 
     @staticmethod
     def get(name):
+        """
+        returns the default theme for printing console messages
+        :param name: the name of the theme
+        :return: 
+        """
         if name in Console.theme:
             return Console.theme[name]
         else:
             return Console.theme['BLACK']
 
     @staticmethod
-    def msg(message, width=90):
+    def msg(message, width=79):
+        """
+        prints a message to the screen
+        :param message: the message to print
+        :param width: teh width of the line
+        :return: 
+        """
         return textwrap.fill(message, width=width)
 
     @staticmethod
     def msg(message):
+        """
+        prints a message
+        :param message: the message to print
+        :return: 
+        """
         message = message or ""
         print(message)
 
     @classmethod
     def error(cls, message, prefix=True, traceflag=True):
+        """
+        prints an error message
+        :param message: the message
+        :param prefix: a prefix for the meassage 
+        :param traceflag: if true the stack trace is retrieved and printed
+        :return: 
+        """
         message = message or ""
         if prefix:
             text = "ERROR: "
@@ -124,6 +168,13 @@ class Console(object):
 
     @staticmethod
     def TODO(message, prefix=True, traceflag=True):
+        """
+        prints an TODO message
+        :param message: the message
+        :param prefix: if set to true it prints TODO: as prefix
+        :param traceflag: if true the stack trace is retrieved and printed
+        :return: 
+        """
         message = message or ""
         if prefix:
             text = "TODO: "
@@ -143,6 +194,11 @@ class Console(object):
 
     @staticmethod
     def debug_msg(message):
+        """
+        print a debug message
+        :param message: the message
+        :return: 
+        """
         message = message or ""
         if Console.color:
             Console.cprint('RED', 'DEBUG: ', message)
@@ -151,6 +207,11 @@ class Console(object):
 
     @staticmethod
     def info(message):
+        """
+        prints an informational message
+        :param message: the message
+        :return: 
+        """
         message = message or ""
         if Console.color:
             Console.cprint('OKBLUE', "INFO: ", message)
@@ -159,6 +220,11 @@ class Console(object):
 
     @staticmethod
     def warning(message):
+        """
+        prints a warning
+        :param message: the message
+        :return: 
+        """
         message = message or ""
         if Console.color:
             Console.cprint('WARNING', "WARNING: ", message)
@@ -167,6 +233,11 @@ class Console(object):
 
     @staticmethod
     def ok(message):
+        """
+        prints an ok message
+        :param message: the message
+        :return: 
+        """
         message = message or ""
         if Console.color:
             Console.cprint('OKGREEN', "", message)
@@ -175,6 +246,13 @@ class Console(object):
 
     @staticmethod
     def cprint(color, prefix, message):
+        """
+        prints a message in a given color
+        :param color: the color as defined in the theme
+        :param prefix: the prefix (a string)
+        :param message: the message
+        :return: 
+        """
         message = message or ""
         prefix = prefix or ""
         print((Console.theme[color] +

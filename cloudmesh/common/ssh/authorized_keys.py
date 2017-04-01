@@ -1,3 +1,6 @@
+"""
+authorized key managemet.
+"""
 # TODO: needs nosetests
 import io
 import itertools
@@ -38,12 +41,21 @@ def get_fingerprint_from_public_key(pubkey):
 
 
 class AuthorizedKeys(object):
+    """
+    Class to manage authorized keys.
+    """
     def __init__(self):
         self._order = dict()
         self._keys = dict()
 
     @classmethod
     def load(cls, path):
+        """
+        load the keys from a path
+        
+        :param path: the filename (path) in which we find the keys
+        :return: 
+        """
         auth = cls()
         with open(path) as fd:
             for pubkey in itertools.imap(str.strip, fd):
@@ -54,12 +66,23 @@ class AuthorizedKeys(object):
         return auth
 
     def add(self, pubkey):
+        """
+        add a public key.
+        :param pubkey: the filename to the public key
+        :return: 
+        """
         f = get_fingerprint_from_public_key(pubkey)
         if f not in self._keys:
             self._order[len(self._keys)] = f
             self._keys[f] = pubkey
 
     def remove(self, pubkey):
+        """
+        Removes the publick key
+        TODO: this method is not implemented
+        :param pubkey: the filename of the public key
+        :return: 
+        """
         raise NotImplementedError()
 
     def __str__(self):
