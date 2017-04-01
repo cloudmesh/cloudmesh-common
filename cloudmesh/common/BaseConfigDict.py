@@ -81,6 +81,7 @@ def ordered_load(stream, Loader=yaml.Loader, object_pairs_hook=OrderedDict):
 # ordered_load(stream, yaml.SafeLoader)
 
 
+# noinspection PyPep8Naming
 def ordered_dump(data, stream=None, Dumper=yaml.Dumper, **kwds):
     """
     writes the dict into an ordered yaml.

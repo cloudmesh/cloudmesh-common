@@ -375,9 +375,12 @@ class Shell(object):
     def execute(cls, cmd, arguments="", shell=False, cwd=None, traceflag=True, witherror=True):
         """Run Shell command
 
+        :param witherror: if set to fasle the error will not be printed
+        :param traceflag: if set to true the trace is printed in case of an error
+        :param cwd: the current working directory in whcih the command is supposed to be executed.
+        :param shell: if set to true the subprocess is called as part of a shell
         :param cmd: command to run
         :param arguments: we dont know yet
-        :param capture: if true returns the output
         :return:
         """
         # print "--------------"
