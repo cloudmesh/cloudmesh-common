@@ -11,9 +11,11 @@ nosetests -v tests/cm_basic/test_shell.py
 """
 from __future__ import print_function
 
+import getpass
+
 from cloudmesh.common.Shell import Shell
 from cloudmesh.common.util import HEADING
-import getpass
+
 
 def run(command):
     parameter = command.split(" ")

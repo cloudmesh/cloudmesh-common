@@ -25,7 +25,7 @@ def readfile(filename):
         return stream.read().split()
 
 
-#requiers = readfile ('requirements.txt')
+# requiers = readfile ('requirements.txt')
 requiers = """
 six
 future
@@ -52,9 +52,7 @@ AUTHOR_EMAIL = "laszewski@gmail.com"
 URL = "https://github.com/cloudmesh/common"
 LONG_DESCRIPTION = "\n".join(readme)
 
-
-setup \
-(
+setup(
     name=NAME,
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
