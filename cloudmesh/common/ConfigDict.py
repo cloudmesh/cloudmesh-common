@@ -2,17 +2,16 @@ from __future__ import print_function
 
 import json
 import os.path
-from collections import OrderedDict
 import sys
-import yaml
-import shutil
+from collections import OrderedDict
 
-from cloudmesh.common.Shell import Shell
+import yaml
+
 from cloudmesh.common.BaseConfigDict import BaseConfigDict
-from cloudmesh.common.todo import TODO
-from cloudmesh.common.util import path_expand
 from cloudmesh.common.console import Console
+from cloudmesh.common.todo import TODO
 from cloudmesh.common.util import backup_name
+from cloudmesh.common.util import path_expand
 
 
 def custom_print(data_structure, indent, attribute_indent=4):
@@ -150,6 +149,7 @@ class Config(object):
                 return name
         return None
 
+
 class ConfigDict(object):
     __shared_state = {}
     versions = ['4.1']
@@ -176,7 +176,6 @@ class ConfigDict(object):
         :rtype: ConfigDict
         """
 
-
         self.__dict__ = self.__shared_state
 
         if ConfigDict.data != {} and not reload:
@@ -185,11 +184,11 @@ class ConfigDict(object):
         # print ("INIT CONFIGDICT", filename, load_order, verbose, etc)
         self.data = None
         if etc:
-            #import cloudmesh_client.etc
-            #load_order = [os.path.dirname(cloudmesh_client.etc.__file__)]
+            # import cloudmesh_client.etc
+            # load_order = [os.path.dirname(cloudmesh_client.etc.__file__)]
             print("etc not supported")
             sys.exit(1)
-            
+
         if load_order is None:
             self.load_order = [".", os.path.join("~", ".cloudmesh")]
         else:

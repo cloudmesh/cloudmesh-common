@@ -9,7 +9,6 @@
 
 from __future__ import print_function
 
-from pipes import quote
 import errno
 import glob
 import os
@@ -17,8 +16,12 @@ import os.path
 import platform
 import subprocess
 import zipfile
+from pipes import quote
+
 from cloudmesh.common.console import Console
-#from cloudmesh.common.util import path_expand
+
+
+# from cloudmesh.common.util import path_expand
 
 def path_expand(text):
     """ returns a string with expanded variable.
@@ -40,12 +43,11 @@ class SubprocessError(Exception):
         self.stderr = stderr
         self.stdout = stdout
 
-
     def __str__(self):
 
         def indent(lines, amount, ch=' '):
             padding = amount * ch
-            return padding + ('\n'+padding).join(lines.split('\n'))
+            return padding + ('\n' + padding).join(lines.split('\n'))
 
         cmd = ' '.join(map(quote, self.cmd))
         s = ''
@@ -61,9 +63,7 @@ class SubprocessError(Exception):
 
 
 class Subprocess(object):
-
     def __init__(self, cmd, cwd=None, stderr=subprocess.PIPE, stdout=subprocess.PIPE, env=None):
-
         Console.debug_msg('Running cmd: {}'.format(' '.join(map(quote, cmd))))
 
         proc = subprocess.Popen(cmd, stderr=stderr, stdout=stdout, cwd=cwd, env=env)
@@ -75,7 +75,6 @@ class Subprocess(object):
 
         if self.returncode != 0:
             raise SubprocessError(cmd, self.returncode, self.stderr, self.stdout)
-
 
 
 class Shell(object):
@@ -116,7 +115,6 @@ class Shell(object):
         """Thin wrapper around :func:`subprocess.check_output`
         """
         return subprocess.check_output(*args, **kwargs)
-
 
     @classmethod
     def ls(cls, *args):
@@ -448,8 +446,8 @@ class Shell(object):
             # is fine.
             if e.errno == errno.EEXIST and os.path.isdir(newdir):
                 pass
-            else: raise
-
+            else:
+                raise
 
     def unzip(source_filename, dest_dir):
         """

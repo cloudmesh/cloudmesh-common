@@ -1,9 +1,13 @@
 from __future__ import print_function
-import os
-from cloudmesh_client.common.Shell import Shell
+
 import json
+import os
 from textwrap import dedent
-from cloudmesh_client.shell.console import Console
+
+from cloudmesh.shell.console import Console
+
+from cloudmesh.common.Shell import Shell
+
 
 class ssh_config(object):
     def __init__(self, filename=None):
@@ -120,24 +124,22 @@ class ssh_config(object):
 
 
 if __name__ == "__main__":
-
-    from cloudmesh_client.common.ConfigDict import ConfigDict
+    from cloudmesh.common.ConfigDict import ConfigDict
 
     hosts = ssh_config()
 
     user = ConfigDict("cloudmesh.yaml")["cloudmesh.profile.user"]
-    print ("User:", user)
+    print("User:", user)
 
     hosts.generate(key="india", username=user)
-    print (hosts.filename)
+    print(hosts.filename)
 
     print(hosts.list())
     print(hosts)
 
+    import sys
 
-    import sys; sys.exit()
-
-
+    sys.exit()
 
     r = hosts.execute("india", "hostname")
     print(r)
@@ -149,4 +151,3 @@ if __name__ == "__main__":
     print(r)
 
     # hosts.login("india")
-

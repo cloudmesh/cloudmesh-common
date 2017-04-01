@@ -1,10 +1,10 @@
 from __future__ import print_function
 
-import traceback
 import textwrap
+import traceback
 
-from colorama import Fore, Back, Style
 import colorama
+from colorama import Fore, Back, Style
 
 colorama.init()
 
@@ -149,7 +149,6 @@ class Console(object):
         else:
             print(Console.msg('DEBUG: ' + message))
 
-
     @staticmethod
     def info(message):
         message = message or ""
@@ -182,7 +181,6 @@ class Console(object):
                prefix +
                message +
                Console.theme['ENDC']))
-
 
 
 #

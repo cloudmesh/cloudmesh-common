@@ -6,9 +6,10 @@ import json
 import yaml
 from prettytable import PrettyTable
 
-from cloudmesh.common.util import convert_from_unicode
 from cloudmesh.common.console import Console
 from cloudmesh.common.dotdict import dotdict
+from cloudmesh.common.util import convert_from_unicode
+
 
 class Printer(object):
     @classmethod
@@ -19,7 +20,7 @@ class Printer(object):
               sort_keys=True,
               show_none=""
               ):
-        if output=="raw":
+        if output == "raw":
             return table
         elif table is None:
             return None
@@ -264,7 +265,7 @@ class Printer(object):
                     values = d[key]
                     x.add_row([key, "+"])
                     for e in values:
-                       x.add_row(["  -", "{}: {}".format(e, values[e])])
+                        x.add_row(["  -", "{}: {}".format(e, values[e])])
                 elif type(d[key]) == list:
                     values = list(d[key])
                     x.add_row([key, "+"])

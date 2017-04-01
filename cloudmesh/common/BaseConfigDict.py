@@ -14,14 +14,13 @@ from string import Template
 import simplejson
 import yaml
 
-from cloudmesh.common.error import Error
-from cloudmesh.common.util import backup_name, path_expand
-from cloudmesh.common.locations import config_file
-from cloudmesh.common.logger import LOGGER
 from cloudmesh.common.console import Console
+from cloudmesh.common.error import Error
+from cloudmesh.common.locations import config_file
+from cloudmesh.common.util import backup_name, path_expand
 
-#Logger dependency not to be there in utility
-#log = LOGGER(__file__)
+# Logger dependency not to be there in utility
+# log = LOGGER(__file__)
 package_dir = os.path.dirname(os.path.abspath(__file__))
 attribute_indent = 4
 
@@ -45,7 +44,9 @@ def check_file_for_tabs(filename, verbose=True):
             location = [
                 i for i in range(len(line)) if line.startswith('\t', i)]
             if verbose:
-                Console.error("Tab found in line {} and column(s) {}".format(line_no, str(location).replace("[","").replace("]", "")), traceflag=False)
+                Console.error("Tab found in line {} and column(s) {}"
+                              .format(line_no, str(location).replace("[", "").replace("]", "")),
+                              traceflag=False)
         line_no += 1
     return file_contains_tabs
 
@@ -429,7 +430,7 @@ class BaseConfigDict(OrderedDict):
             converted = str(value)
         except ValueError:
             converted = "'" + str(value) + "'"
-        exec("self" + nested_str + "=" + converted)
+        exec ("self" + nested_str + "=" + converted)
         return element
 
     def _update(self, keys, value):
@@ -455,7 +456,7 @@ class BaseConfigDict(OrderedDict):
 
 
 if __name__ == "__main__":
-    #TODO: etc not supported
+    # TODO: etc not supported
     # need to create copy and work with that
     config = ConfigDict({"a": "1", "b": {"c": 3}},
                         prefix="cloudmesh.debug",

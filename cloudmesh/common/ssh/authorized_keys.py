@@ -3,8 +3,10 @@ import itertools
 import os.path
 from cStringIO import StringIO
 
-from cloudmesh_client.common.util import tempdir
-from cloudmesh_client.common.Shell import Subprocess
+from cloudmesh.common.Shell import Subprocess
+from cloudmesh.common.util import tempdir
+
+
 # TODO:  use our simple subprocess wrapper ?
 
 def get_fingerprint_from_public_key(pubkey):
@@ -17,7 +19,6 @@ def get_fingerprint_from_public_key(pubkey):
 
     # TODO: why is there a tmpdir?
     with tempdir() as workdir:
-
         key = os.path.join(workdir, 'key.pub')
         with open(key, 'w') as fd:
             fd.write(pubkey)
@@ -35,7 +36,6 @@ def get_fingerprint_from_public_key(pubkey):
 
 
 class AuthorizedKeys(object):
-
     def __init__(self):
         self._order = dict()
         self._keys = dict()
@@ -78,6 +78,7 @@ class AuthorizedKeys(object):
 
 if __name__ == '__main__':
     import sys
+
     path = sys.argv[1]
     auth = AuthorizedKeys.load(path)
     print(auth)

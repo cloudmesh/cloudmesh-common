@@ -1,20 +1,22 @@
 from __future__ import print_function
-from contextlib import contextmanager
-from string import Template
-import inspect
-import glob
-import os
-import shutil
+
 import collections
+import glob
+import inspect
+import os
+import random
+import re
+import shutil
+import sys
+import tempfile
 # import pip
 import time
-import tempfile
-import sys
-import re
+from contextlib import contextmanager
+from string import Template
 
 from builtins import input
 from past.builtins import basestring
-import random
+
 from cloudmesh.common.Shell import Shell
 
 
@@ -37,19 +39,19 @@ def tempdir(*args, **kwargs):
         shutil.rmtree(d)
 
 
-def exponential_backoff(fn, sleeptime_s_max=30*60):
+def exponential_backoff(fn, sleeptime_s_max=30 * 60):
     """Calls `fn` until it returns True, with an exponentially increasing wait time between calls"""
 
     sleeptime_ms = 500
     while True:
-        if fn() == True:
+        if fn():
             return True
         else:
-            print ('Sleeping {} ms'.format(sleeptime_ms))
+            print('Sleeping {} ms'.format(sleeptime_ms))
             time.sleep(sleeptime_ms / 1000.0)
             sleeptime_ms *= 2
 
-        if sleeptime_ms/1000.0 > sleeptime_s_max:
+        if sleeptime_ms / 1000.0 > sleeptime_s_max:
             return False
 
 
@@ -61,6 +63,7 @@ def search(lines, pattern):
         if test.search(l):
             result.append(l)
     return result
+
 
 def grep(pattern, filename):
     """Very simple grep that returns the first matching line in a file.
@@ -310,6 +313,7 @@ def check_python():
         print("WARNING: You are running an old version of pip: " + str(pip_version))
         print("         We recommend you update your pip  with \n")
         print("             pip install -U pip\n")
+
 
 # Reference: http://interactivepython.org/runestone/static/everyday/2013/01/3_password.html
 def generate_password(length=8, lower=True, upper=True, number=True):
