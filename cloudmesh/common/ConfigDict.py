@@ -375,6 +375,7 @@ class ConfigDict(object):
         """
         TODO.implement()
 
+    # noinspection PyPep8Naming
     @classmethod
     def getUser(cls, cloud):
         try:

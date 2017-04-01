@@ -356,6 +356,7 @@ class BaseConfigDict(OrderedDict):
                             Dumper=yaml.SafeDumper,
                             default_flow_style=False)
 
+    # noinspection PyPep8Naming
     def dump(self):
         """
         returns the json output of the dict.

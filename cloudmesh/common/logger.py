@@ -1,11 +1,11 @@
 import logging
 import os
 
-from cloudmesh.common.util import grep
 from cloudmesh.common.locations import config_file
+from cloudmesh.common.util import grep
 
 
-# noinspection PyUnusedLocal
+# noinspection PyUnusedLocal,PyPep8Naming
 def LOGGER(filename):
     """creates a logger with the given name.
 
@@ -58,6 +58,7 @@ def LOGGER(filename):
     return log
 
 
+# noinspection PyPep8Naming
 def LOGGING_ON(log):
     """
     Switches logging on
@@ -70,6 +71,7 @@ def LOGGING_ON(log):
         return False
 
 
+# noinspection PyPep8Naming
 def LOGGING_OFF(log):
     """
     Switches logging off

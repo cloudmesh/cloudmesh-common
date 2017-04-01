@@ -14,8 +14,7 @@ import time
 from contextlib import contextmanager
 from string import Template
 
-from builtins import input
-from past.builtins import basestring
+from six.moves import input
 
 from cloudmesh.common.Shell import Shell
 
@@ -92,7 +91,9 @@ def path_expand(text):
 
 
 def convert_from_unicode(data):
-    if isinstance(data, basestring):
+    # if isinstance(data, basestring):
+
+    if isinstance(data, str):
         return str(data)
     elif isinstance(data, collections.Mapping):
         return dict(map(convert_from_unicode, data.items()))

@@ -9,6 +9,7 @@ from cloudmesh.shell.console import Console
 from cloudmesh.common.Shell import Shell
 
 
+# noinspection PyPep8Naming
 class ssh_config(object):
     def __init__(self, filename=None):
         if filename is not None:

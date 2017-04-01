@@ -136,6 +136,7 @@ class Shell(object):
     def git(cls, *args):
         return cls.execute('git', args)
 
+    # noinspection PyPep8Naming
     @classmethod
     def VBoxManage(cls, *args):
         return cls.execute('VBoxManage', args)
