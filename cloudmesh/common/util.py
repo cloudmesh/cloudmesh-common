@@ -163,14 +163,14 @@ def str_banner(txt=None, c="#", debug=True):
     :param c: the character used instead of c
     :type c: character
     """
-    str = ""
+    line = ""
     if debug:
-        str += "\n"
-        str += "# " + 70 * c
+        line += "\n"
+        line += "# " + 70 * c
         if txt is not None:
-            str += "# " + txt
-            str += "# " + 70 * c
-    return str
+            line += "# " + txt
+            line += "# " + 70 * c
+    return line
 
 
 # noinspection PyPep8Naming
