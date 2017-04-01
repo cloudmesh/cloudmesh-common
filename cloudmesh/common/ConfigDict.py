@@ -92,7 +92,8 @@ class Config(object):
         """
         filename = path_expand(filename)
         file_contains_tabs = False
-        with file(filename) as f:
+
+        with open(filename, 'r') as f:
             lines = f.read().split("\n")
 
         line_no = 1
