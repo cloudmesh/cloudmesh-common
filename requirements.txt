@@ -1,3 +1,4 @@
+six
 nose
 pytest
 simplejson

@@ -3,6 +3,8 @@ import io
 import itertools
 import os.path
 
+from six import itervalues
+
 from cloudmesh.common.Shell import Subprocess
 from cloudmesh.common.util import tempdir
 
@@ -65,7 +67,9 @@ class AuthorizedKeys(object):
         sio = io.StringIO()
 
         # TODO: make pythin 2 and 3 compatible
-        for fingerprint in self._order.itervalues():
+        # old: for fingerprint in self._order.itervalues():
+
+        for fingerprint in itervalues(self._order):
             key = self._keys[fingerprint]
             sio.write(key)
             sio.write('\n')
