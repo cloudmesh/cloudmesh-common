@@ -1,3 +1,6 @@
+"""
+simple logging convenience framework
+"""
 import logging
 import os
 
