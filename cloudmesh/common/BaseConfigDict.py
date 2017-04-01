@@ -53,6 +53,7 @@ def check_file_for_tabs(filename, verbose=True):
 
 # http://stackoverflow.com/questions/5121931/in-python-how-can-you-load-yaml-mappings-as-ordereddicts
 
+# noinspection PyPep8Naming
 def ordered_load(stream, Loader=yaml.Loader, object_pairs_hook=OrderedDict):
     """
     Loads an ordered dict into a yaml while preserving the order

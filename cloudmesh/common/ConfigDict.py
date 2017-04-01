@@ -25,6 +25,7 @@ def custom_print(data_structure, indent, attribute_indent=4):
             print("%s" % (str(value)), end=' ')
 
 
+# noinspection PyPep8Naming
 def ordered_dump(data, stream=None, Dumper=yaml.Dumper, **kwds):
     """
     writes the dict into an ordered yaml.
