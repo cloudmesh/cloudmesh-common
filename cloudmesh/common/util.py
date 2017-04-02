@@ -95,6 +95,8 @@ def path_expand(text):
     template = Template(text)
     result = template.substitute(os.environ)
     result = os.path.expanduser(result)
+    if result.startswith("."):
+        result = result.replace(".", os.getcwd(), 1)
     return result
 
 
