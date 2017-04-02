@@ -22,7 +22,7 @@ from setuptools import find_packages, setup
 
 def readfile(filename):
     with io.open(filename, encoding="utf-8") as stream:
-        return stream.read().split()
+        return stream.read()
 
 
 # requiers = readfile ('requirements.txt')
@@ -45,12 +45,12 @@ flake8
 version = readfile("VERSION")[0].strip()
 readme = readfile('README.rst')
 
-NAME = "cloudmesh-common"
+NAME = "cloudmesh.common"
 DESCRIPTION = "A set of useful APIs for cloudmesh"
 AUTHOR = "Gregor von Laszewski"
 AUTHOR_EMAIL = "laszewski@gmail.com"
 URL = "https://github.com/cloudmesh/common"
-LONG_DESCRIPTION = "\n".join(readme)
+LONG_DESCRIPTION = readme
 
 setup(
     name=NAME,
