@@ -1,3 +1,4 @@
+package=common
 pyenv=ENV2
 UNAME=$(shell uname)
 export ROOT_DIR=${PWD}/cloudmesh/rest/server
@@ -87,6 +88,9 @@ json:
 ######################################################################
 
 dist: clean
+	@echo "######################################"
+	@echo "# $(VERSION)"
+	@echo "######################################"
 	python setup.py sdist --formats=gztar,zip
 	python setup.py bdist
 	python setup.py bdist_wheel
@@ -103,10 +107,10 @@ register: dist
 	@echo "######################################"
 	@echo "# $(VERSION)"
 	@echo "######################################"
-	twine register dist/cloudmesh.common-$(VERSION)-py2.py3-none-any.whl
-	twine register dist/cloudmesh.common-$(VERSION).macosx-10.12-x86_64.tar.gz
-	twine register dist/cloudmesh.common-$(VERSION).tar.gz
-	twine register dist/cloudmesh.common-$(VERSION).zip
+	twine register dist/cloudmesh.$(package)-$(VERSION)-py2.py3-none-any.whl
+	twine register dist/cloudmesh.$(package)-$(VERSION).macosx-10.12-x86_64.tar.gz
+	twine register dist/cloudmesh.$(package)-$(VERSION).tar.gz
+	twine register dist/cloudmesh.$(package)-$(VERSION).zip
 
 upload: dist
 	twine upload dist/*
