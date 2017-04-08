@@ -33,7 +33,7 @@ prettytable
 nose
 pytest
 simplejson
-pyaml
+ruamel.yaml
 colorama
 psutil
 tox
@@ -42,7 +42,7 @@ coverage
 flake8
 """.split("\n")
 
-version = readfile("VERSION")[0].strip()
+version = readfile("VERSION").strip()
 readme = readfile('README.rst')
 
 NAME = "cloudmesh.common"

@@ -2,7 +2,7 @@ six
 nose
 pytest
 simplejson
-pyaml
+ruamel.yaml
 colorama
 psutil
 tox

@@ -421,6 +421,15 @@ class Shell(object):
         return cls.execute('vagrant', args)
 
     @classmethod
+    def pandoc(cls, *args):
+        """
+        executes vagrant with the given arguments
+        :param args: 
+        :return: 
+        """
+        return cls.execute('pandoc', args)
+
+    @classmethod
     def mongod(cls, *args):
         """
         executes mongod with the given arguments
