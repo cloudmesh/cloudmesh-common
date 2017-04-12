@@ -12,7 +12,7 @@ from pprint import pprint
 from string import Template
 
 import simplejson
-import yaml
+import ruamel.yaml
 
 from cloudmesh.common.console import Console
 from cloudmesh.common.error import Error
