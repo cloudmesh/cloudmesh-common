@@ -8,7 +8,7 @@ import os.path
 import sys
 from collections import OrderedDict
 
-import ruamel.yaml
+from ruamel import yaml
 
 from cloudmesh.common.BaseConfigDict import BaseConfigDict
 from cloudmesh.common.console import Console
