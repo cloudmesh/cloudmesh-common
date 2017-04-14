@@ -11,7 +11,6 @@ import time
 
 
 class StopWatch(object):
-
     """
     A class to measure times between events.
     """
