@@ -6,6 +6,7 @@ This class is based on a similar java class in cyberaide, and java cog kit.
 """
 from __future__ import print_function
 
+import os
 import time
 
 
@@ -20,6 +21,8 @@ class StopWatch(object):
     timer_start = {}
     # Timer end dict
     timer_end = {}
+    # Timer diff
+    timer_elapsed = {}
 
     @classmethod
     def keys(cls):
@@ -55,9 +58,12 @@ class StopWatch(object):
         :type name: string
         :rtype: the elapsed time
         """
-        time_elapsed = cls.timer_end[name] - \
-            cls.timer_start[name]
-        return time_elapsed
+        if name in cls.timer_end:
+            cls.timer_elapsed[name] = cls.timer_end[name] - \
+                                      cls.timer_start[name]
+            return cls.timer_elapsed[name]
+        else:
+            return "undefined"
 
     @classmethod
     def clear(cls):
@@ -78,4 +84,16 @@ class StopWatch(object):
             if len(args) == 2:
                 print(args[0], cls.get(args[1]))
             else:
-                raise Exception("wrong number of arguments")
+                raise Exception("StopWatch: wrong number of arguments")
+
+    @classmethod
+    def __str__(cls):
+        s = ""
+        for t in cls.timer_end:
+            data = {"label": t,
+                    "start": cls.timer_start[t],
+                    "end": cls.timer_end[t],
+                    "elapsed": cls.get(t),
+                    "newline": os.linesep}
+            s.append("{label} {start} {end} {elapsed} {newline}".format(**data))
+        return s
