@@ -94,5 +94,5 @@ class StopWatch(object):
                     "end": cls.timer_end[t],
                     "elapsed": cls.get(t),
                     "newline": os.linesep}
-            s.append("{label} {start} {end} {elapsed} {newline}".format(**data))
+            s += "{label} {start} {end} {elapsed} {newline}".format(**data)
         return s
