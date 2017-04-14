@@ -14,7 +14,7 @@ class StopWatch(object):
     """
     A class to measure times between events.
     """
-
+    debug = True
     verbose = True
     # Timer start dict
     timer_start = {}
@@ -36,6 +36,8 @@ class StopWatch(object):
         :param name: the name of the timer
         :type name: string
         """
+        if cls.debug:
+            print("Timer", name, "started ...")
         cls.timer_start[name] = time.time()
 
     @classmethod
@@ -47,6 +49,9 @@ class StopWatch(object):
         :type name: string
         """
         cls.timer_end[name] = time.time()
+        if cls.debug:
+            print("Timer", name, "stopped ...")
+
 
     @classmethod
     def get(cls, name):
@@ -81,7 +86,7 @@ class StopWatch(object):
         """
         if cls.verbose:
             if len(args) == 2:
-                print(args[0], str(cls.get(args[1])))
+                print(args[0], str(cls.get(args[1])), "s")
             else:
                 raise Exception("StopWatch: wrong number of arguments")
 
