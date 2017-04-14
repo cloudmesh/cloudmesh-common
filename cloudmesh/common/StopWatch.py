@@ -4,6 +4,7 @@ Class for starting and stopping named timers.
 This class is based on a similar java class in cyberaide, and java cog kit.
 
 """
+from __future__ import print_function
 
 import time
 
@@ -14,6 +15,7 @@ class StopWatch(object):
     A class to measure times between events.
     """
 
+    verbose = True
     # Timer start dict
     timer_start = {}
     # Timer end dict
@@ -64,3 +66,16 @@ class StopWatch(object):
         """
         cls.timer_start.clear()
         cls.timer_end.clear()
+
+    @classmethod
+    def print(cls, *args):
+        """
+        prints a timer. The first argument is the label if it exists, the last is teh timer
+        :param args: label, name 
+        :return: 
+        """
+        if cls.verbose:
+            if len(args) == 2:
+                print(args[0], cls.get(args[1]))
+            else:
+                raise Exception("wrong number of arguments")
