@@ -81,7 +81,7 @@ class StopWatch(object):
         """
         if cls.verbose:
             if len(args) == 2:
-                print(args[0], cls.get(args[1]))
+                print(args[0], str(cls.get(args[1])))
             else:
                 raise Exception("StopWatch: wrong number of arguments")
 
@@ -90,9 +90,9 @@ class StopWatch(object):
         s = ""
         for t in cls.timer_end:
             data = {"label": t,
-                    "start": cls.timer_start[t],
-                    "end": cls.timer_end[t],
-                    "elapsed": cls.get(t),
+                    "start": str(cls.timer_start[t]),
+                    "end": str(cls.timer_end[t]),
+                    "elapsed": str(cls.get(t)),
                     "newline": os.linesep}
             s += "{label} {start} {end} {elapsed} {newline}".format(**data)
         return s
