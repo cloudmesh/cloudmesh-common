@@ -14,7 +14,7 @@ class StopWatch(object):
     """
     A class to measure times between events.
     """
-    debug = True
+    debug = False
     verbose = True
     # Timer start dict
     timer_start = {}
