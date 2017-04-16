@@ -19,6 +19,9 @@ from cloudmesh.common.error import Error
 from cloudmesh.common.locations import config_file
 from cloudmesh.common.util import backup_name, path_expand
 
+import warnings
+
+warnings.simplefilter('ignore', yaml.error.UnsafeLoaderWarning)
 # Logger dependency not to be there in utility
 # log = LOGGER(__file__)
 package_dir = os.path.dirname(os.path.abspath(__file__))
