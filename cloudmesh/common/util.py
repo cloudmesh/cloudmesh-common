@@ -92,9 +92,11 @@ def path_expand(text):
     :param text: string
 
     """
-    template = Template(text)
-    result = template.substitute(os.environ)
-    result = os.path.expanduser(result)
+    result = os.path.expanduser(text)
+
+    #template = Template(text)
+    #result = template.substitute(os.environ)
+
     if result.startswith("."):
         result = result.replace(".", os.getcwd(), 1)
     return result
