@@ -8,15 +8,48 @@ from __future__ import print_function
 import errno
 import glob
 import os
-import platform
 import subprocess
 import sys
 import zipfile
 from pipes import quote
+from sys import platform
 
 from cloudmesh.common.console import Console
 from cloudmesh.common.util import path_expand
+from distutils.spawn import find_executable
 
+
+class Brew(object):
+    @classmethod
+    def install(cls, name):
+
+        r = Shell.brew("install", name)
+        print(r)
+
+        if "already satisfied: " + name in r:
+            print(name, "... already installed")
+            Console.ok(r)
+        elif "Successfully installed esptool":
+            print(name, "... installed")
+            Console.ok(r)
+        else:
+            print(name, "... error")
+            Console.error(r)
+
+
+class Pip(object):
+    @classmethod
+    def install(cls, name):
+        r = Shell.pip("install", "esptool")
+        if "already satisfied: esptool" in r:
+            print(name, "... already installed")
+            Console.ok(r)
+        elif "Successfully installed esptool":
+            print(name, "... installed")
+            Console.ok(r)
+        else:
+            print(name, "... error")
+            Console.error(r)
 
 class SubprocessError(Exception):
     """
@@ -202,6 +235,14 @@ class Shell(object):
         """
         return cls.execute('bash', args)
 
+    @classmethod
+    def brew(cls, *args):
+        """
+        executes bash with the given arguments
+        :param args: 
+        :return: 
+        """
+        return cls.execute('brew', args)
     @classmethod
     def cat(cls, *args):
         """
@@ -514,7 +555,7 @@ class Shell(object):
         """
         returns  darwin, cygwin, cmd, or linux
         """
-        what = platform.system().lower()
+        what = sys.platform
 
         kind = 'UNDEFINED_TERMINAL_TYPE'
         if 'linux' in what:
@@ -535,16 +576,7 @@ class Shell(object):
         :param command: teh command
         :return: the path
         """
-        t = cls.ttype()
-        if 'windows' in t and cls.command_exists(name):
-            return cls.command['windows'][name]
-        elif 'linux' in t:
-            cmd = ["which", command]
-            result = subprocess.check_output(cmd).rstrip()
-            if len(result) == 0:
-                return None
-            else:
-                return result
+        return find_executable(command)
 
     @classmethod
     def command_exists(cls, name):
@@ -553,28 +585,7 @@ class Shell(object):
         :param name: 
         :return: 
         """
-        t = cls.ttype()
-        if 'windows' in t:
-            # only for windows
-            cls.find_cygwin_executables()
-            return name in cls.command['windows']
-        elif 'linux' in t:
-            r = which(name)
-            return r
-
-    @classmethod
-    def list_commands(cls):
-        """
-        find all cygwin commands.
-        :return: 
-        """
-        t = cls.ttype()
-        if 'windows' in t:
-            # only for windows
-            cls.find_cygwin_executables()
-            print('\n'.join(cls.command['windows']))
-        else:
-            print("ERROR: this command is not supported for this OS")
+        return cls.which(name) is not None
 
     @classmethod
     def operating_system(cls):

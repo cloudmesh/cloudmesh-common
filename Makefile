@@ -29,7 +29,9 @@ define terminal
 endef
 endif
 
-
+source:
+	python setup.py install
+	pip install -e .
 
 setup:
 	# brew update
