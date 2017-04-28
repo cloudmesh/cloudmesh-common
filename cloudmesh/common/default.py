@@ -14,7 +14,7 @@ class Default(object):
         if filename is None:
             self.filename = path_expand("~/.cloudmesh/default-data")
 
-        self.data = shelve.open(self.filename, writeback=True)
+        self.data = shelve.open(self.filename, protocol=2, writeback=True)
         self.data.sync()
 
     def __getitem__(self, context_key):
