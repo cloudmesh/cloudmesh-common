@@ -1,6 +1,7 @@
 six
 nose
 pytest
+python-hostlist
 simplejson
 ruamel.yaml
 colorama

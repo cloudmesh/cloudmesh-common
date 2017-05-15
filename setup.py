@@ -30,6 +30,7 @@ requiers = """
 six
 future
 prettytable
+python-hostlist
 nose
 pytest
 simplejson
