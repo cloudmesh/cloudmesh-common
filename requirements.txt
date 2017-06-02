@@ -11,3 +11,4 @@ detox
 coverage
 flake8
 prettytable
+hypothesis
