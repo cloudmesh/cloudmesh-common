@@ -1,7 +1,6 @@
 from __future__ import print_function
 
-import shelve
-
+from cloudmesh.db.strdb import YamlDB
 from cloudmesh.common.util import path_expand
 
 
@@ -14,8 +13,7 @@ class Default(object):
         if filename is None:
             self.filename = path_expand("~/.cloudmesh/default-data")
 
-        self.data = shelve.open(self.filename, protocol=2, writeback=True)
-        self.data.sync()
+        self.data = YamlDB(self.filename)
 
     def __getitem__(self, context_key):
         try:
@@ -38,7 +36,6 @@ class Default(object):
     def __setitem__(self, context_key, value):
         context, key = context_key
         self.data[self._index(context,key)] = value
-        self.data.sync()
 
     def __delitem__(self, context_key):
         print ("DEL")
@@ -51,7 +48,6 @@ class Default(object):
                 print ("E", element, context)
                 if element.startswith(context + ","):
                     del self.data[element]
-        self.data.sync()
 
     def __contains__(self, item):
         for key in self.data:
