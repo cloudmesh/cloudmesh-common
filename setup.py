@@ -33,6 +33,7 @@ prettytable
 python-hostlist
 nose
 pytest
+hypothesis
 simplejson
 ruamel.yaml
 colorama
