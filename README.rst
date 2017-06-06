@@ -1,6 +1,12 @@
 Cloudmesh Common
 ================
 
+Make sure you have the newest version of pip and setup tools::
+
+    pip install -U setuptools pip
+
+
+
 This library contains a number of useful functions and APIs:
 
 * Console

@@ -42,7 +42,9 @@ class YamlDB(object):
 
     def flush(self):
         with open(self.path, 'wb') as dbfile:
-            yaml.dump(self._db, dbfile, default_flow_style=False)
+            # below only works on Py 3, breaks py 2
+            bits = bytes(yaml.dump(self._db, default_flow_style=False), encoding='utf-8')
+            dbfile.write(bits)
 
     def __setitem__(self, k, v):
         assert isinstance(v, str) or isinstance(v, unicode), repr(v)
