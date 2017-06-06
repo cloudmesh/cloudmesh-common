@@ -36,7 +36,7 @@ nose
 pytest
 hypothesis
 simplejson
-ruamel.yaml
+ruamel.yaml<0.15
 colorama
 psutil
 tox
