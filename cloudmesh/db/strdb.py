@@ -1,3 +1,5 @@
+from builtins import bytes
+
 from ruamel import yaml
 
 import os.path
@@ -41,8 +43,10 @@ class YamlDB(object):
         self.flush()
 
     def flush(self):
+        string = yaml.dump(self._db, default_flow_style=False)
+        bits = bytes(string, encoding='utf-8')
         with open(self.path, 'wb') as dbfile:
-            yaml.dump(self._db, dbfile, default_flow_style=False)
+            dbfile.write(bits)
 
     def __setitem__(self, k, v):
         assert isinstance(v, str) or isinstance(v, unicode), repr(v)
