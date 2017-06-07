@@ -26,6 +26,7 @@ def readfile(filename):
 
 
 # requiers = readfile ('requirements.txt')
+
 requiers = """
 six
 future
@@ -35,7 +36,7 @@ nose
 pytest
 hypothesis
 simplejson
-ruamel.yaml
+ruamel.yaml<0.15
 colorama
 psutil
 tox
