@@ -80,13 +80,13 @@ class StopWatch(object):
     @classmethod
     def print(cls, *args):
         """
-        prints a timer. The first argument is the label if it exists, the last is teh timer
+        prints a timer. The first argument is the label if it exists, the last is the timer
         :param args: label, name 
         :return: 
         """
         if cls.verbose:
             if len(args) == 2:
-                print(args[0], str(cls.get(args[1])), "s")
+                print(args[0], str("{0:.2f}".format(cls.get(args[1]))), "s")
             else:
                 raise Exception("StopWatch: wrong number of arguments")
 
