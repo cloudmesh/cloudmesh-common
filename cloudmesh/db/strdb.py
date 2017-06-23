@@ -1,3 +1,5 @@
+from builtins import bytes
+
 from ruamel import yaml
 
 import os.path
@@ -41,9 +43,9 @@ class YamlDB(object):
         self.flush()
 
     def flush(self):
+        string = yaml.dump(self._db, default_flow_style=False)
+        bits = bytes(string, encoding='utf-8')
         with open(self.path, 'wb') as dbfile:
-            # below only works on Py 3, breaks py 2
-            bits = bytes(yaml.dump(self._db, default_flow_style=False), encoding='utf-8')
             dbfile.write(bits)
 
     def __setitem__(self, k, v):
