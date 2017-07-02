@@ -36,6 +36,11 @@ class Brew(object):
             print(name, "... error")
             Console.error(r)
 
+    @classmethod
+    def version(cls, name):
+        r = Shell.brew("ls", "--version", "name")
+        print(r)
+
 
 class Pip(object):
     @classmethod
