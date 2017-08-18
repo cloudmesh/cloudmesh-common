@@ -1,0 +1,7 @@
+nose
+pytest
+hypothesis
+tox
+detox
+coverage
+flake8
