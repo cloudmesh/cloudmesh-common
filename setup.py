@@ -30,19 +30,14 @@ def readfile(filename):
 requiers = """
 six
 future
+hypothesis
 prettytable
 python-hostlist
-nose
-pytest
-hypothesis
 simplejson
 ruamel.yaml<0.15
 colorama
 psutil
-tox
-detox
-coverage
-flake8
+pytz==2016.10
 """.split("\n")
 
 version = readfile("VERSION").strip()
