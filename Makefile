@@ -10,24 +10,8 @@ define banner
 	@echo "###################################"
 endef
 
-ifeq ($(UNAME),Darwin)
-define terminal
-	osascript -e 'tell application "Terminal" to do script "$(1)"'
-endef
-endif
-ifeq ($(UNAME),Linux)
-define terminal
-	echo "Linux not yet supported, fix me"
-endef
-endif
-ifeq ($(UNAME),Windows)
-define terminal
-	echo "Windows not yet supported, fix me"
-endef
-endif
-
 source:
-	python setup.py install
+	pip install -e .
 
 test:
 	pytest -v 

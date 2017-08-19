@@ -30,7 +30,6 @@ def readfile(filename):
 requiers = """
 six
 future
-hypothesis
 prettytable
 python-hostlist
 simplejson
@@ -38,6 +37,7 @@ ruamel.yaml<0.15
 colorama
 psutil
 pytz==2016.10
+hypothesis
 """.split("\n")
 
 version = readfile("VERSION").strip()
@@ -47,7 +47,7 @@ NAME = "cloudmesh.common"
 DESCRIPTION = "A set of useful APIs for cloudmesh"
 AUTHOR = "Gregor von Laszewski"
 AUTHOR_EMAIL = "laszewski@gmail.com"
-URL = "https://github.com/cloudmesh/common"
+URL = "https://github.com/cloudmesh/cloudmesh.common"
 LONG_DESCRIPTION = readme
 
 setup(
