@@ -94,8 +94,8 @@ def path_expand(text):
     """
     result = os.path.expanduser(text)
 
-    #template = Template(text)
-    #result = template.substitute(os.environ)
+    # template = Template(text)
+    # result = template.substitute(os.environ)
 
     if result.startswith("."):
         result = result.replace(".", os.getcwd(), 1)
@@ -346,7 +346,7 @@ def generate_password(length=8, lower=True, upper=True, number=True):
 
     for i in range(length):
         # last half length will be filled with numbers
-        if number and i >= (length / 2):
+        if number and i >= int(length / 2):
             mypw = mypw + _random_character(digit)
         else:
             mypw = mypw + _random_character(alphabet)

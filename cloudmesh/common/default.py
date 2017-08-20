@@ -5,9 +5,8 @@ from cloudmesh.common.util import path_expand
 
 
 class Default(object):
-
     def _index(self, context, key):
-        return (str(context) + "," + str(key))
+        return str(context) + "," + str(key)
 
     def __init__(self, filename=None):
         if filename is None:
@@ -19,7 +18,7 @@ class Default(object):
         try:
             if type(context_key) == tuple:
                 context, key = context_key
-                index = self._index(context,key)
+                index = self._index(context, key)
                 if index not in self.data:
                     return None
                 else:
@@ -35,17 +34,17 @@ class Default(object):
 
     def __setitem__(self, context_key, value):
         context, key = context_key
-        self.data[self._index(context,key)] = value
+        self.data[self._index(context, key)] = value
 
     def __delitem__(self, context_key):
-        print ("DEL")
+        print("DEL")
         if type(context_key) == tuple:
             context, key = context_key
-            del self.data[self._index(context,key)]
+            del self.data[self._index(context, key)]
         else:
             context = context_key
             for element in self.data:
-                print ("E", element, context)
+                print("E", element, context)
                 if element.startswith(context + ","):
                     del self.data[element]
 
@@ -64,7 +63,7 @@ class Default(object):
                 d[context] = {}
 
             d[context][key] = value
-        #return (str(self.data))
+        # return (str(self.data))
         return str(self.__dict__())
 
     def __dict__(self):
@@ -76,19 +75,19 @@ class Default(object):
                 d[context] = {}
 
             d[context][key] = value
-        return (d)
+        return d
 
     def __repr__(self):
-        return (str(self.data))
+        return str(self.data)
 
     def __len__(self):
         return len(self.data)
 
-    #def __add__(self, directory):
+    # def __add__(self, directory):
     #    for key in directory:
     #        self.data[key] = directory[key]
 
-    #def __sub__(self, keys):
+    # def __sub__(self, keys):
     #    for key in keys:
     #        del self.data[key]
 
@@ -99,24 +98,21 @@ class Default(object):
 if __name__ == "__main__":
     v = Default()
     print(v)
-    v["kilo","gregor"] = "value"
-
+    v["kilo", "gregor"] = "value"
 
     assert "value" in v
     del v["kilo", "gregor"]
-    #assert "gregor" not in v
+    # assert "gregor" not in v
 
-
-    v["kilo","image"] = "i_k"
-    v["kilo","flavor"] = "f_k"
+    v["kilo", "image"] = "i_k"
+    v["kilo", "flavor"] = "f_k"
 
     v["chameleon", "image"] = "i_c"
-    v["chameleon","flavor"] = "f_c"
+    v["chameleon", "flavor"] = "f_c"
 
+    print(v)
 
-    print (v)
-
-    print (v.__repr__())
+    print(v.__repr__())
 
     print(v["chameleon", "bla"])
     assert v["chameleon", "bla"] is None
@@ -125,5 +121,3 @@ if __name__ == "__main__":
     assert v["chameleon"]['image'] == 'i_c'
     print(v["bla"])
     assert v["bla"] is None
-
-

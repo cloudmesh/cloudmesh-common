@@ -3,6 +3,7 @@ from pprint import pprint
 import collections
 import six
 
+
 def key_prefix_replace(d, prefix, new_prefix=""):
     """
     replaces the list of prefix in keys of a flattened dict
@@ -27,6 +28,7 @@ def flatme(d):
     for element in d:
         o[element] = flatten(d[element])
     return o
+
 
 def flatten(d, parent_key='', sep='__'):
     """
@@ -102,8 +104,6 @@ class FlatDict(dict):
 
     def __getattr__(self, attr):
         return self.get(attr)
-
-
 
 
 class FlatDict2(object):

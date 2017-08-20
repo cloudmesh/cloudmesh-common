@@ -1,5 +1,5 @@
 """
-authorized key managemet.
+authorized key management.
 """
 # TODO: needs nosetests
 import io
@@ -78,7 +78,7 @@ class AuthorizedKeys(object):
 
     def remove(self, pubkey):
         """
-        Removes the publick key
+        Removes the public key
         TODO: this method is not implemented
         :param pubkey: the filename of the public key
         :return: 

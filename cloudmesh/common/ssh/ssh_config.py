@@ -1,5 +1,5 @@
 """
-MAnaging ~/.ssh/config
+Managing ~/.ssh/config
 """
 from __future__ import print_function
 
@@ -45,6 +45,7 @@ class ssh_config(object):
                     found_names.append(value)
         return found_names
 
+    # noinspection PyAttributeOutsideInit
     def load(self):
         """list the hosts defined in the ssh config file"""
         with open(self.filename) as f:
@@ -124,7 +125,7 @@ class ssh_config(object):
 
     def username(self, host):
         """
-        returns the username for a given hsot in the config file
+        returns the username for a given host in the config file
         :param host: the hostname
         :return: the username
         """

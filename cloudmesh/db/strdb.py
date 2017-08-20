@@ -6,16 +6,22 @@ import os.path
 import os
 
 
-################################################################ make yaml understand unicode
+#
+# TODO: this does not follow our conventions, should this not be done at __init__?
+#
+###############################################################
+#  make yaml understand unicode
 
 def yaml_construct_unicode(self, node):
     return self.construct_scalar(node)
+
 
 yaml.Loader.add_constructor(u'tag:yaml.org,2002:python/unicode', yaml_construct_unicode)
 yaml.SafeLoader.add_constructor(u'tag:yaml.org,2002:python/unicode', yaml_construct_unicode)
 
 
-################################################################ the db api
+###############################################################
+#  the db api
 
 class YamlDB(object):
     """A YAML-backed Key-Value database.
@@ -71,17 +77,23 @@ class YamlDB(object):
         return len(self._db)
 
     def close(self):
-        "This is a NoOP for backwards compatibility"
+        """This is a NoOP for backwards compatibility"""
         pass
 
     def clear(self):
-        "Truncate the database"
+        """Truncate the database"""
         self._db.clear()
         self.flush()
 
 
-################################################################ tests
+###############################################################
+#  tests
 
+#
+# TODO: theres is absolutely no need to use hypothesis. THis code does not
+#       follow our convention to develop nose tests. Also usining nosetests allows us
+#       to get rid of hypothesis
+#
 import unittest
 from hypothesis import given
 from hypothesis import strategies as st
@@ -89,7 +101,6 @@ from tempfile import mkstemp
 
 
 class TestYamlDB(unittest.TestCase):
-
     def setUp(self):
         self.dbfd, self.dbpath = mkstemp(
             prefix='cloudmesh.db.strdb.TestYamlDB.'

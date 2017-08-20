@@ -7,10 +7,10 @@ pycharm to easier find them.
 
 class TODO(object):
     """
-    class to raise an exeption for code that has not yet been implemented.
+    class to raise an exception for code that has not yet been implemented.
     
     import cloudmesh.common.todo
-    TODO.implenet()
+    TODO.implement()
     """
 
     @classmethod
