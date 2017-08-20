@@ -1,6 +1,6 @@
 """
-A convenient method to execute shell commands and return their output. Note: that thsi method requires that the 
-command be completley execute before the output is returned. FOr many activities in cloudemsh this is sufficient.
+A convenient method to execute shell commands and return their output. Note: that this method requires that the
+command be completely execute before the output is returned. FOr many activities in cloudmesh this is sufficient.
 """
 
 from __future__ import print_function
@@ -56,11 +56,13 @@ class Pip(object):
             print(name, "... error")
             Console.error(r)
 
+
 class SubprocessError(Exception):
     """
     Manages the formatting of the error and stdout. 
     THis command should not be directly called. Instead use SHell
     """
+
     def __init__(self, cmd, returncode, stderr, stdout):
         """
         sets the error
@@ -104,6 +106,7 @@ class Subprocess(object):
     """
     Executes a command. This class should not be directly used, but instead you should use Shell.
     """
+
     def __init__(self, cmd, cwd=None, stderr=subprocess.PIPE, stdout=subprocess.PIPE, env=None):
         """
         execute the given command
@@ -129,7 +132,7 @@ class Subprocess(object):
 class Shell(object):
     """
     The shell class allowing us to conveniently access many operating system commands. 
-    TODO: This works well on Linux and OSX, but has not been tested much on WIndows
+    TODO: This works well on Linux and OSX, but has not been tested much on Windows
     """
 
     # TODO: we have not supported cygwin for a while
@@ -142,9 +145,8 @@ class Shell(object):
     }
 
     '''
-
-    big question for badi and others
-
+    TODO
+    
     how do we now define dynamically functions based on a list that we want to support
 
     what we want is where args are multiple unlimited parameters to the function
@@ -248,6 +250,7 @@ class Shell(object):
         :return: 
         """
         return cls.execute('brew', args)
+
     @classmethod
     def cat(cls, *args):
         """
@@ -484,7 +487,6 @@ class Shell(object):
         """
         return cls.execute('mongod', args)
 
-
     @classmethod
     def dialog(cls, *args):
         """
@@ -609,7 +611,7 @@ class Shell(object):
         :param cwd: the current working directory in whcih the command is supposed to be executed.
         :param shell: if set to true the subprocess is called as part of a shell
         :param cmd: command to run
-        :param arguments: we dont know yet
+        :param arguments: we do not know yet
         :return:
         """
         # print "--------------"
@@ -704,7 +706,7 @@ class Shell(object):
 
 def main():
     """
-    a test that shoudl actually be added into a nosetest
+    a test that should actually be added into a nosetest
     :return: 
     """
     shell = Shell()

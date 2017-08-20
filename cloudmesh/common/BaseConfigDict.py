@@ -94,7 +94,7 @@ def ordered_load(stream, Loader=yaml.Loader, object_pairs_hook=OrderedDict):
 
 
 # noinspection PyPep8Naming
-def ordered_dump(data, stream=None, Dumper=yaml.Dumper, **kwds):
+def ordered_dump(data, stream=None, Dumper=yaml.Dumper, **keywords):
     """
     writes the dict into an ordered yaml.
 
@@ -116,7 +116,7 @@ def ordered_dump(data, stream=None, Dumper=yaml.Dumper, **kwds):
             data.items())
 
     OrderedDumper.add_representer(OrderedDict, _dict_representer)
-    return yaml.dump(data, stream, OrderedDumper, **kwds)
+    return yaml.dump(data, stream, OrderedDumper, **keywords)
 
 
 # usage:
@@ -203,7 +203,7 @@ class OrderedJsonEncoder(simplejson.JSONEncoder):
 
 def custom_print(data_structure, indent):
     """
-    prints a given datastructure such as a dict or ordered dict at a given indentation level
+    prints a given data structure such as a dict or ordered dict at a given indentation level
     :param data_structure: 
     :param indent: 
     :return: 
@@ -234,7 +234,7 @@ class BaseConfigDict(OrderedDict):
 
     def __init__(self, *args, **kwargs):
         """
-        The initalization method
+        The initialization method
         """
         OrderedDict.__init__(self, *args, **kwargs)
 
@@ -310,12 +310,12 @@ class BaseConfigDict(OrderedDict):
         :param location: the location of the file to be backed up
         """
         import shutil
-        dest = backup_name(location)
-        shutil.copyfile(location, dest)
+        destination = backup_name(location)
+        shutil.copyfile(location, destination)
 
     def write(self, filename=None, output="dict", attribute_indent=attribute_indent):
         """
-        This method writes the dict into various outout formats. This includes a dict,
+        This method writes the dict into various output formats. This includes a dict,
         json, and yaml
 
         :param filename: the file in which the dict is written
@@ -465,7 +465,7 @@ class BaseConfigDict(OrderedDict):
             converted = str(value)
         except ValueError:
             converted = "'" + str(value) + "'"
-        exec ("self" + nested_str + "=" + converted)
+        exec("self" + nested_str + "=" + converted)
         return element
 
     def _update(self, keys, value):

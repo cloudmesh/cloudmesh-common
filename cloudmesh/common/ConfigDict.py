@@ -36,7 +36,7 @@ def custom_print(data_structure, indent, attribute_indent=4):
 
 
 # noinspection PyPep8Naming
-def ordered_dump(data, stream=None, Dumper=yaml.Dumper, **kwds):
+def ordered_dump(data, stream=None, Dumper=yaml.Dumper, **keywords):
     """
     writes the dict into an ordered yaml.
     :param data: The ordered dict
@@ -47,7 +47,7 @@ def ordered_dump(data, stream=None, Dumper=yaml.Dumper, **kwds):
     # noinspection PyClassHasNoInit
     class OrderedDumper(Dumper):
         """
-        A helper class to print an orderd dict
+        A helper class to print an ordered dict
         """
         pass
 
@@ -57,7 +57,7 @@ def ordered_dump(data, stream=None, Dumper=yaml.Dumper, **kwds):
             data.items())
 
     OrderedDumper.add_representer(OrderedDict, _dict_representer)
-    return yaml.dump(data, stream, OrderedDumper, **kwds)
+    return yaml.dump(data, stream, OrderedDumper, **keywords)
 
 
 # noinspection PyPep8Naming
@@ -274,7 +274,7 @@ class ConfigDict(object):
 
     def write(self, filename=None, output="dict", attribute_indent=4):
         """
-        This method writes the dict into various outout formats. This includes a dict,
+        This method writes the dict into various output formats. This includes a dict,
         json, and yaml
         :param filename: the file in which the dict is written
         :param output: is a string that is either "dict", "json", "yaml"
@@ -317,8 +317,8 @@ class ConfigDict(object):
         :param location: the location of the file to be backed up
         """
         import shutil
-        dest = backup_name(location)
-        shutil.copyfile(location, dest)
+        destination = backup_name(location)
+        shutil.copyfile(location, destination)
 
     def save(self, filename=None):
         """

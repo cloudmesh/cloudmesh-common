@@ -15,7 +15,7 @@ from cloudmesh.common.util import convert_from_unicode
 
 class Printer(object):
     """
-    A simple Printer class with convenient methods to pring dictionary, tables, csv, lists
+    A simple Printer class with convenient methods to print dictionary, tables, csv, lists
     """
     @classmethod
     def write(cls, table,
@@ -32,7 +32,7 @@ class Printer(object):
         :param header: the header for the columns
         :param output: the format (default is table, values are raw, csv, json, yaml, dict
         :param sort_keys: if true the table is sorted
-        :param show_none: passed alomng to the list or dict printer
+        :param show_none: passed along to the list or dict printer
         :return: 
         """
         if output == "raw":

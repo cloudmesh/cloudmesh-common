@@ -1,5 +1,5 @@
 """
-clas that specifies where we read the cloudmesh.yaml file from
+class that specifies where we read the cloudmesh.yaml file from
 """
 import os
 

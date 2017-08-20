@@ -10,7 +10,7 @@ import traceback
 #
 class Error(object):
     """
-    A plass to print error messages
+    A class to print error messages
     """
 
     #
@@ -35,7 +35,7 @@ class Error(object):
     def traceback(cls, error=None, debug=True, trace=True):
         """
         prints the trace
-        :param error: a message preceeding the trace
+        :param error: a message preceding the trace
         :param debug: prints it if debug is set to true
         :param trace: 
         :return: 

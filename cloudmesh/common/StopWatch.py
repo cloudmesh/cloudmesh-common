@@ -52,7 +52,6 @@ class StopWatch(object):
         if cls.debug:
             print("Timer", name, "stopped ...")
 
-
     @classmethod
     def get(cls, name):
         """
