@@ -19,7 +19,7 @@ from cloudmesh.common.util import path_expand
 
 def custom_print(data_structure, indent, attribute_indent=4):
     """
-    prints the data structure at a given level. THis includes dicts and ordered dicts
+    prints the data structure at a given level. This includes dicts and ordered dicts
     :param data_structure: 
     :param indent: 
     :param attribute_indent: 
