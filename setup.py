@@ -27,6 +27,8 @@ def readfile(filename):
 
 # requiers = readfile ('requirements.txt')
 
+# pytz==2016.10
+
 requiers = """
 six
 future
@@ -36,7 +38,6 @@ simplejson
 ruamel.yaml<0.15
 colorama
 psutil
-pytz==2016.10
 hypothesis
 """.split("\n")
 
