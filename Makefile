@@ -12,8 +12,7 @@ endef
 
 source:
 	$(call banner, "Install cloudmesh.sommon")
-	python setup.py install
-	pip install -e .
+	pip install . -U
 
 test:
 	pytest -v 
