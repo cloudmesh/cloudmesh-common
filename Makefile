@@ -62,7 +62,7 @@ register: dist
 	twine register dist/cloudmesh.$(package)-$(VERSION)-py2.py3-none-any.whl
 	#twine register dist/cloudmesh.$(package)-$(VERSION).macosx-10.12-x86_64.tar.gz
 
-upload: dist
+upload: clean dist
 	twine upload dist/*
 
 #
