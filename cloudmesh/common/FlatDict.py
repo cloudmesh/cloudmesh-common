@@ -64,6 +64,12 @@ class FlatDict(dict):
         self.__dict__ = flatten(d)
 
     def __setitem__(self, key, item):
+        """
+        sets an item at a kive key
+
+        :param key: this is the key
+        :param item:  this is the item to be set
+        """
         self.__dict__[key] = item
 
     def __getitem__(self, key):
