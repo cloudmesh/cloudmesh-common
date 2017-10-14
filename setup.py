@@ -72,6 +72,7 @@ setup(
         "Programming Language :: Python :: 3",
     ],
     install_requires=requiers,
+    include_package_data=True,
     tests_require=[
         "flake8",
         "coverage",

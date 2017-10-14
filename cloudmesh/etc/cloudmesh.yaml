@@ -1,0 +1,227 @@
+meta:
+    version: 4.1
+    kind: clouds
+cloudmesh:
+    profile:
+        firstname: TBD
+        lastname: TBD
+        email: TBD
+        user: TBD
+    github:
+        username: TBD
+    portal:
+        location: TBD
+        browser: firefox
+    comet:
+        username: TBD
+        active: production
+        endpoints:
+            dev:
+                nucleus_base_url: https://comet-nucleus-dev.sdsc.edu/nucleus
+                api_version: v1
+                auth_provider: apikey
+                userpass:
+                  username: TBD
+                  password: TBD
+                apikey:
+                  api_key: TBD
+                  api_secret: TBD
+            production:
+                nucleus_base_url: https://comet-nucleus.sdsc.edu/nucleus
+                api_version: v1
+                auth_provider: apikey
+                userpass:
+                  username: TBD
+                  password: TBD
+                apikey:
+                  api_key: TBD
+                  api_secret: TBD
+    hpc:
+        experiment:
+           name: gregor-00000
+        active:
+        - comet
+        - juliet
+        clusters:
+            india:
+                cm_heading: India HPC CLuster
+                cm_host: india
+                cm_label: indiahpc
+                cm_type: slurm
+                cm_type_version: 14.11.9
+                credentials:
+                    username: TBD
+                    project: None
+                default:
+                    queue: delta
+                    experiment_dir: /N/u/{username}/experiment
+                    prefix: {username}
+            comet:
+                cm_heading: Comet HPC CLuster
+                cm_host: comet
+                cm_label: comethpc
+                cm_type: slurm
+                cm_type_version: 14.11.9
+                credentials:
+                    username: TBD
+                    project: None
+                default:
+                    queue: debug
+                    experiment_dir: /home/{username}/experiment
+                    prefix: {username}
+    active:
+        - kilo
+    clouds:
+        kilo:
+            cm_heading: India OpenStack, Kilo
+            cm_host: india
+            cm_label: kilo
+            cm_type: openstack
+            cm_type_version: kilo
+            cm_openrc: ~/.cloudmesh/clouds/india/kilo/openrc.sh
+            credentials:
+                OS_AUTH_URL: https://kilo.futuresystems.org:5000/v3
+                OS_PASSWORD: TBD
+                OS_TENANT_NAME: TBD
+                OS_USERNAME: TBD
+                OS_PROJECT_DOMAIN_ID: default
+                OS_USER_DOMAIN_ID: default
+                OS_PROJECT_NAME: TBD
+                OS_IMAGE_API_VERSION: 2
+                OS_VOLUME_API_VERSION: 2
+            default:
+                flavor: m1.small
+                image: Ubuntu-14.04-64
+        chameleon:
+            cm_heading: Chameleon
+            cm_host: chameleoncloud.org
+            cm_label: chameleon
+            cm_type: openstack
+            cm_type_version: liberty
+            credentials:
+              OS_AUTH_URL: https://openstack.tacc.chameleoncloud.org:5000/v3
+              OS_PASSWORD: TBD
+              OS_TENANT_NAME: CH-818144
+              OS_TENANT_ID: CH-818144
+              OS_PROJECT_NAME: CH-818144
+              OS_PROJECT_DOMAIN_ID: default
+              OS_USER_DOMAIN_ID: default
+              OS_USERNAME: TBD
+              OS_VERSION: liberty
+              OS_REGION_NAME: RegionOne
+            default:
+              flavor: m1.small
+              image: Ubuntu-Server-14.04-LTS
+        jetstream:
+            cm_heading: Jetstream
+            cm_host: http://jetstream-cloud.org/
+            cm_label: jetstream
+            cm_type: openstack
+            cm_type_version: kilo
+            credentials:
+              OS_PROJECT_DOMAIN_NAME: tacc
+              OS_USER_DOMAIN_NAME: tacc
+              OS_PROJECT_NAME: TBD
+              OS_TENANT_NAME: TBD
+              OS_USERNAME: TBD
+              OS_PASSWORD: TBD
+              OS_AUTH_URL: https://jblb.jetstream-cloud.org:35357/v3
+              OS_IDENTITY_API_VERSION: 3
+              OS_VERSION: kilo
+            default:
+                flavor: m1.small
+                image: Ubuntu-Server-14.04-LTS
+        cybera-c:
+          cm_heading: Cybera Calgary OpenStack
+          cm_host: cybera
+          cm_label: cybera-c
+          cm_type: openstack
+          cm_type_version: kilo
+          credentials:
+            OS_AUTH_URL: TBD
+            OS_TENANT_ID: TBD
+            OS_TENANT_NAME: TBD
+            OS_PROJECT_NAME: TBD
+            OS_USERNAME: TBD
+            OS_PASSWORD: TBD
+            OS_REGION_NAME: Calgary
+          default:
+            flavor: m1.small
+            image: Ubuntu 14.04
+        cybera-e:
+          cm_heading: Cybera Edmonton OpenStack
+          cm_host: cybera
+          cm_label: kilo
+          cm_type: openstack
+          cm_type_version: kilo
+          credentials:
+            OS_AUTH_URL: https://keystone-yyc.cloud.cybera.ca:5000/v2.0
+            OS_TENANT_ID: TBD
+            OS_TENANT_NAME: TBD
+            OS_PROJECT_NAME: TBD
+            OS_USERNAME: TBD
+            OS_PASSWORD: TBD
+            OS_REGION_NAME: Edmonton
+          default:
+            flavor: m1.small
+            image: Ubuntu 14.04
+        aws:
+            cm_heading: Amazon Cloud, AWS
+            cm_host: aws.amazon.com
+            cm_label: aws
+            cm_type: ec2
+            cm_type_version: null
+            credentials:
+                EC2_ACCESS_KEY: TBD
+                EC2_SECRET_KEY: TBD
+                keyname: TBD
+                userid: TBD
+            default:
+                flavor: t1.micro
+                image: ami-d85e75b0
+                location: us-east-1
+        chameleon-ec2:
+            cm_heading: Chameleon, EC2
+            cm_host: chameleoncloud.org
+            cm_label: chameleon_ec2
+            cm_type: ec2
+            cm_type_version: ec2
+            credentials:
+                EC2_ACCESS_KEY: TBD
+                EC2_SECRET_KEY: TBD
+                keyname: TBD_not_used
+                userid: TBD_not_used
+                EC2_URL: https://openstack.tacc.chameleoncloud.org:8773/services/Cloud
+                EC2_USER_ID: TBD
+                EC2_PRIVATE_KEY: ~/.cloudmesh/clouds/chameleon/TBD/pk.pem
+                EC2_CERT: ~/.cloudmesh/clouds/chameleon/TBD/cert.pem
+                NOVA_CERT: ~/.cloudmesh/clouds/chameleon/TBD/cacert.pem
+                EUCALYPTUS_CERT: ~/.cloudmesh/clouds/chameleon/TBD/cacert.pem
+            default:
+                flavor: m1.small
+                image: Ubuntu-Server-14.04-LTS
+        azure:
+            cm_heading: Microsoft Azure Virtual Machines
+            cm_host: windowsazure.com
+            cm_label: azure
+            cm_type: azure
+            cm_type_version: null
+            credentials:
+                managementcertfile: TBD
+                servicecertfile: TBD
+                subscriptionid: TBD
+                thumbprint: TBD
+            default:
+                username: TBD
+                password: TBD
+                flavor: Basic_A1
+                image: b39f27a8b8c64d52b05eac6a62ebad85__Ubuntu-12_04_5-LTS-amd64-server-20160315-en-us-30GB
+                location: Central US
+    system:
+        data: ~/.cloudmesh/cloudmesh_inventory.yaml
+        console_color: true
+    logging:
+        file: ~/.cloudmesh/cloudmesh.log
+        level: DEBUG
+    plugins:
+         - vbox: cloudmesh_vagrant cloudmesh_vagrant.cm_vbox.do_vbox
