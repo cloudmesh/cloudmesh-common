@@ -11,7 +11,6 @@ class EncryptFile(object):
             'key': path_expand(' ~/.ssh/id_rsa')
         }
         self.debug = debug
-        self.encrypt()
 
     def _execute(self, command):
         if self.debug:
@@ -55,5 +54,6 @@ if __name__ == "__main__":
         f.write("Big Data is here.")
 
     e = EncryptFile('file.txt', 'secret.txt')
+    e.encrypt()
     e.decrypt()
 
