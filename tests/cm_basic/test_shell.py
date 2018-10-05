@@ -38,4 +38,4 @@ class Test_shell(object):
         HEADING("check if we can run help:return: ")
         r = run("whoami")
         print(r)
-        assert getpass.getuser() == r
+        assert getpass.getuser() in r
