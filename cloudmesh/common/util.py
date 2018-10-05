@@ -94,7 +94,7 @@ def path_expand(text):
     """
     result = os.path.expanduser(text)
 
-    # os.path.expandvars(path)¶
+    # os.path.expandvars(path)
 
     # template = Template(text)
     # result = template.substitute(os.environ)
