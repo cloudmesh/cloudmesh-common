@@ -24,7 +24,6 @@ def readfile(filename):
     with io.open(filename, encoding="utf-8") as stream:
         return stream.read()
 
-
 # requiers = readfile ('requirements.txt')
 
 # pytz==2016.10
@@ -35,7 +34,7 @@ future
 prettytable
 python-hostlist
 simplejson
-ruamel.yaml<0.15
+ruamel.yaml==0.15.71
 colorama
 psutil
 hypothesis
