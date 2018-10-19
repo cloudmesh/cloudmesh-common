@@ -12,7 +12,6 @@ nosetests -v tests/cm_basic/test_configdict.py
 from __future__ import print_function
 
 import os
-import shutil
 
 from cloudmesh.common.ConfigDict import ConfigDict
 from cloudmesh.common.util import HEADING
