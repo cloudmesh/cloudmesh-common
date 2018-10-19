@@ -5,7 +5,7 @@ from __future__ import print_function
 
 import json
 
-from ruamel import yaml
+import oyaml as yaml
 from prettytable import PrettyTable
 
 from cloudmesh.common.console import Console
