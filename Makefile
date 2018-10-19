@@ -42,6 +42,10 @@ clean:
 # PYPI
 ######################################################################
 
+
+twine:
+	pip install -U twine
+
 dist: clean
 	$(call banner, $VERSION)
 	python setup.py sdist
@@ -50,6 +54,10 @@ dist: clean
 
 upload_test:
 	python setup.py	 sdist bdist bdist_wheel upload -r https://testpypi.python.org/pypi
+
+upload_test: twine
+#	python setup.py	 sdist bdist bdist_wheel upload -r https://test.pypi.org/legacy/
+	twine upload --repository pypitest dist/cloudmesh.common-*.whl	dist/cloudmesh.common-*.tar.gz
 
 log:
 	gitchangelog | fgrep -v ":dev:" | fgrep -v ":new:" > ChangeLog
