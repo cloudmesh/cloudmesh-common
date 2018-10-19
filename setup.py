@@ -35,7 +35,7 @@ future
 prettytable
 python-hostlist
 simplejson
-ruamel.yaml<0.15
+oyaml
 colorama
 psutil
 hypothesis

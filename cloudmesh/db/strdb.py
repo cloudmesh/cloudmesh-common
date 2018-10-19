@@ -1,6 +1,6 @@
 from builtins import bytes
 
-from ruamel import yaml
+import oyaml as yaml
 
 import os.path
 import os
