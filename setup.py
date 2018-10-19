@@ -34,11 +34,7 @@ future
 prettytable
 python-hostlist
 simplejson
-<<<<<<< HEAD
 oyaml
-=======
-ruamel.yaml==0.15.71
->>>>>>> 8d0afd1796a2a0fbefbf3c1ebac84131a0cae5eb
 colorama
 psutil
 hypothesis
