@@ -8,6 +8,7 @@ import traceback
 
 import colorama
 from colorama import Fore, Back, Style
+import sys
 
 colorama.init()
 
@@ -150,6 +151,7 @@ class Console(object):
         :param traceflag: if true the stack trace is retrieved and printed
         :return: 
         """
+        print (message, prefix)
         message = message or ""
         if prefix:
             text = "ERROR: "
@@ -162,9 +164,11 @@ class Console(object):
 
         if traceflag and cls.debug:
             trace = traceback.format_exc().strip()
-            print()
-            print("\n".join(str(trace).splitlines()))
-            print()
+            if trace is not None:
+                print()
+                print("Trace:")
+                print("\n".join(str(trace).splitlines()))
+                print()
 
     @staticmethod
     def TODO(message, prefix=True, traceflag=True):
