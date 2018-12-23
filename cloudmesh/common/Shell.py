@@ -615,7 +615,13 @@ class Shell(object):
         return platform.system().lower()
 
     @classmethod
-    def execute(cls, cmd, arguments="", shell=False, cwd=None, traceflag=True, witherror=True):
+    def execute(cls,
+                cmd,
+                arguments="",
+                shell=False,
+                cwd=None,
+                traceflag=True,
+                witherror=True):
         """Run Shell command
 
         :param witherror: if set to fasle the error will not be printed

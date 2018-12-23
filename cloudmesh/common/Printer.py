@@ -40,8 +40,12 @@ class Printer(object):
         elif table is None:
             return None
         elif type(table) in [dict, dotdict]:
-            return cls.dict(table, order=order, header=header, output=output,
-                            sort_keys=sort_keys, show_none=show_none)
+            return cls.dict(table,
+                            order=order,
+                            header=header,
+                            output=output,
+                            sort_keys=sort_keys,
+                            show_none=show_none)
 
         elif type(table) == list:
 
