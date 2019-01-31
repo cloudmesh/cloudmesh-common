@@ -143,7 +143,7 @@ class Console(object):
         print(message)
 
     @classmethod
-    def error(cls, message, prefix=True, traceflag=True):
+    def error(cls, message, prefix=True, traceflag=False):
         """
         prints an error message
         :param message: the message
@@ -151,7 +151,7 @@ class Console(object):
         :param traceflag: if true the stack trace is retrieved and printed
         :return: 
         """
-        print (message, prefix)
+        # print (message, prefix)
         message = message or ""
         if prefix:
             text = "ERROR: "
@@ -164,11 +164,12 @@ class Console(object):
 
         if traceflag and cls.debug:
             trace = traceback.format_exc().strip()
-            if trace is not None:
+            if trace:
                 print()
                 print("Trace:")
                 print("\n".join(str(trace).splitlines()))
                 print()
+                print ("KKKK")
 
     @staticmethod
     def TODO(message, prefix=True, traceflag=True):
