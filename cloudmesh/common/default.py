@@ -2,7 +2,7 @@ from __future__ import print_function
 
 from cloudmesh.db.strdb import YamlDB
 from cloudmesh.common.util import path_expand
-
+from pathlib import Path
 
 class Default(object):
     def _index(self, context, key):
@@ -10,7 +10,7 @@ class Default(object):
 
     def __init__(self, filename=None):
         if filename is None:
-            self.filename = path_expand("~/.cloudmesh/default-data")
+            self.filename = Path(path_expand("~/.cloudmesh/default-data"))
 
         self.data = YamlDB(self.filename)
 
