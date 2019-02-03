@@ -15,6 +15,7 @@ import tempfile
 import time
 from contextlib import contextmanager
 from string import Template
+from pathlib import Path
 
 from six.moves import input
 
@@ -243,7 +244,7 @@ def auto_create_version(class_name, version, filename="__init__.py"):
     :param filename: 
     :return: 
     """
-    version_filename = "{0}/{1}".format(class_name, filename)
+    version_filename = Path("{classname}/{filename}".format(classname=class_name, filename=filename))
     with open(version_filename, "r") as f:
         content = f.read()
 

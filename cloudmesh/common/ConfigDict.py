@@ -15,7 +15,7 @@ from cloudmesh.common.console import Console
 from cloudmesh.common.todo import TODO
 from cloudmesh.common.util import backup_name
 from cloudmesh.common.util import path_expand
-
+from pathlib import Path
 
 def custom_print(data_structure, indent, attribute_indent=4):
     """
@@ -237,7 +237,7 @@ class ConfigDict(object):
             self.load_order = load_order
 
         for path in self.load_order:
-            name = Config.path_expand(os.path.join(path, filename))
+            name = Path(Config.path_expand(os.path.join(path, filename)))
             if verbose:
                 print("try Loading ConfigDict", name)
             if os.path.isfile(name):
