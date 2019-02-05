@@ -79,5 +79,9 @@ class YamlDB(object):
         self._db.clear()
         self.flush()
 
+    def set(self, **kwargs):
+        for name in kwargs:
+            self._db[name] = kwargs[name]
+
 
 

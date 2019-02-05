@@ -194,7 +194,7 @@ def str_banner(txt=None, c="#", debug=True):
 
 
 # noinspection PyPep8Naming
-def HEADING(txt=None):
+def HEADING(txt=None, c="#"):
     """
     Prints a message to stdout with #### surrounding it. This is useful for
     nosetests to better distinguish them.
@@ -210,7 +210,7 @@ def HEADING(txt=None):
     msg = "{}\n# {} {} {}".format(txt, method, filename, line)
 
     print()
-    banner(msg)
+    banner(msg, c=c)
 
 
 def backup_name(filename):
