@@ -40,14 +40,20 @@ def flatten(d, parent_key='', sep='__'):
     :return: the flattened dict
     """
     # http://stackoverflow.com/questions/6027558/flatten-nested-python-dictionaries-compressing-keys
-    items = []
-    for k, v in d.items():
-        new_key = parent_key + sep + k if parent_key else k
-        if isinstance(v, collections.MutableMapping):
-            items.extend(flatten(v, new_key, sep=sep).items())
-        else:
-            items.append((new_key, v))
-    return dict(items)
+    if type(d) == list:
+        flat = []
+        for entry in d:
+            flat.append(flatten(entry, parent_key=parent_key, sep=sep))
+        return flat
+    else:
+        items = []
+        for k, v in d.items():
+            new_key = parent_key + sep + k if parent_key else k
+            if isinstance(v, collections.MutableMapping):
+                items.extend(flatten(v, new_key, sep=sep).items())
+            else:
+                items.append((new_key, v))
+        return dict(items)
 
 
 class FlatDict(dict):
