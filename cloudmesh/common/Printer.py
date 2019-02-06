@@ -11,12 +11,41 @@ from prettytable import PrettyTable
 from cloudmesh.common.console import Console
 from cloudmesh.common.dotdict import dotdict
 from cloudmesh.common.util import convert_from_unicode
-
+from cloudmesh.common.FlatDict import flatten
 
 class Printer(object):
     """
     A simple Printer class with convenient methods to print dictionary, tables, csv, lists
     """
+
+    @classmethod
+    def flatwrite(cls, table,
+              order=None,
+              header=None,
+              output="table",
+              sort_keys=True,
+              show_none="",
+              sep="."
+              ):
+        """
+        writes the information given in the table
+        :param table: the table of values
+        :param order: the order of the columns
+        :param header: the header for the columns
+        :param output: the format (default is table, values are raw, csv, json, yaml, dict
+        :param sort_keys: if true the table is sorted
+        :param show_none: passed along to the list or dict printer
+        :return:
+        """
+
+        flat = flatten(table, sep=sep)
+
+        return Printer.write(flat,
+                        sort_keys=sort_keys,
+                        order=order,
+                        header=header)
+
+
     @classmethod
     def write(cls, table,
               order=None,
