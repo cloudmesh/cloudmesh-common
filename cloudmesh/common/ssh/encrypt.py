@@ -21,7 +21,7 @@ class EncryptFile(object):
         command = path_expand("openssl rsa -in {key} -pubout  > {pem}".format(**self.data))
         self._execute(command)
 
-    def pem_cat(slef):
+    def pem_cat(self):
         command = path_expand("cat {pem}".format(**self.data))
         self._execute(command)
 
