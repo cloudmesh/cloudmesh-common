@@ -133,14 +133,14 @@ class Console(object):
         return textwrap.fill(message, width=width)
 
     @staticmethod
-    def msg(message):
+    def msg(*message):
         """
         prints a message
         :param message: the message to print
         :return: 
         """
-        message = message or ""
-        print(message)
+        str = " ".join(message)
+        print(str)
 
     @classmethod
     def error(cls, message, prefix=True, traceflag=False):
