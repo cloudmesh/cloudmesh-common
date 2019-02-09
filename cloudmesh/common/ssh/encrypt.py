@@ -45,7 +45,7 @@ if __name__ == "__main__":
     for filename in ['file.txt', 'secret.txt']:
         try:
             os.remove(filename)
-        except Exception as e:
+        except FileNotFoundError:
             pass
 
     # Creating a file with data
