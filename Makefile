@@ -50,7 +50,7 @@ twine:
 dist: clean
 	$(call banner, $VERSION)
 	python setup.py sdist
-	python setup.py bdist
+	# python setup.py bdist
 	python setup.py bdist_wheel
 
 upload_test: twine dist
