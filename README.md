@@ -1,10 +1,10 @@
-Cloudmesh Common
-================
+# Cloudmesh Common
 
 Make sure you have the newest version of pip and setup tools::
 
-    pip install -U setuptools pip
-
+```bash
+$ pip install -U setuptools pip
+```
 
 
 This library contains a number of useful functions and APIs:
@@ -33,13 +33,13 @@ This library contains a number of useful functions and APIs:
 
 * ssh
 
-  managing ssh config files
-  managing authorized keys
+  * managing ssh config files
+  * managing authorized keys
 
 * other util functions such as
 
-  generating passwords
-  banners
-  yn_choices
-  path_expansion
-  grep (simple line matching)
+  * generating passwords
+  * banners
+  * yn_choices
+  * path_expansion
+  * grep (simple line matching)
