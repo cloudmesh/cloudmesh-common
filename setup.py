@@ -41,21 +41,24 @@ hypothesis
 """.split("\n")
 
 version = readfile("VERSION").strip()
-readme = readfile('README.rst')
+
+with open('README.md') as f:
+    long_description = f.read()
+
 
 NAME = "cloudmesh.common"
 DESCRIPTION = "A set of useful APIs for cloudmesh"
 AUTHOR = "Gregor von Laszewski"
 AUTHOR_EMAIL = "laszewski@gmail.com"
 URL = "https://github.com/cloudmesh/cloudmesh.common"
-LONG_DESCRIPTION = readme
 
 setup(
     name=NAME,
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
     description=DESCRIPTION,
-    long_description=LONG_DESCRIPTION,
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     version=version,
     license="Apache 2.0",
     url=URL,
