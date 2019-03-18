@@ -13,11 +13,12 @@ import sys
 import zipfile
 from pipes import quote
 from sys import platform
-
+import platform
 from cloudmesh.common.console import Console
 from cloudmesh.common.util import path_expand
 from distutils.spawn import find_executable
-
+import shlex
+from cloudmesh.common.dotdict import dotdict
 
 class Brew(object):
     @classmethod
@@ -168,6 +169,26 @@ class Shell(object):
     '''
 
     @classmethod
+    def live(cls, command):
+        process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
+        result = b''
+        while True:
+            output = process.stdout.read(1)
+            if output == b'' and process.poll() is not None:
+                break
+            if output:
+                result = result + output
+                sys.stdout.write(output.decode("utf-8"))
+                sys.stdout.flush()
+        rc = process.poll()
+        data = dotdict({
+            "status": rc,
+            "text": output.decode("utf-8")
+        })
+        return data
+
+
+    @classmethod
     def get_python(cls):
         """
         returns the python and pip version
@@ -289,7 +310,12 @@ class Shell(object):
         :param args: 
         :return: 
         """
-        return cls.execute('VBoxManage', args)
+
+        if platform.system().lower() == "darwin":
+            command = "/Applications/VirtualBox.app/Contents/MacOS/VBoxManage"
+        else:
+            command = 'VBoxManage'
+        return cls.execute(command, args)
 
     @classmethod
     def blockdiag(cls, *args):
@@ -479,7 +505,7 @@ class Shell(object):
         :param args: 
         :return: 
         """
-        return cls.execute('vagrant', args)
+        return cls.execute('vagrant', args, shell=True)
 
     @classmethod
     def pandoc(cls, *args):
