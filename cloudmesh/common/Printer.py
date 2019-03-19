@@ -41,9 +41,10 @@ class Printer(object):
         flat = flatten(table, sep=sep)
 
         return Printer.write(flat,
-                        sort_keys=sort_keys,
-                        order=order,
-                        header=header)
+                             sort_keys=sort_keys,
+                             order=order,
+                             header=header,
+                             output=output)
 
 
     @classmethod
