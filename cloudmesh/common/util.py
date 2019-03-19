@@ -18,7 +18,7 @@ from string import Template
 from pathlib import Path
 
 from six.moves import input
-
+from cloudmesh.common.console import Console
 
 @contextmanager
 def tempdir(*args, **kwargs):
@@ -147,7 +147,7 @@ def yn_choice(message, default='y', tries=None):
                 tries -= 1
 
 
-def banner(txt=None, c="#", debug=True):
+def banner(txt=None, c="#", debug=True, label=None, color=None):
     """prints a banner of the form with a frame of # around the txt::
 
       ############################
@@ -161,12 +161,20 @@ def banner(txt=None, c="#", debug=True):
     :param c: the character used instead of c
     :type c: character
     """
+    output = ""
     if debug:
-        print()
-        print("#", 70 * c)
+        output = "\n"
+        output += "# " + 70 * c + "\n"
+        if label is not None:
+            output += "# " + label + "\n"
+            output += "# " + 70 * c + "\n"
         if txt is not None:
-            print("#", txt)
-            print("#", 70 * c)
+            for line in txt.split("\n"):
+                output += "# " + line + "\n"
+            output += "# " + 70 * c + "\n"
+    if color is None:
+        color = "BLUE"
+    Console.cprint(color, "", output)
 
 
 def str_banner(txt=None, c="#", debug=True):

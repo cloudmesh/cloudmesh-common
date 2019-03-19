@@ -240,7 +240,7 @@ class Console(object):
     def ok(message):
         """
         prints an ok message
-        :param message: the message
+        :param message: the message<
         :return: 
         """
         message = message or ""
