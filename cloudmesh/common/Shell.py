@@ -169,8 +169,11 @@ class Shell(object):
     '''
 
     @classmethod
-    def live(cls, command):
-        process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
+    def live(cls, command, cwd=None):
+        if cwd is None:
+            cwd = os.getcwd()
+        process = subprocess.Popen(shlex.split(command), cwd=cwd,
+                                   stdout=subprocess.PIPE)
         result = b''
         while True:
             output = process.stdout.read(1)
