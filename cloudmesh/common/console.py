@@ -8,7 +8,6 @@ import traceback
 
 import colorama
 from colorama import Fore, Back, Style
-import sys
 
 colorama.init()
 
@@ -167,9 +166,8 @@ class Console(object):
             if trace:
                 print()
                 print("Trace:")
-                print("\n".join(str(trace).splitlines()))
+                print("\n    ".join(str(trace).splitlines()))
                 print()
-                print ("KKKK")
 
     @staticmethod
     def TODO(message, prefix=True, traceflag=True):

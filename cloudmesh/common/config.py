@@ -4,6 +4,7 @@ from cloudmesh.common.util import readfile
 from ruamel import yaml
 from pathlib import Path
 
+
 class Config(object):
     def __init__(self, filename=None):
         self.filename = filename

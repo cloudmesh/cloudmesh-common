@@ -48,7 +48,9 @@ def check_file_for_tabs(filename, verbose=True):
                 i for i in range(len(line)) if line.startswith('\t', i)]
             if verbose:
                 Console.error("Tab found in line {} and column(s) {}"
-                              .format(line_no, str(location).replace("[", "").replace("]", "")),
+                              .format(line_no,
+                                      str(location).replace("[", "").replace(
+                                          "]", "")),
                               traceflag=False)
         line_no += 1
     return file_contains_tabs
@@ -297,7 +299,9 @@ class BaseConfigDict(OrderedDict):
                 print("ERROR: can not find", self["location"])
                 sys.exit()
         else:
-            print("Error while reading and updating the configuration file {:}".format(filename))
+            print(
+                "Error while reading and updating the configuration file {:}".format(
+                    filename))
 
     def make_a_copy(self, location=None):
         """
@@ -313,7 +317,8 @@ class BaseConfigDict(OrderedDict):
         destination = backup_name(location)
         shutil.copyfile(location, destination)
 
-    def write(self, filename=None, output="dict", attribute_indent=attribute_indent):
+    def write(self, filename=None, output="dict",
+              attribute_indent=attribute_indent):
         """
         This method writes the dict into various output formats. This includes a dict,
         json, and yaml

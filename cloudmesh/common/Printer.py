@@ -13,6 +13,7 @@ from cloudmesh.common.dotdict import dotdict
 from cloudmesh.common.util import convert_from_unicode
 from cloudmesh.common.FlatDict import flatten
 
+
 class Printer(object):
     """
     A simple Printer class with convenient methods to print dictionary, tables, csv, lists
@@ -20,13 +21,13 @@ class Printer(object):
 
     @classmethod
     def flatwrite(cls, table,
-              order=None,
-              header=None,
-              output="table",
-              sort_keys=True,
-              show_none="",
-              sep="."
-              ):
+                  order=None,
+                  header=None,
+                  output="table",
+                  sort_keys=True,
+                  show_none="",
+                  sep="."
+                  ):
         """
         writes the information given in the table
         :param table: the table of values
@@ -45,7 +46,6 @@ class Printer(object):
                              order=order,
                              header=header,
                              output=output)
-
 
     @classmethod
     def write(cls, table,
@@ -277,7 +277,8 @@ class Printer(object):
             if type(sort_keys) is str:
                 sorted_list = sorted(d, key=lambda x: d[x][sort_keys])
             elif type(sort_keys) == tuple:
-                sorted_list = sorted(d, key=lambda x: tuple([d[x][sort_key] for sort_key in sort_keys]))
+                sorted_list = sorted(d, key=lambda x: tuple(
+                    [d[x][sort_key] for sort_key in sort_keys]))
             else:
                 sorted_list = d
         else:
@@ -348,6 +349,7 @@ class Printer(object):
         :param output: the output, default is a table
         :return: 
         """
+
         def dict_from_list(l):
             """
             returns a dict from a list for printing
@@ -402,7 +404,8 @@ class Printer(object):
                 value_keys = list(value)
                 first_key = value_keys[0]
                 rest_keys = value_keys[1:]
-                x.add_row([key, "{0} : {1}".format(first_key, value[first_key])])
+                x.add_row(
+                    [key, "{0} : {1}".format(first_key, value[first_key])])
                 for element in rest_keys:
                     x.add_row(["", "{0} : {1}".format(element, value[element])])
             else:

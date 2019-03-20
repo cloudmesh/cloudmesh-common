@@ -14,11 +14,12 @@ import tempfile
 # import pip
 import time
 from contextlib import contextmanager
-from string import Template
 from pathlib import Path
 
 from six.moves import input
+
 from cloudmesh.common.console import Console
+
 
 @contextmanager
 def tempdir(*args, **kwargs):
@@ -136,7 +137,8 @@ def yn_choice(message, default='y', tries=None):
         return True if choice.strip().lower() in values else False
     else:
         while tries > 0:
-            choice = input("%s (%s) (%s)" % (message, choices, "'q' to discard"))
+            choice = input(
+                "%s (%s) (%s)" % (message, choices, "'q' to discard"))
             choice = choice.strip().lower()
             if choice in ['y', 'yes']:
                 return True
@@ -174,6 +176,7 @@ def banner(txt=None, c="#", debug=True, label=None, color=None):
             output += "# " + 70 * c + "\n"
     if color is None:
         color = "BLUE"
+
     Console.cprint(color, "", output)
 
 
@@ -252,7 +255,9 @@ def auto_create_version(class_name, version, filename="__init__.py"):
     :param filename: 
     :return: 
     """
-    version_filename = Path("{classname}/{filename}".format(classname=class_name, filename=filename))
+    version_filename = Path(
+        "{classname}/{filename}".format(classname=class_name,
+                                        filename=filename))
     with open(version_filename, "r") as f:
         content = f.read()
 
