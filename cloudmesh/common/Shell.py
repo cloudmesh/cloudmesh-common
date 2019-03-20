@@ -20,6 +20,7 @@ from distutils.spawn import find_executable
 import shlex
 from cloudmesh.common.dotdict import dotdict
 
+
 class Brew(object):
     @classmethod
     def install(cls, name):
@@ -108,7 +109,8 @@ class Subprocess(object):
     Executes a command. This class should not be directly used, but instead you should use Shell.
     """
 
-    def __init__(self, cmd, cwd=None, stderr=subprocess.PIPE, stdout=subprocess.PIPE, env=None):
+    def __init__(self, cmd, cwd=None, stderr=subprocess.PIPE,
+                 stdout=subprocess.PIPE, env=None):
         """
         execute the given command
         :param cmd: the command
@@ -119,7 +121,8 @@ class Subprocess(object):
         """
         Console.debug_msg('Running cmd: {}'.format(' '.join(map(quote, cmd))))
 
-        proc = subprocess.Popen(cmd, stderr=stderr, stdout=stdout, cwd=cwd, env=env)
+        proc = subprocess.Popen(cmd, stderr=stderr, stdout=stdout, cwd=cwd,
+                                env=env)
         stdout, stderr = proc.communicate()
 
         self.returncode = proc.returncode
@@ -127,7 +130,8 @@ class Subprocess(object):
         self.stdout = stdout
 
         if self.returncode != 0:
-            raise SubprocessError(cmd, self.returncode, self.stderr, self.stdout)
+            raise SubprocessError(cmd, self.returncode, self.stderr,
+                                  self.stdout)
 
 
 class Shell(object):
@@ -190,7 +194,6 @@ class Shell(object):
         })
         return data
 
-
     @classmethod
     def get_python(cls):
         """
@@ -215,33 +218,45 @@ class Shell(object):
 
         v_string = [str(i) for i in python_version]
 
-        if (python_version[0] == 2):
+        if python_version[0] == 2:
 
             python_version_s = '.'.join(v_string)
-            if (python_version[0] == 2) and (python_version[1] >= 7) and (python_version[2] >= 9):
+            if (python_version[0] == 2) and (python_version[1] >= 7) and (
+                    python_version[2] >= 9):
 
-                print("You are running a supported version of python: {:}".format(python_version_s))
+                print(
+                    "You are running a supported version of python: {:}".format(
+                        python_version_s))
             else:
-                print("WARNING: You are running an unsupported version of python: {:}".format(python_version_s))
+                print(
+                    "WARNING: You are running an unsupported version of python: {:}".format(
+                        python_version_s))
                 print("         We recommend you update your python")
 
         elif (python_version[0] == 3):
 
             python_version_s = '.'.join(v_string)
-            if (python_version[0] == 3) and (python_version[1] >= 7) and (python_version[2] >= 0):
+            if (python_version[0] == 3) and (python_version[1] >= 7) and (
+                    python_version[2] >= 0):
 
-                print("You are running a supported version of python: {:}".format(python_version_s))
+                print(
+                    "You are running a supported version of python: {:}".format(
+                        python_version_s))
             else:
-                print("WARNING: You are running an unsupported version of python: {:}".format(python_version_s))
+                print(
+                    "WARNING: You are running an unsupported version of python: {:}".format(
+                        python_version_s))
                 print("         We recommend you update your python")
 
         # pip_version = pip.__version__
         python_version, pip_version = cls.get_python()
 
         if int(pip_version.split(".")[0]) >= 18:
-            print("You are running a supported version of pip: " + str(pip_version))
+            print("You are running a supported version of pip: " + str(
+                pip_version))
         else:
-            print("WARNING: You are running an old version of pip: " + str(pip_version))
+            print("WARNING: You are running an old version of pip: " + str(
+                pip_version))
             print("         We recommend you update your pip  with \n")
             print("             pip install -U pip\n")
 
@@ -701,7 +716,8 @@ class Shell(object):
                     cwd=cwd)
         except:
             if witherror:
-                Console.error("problem executing subprocess", traceflag=traceflag)
+                Console.error("problem executing subprocess",
+                              traceflag=traceflag)
         if result is not None:
             result = result.strip().decode()
         return result

@@ -4,6 +4,7 @@ from cloudmesh.db.strdb import YamlDB
 from cloudmesh.common.util import path_expand
 from pathlib import Path
 
+
 class Default(object):
     def _index(self, context, key):
         return str(context) + "," + str(key)

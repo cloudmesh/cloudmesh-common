@@ -17,6 +17,7 @@ from cloudmesh.common.util import backup_name
 from cloudmesh.common.util import path_expand
 from pathlib import Path
 
+
 def custom_print(data_structure, indent, attribute_indent=4):
     """
     prints the data structure at a given level. This includes dicts and ordered dicts
@@ -72,6 +73,7 @@ def dprint(OD, mode='dict', s="", indent=' ' * 4, level=0):
     :param level: the level
     :return: 
     """
+
     def is_number(s):
         """
         checks if the type of s is a float
@@ -103,9 +105,10 @@ def dprint(OD, mode='dict', s="", indent=' ' * 4, level=0):
     for i, k in enumerate(OD.keys()):
         if type(OD[k]) in [dict, OrderedDict]:
             level += 1
-            s += (level - 1) * indent + kv_tpl % (k, ST + dprint(OD[k], mode=mode,
-                                                                 indent=indent, level=level) + (
-                                                      level - 1) * indent + END)
+            s += (level - 1) * indent + kv_tpl % (
+                k, ST + dprint(OD[k], mode=mode,
+                               indent=indent, level=level) + (
+                        level - 1) * indent + END)
             level -= 1
         else:
             s += level * indent + kv_tpl % (k, fstr(OD[k]))
@@ -119,6 +122,7 @@ class Config(object):
     """
     Manage configuration files in yaml format
     """
+
     @classmethod
     def check_file_for_tabs(cls, filename, verbose=True):
         """identifies if the file contains tabs and returns True if it
@@ -249,7 +253,8 @@ class ConfigDict(object):
                 return
 
         # Create default yaml file
-        raise ValueError("Could not find file {:} in {:}".format(filename, self.load_order))
+        raise ValueError(
+            "Could not find file {:} in {:}".format(filename, self.load_order))
 
     def load(self, filename):
         """
@@ -264,10 +269,13 @@ class ConfigDict(object):
         try:
             version = str(self.data["meta"]["version"])
             if version not in self.versions:
-                Console.error("The yaml file version must be {}".format(', '.join(self.versions)))
+                Console.error("The yaml file version must be {}".format(
+                    ', '.join(self.versions)))
                 sys.exit(1)
         except Exception as e:
-            Console.error("Your yaml file ~/.cloudmesh/cloudmesh.yaml is not up to date.", traceflag=False)
+            Console.error(
+                "Your yaml file ~/.cloudmesh/cloudmesh.yaml is not up to date.",
+                traceflag=False)
             Console.error(e.message, traceflag=False)
             sys.exit(1)
             # return self.data
