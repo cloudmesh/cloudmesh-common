@@ -8,17 +8,18 @@ from __future__ import print_function
 import errno
 import glob
 import os
+import platform
+import shlex
 import subprocess
 import sys
 import zipfile
+from distutils.spawn import find_executable
 from pipes import quote
 from sys import platform
-import platform
+
 from cloudmesh.common.console import Console
-from cloudmesh.common.util import path_expand
-from distutils.spawn import find_executable
-import shlex
 from cloudmesh.common.dotdict import dotdict
+from cloudmesh.common.util import path_expand
 
 
 class Brew(object):
@@ -173,6 +174,18 @@ class Shell(object):
     '''
 
     @classmethod
+    def terminal(cls, command):
+
+        machine = platform.system().lower()
+        if machine == 'darwin':
+            os.system(
+                "osascript -e 'tell application \"Terminal\" to do script \"{command}\"'".format(
+                    **locals())
+            )
+        else:
+            raise NotImplementedError
+
+    @classmethod
     def live(cls, command, cwd=None):
         if cwd is None:
             cwd = os.getcwd()
@@ -233,7 +246,7 @@ class Shell(object):
                         python_version_s))
                 print("         We recommend you update your python")
 
-        elif (python_version[0] == 3):
+        elif python_version[0] == 3:
 
             python_version_s = '.'.join(v_string)
             if (python_version[0] == 3) and (python_version[1] >= 7) and (
@@ -748,6 +761,7 @@ class Shell(object):
     def unzip(cls, source_filename, dest_dir):
         """
         unzips a file into the destination directory
+        :param source_filename: the source
         :param dest_dir: the destination directory
         :return:
         """
