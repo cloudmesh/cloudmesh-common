@@ -302,16 +302,6 @@ def copy_files(files_glob, source_dir, dest_dir):
             shutil.copy2(filename, dest_dir)
 
 
-def dict_replace(content, replacements=None):
-    # TODO: it is unclear why we have this. Describe
-    if replacements is None:
-        replacements = {}
-    for key in replacements:
-        content = content.replace("\{key\}".format(replacements[key]))
-
-    return content
-
-
 def readfile(filename):
     """
     returns the content of a file
