@@ -126,6 +126,8 @@ def convert_from_unicode(data):
 
 def yn_choice(message, default='y', tries=None):
     """asks for a yes/no question.
+
+    :param tries: the number of tries
     :param message: the message containing the question
     :param default: the default answer
     """
@@ -156,8 +158,9 @@ def banner(txt=None, c="#", debug=True, label=None, color=None):
       # txt
       ############################
 
-    .
-
+    :param color: prints in the given color
+    :param label: adds a label
+    :param debug: prints only if debug is true
     :param txt: a text message to be printed
     :type txt: string
     :param c: the character used instead of c
@@ -187,8 +190,8 @@ def str_banner(txt=None, c="#", debug=True):
       # txt
       ############################
 
-    .
-
+    :param debug: return "" if not in debug
+    :type debug: boolean
     :param txt: a text message to be printed
     :type txt: string
     :param c: the character used instead of c
@@ -210,6 +213,7 @@ def HEADING(txt=None, c="#"):
     Prints a message to stdout with #### surrounding it. This is useful for
     nosetests to better distinguish them.
 
+    :param c: uses the given char to wrap the header
     :param txt: a text message to be printed
     :type txt: string
     """

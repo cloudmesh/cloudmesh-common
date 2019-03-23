@@ -36,6 +36,7 @@ class Printer(object):
         :param output: the format (default is table, values are raw, csv, json, yaml, dict
         :param sort_keys: if true the table is sorted
         :param show_none: passed along to the list or dict printer
+        :param sep: uses sep as the separator for csv printer
         :return:
         """
 
@@ -101,7 +102,6 @@ class Printer(object):
         :param output:
         :param sort_keys:
         :param show_none:
-        :param key:
         :return:
         """
         d = {}
@@ -138,6 +138,8 @@ class Printer(object):
         :type output: string
         :param sort_keys:
         :type sort_keys: bool
+        :param show_none: prints None if True for None values otherwise ""
+        :type show_none: bool
         :return:
         """
         if output == "table":
@@ -240,6 +242,10 @@ class Printer(object):
         :param sort_keys:   Key(s) of the dict to be used for sorting.
                             This specify the column(s) in the table for sorting.
         :type sort_keys:    string or a tuple of string (for sorting with multiple columns)
+        :param show_none: prints None if True for None values otherwise ""
+        :type show_none: bool
+        :param max_width: maximum width for a cell
+        :type max_width: int
         """
 
         def _keys():
@@ -309,6 +315,7 @@ class Printer(object):
          :param sort_keys:   Key(s) of the dict to be used for sorting.
                              This specify the column(s) in the table for sorting.
          :type sort_keys:    string or a tuple of string (for sorting with multiple columns)
+         :param output: the output format table, csv, dict, json
          """
 
         if header is None:
@@ -388,6 +395,7 @@ class Printer(object):
         :param d: A dict to be printed
         :param order: The order in which the columns are printed.
                       The order is specified by the key names of the dict.
+        :param labels: The array of labels for the column
         """
         # header
         header = list(d)
