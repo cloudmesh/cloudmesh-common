@@ -14,7 +14,7 @@ colorama.init()
 
 def indent(text, indent=2, width=128):
     """
-    indents the given text by the indent specified and maing it maximal width wide
+    indents the given text by the indent specified and wrapping to the given width
     
     :param text: the text to print
     :param indent: indent characters
@@ -90,7 +90,7 @@ class Console(object):
     @classmethod
     def set_debug(cls, on=True):
         """
-        sets debuggin on or of
+        sets debugging on or of
         :param on: if on debugging is set
         :return: 
         """
@@ -146,7 +146,7 @@ class Console(object):
         """
         prints an error message
         :param message: the message
-        :param prefix: a prefix for the meassage 
+        :param prefix: a prefix for the message
         :param traceflag: if true the stack trace is retrieved and printed
         :return: 
         """

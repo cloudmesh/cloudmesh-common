@@ -5,10 +5,10 @@ command be completely execute before the output is returned. FOr many activities
 
 from __future__ import print_function
 
+
 import errno
 import glob
 import os
-import platform
 import shlex
 import subprocess
 import sys
@@ -174,14 +174,15 @@ class Shell(object):
     '''
 
     @classmethod
-    def terminal(cls, command):
+    def terminal(cls, command='pwd'):
 
-        machine = platform.system().lower()
-        if machine == 'darwin':
+        if platform == 'darwin':
             os.system(
                 "osascript -e 'tell application \"Terminal\" to do script \"{command}\"'".format(
                     **locals())
             )
+        elif platform == "linus":  # for ubuntu running gnome
+            os.system('gnome-terminal --command="{command}"'.format(**locals()))
         else:
             raise NotImplementedError
 
@@ -681,7 +682,7 @@ class Shell(object):
                 witherror=True):
         """Run Shell command
 
-        :param witherror: if set to fasle the error will not be printed
+        :param witherror: if set to False the error will not be printed
         :param traceflag: if set to true the trace is printed in case of an error
         :param cwd: the current working directory in whcih the command is supposed to be executed.
         :param shell: if set to true the subprocess is called as part of a shell

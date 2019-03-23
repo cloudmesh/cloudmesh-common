@@ -338,7 +338,7 @@ def writefile(filename, content):
 # Reference: http://interactivepython.org/runestone/static/everyday/2013/01/3_password.html
 def generate_password(length=8, lower=True, upper=True, number=True):
     """
-    generates a simple password. We should not realy use this in production.
+    generates a simple password. We should not really use this in production.
     :param length: the length of the password
     :param lower: True of lower case characters are allowed
     :param upper: True if upper case characters are allowed
