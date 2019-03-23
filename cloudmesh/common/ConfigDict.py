@@ -128,6 +128,8 @@ class Config(object):
         """identifies if the file contains tabs and returns True if it
         does. It also prints the location of the lines and columns. If
         verbose is set to False, the location is not printed.
+
+        :param verbose: if true prints issues
         :param filename: the filename
         :type filename: str
         :rtype: True if there are tabs in the file

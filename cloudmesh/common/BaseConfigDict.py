@@ -33,6 +33,7 @@ def check_file_for_tabs(filename, verbose=True):
     does. It also prints the location of the lines and columns. If
     verbose is set to False, the location is not printed.
 
+    :param verbose: if true prints information about issues
     :param filename: the filename
     :rtype: True if there are tabs in the file
     """
@@ -131,6 +132,8 @@ def read_yaml_config(filename, check=True, osreplace=True, exit=True):
     the code will fail if the file does not exist. However if it is set to
     false and the file does not exist, None is returned.
 
+    :param exit: if true is exist with sys exit
+    :param osreplace: if true replaces environment variables from the OS
     :param filename: the file name
     :param check: if True fails if the file does not exist,
                   if False and the file does not exist return will be None
