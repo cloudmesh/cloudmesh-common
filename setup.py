@@ -24,6 +24,7 @@ def readfile(filename):
     with io.open(filename, encoding="utf-8") as stream:
         return stream.read()
 
+
 # requiers = readfile ('requirements.txt')
 
 # pytz==2016.10
@@ -44,7 +45,6 @@ version = readfile("VERSION").strip()
 
 with open('README.md') as f:
     long_description = f.read()
-
 
 NAME = "cloudmesh.common"
 DESCRIPTION = "A set of useful APIs for cloudmesh"
