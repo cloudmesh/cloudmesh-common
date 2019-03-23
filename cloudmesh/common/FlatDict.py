@@ -72,7 +72,7 @@ class FlatDict(dict):
 
     def __setitem__(self, key, item):
         """
-        sets an item at a kive key
+        sets an item at a key
 
         :param key: this is the key
         :param item:  this is the item to be set
