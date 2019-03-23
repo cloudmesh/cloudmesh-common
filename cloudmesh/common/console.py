@@ -122,7 +122,7 @@ class Console(object):
             return Console.theme['BLACK']
 
     @staticmethod
-    def msg(message, width=79):
+    def txt_msg(message, width=79):
         """
         prints a message to the screen
         :param message: the message to print
@@ -159,7 +159,7 @@ class Console(object):
         if cls.color:
             cls.cprint('FAIL', text, str(message))
         else:
-            print(cls.msg(text + str(message)))
+            print(cls.txt_msg(text + str(message)))
 
         if traceflag and cls.debug:
             trace = traceback.format_exc().strip()
