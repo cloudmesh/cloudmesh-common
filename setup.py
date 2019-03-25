@@ -31,14 +31,22 @@ def readfile(filename):
 
 requiers = """
 six
-future
-prettytable
+nose
+pytest
 python-hostlist
 simplejson
 oyaml
 colorama
 psutil
+tox
+detox
+coverage
+flake8
+prettytable
 hypothesis
+ruamel.yaml
+pathlib
+pathlib2
 """.split("\n")
 
 version = readfile("VERSION").strip()
