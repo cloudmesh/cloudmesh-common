@@ -2,7 +2,10 @@ from __future__ import print_function
 
 from cloudmesh.db.strdb import YamlDB
 from cloudmesh.common.util import path_expand
-from pathlib import Path
+try:
+    from pathlib import Path
+except:
+    from pathlib2 import Path
 
 
 class Default(object):
@@ -13,7 +16,7 @@ class Default(object):
         if filename is None:
             self.filename = Path(path_expand("~/.cloudmesh/default-data"))
 
-        self.data = YamlDB(self.filename)
+        self.data = YamlDB(str(self.filename))
 
     def __getitem__(self, context_key):
         try:
