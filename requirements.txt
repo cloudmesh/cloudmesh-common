@@ -12,3 +12,4 @@ coverage
 flake8
 prettytable
 hypothesis
+ruamel.yaml

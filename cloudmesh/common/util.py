@@ -14,7 +14,10 @@ import tempfile
 # import pip
 import time
 from contextlib import contextmanager
-from pathlib import Path
+try:
+    from pathlib import Path
+except:
+    from pathlib2 import Path
 
 from six.moves import input
 

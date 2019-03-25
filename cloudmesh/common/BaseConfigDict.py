@@ -295,7 +295,7 @@ class BaseConfigDict(OrderedDict):
             d = read_yaml_config(self['location'], check=True)
             with open(self['location']) as myfile:
                 document = myfile.read()
-            x = yaml.load(document)
+            x = yaml.load(document, Loader=yaml.FullLoader)
             try:
                 self.update(d)
             except:
