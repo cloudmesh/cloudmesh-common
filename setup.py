@@ -38,15 +38,12 @@ simplejson
 oyaml
 colorama
 psutil
-tox
-detox
-coverage
-flake8
 prettytable
 hypothesis
 ruamel.yaml
 pathlib
 pathlib2
+future
 """.split("\n")
 
 version = readfile("VERSION").strip()
