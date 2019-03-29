@@ -7,7 +7,6 @@ oyaml
 colorama
 psutil
 tox
-detox
 coverage
 flake8
 prettytable
