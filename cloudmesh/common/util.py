@@ -93,19 +93,18 @@ def grep(pattern, filename):
 def path_expand(text):
     """ returns a string with expanded variable.
 
-    :param text: the path to be expanded, which can include ~ and $ variables
+    :param text: the path to be expanded, which can include ~ and environment $ variables
     :param text: string
 
     """
-    result = os.path.expanduser(text)
-
-    # os.path.expandvars(path)
+    result = os.path.expandvars(os.path.expanduser(text))
 
     # template = Template(text)
     # result = template.substitute(os.environ)
 
     if result.startswith("."):
         result = result.replace(".", os.getcwd(), 1)
+
     return result
 
 
