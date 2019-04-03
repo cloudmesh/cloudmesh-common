@@ -11,7 +11,7 @@ define banner
 endef
 
 source:
-	$(call banner, "Install cloudmesh.sommon")
+	$(call banner, "Install cloudmesh-sommon")
 	pip install -e . -U 
 
 test:
@@ -55,7 +55,7 @@ dist: clean
 
 upload_test: twine dist
 	rm -f dist/*zip
-	twine upload --repository pypitest dist/cloudmesh.$(package)-*.whl	dist/cloudmesh.$(package)-$(VERSION).tar.gz
+	twine upload --repository pypitest dist/cloudmesh-$(package)-*.whl	dist/cloudmesh-$(package)-$(VERSION).tar.gz
 
 log:
 	gitchangelog | fgrep -v ":dev:" | fgrep -v ":new:" > ChangeLog
@@ -64,8 +64,8 @@ log:
 
 register: dist
 	$(call banner, $VERSION)
-	twine register dist/cloudmesh.$(package)-$(VERSION)-py2.py3-none-any.whl
-	#twine register dist/cloudmesh.$(package)-$(VERSION).macosx-10.12-x86_64.tar.gz
+	twine register dist/cloudmesh-$(package)-$(VERSION)-py2.py3-none-any.whl
+	#twine register dist/cloudmesh-$(package)-$(VERSION).macosx-10.12-x86_64.tar.gz
 
 upload: clean dist
 	twine upload dist/*
