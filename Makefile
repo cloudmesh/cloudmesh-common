@@ -82,3 +82,12 @@ pip: upload_test
 	pip install --index-url https://test.pypi.org/simple/ \
 	    --extra-index-url https://pypi.org/simple cloudmesh-$(package)
 
+
+bump:
+	git checkout master
+	git pull
+	tox
+	bumpversion release
+	python setup.py sdist bdist_wheel upload
+	bumpversion --no-tag patch
+	git push origin master --tags
