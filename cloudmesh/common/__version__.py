@@ -1,1 +1,1 @@
-version = 1.5.8-dev2
+version = 1.5.8-dev3
