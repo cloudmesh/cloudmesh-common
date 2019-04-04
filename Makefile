@@ -46,49 +46,44 @@ clean:
 twine:
 	pip install -U twine
 
-dist: clean
-	$(call banner, $VERSION)
+dist:
 	python setup.py sdist bdist_wheel
 	twine check dist/*
 
-upload_test: twine dist
-	bumpversion patch
+patch: clean
+	$(call banner, patch to testpypi)
+	bumpversion --allow-dirty patch
+	python setup.py sdist bdist_wheel
+	git push origin master --tags
+	twine check dist/*
 	twine upload --repository testpypi https://test.pypi.org/legacy/ dist/*
 
+release: clean dist
+	$(call banner, release to pypi)
+	bumpversion release
+	python setup.py sdist bdist_wheel
+	git push origin master --tags
+	twine check dist/*
+	twine upload dist/*
+
+pip: patch
+	pip install --index-url https://test.pypi.org/simple/ \
+	    --extra-index-url https://pypi.org/simple cloudmesh-$(package)
+
 log:
+	$(call banner, log)
 	gitchangelog | fgrep -v ":dev:" | fgrep -v ":new:" > ChangeLog
 	git commit -m "chg: dev: Update ChangeLog" ChangeLog
 	git push
 
-register: dist
-	$(call banner, $VERSION)
-	twine register dist/cloudmesh-$(package)-$(VERSION)-py2.py3-none-any.whl
-
-upload: clean dist
-	twine upload dist/*
-
-#
-# GIT
-#
-
-tag:
-	touch README.rst
-	git tag $(VERSION)
-	git commit -a -m "$(VERSION)"
-	git push
+# bump:
+#	git checkout master
+#	git pull
+#	tox
+#	python setup.py sdist bdist_wheel upload
+#	bumpversion --no-tag patch
+#	git push origin master --tags
 
 
-
-pip: upload_test
-	pip install --index-url https://test.pypi.org/simple/ \
-	    --extra-index-url https://pypi.org/simple cloudmesh-$(package)
-
-
-bump:
-	git checkout master
-	git pull
-	tox
-	bumpversion release
-	python setup.py sdist bdist_wheel upload
-	bumpversion --no-tag patch
-	git push origin master --tags
+# API_JSON=$(printf '{"tag_name": "v%s","target_commitish": "master","name": "v%s","body": "Release of version %s","draft": false,"prerelease": false}' $VERSION $VERSION $VERSION)
+# curl --data "$API_JSON" https://api.github.com/repos/:owner/:repository/releases?access_token=:access_token
