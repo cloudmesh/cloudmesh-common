@@ -1,13 +1,10 @@
 six
-nose
-pytest
 python-hostlist
 simplejson
 oyaml
 colorama
 psutil
 prettytable
-hypothesis
 ruamel.yaml
 pathlib
 pathlib2

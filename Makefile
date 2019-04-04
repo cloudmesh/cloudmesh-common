@@ -43,19 +43,16 @@ clean:
 ######################################################################
 
 
-
 twine:
 	pip install -U twine
 
 dist: clean
 	$(call banner, $VERSION)
-	python setup.py sdist
-	# python setup.py bdist
-	python setup.py bdist_wheel
+	python setup.py sdist bdist_wheel
+	twine check dist/*
 
 upload_test: twine dist
-	rm -f dist/*zip
-	twine upload --repository pypitest dist/cloudmesh-$(package)-*.whl	dist/cloudmesh-$(package)-$(VERSION).tar.gz
+	twine upload --repository testpypi https://test.pypi.org/legacy/ dist/*
 
 log:
 	gitchangelog | fgrep -v ":dev:" | fgrep -v ":new:" > ChangeLog
@@ -65,7 +62,6 @@ log:
 register: dist
 	$(call banner, $VERSION)
 	twine register dist/cloudmesh-$(package)-$(VERSION)-py2.py3-none-any.whl
-	#twine register dist/cloudmesh-$(package)-$(VERSION).macosx-10.12-x86_64.tar.gz
 
 upload: clean dist
 	twine upload dist/*
@@ -79,3 +75,10 @@ tag:
 	git tag $(VERSION)
 	git commit -a -m "$(VERSION)"
 	git push
+
+
+
+pip: upload_test
+	pip install --index-url https://test.pypi.org/simple/ \
+	    --extra-index-url https://pypi.org/simple cloudmesh-$(package)
+
