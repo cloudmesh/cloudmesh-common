@@ -52,6 +52,7 @@ dist: clean
 	twine check dist/*
 
 upload_test: twine dist
+	bumpversion patch
 	twine upload --repository testpypi https://test.pypi.org/legacy/ dist/*
 
 log:
