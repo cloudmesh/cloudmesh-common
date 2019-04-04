@@ -57,6 +57,8 @@ build: clean
 	# git push origin master --tags
 	twine check dist/*
 	twine upload --repository testpypi  dist/*
+	pip install --index-url https://test.pypi.org/simple/ \
+	    --extra-index-url https://pypi.org/simple cloudmesh-$(package)
 
 patch: clean
 	$(call banner, "patch")
@@ -78,12 +80,15 @@ release: clean
 	python setup.py sdist bdist_wheel
 	git push origin master --tags
 	twine check dist/*
-	twine upload --repository testpypi https://test.pypi.org/legacy/ dist/*
+	twine upload --repository testpypi dist/*
 	@bump2version --new-version "$(VERSION)-dev0" part --allow-dirty
 	@bump2version patch --allow-dirty
 	$(call banner, "new-version")
 	@cat VERSION
 	@echo
+	pip install --index-url https://test.pypi.org/simple/ \
+	    --extra-index-url https://pypi.org/simple cloudmesh-$(package)
+
 
 dev:
 	bump2version --new-version "$(VERSION)-dev0" part --allow-dirty
