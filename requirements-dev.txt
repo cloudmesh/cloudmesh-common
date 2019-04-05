@@ -1,7 +1,5 @@
 nose
 pytest
-hypothesis
-tox
-detox
 coverage
 flake8
+bump2version
