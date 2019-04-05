@@ -51,13 +51,14 @@ dist:
 	twine check dist/*
 
 patch: clean
-	$(call banner, "bbuild")
+	$(call banner, "patch")
 	bump2version --allow-dirty patch
 	python setup.py sdist bdist_wheel
 	# git push origin master --tags
 	twine check dist/*
 	twine upload --repository testpypi  dist/*
 	$(call banner, "install")
+	pip search "cloudmesh" | fgrep cloudmesh-$(package)
 	sleep 10
 	pip install --index-url https://test.pypi.org/simple/ cloudmesh-$(package) -U
 
