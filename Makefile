@@ -11,7 +11,7 @@ define banner
 endef
 
 source:
-	$(call banner, "Install cloudmesh.sommon")
+	$(call banner, "Install cloudmesh-sommon")
 	pip install -e . -U 
 
 test:
@@ -43,39 +43,77 @@ clean:
 ######################################################################
 
 
-
 twine:
 	pip install -U twine
 
-dist: clean
-	$(call banner, $VERSION)
-	python setup.py sdist
-	# python setup.py bdist
-	python setup.py bdist_wheel
+dist:
+	python setup.py sdist bdist_wheel
+	twine check dist/*
 
-upload_test: twine dist
-	rm -f dist/*zip
-	twine upload --repository pypitest dist/cloudmesh.$(package)-*.whl	dist/cloudmesh.$(package)-$(VERSION).tar.gz
+patch: clean
+	$(call banner, "patch")
+	bump2version --allow-dirty patch
+	python setup.py sdist bdist_wheel
+	# git push origin master --tags
+	twine check dist/*
+	twine upload --repository testpypi  dist/*
+	$(call banner, "install")
+	pip search "cloudmesh" | fgrep cloudmesh-$(package)
+	sleep 10
+	pip install --index-url https://test.pypi.org/simple/ cloudmesh-$(package) -U
+
+minor: clean
+	$(call banner, "minor")
+	bump2version minor --allow-dirty
+	@cat VERSION
+	@echo
+
+release: clean
+	$(call banner, "release")
+	git tag "v$(VERSION)"
+	git push origin master --tags
+	python setup.py sdist bdist_wheel
+	twine check dist/*
+	twine upload --repository pypi dist/*
+	$(call banner, "install")
+	@cat VERSION
+	@echo
+	sleep 10
+	pip install -U cloudmesh-common
+
+
+dev:
+	bump2version --new-version "$(VERSION)-dev0" part --allow-dirty
+	bump2version patch --allow-dirty
+	@cat VERSION
+	@echo
+
+reset:
+	bump2version --new-version "4.0.0-dev0" part --allow-dirty
+
+upload:
+	twine check dist/*
+	twine upload dist/*
+
+pip:
+	pip install --index-url https://test.pypi.org/simple/ cloudmesh-$(package) -U
+
+#	    --extra-index-url https://test.pypi.org/simple
 
 log:
+	$(call banner, log)
 	gitchangelog | fgrep -v ":dev:" | fgrep -v ":new:" > ChangeLog
 	git commit -m "chg: dev: Update ChangeLog" ChangeLog
 	git push
 
-register: dist
-	$(call banner, $VERSION)
-	twine register dist/cloudmesh.$(package)-$(VERSION)-py2.py3-none-any.whl
-	#twine register dist/cloudmesh.$(package)-$(VERSION).macosx-10.12-x86_64.tar.gz
+# bump:
+#	git checkout master
+#	git pull
+#	tox
+#	python setup.py sdist bdist_wheel upload
+#	bumpversion --no-tag patch
+#	git push origin master --tags
 
-upload: clean dist
-	twine upload dist/*
 
-#
-# GIT
-#
-
-tag:
-	touch README.rst
-	git tag $(VERSION)
-	git commit -a -m "$(VERSION)"
-	git push
+# API_JSON=$(printf '{"tag_name": "v%s","target_commitish": "master","name": "v%s","body": "Release of version %s","draft": false,"prerelease": false}' $VERSION $VERSION $VERSION)
+# curl --data "$API_JSON" https://api.github.com/repos/:owner/:repository/releases?access_token=:access_token

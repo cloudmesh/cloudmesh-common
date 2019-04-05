@@ -51,11 +51,11 @@ version = readfile("VERSION").strip()
 with open('README.md') as f:
     long_description = f.read()
 
-NAME = "cloudmesh.common"
+NAME = "cloudmesh-common"
 DESCRIPTION = "A set of useful APIs for cloudmesh"
 AUTHOR = "Gregor von Laszewski"
 AUTHOR_EMAIL = "laszewski@gmail.com"
-URL = "https://github.com/cloudmesh/cloudmesh.common"
+URL = "https://github.com/cloudmesh/cloudmesh-common"
 
 setup(
     name=NAME,
@@ -74,9 +74,7 @@ setup(
         "Intended Audience :: Developers",
         "License :: OSI Approved :: BSD License",
         "Operating System :: OS Independent",
-        "Programming Language :: Python",
-        "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.7",
     ],
     install_requires=requiers,
     include_package_data=True,
