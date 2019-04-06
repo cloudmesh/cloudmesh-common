@@ -1,6 +1,8 @@
 ###############################################################
-#  tests
-
+# pip install .; npytest -v --capture=no  tests/test_strdb.py:Test_strdb.test_001
+# pytest -v --capture=no  tests/test_strdb.py
+# pytest -v tests/test_strdb.py
+###############################################################
 #
 # TODO: theres is absolutely no need to use hypothesis. THis code does not
 #       follow our convention to develop nose tests. Also using nosetests 

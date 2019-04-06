@@ -1,12 +1,12 @@
 """ run with
 
-python setup.py install; nosetests -v --nocapture tests/test_configdict.py:Test_configdict.test_001
+pip install .; pytest -v --capture=no tests/test_configdict.py:Test_configdict.test_001
 
-nosetests -v --nocapture tests/test_configdict.py
+pytest -v --capture=no tests/test_configdict.py
 
 or
 
-nosetests -v tests/test_configdict.py
+pytest -v  tests/test_configdict.py
 
 """
 from __future__ import print_function
