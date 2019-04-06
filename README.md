@@ -14,45 +14,162 @@ instalation documentation.
 
 |  | Links |
 |---------------|-------|
-| Documentation | <https://cloudmesh.github.io/cloudmesh-cloud/> |
+| Documentation | <https://cloudmesh.github.io/cloudmesh-cloud> |
 | Code | <https://github.com/cloudmesh/cloudmesh-cloud> |
-| Instalation | <https://github.com/cloudmesh/get> |
+| Instalation Instructions | <https://github.com/cloudmesh/get> |
 
 ## Highlighted features
 
-This library contains a number of useful functions and APIs:
+This library contains a number of useful functions and APIs that we highlight
+here. They are used to interact with the system and provide a number of
+functions to implement command line programs and shells.
 
-* Console
+## Console
 
-  A convenient way to print colored messages types in the terminal,
-  such as errors, info, and regular messages
+The console provides convenient way to print colored messages types in the
+terminal, such as errors, info, and regular messages
 
-* Shell
+* [cloudmesh.common.console](https://github.com/cloudmesh/cloudmesh-common/blob/master/cloudmesh/common/console.py)
 
-  A convenient way to execute operating system commands in python
 
-* Printer
+    from cloudmesh.common.console import Console
+    
+    Console.error("this is an error printed in red wth prefix ERROR:")
+    Console.msg("this is a msg printed in black")
+    Console.ok("this is an ok message printed in green")
+    
 
-  A convenient way to pring dictionaries and lists with repeated
-  entries as tables, csv, json, yaml
 
-* StopWatch
+## Shell
 
-  A convenient way on using named timers
+We have lots of shell commands that call linux commands, but also have a
+convenient execution command that returns the results in a string.
 
-* dotdict
+For more information we like you to inspect the source code:
 
-  Dictionaries in dot format
+* [cloudmesh.common.Shell](https://github.com/cloudmesh/cloudmesh-common/blob/master/cloudmesh/common/Shell.py)
 
-* ssh
+
+    from cloudmesh.common.Shell import SHell
+    
+    shell = Shell()
+
+    print(shell.terminal_type())
+
+    # prints after the command is finished
+    r = shell.execute('pwd') 
+    print(r)
+    
+    # prints while the command is executed
+    r = shell.live('pwd') 
+    print(r)
+    
+    # open a new terminal and star the command ls in it (for OSX and Gnome)
+    shell.terminal("ls")
+    
+    # an example of a build in command
+    shell.pip("install cloudmesh-common")
+    
+    We have many such build in commands, please see the source
+
+    
+## Printer
+
+A convenient way to pring dictionaries and lists with repeated
+entries as tables, csv, json, yaml. The dictionaries can even be hirachical.
+
+* [cloudmesh.common.Printer](https://github.com/cloudmesh/cloudmesh-common/blob/master/cloudmesh/common/Printer.py)
+
+Let us assume we have 
+
+     data = [
+        {
+            "name": "Gregor",
+            "address": {
+                "street": "Funny Lane 11",
+                "city": "Cloudville"
+            }
+        },
+        {
+            "name": "Albert",
+            "address": {
+                "street": "Memory Lane 1901",
+                "city": "Cloudnine"
+            }
+        }
+     ]
+
+Then we can print it nicely with 
+
+    print(Printer.flatwrite(self.data,
+                        sort_keys=["name"],
+                        order=["name", "address.street", "address.city"],
+                        header=["Name", "Street", "City"],
+                        output="table")
+              )
+
+Other formats such as csv, json, dict are also supported.
+
+In addition we have also printers for printing attribute lists. Please consult
+the source code.
+
+## StopWatch
+
+
+* [cloudmesh.common.StopWatch](https://github.com/cloudmesh/cloudmesh-common/blob/master/cloudmesh/common/StopWatch.py)
+
+A convenient way on using named timers
+
+    from cloudmesh.common.StopWatch import StopWatch
+    import os
+    
+    watch = StopWatch()
+    
+    watch.start("test")
+    os.sleep(1)
+    watch.stop("test")
+    
+    print (watch["test"])
+    
+    
+
+## dotdict
+
+
+* [cloudmesh.common.dotdict](https://github.com/cloudmesh/cloudmesh-common/blob/master/cloudmesh/common/dotdict.py)
+
+One dimensional Dictionaries in dot format. 
+
+    from cloudmesh.common.dotdict import doctict
+    
+    d = dotdict({"name": "Gregor"})
+
+Now you can say
+
+    print(d["name])
+    print(d.name)
+    
+
+## ssh
+
+* [cloudmesh.common.ssh](https://github.com/cloudmesh/cloudmesh-common/blob/master/cloudmesh/common/ssh)
 
   * managing ssh config files
   * managing authorized keys
 
-* other util functions such as
+## util
+
+Very useful funtions are included in util
+
+
+* [cloudmesh.common.util](https://github.com/cloudmesh/cloudmesh-common/blob/master/cloudmesh/common/util.py)
+
+Especially useful are
 
   * generating passwords
   * banners
   * yn_choices
   * path_expansion
   * grep (simple line matching)
+  * HEADING() which without parameter identifies the name of the function and 
+  prints its name within a banner

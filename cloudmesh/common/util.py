@@ -275,7 +275,9 @@ def auto_create_version(class_name, version, filename="__init__.py"):
 
 def auto_create_requirements(requirements):
     """
-    creates a requirement.txt file form the requirements in the list. If the file exists, it get changed only if the
+
+    creates a requirement.txt file form the requirements in the list. If the file
+    exists, it get changed only if the
     requirements in the list are different from the existing file
 
     :param requirements: the requirements in a list
