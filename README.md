@@ -50,27 +50,29 @@ For more information we like you to inspect the source code:
 * [cloudmesh.common.Shell](https://github.com/cloudmesh/cloudmesh-common/blob/master/cloudmesh/common/Shell.py)
 
 
-    from cloudmesh.common.Shell import SHell
-    
-    shell = Shell()
+```
+from cloudmesh.common.Shell import SHell
 
-    print(shell.terminal_type())
+shell = Shell()
 
-    # prints after the command is finished
-    r = shell.execute('pwd') 
-    print(r)
-    
-    # prints while the command is executed
-    r = shell.live('pwd') 
-    print(r)
-    
-    # open a new terminal and star the command ls in it (for OSX and Gnome)
-    shell.terminal("ls")
-    
-    # an example of a build in command
-    shell.pip("install cloudmesh-common")
-    
-    We have many such build in commands, please see the source
+print(shell.terminal_type())
+
+# prints after the command is finished
+r = shell.execute('pwd') 
+print(r)
+
+# prints while the command is executed
+r = shell.live('pwd') 
+print(r)
+
+# open a new terminal and star the command ls in it (for OSX and Gnome)
+shell.terminal("ls")
+
+# an example of a build in command
+shell.pip("install cloudmesh-common")
+```
+ 
+We have many such build in commands, please see the source
 
     
 ## Printer
