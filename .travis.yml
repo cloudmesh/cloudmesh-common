@@ -4,14 +4,18 @@ language: python
 
 python:
   - "3.7"
-  - "3.8-dev"  # 3.8 development branch
-  - "nightly"  # nightly build
+#  - "3.8-dev"  # 3.8 development branch
+#  - "nightly"  # nightly build
 
 install:
   - pip install -r requirements.txt
   - pip install -r requirements-dev.txt
   - pip install .
   - ls
+  - ls ~
+  - ls cloudmesh
+  - ls cloudmesh/common
+  - ls cloudmesh/common/etc
   - pwd
   - mkdir ~/.cloudmesh
   - cp cloudmesh/common/etc/cloudmesh.yaml ~/.cloudmesh
