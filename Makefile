@@ -15,14 +15,11 @@ source:
 	pip install -e . -U 
 
 test:
-	pytest -v 
+	pytest -v --html=.report.html
+	open .report.html
 
 dtest:
 	pytest -v --capture=no
-
-nosetests:
-	nosetests -v --nocapture tests/test_mongo.py
-
 
 clean:
 	$(call banner, "CLEAN")

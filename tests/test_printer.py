@@ -1,14 +1,9 @@
-""" run with
+###############################################################
+# python setup.py install; pytest -v --capture=no -v --nocapture tests/test_configdict.py:Test_configdict.test_001
+# pytest -v --capture=no tests/test_printer.py
+# pytest -v  tests/test_printer.py
+###############################################################
 
-python setup.py install; nosetests -v --nocapture tests/test_configdict.py:Test_configdict.test_001
-
-nosetests -v --nocapture tests/test_printer.py
-
-or
-
-nosetests -v tests/test_printer.py
-
-"""
 from __future__ import print_function
 from cloudmesh.common.Printer import Printer
 from cloudmesh.common.util import HEADING

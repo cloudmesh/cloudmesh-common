@@ -1,14 +1,8 @@
-""" run with
-
-python setup.py install; nosetests -v --nocapture tests/test_shell.py:Test_shell.test_001
-
-nosetests -v --nocapture tests/test_shell.py
-
-or
-
-nosetests -v tests/test_shell.py
-
-"""
+###############################################################
+# pip install .; npytest -v --capture=no  tests/test_shell.py:Test_shell.test_001
+# pytest -v --capture=no  tests/test_shell.py
+# pytest -v tests/test_shell.py
+###############################################################
 from __future__ import print_function
 
 import getpass
