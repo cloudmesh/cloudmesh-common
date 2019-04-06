@@ -13,15 +13,6 @@ from cloudmesh.common.util import HEADING
 
 
 class Test_configdict:
-    root_path = os.path.abspath(os.sep)
-    cwd_path = os.getcwd()
-
-    def setup(self):
-        # os.system("cm help")
-        # self.etc_yaml = os.path.join(self.cwd_path, "cloudmesh_client", "etc", "cloudmesh.yaml")
-        self.tmp_yaml = os.path.join(self.root_path, "tmp", "cloudmesh.yaml")
-        self.tmp_dir = os.path.join(self.root_path, "tmp")
-        pass
 
     # noinspection PyPep8Naming
     def tearDown(self):
@@ -29,7 +20,7 @@ class Test_configdict:
 
     def test_001_read(self):
         HEADING("test if cloudmesh.yaml is loaded")
-        d = ConfigDict("~/.cloudmesh/cloudmesh.yaml",
+        d = ConfigDict("cloudmesh.yaml",
                        verbose=True)
 
         assert d["cloudmesh"]["profile"]["firstname"] != ""
@@ -67,7 +58,7 @@ class Test_configdict:
         
     def test_003_json(self):
         HEADING("test if json is produced")
-        d = ConfigDict("~/.cloudmesh/cloudmesh.yaml",
+        d = ConfigDict("cloudmesh.yaml",
                        verbose=True)
 
         assert d.json.startswith('{')
@@ -82,7 +73,7 @@ class Test_configdict:
     def test_004_yaml(self):
 
         HEADING("test if yaml is produced")
-        d = ConfigDict("~/.cloudmesh/cloudmesh.yaml",
+        d = ConfigDict("cloudmesh.yaml",
                        verbose=True)
         result = d.yaml
 
