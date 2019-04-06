@@ -10,7 +10,8 @@ def key_prefix_replace(d, prefix, new_prefix=""):
     replaces the list of prefix in keys of a flattened dict
 
     :param d: the flattened dict
-    :param prefix: a list of prefixes that are replaced with a new prefix. Typically this will be ""
+    :param prefix: a list of prefixes that are replaced with a new prefix.
+                   Typically this will be ""
     :type prefix: list of str
     :param new_prefix: The new prefix. By default it is set to ""
     :return: the dict with the keys replaced as specified
