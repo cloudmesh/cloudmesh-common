@@ -21,5 +21,6 @@ install:
   - ls cloudmesh/common
   - ls cloudmesh/etc
   - cp cloudmesh/etc/cloudmesh.yaml ~/.cloudmesh
+  - ls ~/.cloudmesh
 
 script: pytest -v

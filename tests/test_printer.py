@@ -9,7 +9,7 @@ from cloudmesh.common.Printer import Printer
 from cloudmesh.common.util import HEADING
 from pprint import pprint
 
-class Test_configdict:
+class Test_Printer:
 
     def setup(self):
         self.data = [
