@@ -1,17 +1,24 @@
 # Cloudmesh Common
 
-[![image](https://img.shields.io/travis/TankerHQ/cloudmesh-common.svg?branch=master)](https://travis-ci.org/TankerHQ/cloudmesn-common)
-[![image](https://img.shields.io/pypi/pyversions/cloudmesh-common.svg)](https://pypi.org/project/cloudmesh-common)
-[![image](https://img.shields.io/pypi/v/cloudmesh-common.svg)](https://pypi.org/project/cloudmesh-common/)
-[![image](https://img.shields.io/github/license/TankerHQ/python-cloudmesh-common.svg)](https://github.com/TankerHQ/python-cloudmesh-common/blob/master/LICENSE)
+[![Version](https://img.shields.io/pypi/v/cloudmesh-common.svg)](https://pypi.python.org/pypi/cloudmesh-common)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/cloudmesh/cloudmesh-common/blob/master/LICENSE)
+[![Python](https://img.shields.io/pypi/pyversions/cloudmesh-common.svg)](https://pypi.python.org/pypi/cloudmesh-common)
+[![Format](https://img.shields.io/pypi/format/cloudmesh-common.svg)](https://pypi.python.org/pypi/cloudmesh-common)
+[![Format](https://img.shields.io/pypi/status/cloudmesh-common.svg)](https://pypi.python.org/pypi/cloudmesh-common)
 
 
-Make sure you have the newest version of pip and setup tools
+## Instalation and Documentation
 
-```bash
-$ pip install -U setuptools pip
-```
+Please note that several packages are available which are pointed to in the
+instalation documentation.
 
+|  | Links |
+|---------------|-------|
+| Documentation | <https://cloudmesh.github.io/cloudmesh-cloud/> |
+| Code | <https://github.com/cloudmesh/cloudmesh-cloud> |
+| Instalation | <https://github.com/cloudmesh/get> |
+
+## Highlighted features
 
 This library contains a number of useful functions and APIs:
 
