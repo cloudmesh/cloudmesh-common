@@ -31,13 +31,13 @@ terminal, such as errors, info, and regular messages
 
 * [cloudmesh.common.console](https://github.com/cloudmesh/cloudmesh-common/blob/master/cloudmesh/common/console.py)
 
+```python
+from cloudmesh.common.console import Console
 
-    from cloudmesh.common.console import Console
-    
-    Console.error("this is an error printed in red wth prefix ERROR:")
-    Console.msg("this is a msg printed in black")
-    Console.ok("this is an ok message printed in green")
-    
+Console.error("this is an error printed in red wth prefix ERROR:")
+Console.msg("this is a msg printed in black")
+Console.ok("this is an ok message printed in green")
+``` 
 
 
 ## Shell
@@ -50,7 +50,7 @@ For more information we like you to inspect the source code:
 * [cloudmesh.common.Shell](https://github.com/cloudmesh/cloudmesh-common/blob/master/cloudmesh/common/Shell.py)
 
 
-```
+```python
 from cloudmesh.common.Shell import SHell
 
 shell = Shell()
@@ -84,31 +84,35 @@ entries as tables, csv, json, yaml. The dictionaries can even be hirachical.
 
 Let us assume we have 
 
-     data = [
-        {
-            "name": "Gregor",
-            "address": {
-                "street": "Funny Lane 11",
-                "city": "Cloudville"
-            }
-        },
-        {
-            "name": "Albert",
-            "address": {
-                "street": "Memory Lane 1901",
-                "city": "Cloudnine"
-            }
+```python
+ data = [
+    {
+        "name": "Gregor",
+        "address": {
+            "street": "Funny Lane 11",
+            "city": "Cloudville"
         }
-     ]
+    },
+    {
+        "name": "Albert",
+        "address": {
+            "street": "Memory Lane 1901",
+            "city": "Cloudnine"
+        }
+    }
+ ]
+```
 
 Then we can print it nicely with 
 
-    print(Printer.flatwrite(self.data,
-                        sort_keys=["name"],
-                        order=["name", "address.street", "address.city"],
-                        header=["Name", "Street", "City"],
-                        output="table")
-              )
+```python
+print(Printer.flatwrite(self.data,
+                    sort_keys=["name"],
+                    order=["name", "address.street", "address.city"],
+                    header=["Name", "Street", "City"],
+                    output="table")
+          )
+```
 
 Other formats such as csv, json, dict are also supported.
 
@@ -122,17 +126,18 @@ the source code.
 
 A convenient way on using named timers
 
-    from cloudmesh.common.StopWatch import StopWatch
-    import os
-    
-    watch = StopWatch()
-    
-    watch.start("test")
-    os.sleep(1)
-    watch.stop("test")
-    
-    print (watch["test"])
-    
+```python
+from cloudmesh.common.StopWatch import StopWatch
+import os
+
+watch = StopWatch()
+
+watch.start("test")
+os.sleep(1)
+watch.stop("test")
+
+print (watch["test"])
+```
     
 
 ## dotdict
@@ -142,15 +147,15 @@ A convenient way on using named timers
 
 One dimensional Dictionaries in dot format. 
 
-    from cloudmesh.common.dotdict import doctict
-    
-    d = dotdict({"name": "Gregor"})
+```python
+from cloudmesh.common.dotdict import doctict
 
-Now you can say
-
-    print(d["name])
-    print(d.name)
-    
+# convert a simple dict to a dotdict
+d = dotdict({"name": "Gregor"})
+# Now you can say
+print(d["name])
+print(d.name)
+```
 
 ## ssh
 

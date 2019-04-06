@@ -6,7 +6,8 @@ from __future__ import print_function
 import json
 
 import oyaml as yaml
-from prettytable import PrettyTable
+#from prettytable import PrettyTable
+from cloudmesh.common.prettytable import PrettyTable
 
 from cloudmesh.common.console import Console
 from cloudmesh.common.dotdict import dotdict
