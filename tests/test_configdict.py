@@ -1,14 +1,9 @@
-""" run with
+###############################################################
+# python setup.py install; pytest -v --capture=no -v --nocapture tests/test_configdict.py:Test_configdict.test_001
+# pytest -v --capture=no tests/test_configdictr.py
+# pytest -v  tests/test_configdict.py
+###############################################################
 
-pip install .; pytest -v --capture=no tests/test_configdict.py:Test_configdict.test_001
-
-pytest -v --capture=no tests/test_configdict.py
-
-or
-
-pytest -v  tests/test_configdict.py
-
-"""
 from __future__ import print_function
 
 import os
@@ -17,7 +12,6 @@ from cloudmesh.common.ConfigDict import ConfigDict
 from cloudmesh.common.util import HEADING
 
 
-# noinspection PyMethodMayBeStatic,PyMethodMayBeStatic,PyMethodMayBeStatic,PyPep8Naming,PyBroadException,PyBroadException
 class Test_configdict:
     root_path = os.path.abspath(os.sep)
     cwd_path = os.getcwd()
@@ -35,7 +29,7 @@ class Test_configdict:
 
     def test_001_read(self):
         HEADING("test if cloudmesh.yaml is loaded")
-        d = ConfigDict("cloudmesh.yaml",
+        d = ConfigDict("~/.cloudmesh/cloudmesh.yaml",
                        verbose=True)
 
         assert d["cloudmesh"]["profile"]["firstname"] != ""
@@ -73,7 +67,7 @@ class Test_configdict:
         
     def test_003_json(self):
         HEADING("test if json is produced")
-        d = ConfigDict("cloudmesh.yaml",
+        d = ConfigDict("~/.cloudmesh/cloudmesh.yaml",
                        verbose=True)
 
         assert d.json.startswith('{')
@@ -88,7 +82,7 @@ class Test_configdict:
     def test_004_yaml(self):
 
         HEADING("test if yaml is produced")
-        d = ConfigDict("cloudmesh.yaml",
+        d = ConfigDict("~/.cloudmesh/cloudmesh.yaml",
                        verbose=True)
         result = d.yaml
 

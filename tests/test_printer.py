@@ -1,5 +1,5 @@
 ###############################################################
-# python setup.py install; pytest -v --capture=no -v --nocapture tests/test_configdict.py:Test_configdict.test_001
+# pip install .; pytest -v --capture=no -v --nocapture tests/test_printer.py:Test_printer.test_001
 # pytest -v --capture=no tests/test_printer.py
 # pytest -v  tests/test_printer.py
 ###############################################################
