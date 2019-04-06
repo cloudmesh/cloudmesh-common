@@ -5,7 +5,7 @@
 [![Python](https://img.shields.io/pypi/pyversions/cloudmesh-common.svg)](https://pypi.python.org/pypi/cloudmesh-common)
 [![Format](https://img.shields.io/pypi/format/cloudmesh-common.svg)](https://pypi.python.org/pypi/cloudmesh-common)
 [![Format](https://img.shields.io/pypi/status/cloudmesh-common.svg)](https://pypi.python.org/pypi/cloudmesh-common)
-[![Travis](https://img.shields.io/travis/cloudmesh/cloudmesh-common.svg)](https://travis-ci.com/cloudmesh/cloudmesh-common/jobs)
+[![Travis](https://travis-ci.com/cloudmesh/cloudmesh-common.svg?branch=master)](https://travis-ci.com/cloudmesh/cloudmesh-common/jobs)
 
 
 ## Instalation and Documentation
