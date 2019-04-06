@@ -38,7 +38,6 @@ simplejson
 oyaml
 colorama
 psutil
-prettytable
 hypothesis
 ruamel.yaml
 pathlib
