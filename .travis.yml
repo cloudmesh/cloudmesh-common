@@ -23,4 +23,4 @@ install:
   - cp cloudmesh/etc/cloudmesh.yaml ~/.cloudmesh
   - ls ~/.cloudmesh
 
-script: pytest -v tests
+script: pytest -v tests/test_tables.py
