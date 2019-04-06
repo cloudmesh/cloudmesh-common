@@ -11,9 +11,9 @@ python:
 
 install:
   - pwd
-  - pip --user install -r requirements.txt
-  - pip --user install -r requirements-dev.txt
-  - pip --user install .
+  - pip install --user -r requirements.txt
+  - pip install --user -r requirements-dev.txt
+  - pip install --user .
   - mkdir ~/.cloudmesh
   - ls
   - ls ~
