@@ -1,6 +1,6 @@
 include __init__.py
 include requirements.txt
-include cloudmesh/etc/cloudmesh.yaml
+include cloudmesh/common/etc/cloudmesh.yaml
 include cloudmesh/__init__.py
 
 exclude .gitignore
