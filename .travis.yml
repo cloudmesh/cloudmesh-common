@@ -1,6 +1,8 @@
 dist: xenial
 
-language: python
+sudo: required
+
+# language: python
 
 python:
   - "3.7"
@@ -8,16 +10,16 @@ python:
 #  - "nightly"  # nightly build
 
 install:
+  - pwd
   - pip install -r requirements.txt
   - pip install -r requirements-dev.txt
   - pip install .
+  - mkdir ~/.cloudmesh
   - ls
   - ls ~
   - ls cloudmesh
   - ls cloudmesh/common
-  - ls cloudmesh/common/etc
-  - pwd
-  - mkdir ~/.cloudmesh
-  - cp cloudmesh/common/etc/cloudmesh.yaml ~/.cloudmesh
+  - ls cloudmesh/etc
+  - cp cloudmesh/etc/cloudmesh.yaml ~/.cloudmesh
 
 script: pytest -v
