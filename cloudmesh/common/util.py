@@ -118,9 +118,9 @@ def convert_from_unicode(data):
 
     if isinstance(data, str):
         return str(data)
-    elif isinstance(data, collections.Mapping):
+    elif isinstance(data, collections.abc.Mapping):
         return dict(map(convert_from_unicode, data.items()))
-    elif isinstance(data, collections.Iterable):
+    elif isinstance(data, collections.abc.Iterable):
         return type(data)(map(convert_from_unicode, data))
     else:
         return data
