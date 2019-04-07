@@ -15,12 +15,6 @@ install:
   - pip install --user -r requirements-dev.txt
   - pip install --user .
   - mkdir ~/.cloudmesh
-  - ls
-  - ls ~
-  - ls cloudmesh
-  - ls cloudmesh/common
-  - ls cloudmesh/etc
   - cp cloudmesh/etc/cloudmesh.yaml ~/.cloudmesh
-  - ls ~/.cloudmesh
 
 script: pytest -v tests/test_tables.py
