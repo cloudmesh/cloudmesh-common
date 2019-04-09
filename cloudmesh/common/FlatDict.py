@@ -2,8 +2,14 @@ from __future__ import print_function
 
 import collections
 
-import six
+try:
+    collectionsAbc = collections.abc
+except AttributeError:
+    collectionsAbc = collections
 
+
+import six
+import sys
 
 def key_prefix_replace(d, prefix, new_prefix=""):
     """
@@ -51,10 +57,13 @@ def flatten(d, parent_key='', sep='__'):
         items = []
         for k, v in d.items():
             new_key = parent_key + sep + k if parent_key else k
-            if isinstance(v, collections.abc.MutableMapping):
+
+            if isinstance(v, collectionsAbc.MutableMapping):
                 items.extend(flatten(v, new_key, sep=sep).items())
             else:
                 items.append((new_key, v))
+
+
         return dict(items)
 
 
