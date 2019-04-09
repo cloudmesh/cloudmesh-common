@@ -3,7 +3,6 @@ Useful utility functions
 """
 from __future__ import print_function
 
-import collections
 import glob
 import inspect
 import os
@@ -14,6 +13,13 @@ import tempfile
 # import pip
 import time
 from contextlib import contextmanager
+import collections
+
+try:
+    collectionsAbc = collections.abc
+except AttributeError:
+    collectionsAbc = collections
+
 try:
     from pathlib import Path
 except:
@@ -118,9 +124,9 @@ def convert_from_unicode(data):
 
     if isinstance(data, str):
         return str(data)
-    elif isinstance(data, collections.abc.Mapping):
+    elif isinstance(data, collectionsAbc.Mapping):
         return dict(map(convert_from_unicode, data.items()))
-    elif isinstance(data, collections.abc.Iterable):
+    elif isinstance(data, collectionsAbc.Iterable):
         return type(data)(map(convert_from_unicode, data))
     else:
         return data
