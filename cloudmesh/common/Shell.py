@@ -184,7 +184,7 @@ class Shell(object):
                     **locals())
             )
         elif platform == "linus":  # for ubuntu running gnome
-            os.system('gnome-terminal --command="{command}"'.format(**locals()))
+            os.system('gnome-container --command="{command}"'.format(**locals()))
         else:
             raise NotImplementedError
 

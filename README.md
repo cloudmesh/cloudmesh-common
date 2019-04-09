@@ -66,7 +66,7 @@ print(r)
 r = shell.live('pwd') 
 print(r)
 
-# open a new terminal and star the command ls in it (for OSX and Gnome)
+# open a new terminal and start the command ls in it (for OSX and Gnome)
 shell.terminal("ls")
 
 # an example of a build in command
