@@ -16,7 +16,9 @@ from tempfile import mkstemp
 from ruamel import yaml
 from cloudmesh.db.strdb import YamlDB
 
+import pytest
 
+@pytest.mark.incremental
 class TestYamlDB(unittest.TestCase):
     def setUp(self):
         self.dbfd, self.dbpath = mkstemp(

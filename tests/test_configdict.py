@@ -10,8 +10,9 @@ import os
 
 from cloudmesh.common.ConfigDict import ConfigDict
 from cloudmesh.common.util import HEADING
+import pytest
 
-
+@pytest.mark.incremental
 class Test_configdict:
 
     # noinspection PyPep8Naming

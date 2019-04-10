@@ -8,7 +8,9 @@ from __future__ import print_function
 from cloudmesh.common.Printer import Printer
 from cloudmesh.common.util import HEADING
 from pprint import pprint
+import pytest
 
+@pytest.mark.incremental
 class Test_Printer:
 
     def setup(self):

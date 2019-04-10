@@ -10,9 +10,10 @@ from cloudmesh.common.util import HEADING
 from cloudmesh.DEBUG import VERBOSE
 import io
 from contextlib import redirect_stdout
+import pytest
 
 
-# noinspection PyPep8Naming
+@pytest.mark.incremental
 class Test_Verbose:
 
 
