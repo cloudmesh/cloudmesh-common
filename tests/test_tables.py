@@ -8,9 +8,9 @@ from pprint import pprint
 
 from cloudmesh.common.Printer import Printer
 from cloudmesh.common.util import HEADING
+import pytest
 
-
-# noinspection PyPep8Naming
+@pytest.mark.incremental
 class Test_tables:
     """define tests for dict printer so you test
     yaml

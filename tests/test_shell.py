@@ -9,6 +9,7 @@ import getpass
 
 from cloudmesh.common.Shell import Shell
 from cloudmesh.common.util import HEADING
+import pytest
 
 
 def run(command):
@@ -19,7 +20,8 @@ def run(command):
     return str(result)
 
 
-# noinspection PyMethodMayBeStatic,PyPep8Naming
+
+@pytest.mark.incremental
 class Test_shell(object):
     """
 

@@ -8,9 +8,10 @@ from pprint import pprint
 
 from cloudmesh.common.FlatDict import FlatDict, flatten
 from cloudmesh.common.util import HEADING
+import pytest
 
 
-# noinspection PyPep8Naming
+@pytest.mark.incremental
 class Test_Flatdict:
 
     def setup(self):
