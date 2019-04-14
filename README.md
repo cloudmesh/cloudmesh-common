@@ -52,7 +52,7 @@ For more information we like you to inspect the source code:
 
 
 ```python
-from cloudmesh.common.Shell import SHell
+from cloudmesh.common.Shell import Shell
 
 shell = Shell()
 

@@ -14,7 +14,7 @@ def LOGGER(filename):
 
     You can use it as follows::
 
-       log = cloudmesh.util.LOGGER(__file__)
+       log = cloudmesh.common.LOGGER(__file__)
        log.error("this is an error")
        log.info("this is an info")
        log.warning("this is a warning")
