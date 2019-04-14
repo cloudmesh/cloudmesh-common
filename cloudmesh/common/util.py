@@ -334,9 +334,8 @@ def writefile(filename, content):
     :param content: teh content
     :return: 
     """
-    outfile = open(path_expand(filename), 'w')
-    outfile.write(content)
-    outfile.close()
+    with open(path_expand(filename), 'w') as outfile:
+        outfile.write(content)
 
 
 # Reference: http://interactivepython.org/runestone/static/everyday/2013/01/3_password.html

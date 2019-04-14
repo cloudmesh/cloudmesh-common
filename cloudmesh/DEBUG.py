@@ -1,4 +1,7 @@
-from cloudmesh.shell.variables import Variables
+#
+# TODO: THIS REQUIRES CMD5 OR VARIABLES TO BE HERE
+#
+from cloudmesh.variables import Variables
 from cloudmesh.common.util import banner
 from pprint import pformat
 from pprint import pprint
