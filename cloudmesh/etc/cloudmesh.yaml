@@ -217,6 +217,21 @@ cloudmesh:
                 flavor: Basic_A1
                 image: b39f27a8b8c64d52b05eac6a62ebad85__Ubuntu-12_04_5-LTS-amd64-server-20160315-en-us-30GB
                 location: Central US
+        google:
+            cm_heading: Google Virtual Machines
+            cm_host: google.cloud.com
+            cm_label: google
+            cm_type: google
+            cm_type_version: null
+            credentials:
+                datacenter: TBD
+                client_email: TBD
+                project: TBD
+                path_to_json_file: TBD
+            default:
+                flavor: TBD
+                image: TBD
+                location: TBD                
     system:
         data: ~/.cloudmesh/cloudmesh_inventory.yaml
         console_color: true
