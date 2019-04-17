@@ -16,7 +16,7 @@ class Variables(object):
             return self.data[key]
 
     def __setitem__(self, key, value):
-        print("set", key, value)
+        # print("set", key, value)
         self.data[str(key)] = value
 
     def __delitem__(self, key):
