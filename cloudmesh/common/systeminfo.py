@@ -14,17 +14,19 @@ def systeminfo():
         'system': platform.system(),
         'processors': platform.system(),
         'sys': sys.platform,
+        'mac_version': "",
+        'win_version': ""
     }
     try:
         data['user']= os.environ['USER']
     except:
         pass
     try:
-        data['mac version'] = platform.mac_ver()[0]
+        data['mac_version'] = platform.mac_ver()[0]
     except:
         pass
     try:
-        data['win version'] = platform.win32_ver()
+        data['win_version'] = platform.win32_ver()
     except:
         pass
 
