@@ -10,11 +10,11 @@ class run(object):
         self.pid = None
 
     def execute(self):
-        self.pid = subprocess.Popen(self.command)
+        self.proc = subprocess.Popen(self.command)
+        self.pid = self.proc.pid
 
     def kill(self):
-        if self.pid.poll() is None:
+        if self.proc.poll() is None:
             print("Killing: ", self.command)
             print("Pid", self.pid)
-
-
+            subprocess.Popen(['kill', f"{self.pid}"])
