@@ -23,10 +23,14 @@ def systeminfo():
         pass
     try:
         data['mac_version'] = platform.mac_ver()[0]
+        if data['mac_version'] == ('', '', '', ''):
+            data['mac_version'] = ""
     except:
         pass
     try:
         data['win_version'] = platform.win32_ver()
+        if data['win_version'] == ('', '', '', ''):
+            data['win_version'] = ""
     except:
         pass
 
