@@ -2,7 +2,7 @@ import platform
 import sys
 import os
 
-def info():
+def systeminfo():
     data = {
         'machine': platform.machine(),
         'version': platform.version(),
@@ -20,11 +20,11 @@ def info():
     except:
         pass
     try:
-        data['mac ver'] = platform.mac_ver()
+        data['mac version'] = platform.mac_ver()[0]
     except:
         pass
     try:
-        data['win ver'] = platform.win32_ver()
+        data['win version'] = platform.win32_ver()
     except:
         pass
 
