@@ -358,13 +358,13 @@ class ConfigDict(object):
         keys = None
         if "." in item:
             keys = item.split(".")
+            d = self.data
+            for i in keys[:-1]:
+                d = d[i]
+            d[keys[-1]] = value
         else:
-            element = self.data[item]
-
-        element = self.data[keys[0]]
-        for key in keys[1:]:
-            element = element[key]
-        element = value
+            self.data[item] = value
+        self.save()
 
     def __getitem__(self, item):
         """
