@@ -21,7 +21,6 @@ from cloudmesh.common.console import Console
 from cloudmesh.common.dotdict import dotdict
 from cloudmesh.common.util import path_expand
 import subprocess
-from multiprocessing import Pool
 from functools import partial
 
 class Brew(object):
@@ -431,32 +430,6 @@ class Shell(object):
         :return: 
         """
         return cls.execute('nova', args)
-
-    def pings(self, ips=None, count=1, timeout=None, processors=4):
-        """
-        FUNCTION NOT YET TESTED
-
-        ping a list of given ip addresses
-        :param ips: a list of ip addresses
-        :param timeout: given in seconds. if timeout expires, a process is killed. not yet implemented
-        :return: none
-        """
-
-        def ping_ip(self, ip, count=count):
-            """
-            ping a vm from given ip address
-            :param ip: str of ip address
-            :param timeout: given in seconds. if timeout expires, the process is killed
-            :return: a str representing the ping result
-            """
-            param = '-n' if platform.system().lower() == 'windows' else '-c'
-            command = ['ping', param, count, ip]
-            ret_code = subprocess.run(command, capture_output=False).returncode
-            return {ip: ret_code}
-
-        with Pool(processes=processors) as p:
-            res = p.map(ping_ip, ips)
-        return res
 
     @classmethod
     def ping(cls, host=None, count=1):
