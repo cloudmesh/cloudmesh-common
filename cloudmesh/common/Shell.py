@@ -474,20 +474,6 @@ class Shell(object):
     #         res = p.map(ping_ip, ips)
     #     return res
 
-    def ping_ip(args):
-        """
-        ping a vm from given ip address
-
-        :param args: dict of {ip address, count}
-        :return: a dict representing the result, if ret_code=0 ping is successfully
-        """
-        ip = args['ip']
-        count = str(args['count'])
-        param = '-n' if platform.system().lower()=='windows' else '-c'
-        command = ['ping', param, count, ip]
-        ret_code = subprocess.run(command, capture_output=False).returncode
-        return {ip: ret_code}
-
     @classmethod
     def pings(cls, ips=None, count=1, processors=3):
         """
