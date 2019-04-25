@@ -35,8 +35,10 @@ class Test_Printer:
     def test_001_print(self):
         HEADING()
         pprint (self.data)
-        print(Printer.flatwrite(self.data,
+        table = Printer.flatwrite(self.data,
                             sort_keys=["name"],
                             order=["name", "address.street", "address.city"],
                             header=["Name", "Street", "City"],)
-              )
+
+        print(table)
+        assert "Name" in table

@@ -5,11 +5,13 @@ sudo: required
 # language: python
 
 python:
+  - "2.7"
   - "3.7"
 #  - "3.8-dev"  # 3.8 development branch
 #  - "nightly"  # nightly build
 
 install:
+  - python --version
   - pwd
   - pip install --user -r requirements.txt
   - pip install --user -r requirements-dev.txt
@@ -17,4 +19,8 @@ install:
   - mkdir ~/.cloudmesh
   - cp cloudmesh/etc/cloudmesh.yaml ~/.cloudmesh
 
-script: pytest -v tests/test_tables.py
+script:
+  - pytest -v tests/test_tables.py
+  - pytest -v tests/test_flatdict.py
+  - pytest -v tests/test_printer.py
+  - pytest -v tests/test_shell.py
