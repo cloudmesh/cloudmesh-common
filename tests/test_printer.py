@@ -41,4 +41,4 @@ class Test_Printer:
                             header=["Name", "Street", "City"],)
 
         print(table)
-        assert "Name" in table
+        assert "Name" in str(table)
