@@ -136,6 +136,21 @@ class Subprocess(object):
             raise SubprocessError(cmd, self.returncode, self.stderr,
                                   self.stdout)
 
+# helper function for Shell.pings
+# has to be placed outside Shell class due to nature of Pool
+def ping_ip(args):
+    """
+    ping a vm from given ip address
+
+    :param args: dict of {ip address, count}
+    :return: a dict representing the result, if ret_code=0 ping is successfully
+    """
+    ip = args['ip']
+    count = str(args['count'])
+    param = '-n' if platform=='windows' else '-c'
+    command = ['ping', param, count, ip]
+    ret_code = subprocess.run(command, capture_output=False).returncode
+    return {ip: ret_code}
 
 class Shell(object):
     """
@@ -459,7 +474,7 @@ class Shell(object):
     #         res = p.map(ping_ip, ips)
     #     return res
 
-    def __ping_ip__(self, args):
+    def ping_ip(args):
         """
         ping a vm from given ip address
 
@@ -473,7 +488,8 @@ class Shell(object):
         ret_code = subprocess.run(command, capture_output=False).returncode
         return {ip: ret_code}
 
-    def pings(self, ips=None, count=1, processors=3):
+    @classmethod
+    def pings(cls, ips=None, count=1, processors=3):
         """
         ping a list of given ip addresses
 
@@ -486,7 +502,7 @@ class Shell(object):
         args = [{'ip':ip, 'count':count} for ip in ips]
 
         with Pool(processors) as p:
-            res = p.map(self.__ping_ip__, args)
+            res = p.map(ping_ip, args)
         return res
 
     @classmethod
