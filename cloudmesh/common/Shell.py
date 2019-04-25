@@ -64,7 +64,7 @@ class Pip(object):
 
 class SubprocessError(Exception):
     """
-    Manages the formatting of the error and stdout. 
+    Manages the formatting of the error and stdout.
     THis command should not be directly called. Instead use SHell
     """
 
@@ -86,10 +86,10 @@ class SubprocessError(Exception):
         def indent(lines, amount, ch=' '):
             """
             indent the lines by multiples of ch
-            :param lines: 
-            :param amount: 
-            :param ch: 
-            :return: 
+            :param lines:
+            :param amount:
+            :param ch:
+            :return:
             """
             padding = amount * ch
             return padding + ('\n' + padding).join(lines.split('\n'))
@@ -120,7 +120,7 @@ class Subprocess(object):
         :param cwd: the directory in which to execute the command
         :param stderr: the pipe for stderror
         :param stdout: the pipe for the stdoutput
-        :param env: 
+        :param env:
         """
         Console.debug_msg('Running cmd: {}'.format(' '.join(map(quote, cmd))))
 
@@ -139,7 +139,7 @@ class Subprocess(object):
 
 class Shell(object):
     """
-    The shell class allowing us to conveniently access many operating system commands. 
+    The shell class allowing us to conveniently access many operating system commands.
     TODO: This works well on Linux and OSX, but has not been tested much on Windows
     """
 
@@ -154,7 +154,7 @@ class Shell(object):
 
     '''
     TODO
-    
+
     how do we now define dynamically functions based on a list that we want to support
 
     what we want is where args are multiple unlimited parameters to the function
@@ -286,8 +286,8 @@ class Shell(object):
     def ls(cls, *args):
         """
         executes ls with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('ls', args)
 
@@ -295,8 +295,8 @@ class Shell(object):
     def ps(cls, *args):
         """
         executes ps with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('ps', args)
 
@@ -304,8 +304,8 @@ class Shell(object):
     def bash(cls, *args):
         """
         executes bash with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('bash', args)
 
@@ -313,8 +313,8 @@ class Shell(object):
     def brew(cls, *args):
         """
         executes bash with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('brew', args)
 
@@ -322,8 +322,8 @@ class Shell(object):
     def cat(cls, *args):
         """
         executes cat with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('cat', args)
 
@@ -331,8 +331,8 @@ class Shell(object):
     def git(cls, *args):
         """
         executes git with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('git', args)
 
@@ -341,8 +341,8 @@ class Shell(object):
     def VBoxManage(cls, *args):
         """
         executes VboxManage with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
 
         if platform.system().lower() == "darwin":
@@ -355,8 +355,8 @@ class Shell(object):
     def blockdiag(cls, *args):
         """
         executes blockdiag with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('blockdiag', args)
 
@@ -364,8 +364,8 @@ class Shell(object):
     def cm(cls, *args):
         """
         executes cm with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('cm', args)
 
@@ -373,8 +373,8 @@ class Shell(object):
     def fgrep(cls, *args):
         """
         executes fgrep with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('fgrep', args)
 
@@ -382,8 +382,8 @@ class Shell(object):
     def grep(cls, *args):
         """
         executes grep with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('grep', args)
 
@@ -391,8 +391,8 @@ class Shell(object):
     def head(cls, *args):
         """
         executes head with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('head', args)
 
@@ -400,8 +400,8 @@ class Shell(object):
     def keystone(cls, *args):
         """
         executes keystone with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('keystone', args)
 
@@ -409,8 +409,8 @@ class Shell(object):
     def kill(cls, *args):
         """
         executes kill with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('kill', args)
 
@@ -418,8 +418,8 @@ class Shell(object):
     def nosetests(cls, *args):
         """
         executes nosetests with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('nosetests', args)
 
@@ -427,44 +427,75 @@ class Shell(object):
     def nova(cls, *args):
         """
         executes nova with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('nova', args)
 
-    def pings(self, ips=None, count=1, timeout=None, processors=4):
-        """
-        FUNCTION NOT YET TESTED
+    # this function will not work since Pool is placement dependent
+    # def pings(self, ips=None, count=1, timeout=None, processors=4):
+    #     """
+    #     FUNCTION NOT YET TESTED
+    #
+    #     ping a list of given ip addresses
+    #     :param ips: a list of ip addresses
+    #     :param timeout: given in seconds. if timeout expires, a process is killed. not yet implemented
+    #     :return: none
+    #     """
+    #
+    #     def ping_ip(self, ip, count=count):
+    #         """
+    #         ping a vm from given ip address
+    #         :param ip: str of ip address
+    #         :param timeout: given in seconds. if timeout expires, the process is killed
+    #         :return: a str representing the ping result
+    #         """
+    #         param = '-n' if platform.system().lower() == 'windows' else '-c'
+    #         command = ['ping', param, count, ip]
+    #         ret_code = subprocess.run(command, capture_output=False).returncode
+    #         return {ip: ret_code}
+    #
+    #     with Pool(processes=processors) as p:
+    #         res = p.map(ping_ip, ips)
+    #     return res
 
+    def __ping_ip__(self, args):
+        """
+        ping a vm from given ip address
+
+        :param args: dict of {ip address, count}
+        :return: a dict representing the result, if ret_code=0 ping is successfully
+        """
+        ip = args['ip']
+        count = str(args['count'])
+        param = '-n' if platform.system().lower()=='windows' else '-c'
+        command = ['ping', param, count, ip]
+        ret_code = subprocess.run(command, capture_output=False).returncode
+        return {ip: ret_code}
+
+    def pings(self, ips=None, count=1, processors=3):
+        """
         ping a list of given ip addresses
+
         :param ips: a list of ip addresses
-        :param timeout: given in seconds. if timeout expires, a process is killed. not yet implemented
-        :return: none
+        :param count: number of pings to run per ip
+        :param processors: number of processors to Pool
+        :return: list of dicts representing the ping result
         """
+        # wrap ip and count into one list to be sent to Pool map
+        args = [{'ip':ip, 'count':count} for ip in ips]
 
-        def ping_ip(self, ip, count=count):
-            """
-            ping a vm from given ip address
-            :param ip: str of ip address
-            :param timeout: given in seconds. if timeout expires, the process is killed
-            :return: a str representing the ping result
-            """
-            param = '-n' if platform.system().lower() == 'windows' else '-c'
-            command = ['ping', param, count, ip]
-            ret_code = subprocess.run(command, capture_output=False).returncode
-            return {ip: ret_code}
-
-        with Pool(processes=processors) as p:
-            res = p.map(ping_ip, ips)
+        with Pool(processors) as p:
+            res = p.map(self.__ping_ip__, args)
         return res
 
     @classmethod
     def ping(cls, host=None, count=1):
         """
         execute ping
-        :param host: the host to ping 
+        :param host: the host to ping
         :param count: the number of pings
-        :return: 
+        :return:
         """
         option = '-n' if platform.system().lower() == 'windows' else '-c'
         return cls.execute('ping',
@@ -476,8 +507,8 @@ class Shell(object):
     def pwd(cls, *args):
         """
         executes pwd with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('pwd', args)
 
@@ -485,8 +516,8 @@ class Shell(object):
     def rackdiag(cls, *args):
         """
         executes rackdiag with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('rackdiag', args)
 
@@ -494,8 +525,8 @@ class Shell(object):
     def rm(cls, *args):
         """
         executes rm with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('rm', args)
 
@@ -503,8 +534,8 @@ class Shell(object):
     def rsync(cls, *args):
         """
         executes rsync with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('rsync', args)
 
@@ -512,8 +543,8 @@ class Shell(object):
     def scp(cls, *args):
         """
         executes scp with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('scp', args)
 
@@ -521,8 +552,8 @@ class Shell(object):
     def sort(cls, *args):
         """
         executes sort with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('sort', args)
 
@@ -530,8 +561,8 @@ class Shell(object):
     def sh(cls, *args):
         """
         executes sh with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('sh', args)
 
@@ -539,8 +570,8 @@ class Shell(object):
     def ssh(cls, *args):
         """
         executes ssh with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('ssh', args)
 
@@ -548,8 +579,8 @@ class Shell(object):
     def sudo(cls, *args):
         """
         executes sudo with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('sudo', args)
 
@@ -557,8 +588,8 @@ class Shell(object):
     def tail(cls, *args):
         """
         executes tail with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('tail', args)
 
@@ -566,8 +597,8 @@ class Shell(object):
     def vagrant(cls, *args):
         """
         executes vagrant with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('vagrant', args, shell=True)
 
@@ -575,8 +606,8 @@ class Shell(object):
     def pandoc(cls, *args):
         """
         executes vagrant with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('pandoc', args)
 
@@ -584,8 +615,8 @@ class Shell(object):
     def mongod(cls, *args):
         """
         executes mongod with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('mongod', args)
 
@@ -593,8 +624,8 @@ class Shell(object):
     def dialog(cls, *args):
         """
         executes dialof with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('dialog', args)
 
@@ -602,8 +633,8 @@ class Shell(object):
     def pip(cls, *args):
         """
         executes pip with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('pip', args)
 
@@ -611,9 +642,9 @@ class Shell(object):
     def remove_line_with(cls, lines, what):
         """
         returns all lines that do not contain what
-        :param lines: 
-        :param what: 
-        :return: 
+        :param lines:
+        :param what:
+        :return:
         """
         result = []
         for line in lines:
@@ -625,9 +656,9 @@ class Shell(object):
     def find_lines_with(cls, lines, what):
         """
         returns all lines that contain what
-        :param lines: 
-        :param what: 
-        :return: 
+        :param lines:
+        :param what:
+        :return:
         """
         result = []
         for line in lines:
@@ -691,8 +722,8 @@ class Shell(object):
     def command_exists(cls, name):
         """
         returns True if the command exists
-        :param name: 
-        :return: 
+        :param name:
+        :return:
         """
         return cls.which(name) is not None
 
@@ -773,7 +804,7 @@ class Shell(object):
         """
         creates a directory with all its parents in ots name
         :param directory: the path of the directory
-        :return: 
+        :return:
         """
         directory = path_expand(directory)
         try:
@@ -817,7 +848,7 @@ class Shell(object):
 def main():
     """
     a test that should actually be added into a nosetest
-    :return: 
+    :return:
     """
     shell = Shell()
 
