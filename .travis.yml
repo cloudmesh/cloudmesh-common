@@ -17,5 +17,6 @@ install:
   - mkdir ~/.cloudmesh
   - cp cloudmesh/etc/cloudmesh.yaml ~/.cloudmesh
 
-script: pytest -v tests/test_tables.py
-script: pytest -v tests/test_ping.py
+script:
+  - pytest -v tests/test_tables.py
+  - pytest -v tests/test_ping.py
