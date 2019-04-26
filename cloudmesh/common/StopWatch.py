@@ -8,7 +8,8 @@ from __future__ import print_function
 
 import os
 import time
-
+from cloudmesh.common.Printer import Printer
+from cloudmesh.common.systeminfo import systeminfo
 
 class StopWatch(object):
     """
@@ -100,3 +101,47 @@ class StopWatch(object):
                     "newline": os.linesep}
             s += "{label} {start} {end} {elapsed} {newline}".format(**data)
         return s
+
+    def benchmark(self, sysinfo=True):
+        """
+        prints out all timers in a convenient benchmark tabble
+        :return:
+        :rtype:
+        """
+
+        #
+        # PRINT PLATFORM
+        #
+        if sysinfo:
+            data_platform = systeminfo()
+            print(Printer.attribute(data_platform,
+                                    ["Machine Arribute", "Time/s"]))
+
+        #
+        # PRINT TIMERS
+        #
+        timers = StopWatch.keys()
+
+        data_timers = {}
+        for timer in timers:
+            data_timers[timer] = {
+                'time': round(StopWatch.get(timer), 2),
+                'timer': timer
+            }
+            for attribute in ["node", "system", "machine", "mac_version",
+                              "win_version"]:
+                data_timers[timer][attribute] = data_platform[attribute]
+        # print(Printer.attribute(data_timers, header=["Command", "Time/s"]))
+        print(Printer.write(
+            data_timers,
+            order=["timer", "time", "node", "system", "mac_version",
+                   "win_version"]
+        ))
+
+        print()
+        print(Printer.write(
+            data_timers,
+            order=["timer", "time", "node", "system", "mac_version",
+                   "win_version"],
+            output="csv"
+        ))
