@@ -102,7 +102,8 @@ class StopWatch(object):
             s += "{label} {start} {end} {elapsed} {newline}".format(**data)
         return s
 
-    def benchmark(self, sysinfo=True):
+    @classmethod
+    def benchmark(cls, sysinfo=True):
         """
         prints out all timers in a convenient benchmark tabble
         :return:
