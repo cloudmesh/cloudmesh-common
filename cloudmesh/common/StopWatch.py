@@ -132,6 +132,7 @@ class StopWatch(object):
             for attribute in ["node", "system", "machine", "mac_version",
                               "win_version"]:
                 data_timers[timer][attribute] = data_platform[attribute]
+
         # print(Printer.attribute(data_timers, header=["Command", "Time/s"]))
         print(Printer.write(
             data_timers,
