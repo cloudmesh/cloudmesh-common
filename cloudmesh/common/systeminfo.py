@@ -18,24 +18,24 @@ def systeminfo():
     try:
         data['node'] = platform.uname().node,
     except:
-        pass
+        data['node'] = 'unkown'
     try:
         data['release'] = platform.uname().release,
     except:
-        pass
+        data['release'] = ''
     try:
         data['machine'] = platform.uname().machine,
     except:
-        pass
+        data['machine'] = ''
     try:
         data['processor'] = platform.uname().processor,
     except:
-        pass
+        data['processor'] = ''
 
     try:
         data['user']= os.environ['USER']
     except:
-        pass
+        data['user']= ''
     try:
         data['mac_version'] = platform.mac_ver()[0]
         if data['mac_version'] == ('', '', '', ''):
