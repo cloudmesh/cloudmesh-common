@@ -16,8 +16,8 @@ class Test_Printer:
 
     def test_stopwatch(self):
         HEADING()
-        StopWatch("sleep 1")
+        StopWatch.start("sleep 1")
         time.sleep(1)
-        StopWatch("sleep 1")
+        StopWatch.stop("sleep 1")
         StopWatch.benchmark(sysinfo=True)
         assert True
