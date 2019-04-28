@@ -9,16 +9,29 @@ def systeminfo():
         'machine': platform.machine(),
         'version': platform.version(),
         'platform': platform.platform(),
-        'node': platform.uname().node,
-        'release': platform.uname().release,
-        'machine': platform.uname().machine,
-        'processor': platform.uname().processor,
         'system': platform.system(),
         'processors': platform.system(),
         'sys': sys.platform,
         'mac_version': "",
         'win_version': ""
     }
+    try:
+        data['node'] = platform.uname().node,
+    except:
+        pass
+    try:
+        data['release'] = platform.uname().release,
+    except:
+        pass
+    try:
+        data['machine'] = platform.uname().machine,
+    except:
+        pass
+    try:
+        data['processor'] = platform.uname().processor,
+    except:
+        pass
+
     try:
         data['user']= os.environ['USER']
     except:
