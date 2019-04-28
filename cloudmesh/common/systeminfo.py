@@ -13,7 +13,8 @@ def systeminfo():
         'processors': platform.system(),
         'sys': sys.platform,
         'mac_version': "",
-        'win_version': ""
+        'win_version': "",
+        'python': sys.version
     }
     try:
         data['node'] = platform.uname().node,
@@ -52,7 +53,7 @@ def systeminfo():
     try:
         release_files = Path("/etc").glob("*release")
         for filename in release_files:
-            content = readfile(filename).split("\n")
+            content = readfile(filename.resolve()).split("\n")
             for line in content:
                 if "=" in line:
                     attribute, value = line.split("=", 1)
