@@ -1,12 +1,12 @@
 # Cloudmesh Common
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2656703.svg)](https://doi.org/10.5281/zenodo.2656703)
 [![Version](https://img.shields.io/pypi/v/cloudmesh-common.svg)](https://pypi.python.org/pypi/cloudmesh-common)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/cloudmesh/cloudmesh-common/blob/master/LICENSE)
 [![Python](https://img.shields.io/pypi/pyversions/cloudmesh-common.svg)](https://pypi.python.org/pypi/cloudmesh-common)
 [![Format](https://img.shields.io/pypi/format/cloudmesh-common.svg)](https://pypi.python.org/pypi/cloudmesh-common)
 [![Format](https://img.shields.io/pypi/status/cloudmesh-common.svg)](https://pypi.python.org/pypi/cloudmesh-common)
 [![Travis](https://travis-ci.com/cloudmesh/cloudmesh-common.svg?branch=master)](https://travis-ci.com/cloudmesh/cloudmesh-common)
-
 
 ## Instalation and Documentation
 
