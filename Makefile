@@ -29,7 +29,7 @@ clean:
 	rm -rf docs/build
 	rm -rf build
 	rm -rf dist
-	find . -name '__pycache__' -delete
+	find . -type d -name __pycache__ -delete
 	find . -name '*.pyc' -delete
 	rm -rf .tox
 	rm -f *.whl

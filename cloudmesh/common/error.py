@@ -3,7 +3,7 @@ A simple framework to handle error messages
 """
 import sys
 import traceback
-
+from cloudmesh.common.console import Console
 
 #
 # TODO: this class seems to replicate some portions of what Console does
@@ -27,8 +27,7 @@ class Error(object):
         """
         if debug and error is not None:
             print(error)
-        # TODO: BUG: trace should only be printed if debug is true
-        if trace:
+        if debug and trace:
             print(traceback.format_exc())
 
     @classmethod
@@ -40,38 +39,38 @@ class Error(object):
         :param trace: 
         :return: 
         """
-        # TODO: if debug:
-        Error.msg(error=error, debug=debug, trace=trace)
+        if debug and trace:
+            Error.msg(error=error, debug=debug, trace=trace)
 
     @classmethod
-    def info(cls, msg):
+    def info(cls, msg, debug=True):
         """
         prints an info msg. 
         :param msg: the message
         :return: 
         """
-        # TODO: if info:
-        print(msg)
+        if debug:
+            Console.info(msg)
 
     @classmethod
-    def warning(cls, msg):
+    def warning(cls, msg, debug=True):
         """
         prints a warning message. 
         :param msg: 
         :return: 
         """
-        # TODO: if warning:
-        print(msg)
+        if debug:
+            Console.warning(msg)
 
     @classmethod
-    def debug(cls, msg):
+    def debug(cls, msg, debug=True):
         """
         prints a debug message.
         :param msg: the message
         :return: 
         """
-        # TODO: if debug:
-        print(msg)
+        if debug:
+            Console.msg(msg)
 
     @classmethod
     def exit(cls, msg):
@@ -80,8 +79,5 @@ class Error(object):
         :param msg: 
         :return: 
         """
-        # TODO: if debug:
-        print(msg)
+        Console.error(msg)
         sys.exit()
-
-        # TODO: adding methods for setting and getting info and debug are missing
