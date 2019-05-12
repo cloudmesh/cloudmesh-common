@@ -9,7 +9,7 @@ class Config(object):
     def __init__(self, filename=None):
         self.filename = filename
         if self.filename is None:
-            self.filename = Path(path_expand("~/.cloudmesh/cloudmesh2.yaml"))
+            self.filename = Path(path_expand("~/.cloudmesh/cloudmesh.yaml"))
         content = readfile(self.filename)
         self.data = yaml.load(content, Loader=yaml.RoundTripLoader)
 
