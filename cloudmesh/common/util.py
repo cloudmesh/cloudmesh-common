@@ -1,6 +1,3 @@
-"""
-Useful utility functions
-"""
 from __future__ import print_function
 
 import glob
@@ -160,11 +157,12 @@ def yn_choice(message, default='y', tries=None):
 
 
 def banner(txt=None, c="#", debug=True, label=None, color=None):
-    """prints a banner of the form with a frame of # around the txt::
+    """
+    prints a banner of the form with a frame of # around the txt::
 
-      ############################
-      # txt
-      ############################
+    ############################
+    # txt
+    ############################
 
     :param color: prints in the given color
     :param label: adds a label
@@ -304,12 +302,14 @@ def auto_create_requirements(requirements):
 
 def copy_files(files_glob, source_dir, dest_dir):
     """
+    copies the files to the destination
 
-    :param files_glob: *.yaml
+    :param files_glob: \*.yaml
     :param source_dir: source directiry
     :param dest_dir: destination directory
-    :return:
+
     """
+
     files = glob.iglob(os.path.join(source_dir, files_glob))
     for filename in files:
         if os.path.isfile(filename):
