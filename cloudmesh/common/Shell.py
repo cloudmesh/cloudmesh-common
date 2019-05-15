@@ -5,7 +5,6 @@ command be completely execute before the output is returned. FOr many activities
 
 from __future__ import print_function
 
-
 import errno
 import glob
 import os
@@ -22,6 +21,7 @@ from cloudmesh.common.dotdict import dotdict
 from cloudmesh.common.util import path_expand
 import subprocess
 from functools import partial
+
 
 class Brew(object):
     @classmethod
@@ -236,23 +236,18 @@ class Shell(object):
         if python_version[0] == 2:
 
             python_version_s = '.'.join(v_string)
-            if (python_version[0] == 2) and (python_version[1] >= 7) and (
-                    python_version[2] >= 9):
+            if (python_version[0] == 2) and (python_version[1] >= 7) and (python_version[2] >= 9):
 
-                print(
-                    "You are running a supported version of python: {:}".format(
-                        python_version_s))
+                print("You are running a supported version of python: {:}".format(python_version_s))
             else:
-                print(
-                    "WARNING: You are running an unsupported version of python: {:}".format(
-                        python_version_s))
+                print("WARNING: You are running an unsupported version of python: {:}".format(python_version_s))
                 print("         We recommend you update your python")
 
         elif python_version[0] == 3:
 
             python_version_s = '.'.join(v_string)
             if (python_version[0] == 3) and (python_version[1] >= 7) and (
-                    python_version[2] >= 0):
+                python_version[2] >= 0):
 
                 print(
                     "You are running a supported version of python: {:}".format(
