@@ -6,7 +6,7 @@ from __future__ import print_function
 import json
 
 import oyaml as yaml
-#from prettytable import PrettyTable
+# from prettytable import PrettyTable
 from cloudmesh.common.prettytable import PrettyTable
 
 from cloudmesh.common.console import Console
@@ -105,6 +105,7 @@ class Printer(object):
         :param show_none:
         :return:
         """
+
         d = {}
         count = 0
         for entry in l:
@@ -119,30 +120,25 @@ class Printer(object):
                         show_none=show_none)
 
     @classmethod
-    def dict(cls,
-             d,
-             order=None,
-             header=None,
-             output="table",
-             sort_keys=True,
-             show_none=""):
+    def dict(cls, d, order=None, header=None, output="table", sort_keys=True, show_none=""):
         """
-        TODO
         :param d: A a dict with dicts of the same type.
         :type d: dict
-        :param order:The order in which the columns are printed.
-                    The order is specified by the key names of the dict.
-        :type order:
+        :param order: The order in which the columns are printed.
+                      The order is specified by the key names of the dict.
+        :type order: list
         :param header: The Header of each of the columns
         :type header: list or tuple of field names
         :param output: type of output (table, csv, json, yaml or dict)
         :type output: string
-        :param sort_keys:
+        :param sort_keys: list
         :type sort_keys: bool
         :param show_none: prints None if True for None values otherwise ""
-        :type show_none: bool
+        :type show_none: string
         :return:
+
         """
+
         if output == "table":
             if d == {}:
                 return None
@@ -166,25 +162,22 @@ class Printer(object):
             return "UNKOWN FORMAT. Please use table, csv, json, yaml, dict."
 
     @classmethod
-    def csv(cls,
-            d,
-            order=None,
-            header=None,
-            sort_keys=True):
+    def csv(cls, d, order=None, header=None, sort_keys=True):
         """
         prints a table in csv format
 
         :param d: A a dict with dicts of the same type.
         :type d: dict
-        :param order:The order in which the columns are printed.
-                    The order is specified by the key names of the dict.
+        :param order: The order in which the columns are printed.
+                      The order is specified by the key names of the dict.
         :type order:
         :param header: The Header of each of the columns
         :type header: list or tuple of field names
-        :param sort_keys: TODO: not yet implemented
+        :param sort_keys: TODO - not yet implemented
         :type sort_keys: bool
         :return: a string representing the table in csv format
         """
+
         first_element = list(d)[0]
 
         def _keys():
@@ -226,25 +219,20 @@ class Printer(object):
         return table
 
     @classmethod
-    def dict_table(cls,
-                   d,
-                   order=None,
-                   header=None,
-                   sort_keys=True,
-                   show_none="",
-                   max_width=40):
-        """prints a pretty table from an dict of dicts
-        :param d: A a dict with dicts of the same type.
-                      Each key will be a column
+    def dict_table(cls, d, order=None, header=None, sort_keys=True, show_none="", max_width=40):
+        """
+        prints a pretty table from an dict of dicts
+
+        :param d: A a dict with dicts of the same type. Each key will be a column
         :param order: The order in which the columns are printed.
                       The order is specified by the key names of the dict.
-        :param header:  The Header of each of the columns
-        :type header:   A list of string
-        :param sort_keys:   Key(s) of the dict to be used for sorting.
-                            This specify the column(s) in the table for sorting.
-        :type sort_keys:    string or a tuple of string (for sorting with multiple columns)
-        :param show_none: prints None if True for None values otherwise ""
-        :type show_none: bool
+        :param header: The Header of each of the columns
+        :type header: A list of string
+        :param sort_keys: Key(s) of the dict to be used for sorting.
+                          This specify the column(s) in the table for sorting.
+        :type sort_keys: string or a tuple of string (for sorting with multiple columns)
+        :param show_none: prints None if True for None values
+        :type show_none: string
         :param max_width: maximum width for a cell
         :type max_width: int
         """
@@ -300,24 +288,21 @@ class Printer(object):
         return x
 
     @classmethod
-    def attribute(cls,
-                  d,
-                  header=None,
-                  order=None,
-                  sort_keys=True,
-                  output="table"):
-        """prints a attribute/key value table 
-         :param d: A a dict with dicts of the same type.
-                       Each key will be a column
-         :param order: The order in which the columns are printed.
+    def attribute(cls, d, header=None, order=None, sort_keys=True, output="table"):
+        """
+        prints a attribute/key value table
+
+        :param d: A a dict with dicts of the same type.
+                  Each key will be a column
+        :param order: The order in which the columns are printed.
                        The order is specified by the key names of the dict.
-         :param header:  The Header of each of the columns
-         :type header:   A list of string
-         :param sort_keys:   Key(s) of the dict to be used for sorting.
+        :param header:  The Header of each of the columns
+        :type header:   A list of string
+        :param sort_keys:   Key(s) of the dict to be used for sorting.
                              This specify the column(s) in the table for sorting.
-         :type sort_keys:    string or a tuple of string (for sorting with multiple columns)
-         :param output: the output format table, csv, dict, json
-         """
+        :type sort_keys:    string or a tuple of string (for sorting with multiple columns)
+        :param output: the output format table, csv, dict, json
+        """
 
         if header is None:
             header = ["Attribute", "Value"]
@@ -392,7 +377,9 @@ class Printer(object):
 
     @classmethod
     def row_table(cls, d, order=None, labels=None):
-        """prints a pretty table from data in the dict.
+        """
+        prints a pretty table from data in the dict.
+
         :param d: A dict to be printed
         :param order: The order in which the columns are printed.
                       The order is specified by the key names of the dict.
