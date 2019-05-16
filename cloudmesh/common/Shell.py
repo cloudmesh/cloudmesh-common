@@ -151,28 +151,26 @@ class Shell(object):
         'darwin': {}
     }
 
-    '''
-    TODO
-    
-    how do we now define dynamically functions based on a list that we want to support
+    # TODO
+    #
+    # how do we now define dynamically functions based on a list that we want to support
+    #
+    # what we want is where args are multiple unlimited parameters to the function
+    #
+    # def f(args...):
+    #     name = get the name from f
+    #     a = list of args...
+    #
+    #    cls.execute(cmd, arguments=a, capture=True, verbose=False)
+    #
+    # commands = ['ps', 'ls', ..... ]
+    # for c in commands:
+    #    generate this command and add to this class dynamically
+    #
+    # or do something more simple
+    #
+    # ls = cls.execute('cmd', args...)
 
-    what we want is where args are multiple unlimited parameters to the function
-
-    def f(args...):
-        name = get the name from f
-        a = list of args...
-
-        cls.execute(cmd, arguments=a, capture=True, verbose=False)
-
-    commands = ['ps', 'ls', ..... ]
-    for c in commands:
-        generate this command and add to this class dynamically
-
-    or do something more simple
-
-    ls = cls.execute('cmd', args...)
-
-    '''
 
     @classmethod
     def terminal(cls, command='pwd'):
@@ -246,16 +244,11 @@ class Shell(object):
         elif python_version[0] == 3:
 
             python_version_s = '.'.join(v_string)
-            if (python_version[0] == 3) and (python_version[1] >= 7) and (
-                python_version[2] >= 0):
+            if (python_version[0] == 3) and (python_version[1] >= 7) and (python_version[2] >= 0):
 
-                print(
-                    "You are running a supported version of python: {:}".format(
-                        python_version_s))
+                print("You are running a supported version of python: {:}".format(python_version_s))
             else:
-                print(
-                    "WARNING: You are running an unsupported version of python: {:}".format(
-                        python_version_s))
+                print("WARNING: You are running an unsupported version of python: {:}".format(python_version_s))
                 print("         We recommend you update your python")
 
         # pip_version = pip.__version__

@@ -4,10 +4,8 @@
 # pytest -v tests/test_verbose.py
 ###############################################################
 
-from pprint import pprint
-
 from cloudmesh.common.util import HEADING
-from cloudmesh.DEBUG import VERBOSE
+from cloudmesh.common.DEBUG import VERBOSE
 import io
 from contextlib import redirect_stdout
 import pytest
