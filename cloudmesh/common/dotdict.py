@@ -1,16 +1,14 @@
-"""
-A convenient dot dict class
-
-a = dotdict({"argument": "value"})
-
-print (a.argument)
-
-"""
-
-
 # noinspection PyPep8Naming
 class dotdict(dict):
-    """dot.notation access to dictionary attributes"""
+    """
+    A convenient dot dict class::
+
+        a = dotdict({"argument": "value"})
+
+    print (a.argument)
+
+    Nested dot documentation is not supported.
+    """
 
     def __getattr__(self, attr):
         return self.get(attr)
