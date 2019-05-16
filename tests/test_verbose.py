@@ -5,7 +5,7 @@
 ###############################################################
 
 from cloudmesh.common.util import HEADING
-from cloudmesh.common.DEBUG import VERBOSE
+from cloudmesh.common.debug import VERBOSE
 import io
 from contextlib import redirect_stdout
 import pytest
