@@ -1,4 +1,4 @@
-from cloudmesh.variables import Variables
+from cloudmesh.common.variables import Variables
 from cloudmesh.common.util import banner
 from pprint import pformat
 import inspect
