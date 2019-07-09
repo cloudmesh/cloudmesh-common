@@ -49,9 +49,12 @@ class YamlDB(object):
             dbfile.write(bits)
 
     def __setitem__(self, k, v):
-        assert isinstance(v, str) or isinstance(v, unicode), repr(v)
+
         # the assertion should short-circuit, supporting Py2 and Py3
-        self._db[k] = v
+        # the following did not work and therfore was outcommented
+        # assert isinstance(v, str) or isinstance(v, unicode), repr(v)
+
+        self._db[str(k)] = str(v)
         self.flush()
 
     def __getitem__(self, k):
