@@ -4,6 +4,7 @@ import oyaml as yaml
 
 import os.path
 import os
+import sys
 
 
 #
@@ -51,10 +52,11 @@ class YamlDB(object):
     def __setitem__(self, k, v):
 
         # the assertion should short-circuit, supporting Py2 and Py3
-        # the following did not work and therfore was outcommented
-        # assert isinstance(v, str) or isinstance(v, unicode), repr(v)
-
-        self._db[str(k)] = str(v)
+        if sys.version_info[0] == 2:
+            assert isinstance(v, str) or isinstance(v, unicode), repr(v)
+            self._db[str(k)] = v
+        else:
+            self._db[str(k)] = str(v)
         self.flush()
 
     def __getitem__(self, k):
