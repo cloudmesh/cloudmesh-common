@@ -34,7 +34,7 @@ def VERBOSE(msg, label=None, color="BLUE", verbose=9, location=True):
 
         hline = "\n" + 70 * "-" + "\n"
 
-        banner(filename + hline + lineno + hline + pformat(msg) ,
+        banner(lineno + " " + filename + hline + pformat(msg),
                label=label,
                color=color)
 
