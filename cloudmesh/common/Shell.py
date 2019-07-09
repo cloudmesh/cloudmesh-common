@@ -774,6 +774,14 @@ class Shell(object):
                     path = os.path.join(path, word)
                 zf.extract(member, path)
 
+    @staticmethod
+    def edit(filename):
+        if platform == 'darwin':
+            os.system("emacs " + filename)
+
+        else:
+           raise NotImplementedError("Editor not configured for OS")
+
 
 def main():
     """
