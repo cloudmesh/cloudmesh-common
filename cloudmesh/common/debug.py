@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 from cloudmesh.common.variables import Variables
 from cloudmesh.common.util import banner
 from pprint import pformat
