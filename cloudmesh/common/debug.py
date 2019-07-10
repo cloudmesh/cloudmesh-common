@@ -7,8 +7,17 @@ import inspect
 import os
 
 
+
+
 # noinspection PyPep8Naming
-def VERBOSE(msg, label=None, color="BLUE", verbose=9, location=True):
+def VERBOSE(msg, label=None, color="BLUE", verbose=9, location=True,
+            secrets=["OS_PASSWORD", "OS_USERNAME",
+                     "client_secret", "client_id", "project_id",
+                     "AZURE_TENANT_ID", "AZURE_SUBSCRIPTION_ID",
+                     "AZURE_APPLICATION_ID", "AZURE_SECRET_KEY: TBD",
+                     "EC2_ACCESS_ID: TBD", "EC2_SECRET_KEY",
+                     "MONGO_PASSWORD"]
+            ):
     """
     Prints a data structure in verbose mode
 
@@ -18,6 +27,7 @@ def VERBOSE(msg, label=None, color="BLUE", verbose=9, location=True):
     :param verbose: indicates when to print it. If verbose in cloudmesh is higher than the speified value it is printed
     :return:
     """
+
 
     _verbose = int(Variables()["verbose"] or 0)
     if _verbose >= verbose:
@@ -32,9 +42,14 @@ def VERBOSE(msg, label=None, color="BLUE", verbose=9, location=True):
             module = inspect.getmodule(frame[0])
             filename = module.__file__.replace(cwd, ".")
             lineno = str(inspect.stack()[1][2]) + ":" + str(inspect.stack()[1][3])
-            print("# FILENAME:", filename, sep="")
+            # print("# FILENAME:", filename, sep="")
 
         hline = "\n" + 70 * "-" + "\n"
+
+        if type(msg) == dict and secrets is not None:
+            for key in secrets:
+                if key in msg:
+                    msg[key] = "********"
 
         banner(lineno + " " + filename + hline + pformat(msg),
                label=label,
