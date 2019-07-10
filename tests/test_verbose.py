@@ -8,20 +8,7 @@ from cloudmesh.common.util import HEADING
 from cloudmesh.common.debug import VERBOSE
 import io
 import pytest
-
-import sys
-
-if sys.version_info[0] == 3:
-    from contextlib import redirect_stdout
-else:
-    import contextlib
-
-    @contextlib.contextmanager
-    def redirect_stdout(target):
-        original = sys.stdout
-        sys.stdout = target
-        yield
-        sys.stdout = original
+from contextlib import redirect_stdout
 
 
 
