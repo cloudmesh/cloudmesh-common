@@ -3,84 +3,67 @@
 # pytest -v --capture=no  tests/test_strdb.py
 # pytest -v tests/test_strdb.py
 ###############################################################
-#
-# TODO: theres is absolutely no need to use hypothesis. THis code does not
-#       follow our convention to develop nose tests. Also using nosetests 
-#       allows us to get rid of hypothesis
-#
+
 import os
-import unittest
-from hypothesis import given
-from hypothesis import strategies as st
+import pytest
 from tempfile import mkstemp
-from ruamel import yaml
+import oyaml as yaml
 from cloudmesh.db.strdb import YamlDB
 
-import pytest
-
 @pytest.mark.incremental
-class TestYamlDB(unittest.TestCase):
-    def setUp(self):
+class TestYamlDB:
+
+    def setup(self):
+        self.key = "key"
+        self.value = "value"
         self.dbfd, self.dbpath = mkstemp(
             prefix='cloudmesh.db.strdb.TestYamlDB.'
         )
         self.db = YamlDB(path=self.dbpath)
 
-    def tearDown(self):
-        os.close(self.dbfd)
-        os.unlink(self.dbpath)
+    def test_insert(self):
+        self.db[self.key] = self.value
 
-    @given(st.text(), st.text())
-    def test_insert(self, key, value):
-        self.db[key] = value
+    def test_in(self):
+        self.db[self.key] = self.value
+        assert self.key in self.db
 
-    @given(st.text(), st.text())
-    def test_in(self, key, value):
-        self.db[key] = value
-        self.assertIn(key, self.db)
+    def test_get(self):
+        self.db[self.key] = self.value
+        dbvalue = self.db[self.key]
+        assert self.value == dbvalue
 
-    @given(st.text(), st.text())
-    def test_get(self, key, value):
-        self.db[key] = value
-        dbvalue = self.db[key]
-        self.assertEqual(value, dbvalue)
+    def test_del(self):
+        self.db[self.key] = self.value
+        del self.db[self.key]
+        assert self.key not in self.db
 
-    @given(st.text(), st.text())
-    def test_del(self, key, value):
-        self.db[key] = value
-        del self.db[key]
-        self.assertNotIn(key, self.db)
-
-    @given(st.text(), st.text())
-    def test_persistence(self, key, value):
-        self.db[key] = value
+    def test_persistence(self):
+        self.db[self.key] = self.value
         with open(self.dbpath, 'rb') as dbfile:
             db = yaml.safe_load(dbfile)
-        self.assertIn(key, db)
-        self.assertEqual(value, db[key])
+        assert self.key in db
+        assert self.value == db[self.key]
 
-    @given(st.text(), st.text())
-    def test_iter(self, key, value):
-        self.db[key] = value
+    def test_iter(self):
+        self.db[self.key] = self.value
         for k in self.db:
             pass
 
-    @given(st.text(), st.text())
-    def test_clear(self, key, value):
-        self.db[key] = value
+    def test_clear(self):
+        self.db[self.key] = self.value
         self.db.clear()
-        self.assertNotIn(key, self.db)
+        assert self.key not in self.db
 
-    @given(st.lists(st.tuples(st.text(), st.text())))
-    def test_len(self, entries):
+    def test_len(self):
         self.db.clear()
+        entries = ['a', 'b', 'c']
 
-        duplicates = 0
-        for k, v in entries:
-            duplicates += 1 if k in self.db else 0
-            self.db[k] = v
-        self.assertEqual(len(self.db), len(entries) - duplicates)
+        for k in entries:
+            self.db[k] = k
+        assert len(self.db) == len(entries)
 
 
-if __name__ == '__main__':
-    unittest.main()
+    def tearDown(self):
+        os.close(self.dbfd)
+        os.unlink(self.dbpath)
