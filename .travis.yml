@@ -20,6 +20,8 @@ install:
   - cp cloudmesh/etc/cloudmesh.yaml ~/.cloudmesh
 
 script:
+  - pytest -v tests/test_stopwatch.py
+  - pytest -v tests/test_verbose.py
   - pytest -v tests/test_strdb.py
   - pytest -v tests/test_tables.py
   - pytest -v tests/test_flatdict.py
