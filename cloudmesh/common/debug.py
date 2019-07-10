@@ -47,11 +47,15 @@ def VERBOSE(msg, label=None, color="BLUE", verbose=9, location=True,
         hline = "\n" + 70 * "-" + "\n"
 
         if type(msg) == dict and secrets is not None:
+            tmp = dict(msg)
             for key in secrets:
-                if key in msg:
-                    msg[key] = "********"
-
-        banner(lineno + " " + filename + hline + pformat(msg),
-               label=label,
-               color=color)
+                if key in tmp:
+                    tmp[key] = "********"
+            banner(lineno + " " + filename + hline + pformat(tmp),
+                   label=label,
+                   color=color)
+        else:
+            banner(lineno + " " + filename + hline + pformat(msg),
+                   label=label,
+                   color=color)
 
