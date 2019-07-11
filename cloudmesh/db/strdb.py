@@ -88,5 +88,6 @@ class YamlDB(object):
         for name in kwargs:
             self._db[name] = kwargs[name]
 
-
+    def dict(self):
+        return self._db
 

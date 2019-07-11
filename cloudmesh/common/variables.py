@@ -48,6 +48,9 @@ class Variables(object):
     def clear(self):
         self.data.clear()
 
+    def dict(self):
+        return self.data._db
+
 
 if __name__ == "__main__":
     v = Variables()

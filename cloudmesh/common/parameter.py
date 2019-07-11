@@ -10,8 +10,15 @@ class Parameter(object):
             return expand_hostlist(parameter, allow_duplicates=False, sort=False)
 
     @staticmethod
-    def find_attribute (name, dicts):
+    def find(name, *dicts):
+        """
+        Finds the value for the key name in multiple dicts
+
+        :param name: the key to find
+        :param dicts: the list of dicts
+        :return:
+        """
         for d in dicts:
-            if name in d:
+            if name in d and d[name] is not None:
                 return d[name]
         return None
