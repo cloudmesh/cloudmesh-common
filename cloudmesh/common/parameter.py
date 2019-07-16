@@ -1,5 +1,5 @@
 from hostlist import expand_hostlist
-
+from cloudmesh.common.dotdict import dotdict
 
 class Parameter(object):
     @classmethod
@@ -22,3 +22,6 @@ class Parameter(object):
             if name in d and d[name] is not None:
                 return d[name]
         return None
+
+
+

@@ -156,13 +156,13 @@ def yn_choice(message, default='y', tries=None):
                 tries -= 1
 
 
-def banner(txt=None, c="#", debug=True, label=None, color=None):
+def banner(txt=None, c="-", debug=True, label=None, color=None):
     """
     prints a banner of the form with a frame of # around the txt::
 
-    ############################
+    # --------------------------
     # txt
-    ############################
+    # --------------------------
 
     :param color: prints in the given color
     :param label: adds a label
@@ -189,12 +189,12 @@ def banner(txt=None, c="#", debug=True, label=None, color=None):
     Console.cprint(color, "", output)
 
 
-def str_banner(txt=None, c="#", debug=True):
+def str_banner(txt=None, c="-", debug=True):
     """prints a banner of the form with a frame of # around the txt::
 
-      ############################
-      # txt
-      ############################
+    # --------------------------
+    # txt
+    # --------------------------
 
     :param debug: return "" if not in debug
     :type debug: boolean
@@ -214,7 +214,7 @@ def str_banner(txt=None, c="#", debug=True):
 
 
 # noinspection PyPep8Naming
-def HEADING(txt=None, c="#"):
+def HEADING(txt=None, c="#", color="HEADER"):
     """
     Prints a message to stdout with #### surrounding it. This is useful for
     nosetests to better distinguish them.
@@ -228,10 +228,14 @@ def HEADING(txt=None, c="#"):
     filename = frame[1][1].replace(os.getcwd(), "")
     line = frame[1][2] - 1
     method = frame[1][3]
-    msg = "{}\n# {} {} {}".format(txt, method, filename, line)
+    if txt is None:
+        msg = "{} {} {}".format(method, filename, line)
+    else:
+        msg = "{}\n {} {} {}".format(txt, method, filename, line)
+
 
     print()
-    banner(msg, c=c)
+    banner(msg, c=c, color=color)
 
 
 def backup_name(filename):
