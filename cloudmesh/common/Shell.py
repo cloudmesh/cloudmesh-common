@@ -667,18 +667,6 @@ class Shell(object):
 
 
     @classmethod
-    def run(cls, command, encoding='utf-8'):
-        cmd = f"{command}; exit 0"
-
-        r = subprocess.check_output(command,
-                                    stderr=subprocess.STDOUT,
-                                    shell=True)
-        if encoding is None:
-            return r
-        else:
-            return str(r, encoding)
-
-    @classmethod
     def execute(cls,
                 cmd,
                 arguments="",
