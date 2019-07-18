@@ -2,6 +2,7 @@ from __future__ import print_function
 
 from cloudmesh.db.strdb import YamlDB
 from cloudmesh.common.util import path_expand
+from cloudmesh.common.parameter import Parameter
 
 
 class Variables(object):
@@ -50,6 +51,11 @@ class Variables(object):
 
     def dict(self):
         return self.data._db
+
+    def parameter(self, attribute, position=0):
+        value = str(self.data[attribute])
+        expand = Parameter.expand(value)[position]
+        return expand
 
 
 if __name__ == "__main__":
