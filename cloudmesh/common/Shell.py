@@ -332,7 +332,7 @@ class Shell(object):
         :return: 
         """
 
-        if platform.system().lower() == "darwin":
+        if platform == "darwin":
             command = "/Applications/VirtualBox.app/Contents/MacOS/VBoxManage"
         else:
             command = 'VBoxManage'
@@ -427,7 +427,7 @@ class Shell(object):
         :param count: the number of pings
         :return: 
         """
-        option = '-n' if platform.system().lower() == 'windows' else '-c'
+        option = '-n' if platform == 'windows' else '-c'
         return cls.execute('ping',
                            "{option} {count} {host}".format(option=option,
                                                             count=count,
@@ -663,7 +663,7 @@ class Shell(object):
         the name of the os
         :return: the name of the os
         """
-        return platform.system().lower()
+        return platform
 
 
     @classmethod
@@ -823,6 +823,7 @@ def main():
 
     r = shell.pwd()
     print(r)
+
 
 
 if __name__ == "__main__":
