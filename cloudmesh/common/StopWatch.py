@@ -122,16 +122,42 @@ class StopWatch(object):
 
             data_platform['cpu_count'] = multiprocessing.cpu_count()
             mem = psutil.virtual_memory()
-            data_platform['mem_total'] = humanize.naturalsize(mem.total,  \
-                                                                   binary=True)
-            data_platform['mem_available'] = humanize.naturalsize(
-                mem.available, binary=True)
-            data_platform['mem_percent'] = str(mem.percent) +"%"
-            data_platform['mem_used'] = humanize.naturalsize(mem.used, binary=True)
-            data_platform['mem_free'] = humanize.naturalsize(mem.free, binary=True)
-            data_platform['mem_active'] = humanize.naturalsize(mem.active, binary=True)
-            data_platform['mem_inactive'] = humanize.naturalsize(mem.inactive, binary=True)
-            data_platform['mem_wired'] = humanize.naturalsize(mem.wired, binary=True)
+            try:
+                data_platform['mem_total'] = humanize.naturalsize(mem.total,  \
+                                                               binary=True)
+            except:
+                pass
+            try:
+                data_platform['mem_available'] = humanize.naturalsize(
+                    mem.available, binary=True)
+            except:
+                pass
+            try:
+                data_platform['mem_percent'] = str(mem.percent) +"%"
+            except:
+                pass
+            try:
+                data_platform['mem_used'] = humanize.naturalsize(mem.used, binary=True)
+            except:
+                pass
+            try:
+                data_platform['mem_free'] = humanize.naturalsize(mem.free,
+                                                              binary=True)
+            except:
+                pass
+            try:
+                data_platform['mem_active'] = humanize.naturalsize(mem.active,
+                                                                binary=True)
+            except:
+                pass
+            try:
+                data_platform['mem_inactive'] = humanize.naturalsize(mem.inactive, binary=True)
+            except:
+                pass
+            try:
+                data_platform['mem_wired'] = humanize.naturalsize(mem.wired, binary=True)
+            except:
+                pass
             #svmem(total=17179869184, available=6552825856, percent=61.9,
 
 
