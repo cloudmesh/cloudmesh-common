@@ -43,6 +43,7 @@ ruamel.yaml
 pathlib
 pathlib2
 future
+humanize
 """.split("\n")
 
 version = readfile("VERSION").strip()
