@@ -21,7 +21,8 @@ class Variables(object):
         self.data[str(key)] = value
 
     def __delitem__(self, key):
-        del self.data[str(key)]
+        if key in self.data:
+            del self.data[str(key)]
 
     def __contains__(self, item):
         return str(item) in self.data
