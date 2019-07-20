@@ -134,9 +134,10 @@ class ssh_config(object):
             return None
 
     def generate(self,
-                 key="india",
-                 host="india.futuresystems.org",
-                 username=None,
+                 host="india",
+                 hostname="india.futuresystems.org",
+                 identity="~/.ssh/id_rsa.pub",
+                 user=None,
                  force=False,
                  verbose=False):
         """
@@ -148,20 +149,17 @@ class ssh_config(object):
         :param verbose: prints debug messages
         :return: 
         """
-        data = {
-            "host": host,
-            "key": key,
-            "username": username
-        }
-        if verbose and key in self.names():
-            Console.error("{key} already in ~/.ssh/config".format(**data), traceflag=False)
+
+        if verbose and host in self.names():
+            Console.error(f"{host} already in ~/.ssh/config", traceflag=False)
             return ""
         else:
             entry = dedent("""
-            Host {key}
-                Hostname {host}
-                User {username}
-            """.format(**data))
+            Host {host}
+                Hostname {hostname}
+                User {user}
+                IdentityFile {identity}
+            """.format(**locals()))
         try:
             with open(self.filename, "a") as config_ssh:
                 config_ssh.write(entry)
@@ -182,7 +180,7 @@ if __name__ == "__main__":
     user = ConfigDict("cloudmesh.yaml")["cloudmesh.profile.user"]
     print("User:", user)
 
-    hosts.generate(key="india", username=user)
+    hosts.generate(host="india", user=user)
     print(hosts.filename)
 
     print(hosts.list())
