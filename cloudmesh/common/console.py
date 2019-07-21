@@ -263,6 +263,22 @@ class Console(object):
                message +
                Console.theme['ENDC']))
 
+    @staticmethod
+    def text(color='RED', prefix=None, message=None):
+        """
+        returns a message in a given color
+        :param color: the color as defined in the theme
+        :param prefix: the prefix (a string)
+        :param message: the message
+        :return:
+        """
+        message = message or ""
+        prefix = prefix or ""
+        return (Console.theme[color] +
+                prefix +
+                message +
+                Console.theme['ENDC'])
+
 
 #
 # Example
