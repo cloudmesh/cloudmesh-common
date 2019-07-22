@@ -78,7 +78,7 @@ class FlatDict(dict):
     def dict(self):
         return self.__dict__
 
-    def __init__(self, d, sep=None):
+    def __init__(self, d, sep="__"):
         self.__dict__ = flatten(d, sep=sep)
 
     def __setitem__(self, key, item):
