@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import collections
+import re
 
 try:
     collectionsAbc = collections.abc
@@ -77,8 +78,8 @@ class FlatDict(dict):
     def dict(self):
         return self.__dict__
 
-    def __init__(self, d):
-        self.__dict__ = flatten(d)
+    def __init__(self, d, sep=None):
+        self.__dict__ = flatten(d, sep=sep)
 
     def __setitem__(self, key, item):
         """
@@ -128,6 +129,17 @@ class FlatDict(dict):
     def __getattr__(self, attr):
         return self.get(attr)
 
+    def search(self, key, value):
+        """
+        search("cloudmesh.cloud.*.cm.active", True)
+        :param key:
+        :param value:
+        :return:
+        """
+        flat = FlatDict(self.__dict__, sep=".")
+        r = re.compile(key)
+        result = list(filter(r.match, flat))
+        return result
 
 class FlatDict2(object):
     if six.PY2:
