@@ -31,14 +31,11 @@ def readfile(filename):
 
 requiers = """
 six
-nose
-pytest
 python-hostlist
 simplejson
 oyaml
 colorama
 psutil
-hypothesis
 ruamel.yaml
 pathlib
 pathlib2
