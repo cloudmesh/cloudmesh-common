@@ -47,7 +47,7 @@ class TableParser(object):
         """
 
         :param header: if true the first line is a header. Not implemented
-        :param index: if true, identifies one of the heade column as index
+        :param index: if true, identifies one of the header column as index
                       for dict key naming
         :param change: an array of tuples of characters that need to be
                        changed to allow key creation in the dict

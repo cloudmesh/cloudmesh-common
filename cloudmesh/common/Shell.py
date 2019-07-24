@@ -678,7 +678,8 @@ class Shell(object):
 
         :param witherror: if set to False the error will not be printed
         :param traceflag: if set to true the trace is printed in case of an error
-        :param cwd: the current working directory in whcih the command is supposed to be executed.
+        :param cwd: the current working directory in which the command is
+        supposed to be executed.
         :param shell: if set to true the subprocess is called as part of a shell
         :param cmd: command to run
         :param arguments: we do not know yet
@@ -786,7 +787,7 @@ class Shell(object):
 
 def main():
     """
-    a test that should actually be added into a nosetest
+    a test that should actually be added into a pytest
     :return: 
     """
     shell = Shell()

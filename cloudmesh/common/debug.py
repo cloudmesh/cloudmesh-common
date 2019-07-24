@@ -21,10 +21,11 @@ def VERBOSE(msg, label=None, color="BLUE", verbose=9, location=True,
     """
     Prints a data structure in verbose mode
 
-    :param msg: the msg to be printed, can be a datastructure suc as a dict
+    :param msg: the msg to be printed, can be a data structure such as a dict
     :param label: the  label to be used, defaults to the name of the msg variable
     :param color: the color
-    :param verbose: indicates when to print it. If verbose in cloudmesh is higher than the speified value it is printed
+    :param verbose: indicates when to print it. If verbose in cloudmesh is
+                    higher than the specified value it is printed
     :return:
     """
 
