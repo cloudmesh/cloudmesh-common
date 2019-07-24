@@ -109,7 +109,7 @@ class StopWatch(object):
     @classmethod
     def benchmark(cls, sysinfo=True):
         """
-        prints out all timers in a convenient benchmark tabble
+        prints out all timers in a convenient benchmark table
         :return:
         :rtype:
         """
@@ -163,7 +163,7 @@ class StopWatch(object):
 
         if sysinfo:
             print(Printer.attribute(data_platform,
-                                    ["Machine Arribute", "Value"]))
+                                    ["Machine Attribute", "Value"]))
 
 
         #

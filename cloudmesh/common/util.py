@@ -217,7 +217,7 @@ def str_banner(txt=None, c="-", debug=True):
 def HEADING(txt=None, c="#", color="HEADER"):
     """
     Prints a message to stdout with #### surrounding it. This is useful for
-    nosetests to better distinguish them.
+    pytests to better distinguish them.
 
     :param c: uses the given char to wrap the header
     :param txt: a text message to be printed
@@ -309,7 +309,7 @@ def copy_files(files_glob, source_dir, dest_dir):
     copies the files to the destination
 
     :param files_glob: \*.yaml
-    :param source_dir: source directiry
+    :param source_dir: source directory
     :param dest_dir: destination directory
 
     """

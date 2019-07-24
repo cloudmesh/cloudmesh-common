@@ -16,6 +16,8 @@ source:
 
 requirements:
 	pip-compile setup.py
+	fgrep -v "# via" requirements.txt > tmp.txt
+	mv tmp.txt requirements.txt
 
 test:
 	pytest -v --html=.report.html
