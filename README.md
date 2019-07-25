@@ -8,16 +8,16 @@
 [![Format](https://img.shields.io/pypi/status/cloudmesh-common.svg)](https://pypi.python.org/pypi/cloudmesh-common)
 [![Travis](https://travis-ci.com/cloudmesh/cloudmesh-common.svg?branch=master)](https://travis-ci.com/cloudmesh/cloudmesh-common)
 
-## Instalation and Documentation
+## Installation and Documentation
 
 Please note that several packages are available which are pointed to in the
-instalation documentation.
+installation documentation.
 
 |  | Links |
 |---------------|-------|
 | Documentation | <https://cloudmesh.github.io/cloudmesh-cloud> |
 | Code | <https://github.com/cloudmesh/cloudmesh-cloud> |
-| Instalation Instructions | <https://github.com/cloudmesh/get> |
+| Installation Instructions | <https://github.com/cloudmesh/get> |
 
 ## Highlighted features
 
@@ -78,15 +78,15 @@ We have many such build in commands, please see the source
     
 ## Printer
 
-A convenient way to pring dictionaries and lists with repeated
-entries as tables, csv, json, yaml. The dictionaries can even be hirachical.
+A convenient way to print dictionaries and lists with repeated
+entries as tables, csv, json, yaml. The dictionaries can even be hierarchical.
 
 * [cloudmesh.common.Printer](https://github.com/cloudmesh/cloudmesh-common/blob/master/cloudmesh/common/Printer.py)
 
 Let us assume we have 
 
 ```python
- data = [
+data = [
     {
         "name": "Gregor",
         "address": {
@@ -101,7 +101,7 @@ Let us assume we have
             "city": "Cloudnine"
         }
     }
- ]
+]
 ```
 
 Then we can print it nicely with 
@@ -154,7 +154,7 @@ from cloudmesh.common.dotdict import doctict
 # convert a simple dict to a dotdict
 d = dotdict({"name": "Gregor"})
 # Now you can say
-print(d["name])
+print(d["name"])
 print(d.name)
 ```
 
@@ -167,7 +167,7 @@ print(d.name)
 
 ## util
 
-Very useful funtions are included in util
+Very useful functions are included in util
 
 
 * [cloudmesh.common.util](https://github.com/cloudmesh/cloudmesh-common/blob/master/cloudmesh/common/util.py)
