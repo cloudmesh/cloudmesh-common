@@ -19,9 +19,34 @@ class Parameter(object):
         :return:
         """
         for d in dicts:
-            if name in d and d[name] is not None:
+            if type(d) == str:
+                return d
+            elif name in d and d[name] is not None:
                 return d[name]
+
         return None
 
+    @staticmethod
+    def find_bool(name, *dicts):
+        """
+        Finds the value for the key name in multiple dicts
 
+        :param name: the key to find
+        :param dicts: the list of dicts
+        :return:
+        """
+        value = False
+
+        for d in dicts:
+            if type(d) == str:
+                value = d == 'True'
+            elif name in d:
+                value = d[name]
+            if type(value) == str:
+                value = value == 'True'
+
+            if value:
+                return True
+
+        return False
 
