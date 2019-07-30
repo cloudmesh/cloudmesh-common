@@ -16,8 +16,8 @@ install:
   - pip install --user -r requirements.txt
   - pip install --user -r requirements-dev.txt
   - pip install --user .
-  - mkdir ~/.cloudmesh
-  - cp cloudmesh/etc/cloudmesh.yaml ~/.cloudmesh
+#  - mkdir ~/.cloudmesh
+#  - cp cloudmesh/etc/cloudmesh.yaml ~/.cloudmesh
 
 script:
   - pytest -v tests/test_stopwatch.py

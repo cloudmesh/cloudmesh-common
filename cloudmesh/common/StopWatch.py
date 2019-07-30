@@ -6,13 +6,14 @@ This class is based on a similar java class in cyberaide, and java cog kit.
 """
 from __future__ import print_function
 
+import multiprocessing
 import os
 import time
+
+import humanize
+import psutil
 from cloudmesh.common.Printer import Printer
 from cloudmesh.common.systeminfo import systeminfo
-import multiprocessing
-import psutil
-import humanize
 
 
 class StopWatch(object):
@@ -124,8 +125,8 @@ class StopWatch(object):
         data_platform['cpu_count'] = multiprocessing.cpu_count()
         mem = psutil.virtual_memory()
         try:
-            data_platform['mem_total'] = humanize.naturalsize(mem.total,  \
-                                                           binary=True)
+            data_platform['mem_total'] = humanize.naturalsize(mem.total, \
+                                                              binary=True)
         except:
             pass
         try:
@@ -134,64 +135,80 @@ class StopWatch(object):
         except:
             pass
         try:
-            data_platform['mem_percent'] = str(mem.percent) +"%"
+            data_platform['mem_percent'] = str(mem.percent) + "%"
         except:
             pass
         try:
-            data_platform['mem_used'] = humanize.naturalsize(mem.used, binary=True)
+            data_platform['mem_used'] = humanize.naturalsize(mem.used,
+                                                             binary=True)
         except:
             pass
         try:
             data_platform['mem_free'] = humanize.naturalsize(mem.free,
-                                                          binary=True)
+                                                             binary=True)
         except:
             pass
         try:
             data_platform['mem_active'] = humanize.naturalsize(mem.active,
-                                                            binary=True)
+                                                               binary=True)
         except:
             pass
         try:
-            data_platform['mem_inactive'] = humanize.naturalsize(mem.inactive, binary=True)
+            data_platform['mem_inactive'] = humanize.naturalsize(mem.inactive,
+                                                                 binary=True)
         except:
             pass
         try:
-            data_platform['mem_wired'] = humanize.naturalsize(mem.wired, binary=True)
+            data_platform['mem_wired'] = humanize.naturalsize(mem.wired,
+                                                              binary=True)
         except:
             pass
-        #svmem(total=17179869184, available=6552825856, percent=61.9,
+        # svmem(total=17179869184, available=6552825856, percent=61.9,
 
         if sysinfo:
             print(Printer.attribute(data_platform,
                                     ["Machine Attribute", "Value"]))
-
 
         #
         # PRINT TIMERS
         #
         timers = StopWatch.keys()
 
-        data_timers = {}
-        for timer in timers:
-            data_timers[timer] = {
-                'time': round(StopWatch.get(timer), 2),
-                'timer': timer
-            }
-            for attribute in ["node", "system", "machine", "mac_version",
-                              "win_version"]:
-                data_timers[timer][attribute] = data_platform[attribute]
+        if len(timers) > 0:
 
-        # print(Printer.attribute(data_timers, header=["Command", "Time/s"]))
-        print(Printer.write(
-            data_timers,
-            order=["timer", "time", "node", "system", "mac_version",
-                   "win_version"]
-        ))
+            data_timers = {}
+            for timer in timers:
+                data_timers[timer] = {
+                    'time': round(StopWatch.get(timer), 2),
+                    'timer': timer
+                }
+                for attribute in ["node",
+                                  "user",
+                                  "system",
+                                  "machine",
+                                  "mac_version",
+                                  "win_version"]:
+                    data_timers[timer][attribute] = data_platform[attribute]
 
-        print()
-        print(Printer.write(
-            data_timers,
-            order=["timer", "time", "node", "system", "mac_version",
-                   "win_version"],
-            output="csv"
-        ))
+            # print(Printer.attribute(data_timers, header=["Command", "Time/s"]))
+            print(Printer.write(
+                data_timers,
+                order=["timer", "time", "node", "user",
+                       "system",
+                       "mac_version",
+                       "win_version"]
+            ))
+
+            print()
+            print(Printer.write(
+                data_timers,
+                order=["timer", "time", "node", "user",
+                       "system",
+                       "mac_version",
+                       "win_version"],
+                output="csv"
+            ))
+
+        else:
+
+            print("ERROR: No timers found")
