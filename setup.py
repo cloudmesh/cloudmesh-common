@@ -30,13 +30,11 @@ def readfile(filename):
 # pytz==2016.10
 
 requiers = """
-six
 python-hostlist
 simplejson
 oyaml
 colorama
 psutil
-ruamel.yaml
 pathlib
 pathlib2
 future
