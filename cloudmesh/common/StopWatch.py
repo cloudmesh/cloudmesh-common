@@ -108,7 +108,7 @@ class StopWatch(object):
         return s
 
     @classmethod
-    def benchmark(cls, sysinfo=True, csv=True):
+    def benchmark(cls, sysinfo=True, csv=True, tag=None):
         """
         prints out all timers in a convenient benchmark table
         :return:
@@ -180,7 +180,8 @@ class StopWatch(object):
             for timer in timers:
                 data_timers[timer] = {
                     'time': round(StopWatch.get(timer), 2),
-                    'timer': timer
+                    'timer': timer,
+                    'tag': tag or ''
                 }
                 for attribute in ["node",
                                   "user",
@@ -193,7 +194,7 @@ class StopWatch(object):
             # print(Printer.attribute(data_timers, header=["Command", "Time/s"]))
             print(Printer.write(
                 data_timers,
-                order=["timer", "time", "node", "user",
+                order=["timer", "time", "tag", "node", "user",
                        "system",
                        "mac_version",
                        "win_version"]
@@ -203,7 +204,7 @@ class StopWatch(object):
             if csv:
                 print(Printer.write(
                     data_timers,
-                    order=["timer", "time", "node", "user",
+                    order=["timer", "time", "tag", "node", "user",
                            "system",
                            "mac_version",
                            "win_version"],
