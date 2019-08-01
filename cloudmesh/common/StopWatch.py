@@ -108,7 +108,7 @@ class StopWatch(object):
         return s
 
     @classmethod
-    def benchmark(cls, sysinfo=True):
+    def benchmark(cls, sysinfo=True, csv=True):
         """
         prints out all timers in a convenient benchmark table
         :return:
@@ -200,14 +200,15 @@ class StopWatch(object):
             ))
 
             print()
-            print(Printer.write(
-                data_timers,
-                order=["timer", "time", "node", "user",
-                       "system",
-                       "mac_version",
-                       "win_version"],
-                output="csv"
-            ))
+            if csv:
+                print(Printer.write(
+                    data_timers,
+                    order=["timer", "time", "node", "user",
+                           "system",
+                           "mac_version",
+                           "win_version"],
+                    output="csv"
+                ))
 
         else:
 
