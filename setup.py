@@ -39,6 +39,7 @@ pathlib
 pathlib2
 future
 humanize
+python-dateutil
 """.split("\n")
 
 version = readfile("VERSION").strip()
