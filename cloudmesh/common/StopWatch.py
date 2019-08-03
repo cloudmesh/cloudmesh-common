@@ -71,12 +71,10 @@ class StopWatch(object):
         if name in cls.timer_end:
             try:
                 diff = cls.timer_end[name] - cls.timer_start[name]
-                print ("YYY", round, diff)
                 if round is not None:
                     cls.timer_elapsed[name] = round(diff, digits)
                 else:
                     cls.timer_elapsed[name] = diff
-                print ("BBB", cls.timer_elapsed[name])
                 return cls.timer_elapsed[name]
             except:
                 return None
