@@ -45,6 +45,7 @@ class StopWatch(object):
         if cls.debug:
             print("Timer", name, "started ...")
         cls.timer_start[name] = time.time()
+        cls.timer_end[name] = None
 
     @classmethod
     def stop(cls, name):
@@ -59,7 +60,7 @@ class StopWatch(object):
             print("Timer", name, "stopped ...")
 
     @classmethod
-    def get(cls, name):
+    def get(cls, name, digits=None):
         """
         returns the time of the timer.
 
@@ -68,9 +69,17 @@ class StopWatch(object):
         :rtype: the elapsed time
         """
         if name in cls.timer_end:
-            cls.timer_elapsed[name] = cls.timer_end[name] - \
-                                      cls.timer_start[name]
-            return cls.timer_elapsed[name]
+            try:
+                diff = cls.timer_end[name] - cls.timer_start[name]
+                print ("YYY", round, diff)
+                if round is not None:
+                    cls.timer_elapsed[name] = round(diff, digits)
+                else:
+                    cls.timer_elapsed[name] = diff
+                print ("BBB", cls.timer_elapsed[name])
+                return cls.timer_elapsed[name]
+            except:
+                return None
         else:
             return "undefined"
 
@@ -179,7 +188,7 @@ class StopWatch(object):
             data_timers = {}
             for timer in timers:
                 data_timers[timer] = {
-                    'time': round(StopWatch.get(timer), 2),
+                    'time': StopWatch.get(timer, digits=3),
                     'timer': timer,
                     'tag': tag or ''
                 }
