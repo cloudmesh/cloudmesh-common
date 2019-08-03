@@ -113,8 +113,6 @@ class Printer(object):
         :return:
         """
 
-        print ("EEE", humanize)
-
         d = {}
         count = 0
         for entry in l:
@@ -154,7 +152,7 @@ class Printer(object):
         :return:
 
         """
-        print ("YYY", humanize)
+
         if output == "table":
             if d == {}:
                 return None
@@ -267,7 +265,7 @@ class Printer(object):
         :param max_width: maximum width for a cell
         :type max_width: int
         """
-        print ("WWW", humanize)
+
         def _keys():
             all_keys = []
             for e in d:
@@ -313,7 +311,7 @@ class Printer(object):
         else:
             sorted_list = d
 
-        print ("OOO")
+
         for element in sorted_list:
             values = []
             for key in order:
