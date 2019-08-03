@@ -6,14 +6,14 @@ from __future__ import print_function
 import json
 
 import oyaml as yaml
-# from prettytable import PrettyTable
-from cloudmesh.common.prettytable import PrettyTable
-
+from cloudmesh.common.FlatDict import flatten
 from cloudmesh.common.console import Console
 from cloudmesh.common.dotdict import dotdict
+# from prettytable import PrettyTable
+from cloudmesh.common.prettytable import PrettyTable
 from cloudmesh.common.util import convert_from_unicode
-from cloudmesh.common.FlatDict import flatten
-
+from humanize import naturaltime
+from dateutil import parser
 
 class Printer(object):
     """
@@ -27,6 +27,7 @@ class Printer(object):
                   output="table",
                   sort_keys=True,
                   show_none="",
+                  humanize=None,
                   sep="."
                   ):
         """
@@ -47,7 +48,9 @@ class Printer(object):
                              sort_keys=sort_keys,
                              order=order,
                              header=header,
-                             output=output)
+                             output=output,
+                             humanize=humanize
+                             )
 
     @classmethod
     def write(cls, table,
@@ -55,6 +58,7 @@ class Printer(object):
               header=None,
               output="table",
               sort_keys=True,
+              humanize=None,
               show_none=""
               ):
         """
@@ -77,13 +81,15 @@ class Printer(object):
                             header=header,
                             output=output,
                             sort_keys=sort_keys,
+                            humanize=humanize,
                             show_none=show_none)
 
         elif type(table) == list:
 
             return cls.list(table,
                             order=order, header=header, output=output,
-                            sort_keys=sort_keys, show_none=show_none)
+                            sort_keys=sort_keys, humanize=humanize,
+                            show_none=show_none)
         else:
             Console.error("unkown type {0}".format(type(table)))
 
@@ -94,6 +100,7 @@ class Printer(object):
              header=None,
              output="table",
              sort_keys=True,
+             humanize=None,
              show_none=""
              ):
         """
@@ -106,6 +113,8 @@ class Printer(object):
         :return:
         """
 
+        print ("EEE", humanize)
+
         d = {}
         count = 0
         for entry in l:
@@ -117,10 +126,17 @@ class Printer(object):
                         header=header,
                         sort_keys=sort_keys,
                         output=output,
+                        humanize=humanize,
                         show_none=show_none)
 
     @classmethod
-    def dict(cls, d, order=None, header=None, output="table", sort_keys=True, show_none=""):
+    def dict(cls, d,
+             order=None,
+             header=None,
+             output="table",
+             sort_keys=True,
+             humanize=None,
+             show_none=""):
         """
         :param d: A a dict with dicts of the same type.
         :type d: dict
@@ -138,7 +154,7 @@ class Printer(object):
         :return:
 
         """
-
+        print ("YYY", humanize)
         if output == "table":
             if d == {}:
                 return None
@@ -146,11 +162,13 @@ class Printer(object):
                 return cls.dict_table(d,
                                       order=order,
                                       header=header,
+                                      humanize=humanize,
                                       sort_keys=sort_keys)
         elif output == "csv":
             return cls.csv(d,
                            order=order,
                            header=header,
+                           humanize=humanize,
                            sort_keys=sort_keys)
         elif output == "json":
             return json.dumps(d, sort_keys=sort_keys, indent=4)
@@ -162,7 +180,8 @@ class Printer(object):
             return "UNKOWN FORMAT. Please use table, csv, json, yaml, dict."
 
     @classmethod
-    def csv(cls, d, order=None, header=None, sort_keys=True):
+    def csv(cls, d, order=None, header=None, humanize=None,
+            sort_keys=True):
         """
         prints a table in csv format
 
@@ -206,12 +225,18 @@ class Printer(object):
         content = []
         for attribute in order:
             content.append(attribute)
+
         table = table + ",".join([str(e) for e in content]) + "\n"
 
         for job in d:
             content = []
             for attribute in order:
                 try:
+                    #if attribute in humanize:
+                    #    value = parser.parse(d[job][attribute])
+                    #    content.append(naturaltime(value))
+                    #    pass
+                    #else:
                     content.append(d[job][attribute])
                 except:
                     content.append("None")
@@ -219,7 +244,13 @@ class Printer(object):
         return table
 
     @classmethod
-    def dict_table(cls, d, order=None, header=None, sort_keys=True, show_none="", max_width=40):
+    def dict_table(cls, d,
+                   order=None,
+                   header=None,
+                   sort_keys=True,
+                   show_none="",
+                   humanize=None,
+                   max_width=40):
         """
         prints a pretty table from an dict of dicts
 
@@ -236,7 +267,7 @@ class Printer(object):
         :param max_width: maximum width for a cell
         :type max_width: int
         """
-
+        print ("WWW", humanize)
         def _keys():
             all_keys = []
             for e in d:
@@ -250,6 +281,9 @@ class Printer(object):
                 tmp = str(d[item][key])
                 if tmp == "None":
                     tmp = show_none
+                elif humanize and key in humanize:
+                    tmp = parser.parse(tmp)
+                    tmp = naturaltime(tmp)
             except:
                 tmp = ' '
             return tmp
@@ -279,16 +313,19 @@ class Printer(object):
         else:
             sorted_list = d
 
+        print ("OOO")
         for element in sorted_list:
             values = []
             for key in order:
-                values.append(_get(element, key))
+                value = _get(element, key)
+                values.append(value)
             x.add_row(values)
         x.align = "l"
         return x
 
     @classmethod
-    def attribute(cls, d, header=None, order=None, sort_keys=True, output="table"):
+    def attribute(cls, d, header=None, order=None, sort_keys=True, humanize=None,
+                  output="table"):
         """
         prints a attribute/key value table
 
