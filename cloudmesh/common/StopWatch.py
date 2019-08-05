@@ -186,6 +186,8 @@ class StopWatch(object):
             data_timers = {}
             for timer in timers:
                 data_timers[timer] = {
+                    'start': time.strftime("%Y-%m-%d %H:%M:%S",
+                                           time.gmtime(StopWatch.timer_start[timer])),
                     'time': StopWatch.get(timer, digits=3),
                     'timer': timer,
                     'tag': tag or ''
@@ -201,7 +203,12 @@ class StopWatch(object):
             # print(Printer.attribute(data_timers, header=["Command", "Time/s"]))
             print(Printer.write(
                 data_timers,
-                order=["timer", "time", "tag", "node", "user",
+                order=["timer",
+                       "time",
+                       "start",
+                       "tag",
+                       "node",
+                       "user",
                        "system",
                        "mac_version",
                        "win_version"]
@@ -211,7 +218,12 @@ class StopWatch(object):
             if csv:
                 print(Printer.write(
                     data_timers,
-                    order=["timer", "time", "tag", "node", "user",
+                    order=["timer",
+                           "time",
+                           "start"
+                           "tag",
+                           "node",
+                           "user",
                            "system",
                            "mac_version",
                            "win_version"],
