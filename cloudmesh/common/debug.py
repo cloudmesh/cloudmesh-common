@@ -5,9 +5,9 @@ from cloudmesh.common.util import banner
 from pprint import pformat
 import inspect
 import os
+import threading
 
-
-
+verbose_lock = threading.Lock()
 
 # noinspection PyPep8Naming
 def VERBOSE(msg, label=None, color="BLUE", verbose=9, location=True,
@@ -29,9 +29,10 @@ def VERBOSE(msg, label=None, color="BLUE", verbose=9, location=True,
     :return:
     """
 
-
     _verbose = int(Variables()["verbose"] or 0)
     if _verbose >= verbose:
+
+        verbose_lock.acquire()
 
         if label is None:
             label = inspect.stack()[1][4][0].strip().replace("VERBOSE(", "")
@@ -60,3 +61,4 @@ def VERBOSE(msg, label=None, color="BLUE", verbose=9, location=True,
                    label=label,
                    color=color)
 
+        verbose_lock.release()
