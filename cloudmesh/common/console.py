@@ -8,6 +8,7 @@ import traceback
 
 import colorama
 from colorama import Fore, Back, Style
+# from cloudmesh.common.variables import Variables
 
 colorama.init()
 
@@ -151,6 +152,9 @@ class Console(object):
         :return: 
         """
         # print (message, prefix)
+        #variables = Variables()
+        #traceflag = traceflag or variables['trace']
+
         message = message or ""
         if prefix:
             text = "ERROR: "
