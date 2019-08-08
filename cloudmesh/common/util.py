@@ -189,28 +189,39 @@ def banner(txt=None, c="-", debug=True, label=None, color=None):
     Console.cprint(color, "", output)
 
 
-def str_banner(txt=None, c="-", debug=True):
-    """prints a banner of the form with a frame of # around the txt::
+def str_banner(txt=None, c="-", debug=True, label=None, color=None):
+    """
+    prints a banner of the form with a frame of # around the txt::
 
     # --------------------------
     # txt
     # --------------------------
 
-    :param debug: return "" if not in debug
-    :type debug: boolean
+    :param color: prints in the given color
+    :param label: adds a label
+    :param debug: prints only if debug is true
     :param txt: a text message to be printed
     :type txt: string
     :param c: the character used instead of c
     :type c: character
     """
-    line = ""
+    output = ""
     if debug:
-        line += "\n"
-        line += "# " + str(70 * c)
+        output = "\n"
+        output += "# " + 70 * c + "\n"
+        if label is not None:
+            output += "# " + label + "\n"
+            output += "# " + 70 * c + "\n"
         if txt is not None:
-            line += "# " + txt
-            line += "# " + str(70 * c)
-    return line
+            for line in txt.split("\n"):
+                output += "# " + line + "\n"
+            output += "# " + 70 * c + "\n"
+    if color is None:
+        color = "BLUE"
+
+    return output
+
+
 
 
 # noinspection PyPep8Naming
