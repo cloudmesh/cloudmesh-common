@@ -47,6 +47,7 @@ class StopWatch(object):
         cls.timer_start[name] = time.time()
         cls.timer_end[name] = None
 
+
     @classmethod
     def stop(cls, name):
         """
@@ -58,6 +59,7 @@ class StopWatch(object):
         cls.timer_end[name] = time.time()
         if cls.debug:
             print("Timer", name, "stopped ...")
+
 
     @classmethod
     def get(cls, name, digits=None):
@@ -125,6 +127,7 @@ class StopWatch(object):
         #
         # PRINT PLATFORM
         #
+
 
         print()
         data_platform = systeminfo()
@@ -233,3 +236,4 @@ class StopWatch(object):
         else:
 
             print("ERROR: No timers found")
+

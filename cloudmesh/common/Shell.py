@@ -171,6 +171,26 @@ class Shell(object):
     #
     # ls = cls.execute('cmd', args...)
 
+    @staticmethod
+    def dot2svg(filename, engine='dot'):
+        data = {
+            'engine': engine,
+            'file': filename.replace(".dot", "")
+        }
+        command = "{engine} -Tsvg {file}.dot > {file}.svg".format(**data)
+        print(command)
+        os.system(command)
+
+    @staticmethod
+    def browser(filename):
+        data = {
+            'engine': 'python -m webbrowser',
+            'file': filename
+        }
+        if 'file:' not in filename and 'http' not in filename:
+            os.system("python -m webbrowser -t file:///{file}".format(**data))
+        else:
+            os.system("python -m webbrowser -t {file}".format(**data))
 
     @classmethod
     def terminal(cls, command='pwd'):
@@ -355,6 +375,15 @@ class Shell(object):
         :return: 
         """
         return cls.execute('cm', args)
+
+    @classmethod
+    def cms(cls, *args):
+        """
+        executes cm with the given arguments
+        :param args:
+        :return:
+        """
+        return cls.execute('cms', args)
 
     @classmethod
     def fgrep(cls, *args):
@@ -790,11 +819,10 @@ def main():
     a test that should actually be added into a pytest
     :return: 
     """
-    shell = Shell()
 
-    print(shell.terminal_type())
+    print(Shell.terminal_type())
 
-    r = shell.execute('pwd')  # copy line replace
+    r = Shell.execute('pwd')  # copy line replace
     print(r)
 
     # shell.list()
@@ -810,16 +838,16 @@ def main():
         print ("{:}".format(r))
         print ("---------------------")
     """
-    r = shell.execute('ls', ["-l", "-a"])
+    r = Shell.execute('ls', ["-l", "-a"])
     print(r)
 
-    r = shell.execute('ls', "-l -a")
+    r = Shell.execute('ls', "-l -a")
     print(r)
 
-    r = shell.ls("-aux")
+    r = Shell.ls("-aux")
     print(r)
 
-    r = shell.ls("-a", "-u", "-x")
+    r = Shell.ls("-a", "-u", "-x")
     print(r)
 
     r = shell.pwd()
