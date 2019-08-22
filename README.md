@@ -139,6 +139,12 @@ watch.stop("test")
 
 print (watch["test"])
 ```
+
+To print them, you can aslo use
+
+```python
+Stopwatch.benchmark.print()
+```
     
 
 ## dotdict
