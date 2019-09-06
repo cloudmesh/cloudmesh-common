@@ -741,11 +741,32 @@ class Shell(object):
             cwd = os.getcwd()
         try:
             if shell:
-                result = subprocess.check_output(
-                    os_command,
-                    stderr=subprocess.STDOUT,
-                    shell=True,
-                    cwd=cwd)
+                if platform.lower() == 'win32':
+                    import ctypes
+                    class disable_file_system_redirection:
+                        _disable = ctypes.windll.kernel32.Wow64DisableWow64FsRedirection
+                        _revert = ctypes.windll.kernel32.Wow64RevertWow64FsRedirection
+
+                        def __enter__(self):
+                            self.old_value = ctypes.c_long()
+                            self.success = self._disable(ctypes.byref(self.old_value))
+
+                        def __exit__(self, type, value, traceback):
+                            if self.success:
+                                self._revert(self.old_value)
+                    if len(os_command) == 1:
+                        os_command = os_command[0].split(' ')
+                    with disable_file_system_redirection():
+                        result = subprocess.check_output(os_command,
+                                                    stderr=subprocess.STDOUT,
+                                                    shell=True,
+                                                    cwd=cwd)
+                else:
+                    result = subprocess.check_output(
+                        os_command,
+                        stderr=subprocess.STDOUT,
+                        shell=True,
+                        cwd=cwd)
             else:
                 result = subprocess.check_output(
                     os_command,
