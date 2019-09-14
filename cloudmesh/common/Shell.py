@@ -173,12 +173,13 @@ class Shell(object):
     # ls = cls.execute('cmd', args...)
 
     @staticmethod
-    def rmdir(top):
+    def rmdir(top, verbose=False):
         for root, dirs, files in os.walk(top, topdown=False):
             for name in files:
                 try:
                     filename = os.path.join(root, name)
-                    print("D remove", filename)
+                    if verbose:
+                        print("remove", filename)
                     os.chmod(filename, stat.S_IWUSR)
                     os.remove(filename)
                 except:
