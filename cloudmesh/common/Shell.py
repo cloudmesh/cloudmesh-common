@@ -21,6 +21,7 @@ from cloudmesh.common.dotdict import dotdict
 from cloudmesh.common.util import path_expand
 import subprocess
 from functools import partial
+import stat
 
 
 class Brew(object):
@@ -170,6 +171,27 @@ class Shell(object):
     # or do something more simple
     #
     # ls = cls.execute('cmd', args...)
+
+    @staticmethod
+    def rmdir(top):
+        for root, dirs, files in os.walk(top, topdown=False):
+            for name in files:
+                try:
+                    filename = os.path.join(root, name)
+                    print("D remove", filename)
+                    os.chmod(filename, stat.S_IWUSR)
+                    os.remove(filename)
+                except:
+                    pass
+            for name in dirs:
+                try:
+                    os.rmdir(os.path.join(root, name))
+                except:
+                    pass
+        try:
+            os.rmdir(top)
+        except:
+            pass
 
     @staticmethod
     def dot2svg(filename, engine='dot'):
