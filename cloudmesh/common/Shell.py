@@ -9,7 +9,6 @@ import errno
 import glob
 import os
 import shlex
-import subprocess
 import sys
 import zipfile
 from distutils.spawn import find_executable
@@ -20,9 +19,9 @@ from cloudmesh.common.console import Console
 from cloudmesh.common.dotdict import dotdict
 from cloudmesh.common.util import path_expand
 import subprocess
-from functools import partial
-import stat
 
+import stat
+from pathlib import Path
 
 class Brew(object):
     @classmethod
@@ -144,7 +143,7 @@ class Shell(object):
     """
 
     # TODO: we have not supported cygwin for a while
-    cygwin_path = 'bin'  # i copied fom C:\cygwin\bin
+    # cygwin_path = 'bin'  # i copied fom C:\cygwin\bin
 
     command = {
         'windows': {},
@@ -174,6 +173,12 @@ class Shell(object):
 
     @staticmethod
     def rmdir(top, verbose=False):
+
+        # check if top exists
+        p = Path(top)
+        if not p.exists():
+            return
+
         for root, dirs, files in os.walk(top, topdown=False):
             for name in files:
                 try:
@@ -648,29 +653,30 @@ class Shell(object):
                 result = result + [line]
         return result
 
-    def __init__(cls):
-        """
-        identifies parameters for the os
-        """
-        if cls.operating_system() == "windows":
-            cls.find_cygwin_executables()
-        else:
-            pass
-            # implement for cmd, for linux we can just pass as it includes everything
 
-    @classmethod
-    def find_cygwin_executables(cls):
-        """
-        find the executables in cygwin
-        """
-        exe_paths = glob.glob(cls.cygwin_path + r'\*.exe')
-        # print cls.cygwin_path
-        # list all *.exe in  cygwin path, use glob
-        for c in exe_paths:
-            exe = c.split('\\')
-            name = exe[1].split('.')[0]
-            # command['windows'][name] = "{:}\{:}.exe".format(cygwin_path, c)
-            cls.command['windows'][name] = c
+    # def __init__(cls):
+    #     """
+    #     identifies parameters for the os
+    #     """
+    #     if cls.operating_system() == "windows":
+    #         cls.find_cygwin_executables()
+    #     else:
+    #         pass
+    #         # implement for cmd, for linux we can just pass as it includes everything
+    #
+    # @classmethod
+    # def find_cygwin_executables(cls):
+    #     """
+    #     find the executables in cygwin
+    #     """
+    #     exe_paths = glob.glob(cls.cygwin_path + r'\*.exe')
+    #     # print cls.cygwin_path
+    #     # list all *.exe in  cygwin path, use glob
+    #     for c in exe_paths:
+    #         exe = c.split('\\')
+    #         name = exe[1].split('.')[0]
+    #         # command['windows'][name] = "{:}\{:}.exe".format(cygwin_path, c)
+    #         cls.command['windows'][name] = c
 
     @classmethod
     def terminal_type(cls):
@@ -894,7 +900,7 @@ def main():
     r = Shell.ls("-a", "-u", "-x")
     print(r)
 
-    r = shell.pwd()
+    r = Shell.pwd()
     print(r)
 
 
