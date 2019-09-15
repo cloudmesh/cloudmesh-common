@@ -187,3 +187,7 @@ Especially useful are
   * grep (simple line matching)
   * HEADING() which without parameter identifies the name of the function and 
   prints its name within a banner
+
+## Changes
+
+* added support for terminals with dark background
