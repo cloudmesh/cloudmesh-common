@@ -5,12 +5,11 @@ from __future__ import print_function
 
 import textwrap
 import traceback
-
+import platform
 import colorama
 from colorama import Fore, Back, Style
 # from cloudmesh.common.variables import Variables
 
-colorama.init()
 
 
 def indent(text, indent=2, width=128):
@@ -66,8 +65,11 @@ class Console(object):
         'FAIL': Fore.RED,
         'WARNING': Fore.MAGENTA,
         'RED': Fore.RED,
-        'ENDC': '\033[0m',
-        'BOLD': "\033[1m",
+        'ENDC': Style.RESET_ALL,
+        'BOLD': Style.BRIGHT,
+        'NORMAL': Style.NORMAL
+        # 'ENDC': '\033[0m',
+        #'BOLD': "\033[1m",
     }
 
     theme_bw = {
@@ -84,9 +86,14 @@ class Console(object):
         'RED': '',
         'ENDC': '',
         'BOLD': "",
+        'NORMAL': ""
     }
 
     theme = theme_color
+
+    @staticmethod
+    def init():
+        colorama.init()
 
     @classmethod
     def set_debug(cls, on=True):
@@ -252,7 +259,7 @@ class Console(object):
             print(Console.msg(message))
 
     @staticmethod
-    def cprint(color, prefix, message):
+    def cprint(color="BLUE", prefix="", message=""):
         """
         prints a message in a given color
         :param color: the color as defined in the theme
@@ -262,10 +269,11 @@ class Console(object):
         """
         message = message or ""
         prefix = prefix or ""
-        print((Console.theme[color] +
-               prefix +
-               message +
-               Console.theme['ENDC']))
+
+        print(Console.theme_color[color] +
+              prefix +
+              message +
+              Console.theme_color['ENDC'])
 
     @staticmethod
     def text(color='RED', prefix=None, message=None):
