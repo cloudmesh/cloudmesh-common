@@ -11,7 +11,7 @@ define banner
 endef
 
 source:
-	$(call banner, "Install cloudmesh-sommon")
+	$(call banner, "Install cloudmesh-common")
 	pip install -e . -U
 
 requirements:
