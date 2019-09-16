@@ -156,7 +156,7 @@ def yn_choice(message, default='y', tries=None):
                 tries -= 1
 
 
-def banner(txt=None, c="-", debug=True, label=None, color=None):
+def banner(txt=None, c="-", prefix="#", debug=True, label=None, color=None):
     """
     prints a banner of the form with a frame of # around the txt::
 
@@ -175,21 +175,21 @@ def banner(txt=None, c="-", debug=True, label=None, color=None):
     output = ""
     if debug:
         output = "\n"
-        output += "# " + 70 * c + "\n"
+        output += prefix + " " + 70 * c + "\n"
         if label is not None:
-            output += "# " + label + "\n"
-            output += "# " + 70 * c + "\n"
+            output += prefix + " " + label + "\n"
+            output += prefix + " " + 70 * c + "\n"
         if txt is not None:
             for line in txt.split("\n"):
-                output += "# " + line + "\n"
-            output += "# " + 70 * c + "\n"
+                output += prefix + " " + line + "\n"
+            output += prefix + " " + 70 * c + "\n"
     if color is None:
         color = "BLUE"
 
     Console.cprint(color, "", output)
 
 
-def str_banner(txt=None, c="-", debug=True, label=None, color=None):
+def str_banner(txt=None, c="-", prefix= "#", debug=True, label=None, color=None):
     """
     prints a banner of the form with a frame of # around the txt::
 
@@ -208,14 +208,14 @@ def str_banner(txt=None, c="-", debug=True, label=None, color=None):
     output = ""
     if debug:
         output = "\n"
-        output += "# " + 70 * c + "\n"
+        output += prefix + " " + 70 * c + "\n"
         if label is not None:
-            output += "# " + label + "\n"
-            output += "# " + 70 * c + "\n"
+            output += prefix + " " + label + "\n"
+            output += prefix + " " + 70 * c + "\n"
         if txt is not None:
             for line in txt.split("\n"):
-                output += "# " + line + "\n"
-            output += "# " + 70 * c + "\n"
+                output += prefix + " " + line + "\n"
+            output += prefix + " " + 70 * c + "\n"
     if color is None:
         color = "BLUE"
 
