@@ -6,8 +6,25 @@ from pprint import pformat
 import inspect
 import os
 import threading
+import sys
+import traceback
 
 verbose_lock = threading.Lock()
+
+def TRACE():
+    traceback.print_stack()
+
+def tracefunc(frame, event, arg, indent=[0]):
+    if event == "call":
+        indent[0] += 2
+        print("-" * indent[0] + "> call function", frame.f_code.co_name)
+    elif event == "return":
+        print("<" + "-" * indent[0], "exit function", frame.f_code.co_name)
+        indent[0] -= 2
+    return tracefunc
+
+# sys.settrace(tracefunc)
+
 
 # noinspection PyPep8Naming
 def VERBOSE(msg, label=None, color="BLUE", verbose=9, location=True,
