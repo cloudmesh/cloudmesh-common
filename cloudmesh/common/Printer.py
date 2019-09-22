@@ -15,6 +15,7 @@ from cloudmesh.common.util import convert_from_unicode
 from humanize import naturaltime
 from dateutil import parser
 
+
 class Printer(object):
     """
     A simple Printer class with convenient methods to print dictionary, tables, csv, lists
@@ -28,7 +29,8 @@ class Printer(object):
                   sort_keys=True,
                   show_none="",
                   humanize=None,
-                  sep="."
+                  sep=".",
+                  max_width=40
                   ):
         """
         writes the information given in the table
@@ -39,6 +41,8 @@ class Printer(object):
         :param sort_keys: if true the table is sorted
         :param show_none: passed along to the list or dict printer
         :param sep: uses sep as the separator for csv printer
+        :param max_width: maximum width for a cell
+        :type max_width: int
         :return:
         """
 
@@ -49,7 +53,8 @@ class Printer(object):
                              order=order,
                              header=header,
                              output=output,
-                             humanize=humanize
+                             humanize=humanize,
+                             max_width=max_width
                              )
 
     @classmethod
@@ -59,7 +64,8 @@ class Printer(object):
               output="table",
               sort_keys=True,
               humanize=None,
-              show_none=""
+              show_none="",
+              max_width=40
               ):
         """
         writes the information given in the table
@@ -69,6 +75,8 @@ class Printer(object):
         :param output: the format (default is table, values are raw, csv, json, yaml, dict
         :param sort_keys: if true the table is sorted
         :param show_none: passed along to the list or dict printer
+        :param max_width: maximum width for a cell
+        :type max_width: int
         :return: 
         """
         if output == "raw":
@@ -82,14 +90,19 @@ class Printer(object):
                             output=output,
                             sort_keys=sort_keys,
                             humanize=humanize,
-                            show_none=show_none)
+                            show_none=show_none,
+                            max_width=max_width)
 
         elif type(table) == list:
 
             return cls.list(table,
-                            order=order, header=header, output=output,
-                            sort_keys=sort_keys, humanize=humanize,
-                            show_none=show_none)
+                            order=order,
+                            header=header,
+                            output=output,
+                            sort_keys=sort_keys,
+                            humanize=humanize,
+                            show_none=show_none,
+                            max_width=max_width)
         else:
             Console.error("unkown type {0}".format(type(table)))
 
@@ -101,7 +114,8 @@ class Printer(object):
              output="table",
              sort_keys=True,
              humanize=None,
-             show_none=""
+             show_none="",
+             max_width=40
              ):
         """
         :param l: l is a list not a dict
@@ -110,6 +124,8 @@ class Printer(object):
         :param output:
         :param sort_keys:
         :param show_none:
+        :param max_width: maximum width for a cell
+        :type max_width: int
         :return:
         """
 
@@ -125,7 +141,8 @@ class Printer(object):
                         sort_keys=sort_keys,
                         output=output,
                         humanize=humanize,
-                        show_none=show_none)
+                        show_none=show_none,
+                        max_width=max_width)
 
     @classmethod
     def dict(cls, d,
@@ -134,7 +151,8 @@ class Printer(object):
              output="table",
              sort_keys=True,
              humanize=None,
-             show_none=""):
+             show_none="",
+             max_width=40):
         """
         :param d: A a dict with dicts of the same type.
         :type d: dict
@@ -149,6 +167,8 @@ class Printer(object):
         :type sort_keys: bool
         :param show_none: prints None if True for None values otherwise ""
         :type show_none: string
+        :param max_width: maximum width for a cell
+        :type max_width: int
         :return:
 
         """
@@ -161,7 +181,8 @@ class Printer(object):
                                       order=order,
                                       header=header,
                                       humanize=humanize,
-                                      sort_keys=sort_keys)
+                                      sort_keys=sort_keys,
+                                      max_width=max_width)
         elif output == "csv":
             return cls.csv(d,
                            order=order,
@@ -230,11 +251,11 @@ class Printer(object):
             content = []
             for attribute in order:
                 try:
-                    #if attribute in humanize:
+                    # if attribute in humanize:
                     #    value = parser.parse(d[job][attribute])
                     #    content.append(naturaltime(value))
                     #    pass
-                    #else:
+                    # else:
                     content.append(d[job][attribute])
                 except:
                     content.append("None")
@@ -311,7 +332,6 @@ class Printer(object):
         else:
             sorted_list = d
 
-
         for element in sorted_list:
             values = []
             for key in order:
@@ -322,7 +342,8 @@ class Printer(object):
         return x
 
     @classmethod
-    def attribute(cls, d, header=None, order=None, sort_keys=True, humanize=None,
+    def attribute(cls, d, header=None, order=None, sort_keys=True,
+                  humanize=None,
                   output="table"):
         """
         prints a attribute/key value table
