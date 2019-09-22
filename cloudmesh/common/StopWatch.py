@@ -214,8 +214,9 @@ class StopWatch(object):
                        "user",
                        "system",
                        "mac_version",
-                       "win_version"]
-            ))
+                       "win_version"],
+                max_width=128)
+            )
 
             print()
             if csv:
