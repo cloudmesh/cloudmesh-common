@@ -30,7 +30,7 @@ class Printer(object):
                   show_none="",
                   humanize=None,
                   sep=".",
-                  max_width=40
+                  max_width=48
                   ):
         """
         writes the information given in the table
@@ -65,7 +65,7 @@ class Printer(object):
               sort_keys=True,
               humanize=None,
               show_none="",
-              max_width=40
+              max_width=48
               ):
         """
         writes the information given in the table
@@ -115,7 +115,7 @@ class Printer(object):
              sort_keys=True,
              humanize=None,
              show_none="",
-             max_width=40
+             max_width=48
              ):
         """
         :param l: l is a list not a dict
@@ -152,7 +152,7 @@ class Printer(object):
              sort_keys=True,
              humanize=None,
              show_none="",
-             max_width=40):
+             max_width=48):
         """
         :param d: A a dict with dicts of the same type.
         :type d: dict
@@ -269,7 +269,7 @@ class Printer(object):
                    sort_keys=True,
                    show_none="",
                    humanize=None,
-                   max_width=40):
+                   max_width=48):
         """
         prints a pretty table from an dict of dicts
 
