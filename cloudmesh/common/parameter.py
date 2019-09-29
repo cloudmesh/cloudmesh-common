@@ -4,6 +4,13 @@ from cloudmesh.common.dotdict import dotdict
 class Parameter(object):
     @classmethod
     def expand(cls, parameter, allow_duplicates=False, sort=False):
+        """
+        Parameter.expand("a[0-1]")  -> ["a0", "a1"]
+        :param parameter:
+        :param allow_duplicates:
+        :param sort:
+        :return:
+        """
         if parameter is None:
             return parameter
         else:

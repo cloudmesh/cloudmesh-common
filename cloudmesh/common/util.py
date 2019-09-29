@@ -105,6 +105,7 @@ def path_expand(text):
     if result.startswith("."):
         result = result.replace(".", os.getcwd(), 1)
 
+
     return result
 
 def convert_from_unicode(data):
