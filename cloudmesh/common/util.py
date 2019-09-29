@@ -92,6 +92,21 @@ def grep(pattern, filename):
     except StopIteration:
         return ''
 
+def is_gitbash():
+    try:
+        exepath = os.environ['EXEPATH']
+        return "Git" in exepath
+    except:
+        return False
+
+def is_cmd_exe():
+    if is_gitbash():
+        return False
+    else:
+        try:
+            return os.environ['OS'] == 'Windows_NT'
+        except:
+            return False
 
 def path_expand(text):
     """ returns a string with expanded variable.
@@ -105,6 +120,8 @@ def path_expand(text):
     if result.startswith("."):
         result = result.replace(".", os.getcwd(), 1)
 
+    if is_gitbash() or is_cmd_exe():
+        result = result.replace("/", "\\")
 
     return result
 
