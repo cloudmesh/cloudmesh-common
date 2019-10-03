@@ -14,10 +14,11 @@ import zipfile
 from distutils.spawn import find_executable
 from pipes import quote
 from sys import platform
+import platform as os_platform
 
 from cloudmesh.common.console import Console
 from cloudmesh.common.dotdict import dotdict
-from cloudmesh.common.util import path_expand
+from cloudmesh.common.util import path_expand, readfile
 import subprocess
 
 import stat
@@ -862,6 +863,64 @@ class Shell(object):
 
         else:
            raise NotImplementedError("Editor not configured for OS")
+
+    @classmethod
+    def lsb_release(cls):
+        """
+        executes lsb_release command
+        :param args:
+        :return:
+        """
+        return cls.execute('lsb_release', ['-a'])
+
+    @classmethod
+    def distribution(cls):
+        """
+        executes lsb_release command
+        :param args:
+        :return:
+
+        TODO: needs testing
+        """
+
+        machine = platform.lower()
+
+        result = {"platform": machine,
+                  "distribution": None}
+
+        if machine == "linux":
+            #try:
+            #    release = readfile("/etc/os-release")
+            #    if "Debian" in release:
+            #        result["distribution"] = "debian"
+            #    elif "Ubuntu" in release:
+            #        result["distribution"] = "ubuntu"
+            #
+            #except:
+
+            try:
+                r = cls.lsb_release()
+                for line in r.split():
+                    if ":" in line:
+                        attribute, value = line.split(":", 1)
+                        attribute = attribute.strip().replace(" ", "_").lower()
+                        value = value.strip()
+                        result[attribute] = value
+                result["distribution"] = result["description"].split(" ")[0].lower()
+            except:
+                Console.error(f"lsb_release not found for the platform {machine}")
+                raise NotImplementedError
+        elif machine == 'darwin':
+            result["distribution"] = "macos"
+            result["version"] = os_platform.mac_ver()[0]
+        elif machine == 'win32':
+            result["distribution"] = "windows"
+            result["version"] = os_platform.win_ver()[0]
+        else:
+            Console.error(f"not implemented for the platform {machine}")
+            raise NotImplementedError
+
+        return result
 
 
 def main():
