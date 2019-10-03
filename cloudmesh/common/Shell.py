@@ -889,27 +889,29 @@ class Shell(object):
                   "distribution": None}
 
         if machine == "linux":
-            #try:
-            #    release = readfile("/etc/os-release")
-            #    if "Debian" in release:
-            #        result["distribution"] = "debian"
-            #    elif "Ubuntu" in release:
-            #        result["distribution"] = "ubuntu"
-            #
-            #except:
-
             try:
-                r = cls.lsb_release()
-                for line in r.split():
-                    if ":" in line:
-                        attribute, value = line.split(":", 1)
-                        attribute = attribute.strip().replace(" ", "_").lower()
-                        value = value.strip()
-                        result[attribute] = value
-                result["distribution"] = result["description"].split(" ")[0].lower()
+                release = readfile("/etc/os-release")
+                for line in release.splitlines():
+                    attribute, value = line.split("=", 1)
+                    result[attribute] = value
+                if "Debian" in result["NAME"]:
+                    result["distribution"] = "debian"
+                elif "Ubuntu" in result["NAME"]:
+                    result["distribution"] = "ubuntu"
+
             except:
-                Console.error(f"lsb_release not found for the platform {machine}")
-                raise NotImplementedError
+                try:
+                    r = cls.lsb_release()
+                    for line in r.split():
+                        if ":" in line:
+                            attribute, value = line.split(":", 1)
+                            attribute = attribute.strip().replace(" ", "_").lower()
+                            value = value.strip()
+                            result[attribute] = value
+                    result["distribution"] = result["description"].split(" ")[0].lower()
+                except:
+                    Console.error(f"lsb_release not found for the platform {machine}")
+                    raise NotImplementedError
         elif machine == 'darwin':
             result["distribution"] = "macos"
             result["version"] = os_platform.mac_ver()[0]
