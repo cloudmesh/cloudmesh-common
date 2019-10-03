@@ -654,6 +654,20 @@ class Shell(object):
                 result = result + [line]
         return result
 
+    @classmethod
+    def cm_grep(cls, lines, what):
+        """
+        returns all lines that contain what
+        :param lines:
+        :param what:
+        :return:
+        """
+        result = []
+        for line in lines:
+            if what in line:
+                result.append(line)
+        return result
+
 
     # def __init__(cls):
     #     """
