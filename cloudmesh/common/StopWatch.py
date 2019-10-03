@@ -117,7 +117,11 @@ class StopWatch(object):
         return s
 
     @classmethod
-    def benchmark(cls, sysinfo=True, csv=True, tag=None):
+    def benchmark(cls,
+                  sysinfo=True,
+                  csv=True,
+                  prefix="#csv",
+                  tag=None):
         """
         prints out all timers in a convenient benchmark table
         :return:
@@ -220,19 +224,31 @@ class StopWatch(object):
 
             print()
             if csv:
-                print(Printer.write(
-                    data_timers,
-                    order=["timer",
-                           "time",
-                           "start"
-                           "tag",
-                           "node",
-                           "user",
-                           "system",
-                           "mac_version",
-                           "win_version"],
-                    output="csv"
-                ))
+                order = ["csv",
+                         "timer",
+                         "time",
+                         "start"
+                         "tag",
+                         "node",
+                         "user",
+                         "system",
+                         "mac_version",
+                         "win_version"]
+
+                if prefix is not None:
+                    for entry in data_timers:
+                        data_timers[entry]["csv"] = "#csv"
+                    print(Printer.write(
+                        data_timers,
+                        order=order,
+                        output="csv"
+                    ))
+                else:
+                    print(Printer.write(
+                        data_timers,
+                        order=order[1:],
+                        output="csv"
+                    ))
 
         else:
 
