@@ -8,6 +8,8 @@ import traceback
 import platform
 import colorama
 from colorama import Fore, Back, Style
+import os
+
 # from cloudmesh.common.variables import Variables
 
 
@@ -94,6 +96,11 @@ class Console(object):
     @staticmethod
     def init():
         colorama.init()
+
+    @staticmethod
+    def terminate():
+        os._exit(1)
+
 
     @classmethod
     def set_debug(cls, on=True):
