@@ -345,15 +345,19 @@ def copy_files(files_glob, source_dir, dest_dir):
             shutil.copy2(filename, dest_dir)
 
 
-def readfile(filename):
+def readfile(filename, mode='r'):
     """
     returns the content of a file
     :param filename: the filename
     :return: 
     """
-    with open(path_expand(filename), 'r') as f:
-        content = f.read()
-    return content
+    if mode != 'r' and mode != 'rb':
+        Console.error( f"incorrect mode : expected \'r\' or \'rb\' given {mode}\n")
+    else:
+        with open(path_expand(filename), mode)as f:
+            content = f.read()
+            f.close()
+        return content
 
 
 def writefile(filename, content):
@@ -366,6 +370,21 @@ def writefile(filename, content):
     with open(path_expand(filename), 'w') as outfile:
         outfile.write(content)
 
+def writefd(filename, content, mode='w', flags = os.O_RDWR|os.O_CREAT, mask=0o600):
+    """
+    writes the content into the file and control permissions
+    :param filename: the full or relative path to the filename
+    :param content: the content being written
+    :param mode: the write mode ('w') or write bytes mode ('wb')
+    :param flags: the os flags that determine the permissions for the file
+    :param mask: the mask that the permissions will be applied to
+    """
+    if mode != 'w' and mode != 'wb':
+        Console.error( f"incorrect mode : expected \'w\' or \'wb\' given {mode}\n")
+
+    with os.fdopen(os.open(filename, flags, mask), mode) as outfile:
+        outfile.write(content)
+        outfile.close()
 
 # Reference: http://interactivepython.org/runestone/static/everyday/2013/01/3_password.html
 def generate_password(length=8, lower=True, upper=True, number=True):
