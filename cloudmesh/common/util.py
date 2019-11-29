@@ -333,7 +333,7 @@ def copy_files(files_glob, source_dir, dest_dir):
     """
     copies the files to the destination
 
-    :param files_glob: \*.yaml
+    :param files_glob: *.yaml
     :param source_dir: source directory
     :param dest_dir: destination directory
 
