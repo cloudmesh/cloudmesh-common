@@ -1,3 +1,9 @@
+os:
+  - linux
+  - windows
+
+arch: arm64
+
 dist: bionic
 
 sudo: required
