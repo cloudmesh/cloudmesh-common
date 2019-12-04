@@ -299,7 +299,6 @@ class Shell(object):
 
             print("You are running an unsupported version of python: {:}".format(python_version_s))
 
-
             # python_version_s = '.'.join(v_string)
             # if (python_version[0] == 2) and (python_version[1] >= 7) and (python_version[2] >= 9):
 
@@ -320,7 +319,7 @@ class Shell(object):
         # pip_version = pip.__version__
         python_version, pip_version = cls.get_python()
 
-        if int(pip_version.split(".")[0]) >= 18:
+        if int(pip_version.split(".")[0]) >= 19:
             print("You are running a supported version of pip: " + str(
                 pip_version))
         else:
