@@ -24,7 +24,18 @@ import subprocess
 import stat
 from pathlib import Path
 
+def NotImplementedInWindows(f):
+    def new_f():
+        if sys.platfom == "win32":
+            Console.error("The method {f.__name__} is not implemented in Windows,"
+                          " please implement, and/or submit an issue.")
+        f()
+    return new_f
+
+
+
 class Brew(object):
+
     @classmethod
     def install(cls, name):
 
@@ -40,6 +51,7 @@ class Brew(object):
         else:
             print(name, "... error")
             Console.error(r)
+
 
     @classmethod
     def version(cls, name):
@@ -221,6 +233,7 @@ class Shell(object):
         else:
             os.system("python -m webbrowser -t {file}".format(**data))
 
+    @NotImplementedInWindows
     @classmethod
     def terminal(cls, command='pwd'):
 
@@ -282,13 +295,17 @@ class Shell(object):
 
         if python_version[0] == 2:
 
-            python_version_s = '.'.join(v_string)
-            if (python_version[0] == 2) and (python_version[1] >= 7) and (python_version[2] >= 9):
+            print("You are running an unsupported version of python: {:}".format(
+                    python_version_s))
 
-                print("You are running a supported version of python: {:}".format(python_version_s))
-            else:
-                print("WARNING: You are running an unsupported version of python: {:}".format(python_version_s))
-                print("         We recommend you update your python")
+
+            # python_version_s = '.'.join(v_string)
+            # if (python_version[0] == 2) and (python_version[1] >= 7) and (python_version[2] >= 9):
+
+            #    print("You are running an unsupported version of python: {:}".format(python_version_s))
+            # else:
+            #    print("WARNING: You are running an unsupported version of python: {:}".format(python_version_s))
+            #    print("         We recommend you update your python")
 
         elif python_version[0] == 3:
 
