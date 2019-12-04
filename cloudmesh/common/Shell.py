@@ -29,6 +29,7 @@ def NotImplementedInWindows(f):
         if sys.platfom == "win32":
             Console.error("The method {f.__name__} is not implemented in Windows,"
                           " please implement, and/or submit an issue.")
+            sys.exit()
         f()
     return new_f
 
@@ -501,15 +502,6 @@ class Shell(object):
         """
         # TODO: use tasklisk, compare to linux
         return cls.execute('kill', args)
-
-    @classmethod
-    def nosetests(cls, *args):
-        """
-        executes nosetests with the given arguments
-        :param args:
-        :return:
-        """
-        return cls.execute('nosetests', args)
 
     @classmethod
     def nova(cls, *args):
