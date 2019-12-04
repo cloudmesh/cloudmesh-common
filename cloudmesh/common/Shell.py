@@ -293,10 +293,11 @@ class Shell(object):
 
         v_string = [str(i) for i in python_version]
 
+        python_version_s = '.'.join(v_string)
+
         if python_version[0] == 2:
 
-            print("You are running an unsupported version of python: {:}".format(
-                    python_version_s))
+            print("You are running an unsupported version of python: {:}".format(python_version_s))
 
 
             # python_version_s = '.'.join(v_string)
@@ -309,7 +310,6 @@ class Shell(object):
 
         elif python_version[0] == 3:
 
-            python_version_s = '.'.join(v_string)
             if (python_version[0] == 3) and (python_version[1] >= 7) and (python_version[2] >= 0):
 
                 print("You are running a supported version of python: {:}".format(python_version_s))
