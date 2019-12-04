@@ -452,28 +452,6 @@ class Shell(object):
 
     @NotImplementedInWindows
     @classmethod
-    def fgrep(cls, *args):
-        """
-        executes fgrep with the given arguments
-        :param args: 
-        :return: 
-        """
-        # TODO: I think we ahve a similar function that uses pythons file interface
-        #       locate the function, locate all fgrep usesin cloudmesh and check them
-        return cls.execute('fgrep', args)
-
-    @NotImplementedInWindows
-    @classmethod
-    def grep(cls, *args):
-        """
-        executes grep with the given arguments
-        :param args: 
-        :return: 
-        """
-        return cls.execute('grep', args)
-
-    @NotImplementedInWindows
-    @classmethod
     def head(cls, *args):
         """
         executes head with the given arguments
@@ -526,6 +504,7 @@ class Shell(object):
                                                             count=count,
                                                             host=host))
 
+    @NotImplementedInWindows
     @classmethod
     def pwd(cls, *args):
         """
@@ -533,6 +512,8 @@ class Shell(object):
         :param args: 
         :return: 
         """
+        # TODO: implement possibly useing echo %cd%
+        #       there is also python os.getcwd(), check if this works on windows
         return cls.execute('pwd', args)
 
     @classmethod
@@ -544,6 +525,7 @@ class Shell(object):
         """
         return cls.execute('rackdiag', args)
 
+    @NotImplementedInWindows
     @classmethod
     def rm(cls, *args):
         """
@@ -551,6 +533,7 @@ class Shell(object):
         :param args: 
         :return: 
         """
+        # TODO: replace this with shutil.rmtree
         return cls.execute('rm', args)
 
     @classmethod
@@ -571,6 +554,7 @@ class Shell(object):
         """
         return cls.execute('scp', args)
 
+    @NotImplementedInWindows
     @classmethod
     def sort(cls, *args):
         """
@@ -578,6 +562,7 @@ class Shell(object):
         :param args: 
         :return: 
         """
+        # TODO: https://superuser.com/questions/1316317/is-there-a-windows-equivalent-to-the-unix-uniq
         return cls.execute('sort', args)
 
     @classmethod
@@ -598,6 +583,7 @@ class Shell(object):
         """
         return cls.execute('ssh', args)
 
+    @NotImplementedInWindows
     @classmethod
     def sudo(cls, *args):
         """
@@ -605,8 +591,10 @@ class Shell(object):
         :param args: 
         :return: 
         """
+        # TODO: https://stackoverflow.com/questions/9652720/how-to-run-sudo-command-in-windows
         return cls.execute('sudo', args)
 
+    @NotImplementedInWindows
     @classmethod
     def tail(cls, *args):
         """
@@ -614,6 +602,7 @@ class Shell(object):
         :param args: 
         :return: 
         """
+        # TODO: implement with realines on a file.
         return cls.execute('tail', args)
 
     @classmethod
@@ -643,6 +632,7 @@ class Shell(object):
         """
         return cls.execute('mongod', args)
 
+    @NotImplementedInWindows
     @classmethod
     def dialog(cls, *args):
         """
@@ -660,6 +650,41 @@ class Shell(object):
         :return: 
         """
         return cls.execute('pip', args)
+
+    @NotImplementedInWindows
+    @classmethod
+    def fgrep(cls, *args):
+        """
+        executes fgrep with the given arguments
+        :param args:
+        :return:
+        """
+        # TODO: see cm_grep
+        return cls.execute('fgrep', args)
+
+    @NotImplementedInWindows
+    @classmethod
+    def grep(cls, *args):
+        """
+        executes grep with the given arguments
+        :param args:
+        :return:
+        """
+        return cls.execute('grep', args)
+
+    @classmethod
+    def cm_grep(cls, lines, what):
+        """
+        returns all lines that contain what
+        :param lines:
+        :param what:
+        :return:
+        """
+        result = []
+        for line in lines:
+            if what in line:
+                result.append(line)
+        return result
 
     @classmethod
     def remove_line_with(cls, lines, what):
@@ -687,20 +712,6 @@ class Shell(object):
         for line in lines:
             if what in line:
                 result = result + [line]
-        return result
-
-    @classmethod
-    def cm_grep(cls, lines, what):
-        """
-        returns all lines that contain what
-        :param lines:
-        :param what:
-        :return:
-        """
-        result = []
-        for line in lines:
-            if what in line:
-                result.append(line)
         return result
 
 
@@ -909,10 +920,12 @@ class Shell(object):
     def edit(filename):
         if platform == 'darwin':
             os.system("emacs " + filename)
-
+        elif platform == "windows":
+            os.system("notepad " + filename)
         else:
            raise NotImplementedError("Editor not configured for OS")
 
+    @NotImplementedInWindows
     @classmethod
     def lsb_release(cls):
         """
