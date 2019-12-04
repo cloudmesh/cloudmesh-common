@@ -334,6 +334,7 @@ class Shell(object):
         """
         return subprocess.check_output(*args, **kwargs)
 
+    @NotImplementedInWindows
     @classmethod
     def ls(cls, *args):
         """
@@ -341,8 +342,10 @@ class Shell(object):
         :param args: 
         :return: 
         """
+        # TODO: replace with glob
         return cls.execute('ls', args)
 
+    @NotImplementedInWindows
     @classmethod
     def ps(cls, *args):
         """
@@ -350,6 +353,8 @@ class Shell(object):
         :param args: 
         :return: 
         """
+        # TODO: tasklist in windows
+        # TODO: make tasklist and ps behave similar, e.g. have the same output,
         return cls.execute('ps', args)
 
     @classmethod
@@ -361,6 +366,7 @@ class Shell(object):
         """
         return cls.execute('bash', args)
 
+    @NotImplementedInWindows
     @classmethod
     def brew(cls, *args):
         """
@@ -370,6 +376,7 @@ class Shell(object):
         """
         return cls.execute('brew', args)
 
+    @NotImplementedInWindows
     @classmethod
     def cat(cls, *args):
         """
@@ -377,6 +384,9 @@ class Shell(object):
         :param args: 
         :return: 
         """
+        # TODO: replace with file read and reading the content. We need to deal
+        #       with line endings and add maybe a flag endings="unix"/"windows".
+        #       check the finction readlines.
         return cls.execute('cat', args)
 
     @classmethod
@@ -431,14 +441,27 @@ class Shell(object):
         return cls.execute('cms', args)
 
     @classmethod
+    def cmsd(cls, *args):
+        """
+        executes cm with the given arguments
+        :param args:
+        :return:
+        """
+        return cls.execute('cmsd', args)
+
+    @NotImplementedInWindows
+    @classmethod
     def fgrep(cls, *args):
         """
         executes fgrep with the given arguments
         :param args: 
         :return: 
         """
+        # TODO: I think we ahve a similar function that uses pythons file interface
+        #       locate the function, locate all fgrep usesin cloudmesh and check them
         return cls.execute('fgrep', args)
 
+    @NotImplementedInWindows
     @classmethod
     def grep(cls, *args):
         """
@@ -448,6 +471,7 @@ class Shell(object):
         """
         return cls.execute('grep', args)
 
+    @NotImplementedInWindows
     @classmethod
     def head(cls, *args):
         """
@@ -455,6 +479,7 @@ class Shell(object):
         :param args: 
         :return: 
         """
+        # TODO: reimplement with readlines
         return cls.execute('head', args)
 
     @classmethod
@@ -466,6 +491,7 @@ class Shell(object):
         """
         return cls.execute('keystone', args)
 
+    @NotImplementedInWindows
     @classmethod
     def kill(cls, *args):
         """
@@ -473,14 +499,15 @@ class Shell(object):
         :param args: 
         :return: 
         """
+        # TODO: use tasklisk, compare to linux
         return cls.execute('kill', args)
 
     @classmethod
     def nosetests(cls, *args):
         """
         executes nosetests with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('nosetests', args)
 
