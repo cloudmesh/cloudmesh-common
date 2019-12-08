@@ -1,7 +1,5 @@
 from pprint import pprint
 
-Console.error("cloudmesh.common3.Benchmark is deprecated use cloudmesh.common.Benchmark")
-sys.exit()
 
 class DictList(dict):
     """
