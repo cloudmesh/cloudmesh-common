@@ -11,6 +11,7 @@ import tempfile
 import time
 from contextlib import contextmanager
 import collections
+import warnings
 
 try:
     collectionsAbc = collections.abc
