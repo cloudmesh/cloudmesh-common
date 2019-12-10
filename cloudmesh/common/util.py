@@ -353,7 +353,7 @@ def readfile(filename, mode='r'):
     :return: 
     """
     if mode != 'r' and mode != 'rb':
-        Console.error( f"incorrect mode : expected \'r\' or \'rb\' given {mode}\n")
+        Console.error( f"incorrect mode : expected 'r' or 'rb' given {mode}")
     else:
         with open(path_expand(filename), mode)as f:
             content = f.read()
