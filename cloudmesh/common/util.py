@@ -381,7 +381,7 @@ def writefd(filename, content, mode='w', flags = os.O_RDWR|os.O_CREAT, mask=0o60
     :param mask: the mask that the permissions will be applied to
     """
     if mode != 'w' and mode != 'wb':
-        Console.error( f"incorrect mode : expected \'w\' or \'wb\' given {mode}\n")
+        Console.error( f"incorrect mode : expected 'w' or 'wb' given {mode}")
 
     with os.fdopen(os.open(filename, flags, mask), mode) as outfile:
         outfile.write(content)
