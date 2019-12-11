@@ -792,10 +792,9 @@ class Shell(object):
             if output == '' and process.poll() is not None:
                 break
             if output:
-                print
-                output.strip()
-                rc = process.poll()
-                return rc
+                print(output.strip())
+        return_code = process.poll()
+        return return_code
 
     @classmethod
     def execute(cls,
