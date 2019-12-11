@@ -784,15 +784,38 @@ class Shell(object):
         """
         return platform
 
+    @staticmethod
+    def run(command, encoding='utf-8'):
+        """
+        executes the command and returns the output as string
+        :param command:
+        :param encoding:
+        :return:
+        """
+
+        if sys.platform == "win32":
+            command = f"{command}"
+        else:
+            command = f"{command}; exit 0"
+
+        r = subprocess.check_output(command,
+                                    stderr=subprocess.STDOUT,
+                                    shell=True)
+        if encoding is None or encoding == 'utf-8':
+            return str(r, 'utf-8')
+        else:
+            return r
+
     @classmethod
     def live(cls, command):
-        process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
+        process = subprocess.Popen(shlex.split(command),
+                                   stdout=subprocess.PIPE)
         while True:
             output = process.stdout.readline()
             if output == '' and process.poll() is not None:
                 break
             if output:
-                print(output.strip())
+                print(str(output.strip()))
         return_code = process.poll()
         return return_code
 
