@@ -785,7 +785,7 @@ class Shell(object):
         return platform
 
     @classmethod
-    def live(command):
+    def live(cls, command):
         process = subprocess.Popen(shlex.split(command), stdout=subprocess.PIPE)
         while True:
             output = process.stdout.readline()
