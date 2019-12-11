@@ -785,7 +785,7 @@ class Shell(object):
         return platform
 
     @staticmethod
-    def run(command, encoding='utf-8'):
+    def run(command, exit="; exit 0", encoding='utf-8'):
         """
         executes the command and returns the output as string
         :param command:
@@ -796,7 +796,7 @@ class Shell(object):
         if sys.platform == "win32":
             command = f"{command}"
         else:
-            command = f"{command}; exit 0"
+            command = f"{command} {exit}"
 
         r = subprocess.check_output(command,
                                     stderr=subprocess.STDOUT,
