@@ -25,13 +25,15 @@ import stat
 from pathlib import Path
 
 def NotImplementedInWindows(f):
-    def new_f():
-        if sys.platfom == "win32":
-            Console.error("The method {f.__name__} is not implemented in Windows,"
-                          " please implement, and/or submit an issue.")
-            sys.exit()
-        f()
-    return new_f
+    def arg_catcher(*args):
+        def new_f():
+            if sys.platfom == "win32":
+                Console.error("The method {f.__name__} is not implemented in Windows,"
+                            " please implement, and/or submit an issue.")
+                sys.exit()
+            f()
+        return new_f
+    return arg_catcher
 
 
 
