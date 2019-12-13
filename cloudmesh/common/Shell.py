@@ -31,7 +31,7 @@ def NotImplementedInWindows(f):
                 Console.error("The method {f.__name__} is not implemented in Windows,"
                             " please implement, and/or submit an issue.")
                 sys.exit()
-            f()
+            f(args)
         return new_f
     return arg_catcher
 
