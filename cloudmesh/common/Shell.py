@@ -20,6 +20,7 @@ from cloudmesh.common.console import Console
 from cloudmesh.common.dotdict import dotdict
 from cloudmesh.common.util import path_expand, readfile
 import subprocess
+import psutil
 
 import stat
 from pathlib import Path
@@ -337,15 +338,9 @@ class Shell(object):
         """
         return subprocess.check_output(*args, **kwargs)
 
-<<<<<<< HEAD
-    @NotImplementedInWindows
-    @staticmethod
-    def ls(path, match):
-=======
     @classmethod
     @NotImplementedInWindows
-    def ls(cls, *args):
->>>>>>> 6d08f214136d27b3083cd63558a83797176e39f0
+    def ls(cls, path, match):
         """
         executes ls with the given arguments
         :param args: 
@@ -792,6 +787,14 @@ class Shell(object):
         :return: the name of the os
         """
         return platform
+
+    @staticmethod
+    def get_pid(name):
+        pid = None
+        for proc in psutil.process_iter():
+            if name in proc.name():
+                pid = proc.pid
+        return pid
 
     @staticmethod
     def run(command, exit="; exit 0", encoding='utf-8'):
