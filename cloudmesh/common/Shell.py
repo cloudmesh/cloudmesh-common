@@ -25,16 +25,11 @@ import psutil
 import stat
 from pathlib import Path
 
-def NotImplementedInWindows(f):
-    def arg_catcher(*args):
-        def new_f():
-            if sys.platfom == "win32":
-                Console.error("The method {f.__name__} is not implemented in Windows,"
-                            " please implement, and/or submit an issue.")
-                sys.exit()
-            f(args)
-        return new_f
-    return arg_catcher
+def NotImplementedInWindows():
+    if sys.platfom == "win32":
+        Console.error("The method {f.__name__} is not implemented in Windows,"
+                    " please implement, and/or submit an issue.")
+        sys.exit()
 
 
 
@@ -238,8 +233,8 @@ class Shell(object):
             os.system("python -m webbrowser -t {file}".format(**data))
 
     @classmethod
-    @NotImplementedInWindows
     def terminal(cls, command='pwd'):
+        NotImplementedInWindows()
 
         if platform == 'darwin':
             os.system(
@@ -339,25 +334,28 @@ class Shell(object):
         return subprocess.check_output(*args, **kwargs)
 
     @classmethod
-    @NotImplementedInWindows
     def ls(cls, path, match):
         """
         executes ls with the given arguments
         :param args: 
         :return: 
         """
+        NotImplementedInWindows()
+
+
         # TODO: replace with glob
         d = glob.glob(path_expand(path), match)
         return d
 
     @classmethod
-    @NotImplementedInWindows
     def ps(cls, *args):
         """
         executes ps with the given arguments
         :param args: 
         :return: 
         """
+        NotImplementedInWindows()
+
         # TODO: tasklist in windows
         # TODO: make tasklist and ps behave similar, e.g. have the same output,
         return cls.execute('ps', args)
@@ -372,23 +370,23 @@ class Shell(object):
         return cls.execute('bash', args)
 
     @classmethod
-    @NotImplementedInWindows
     def brew(cls, *args):
         """
         executes bash with the given arguments
         :param args: 
         :return: 
         """
+        NotImplementedInWindows()
         return cls.execute('brew', args)
 
     @classmethod
-    @NotImplementedInWindows
     def cat(cls, *args):
         """
         executes cat with the given arguments
         :param args: 
         :return: 
         """
+        NotImplementedInWindows()
         # TODO: replace with file read and reading the content. We need to deal
         #       with line endings and add maybe a flag endings="unix"/"windows".
         #       check the finction readlines.
@@ -455,13 +453,13 @@ class Shell(object):
         return cls.execute('cmsd', args)
 
     @classmethod
-    @NotImplementedInWindows
     def head(cls, *args):
         """
         executes head with the given arguments
         :param args: 
         :return: 
         """
+        NotImplementedInWindows()
         # TODO: reimplement with readlines
         return cls.execute('head', args)
 
@@ -475,13 +473,13 @@ class Shell(object):
         return cls.execute('keystone', args)
 
     @classmethod
-    @NotImplementedInWindows
     def kill(cls, *args):
         """
         executes kill with the given arguments
         :param args: 
         :return: 
         """
+        NotImplementedInWindows()
         # TODO: use tasklisk, compare to linux
         return cls.execute('kill', args)
 
@@ -509,13 +507,13 @@ class Shell(object):
                                                             host=host))
 
     @classmethod
-    @NotImplementedInWindows
     def pwd(cls, *args):
         """
         executes pwd with the given arguments
         :param args: 
         :return: 
         """
+        NotImplementedInWindows()
         # TODO: implement possibly useing echo %cd%
         #       there is also python os.getcwd(), check if this works on windows
         return cls.execute('pwd', args)
@@ -530,13 +528,13 @@ class Shell(object):
         return cls.execute('rackdiag', args)
 
     @classmethod
-    @NotImplementedInWindows
     def rm(cls, *args):
         """
         executes rm with the given arguments
         :param args: 
         :return: 
         """
+        NotImplementedInWindows()
         # TODO: replace this with shutil.rmtree
         return cls.execute('rm', args)
 
@@ -559,13 +557,13 @@ class Shell(object):
         return cls.execute('scp', args)
 
     @classmethod
-    @NotImplementedInWindows
     def sort(cls, *args):
         """
         executes sort with the given arguments
         :param args: 
         :return: 
         """
+        NotImplementedInWindows()
         # TODO: https://superuser.com/questions/1316317/is-there-a-windows-equivalent-to-the-unix-uniq
         return cls.execute('sort', args)
 
@@ -588,24 +586,24 @@ class Shell(object):
         return cls.execute('ssh', args)
 
     @classmethod
-    @NotImplementedInWindows
     def sudo(cls, *args):
         """
         executes sudo with the given arguments
         :param args: 
         :return: 
         """
+        NotImplementedInWindows()
         # TODO: https://stackoverflow.com/questions/9652720/how-to-run-sudo-command-in-windows
         return cls.execute('sudo', args)
 
     @classmethod
-    @NotImplementedInWindows
     def tail(cls, *args):
         """
         executes tail with the given arguments
-        :param args: 
+        :param args:
         :return: 
         """
+        NotImplementedInWindows()
         # TODO: implement with realines on a file.
         return cls.execute('tail', args)
 
@@ -637,13 +635,13 @@ class Shell(object):
         return cls.execute('mongod', args)
 
     @classmethod
-    @NotImplementedInWindows
     def dialog(cls, *args):
         """
         executes dialof with the given arguments
         :param args: 
         :return: 
         """
+        NotImplementedInWindows()
         return cls.execute('dialog', args)
 
     @classmethod
@@ -656,24 +654,24 @@ class Shell(object):
         return cls.execute('pip', args)
 
     @classmethod
-    @NotImplementedInWindows
     def fgrep(cls, *args):
         """
         executes fgrep with the given arguments
         :param args:
         :return:
         """
+        NotImplementedInWindows()
         # TODO: see cm_grep
         return cls.execute('fgrep', args)
 
     @classmethod
-    @NotImplementedInWindows
     def grep(cls, *args):
         """
         executes grep with the given arguments
         :param args:
         :return:
         """
+        NotImplementedInWindows()
         return cls.execute('grep', args)
 
     @classmethod
@@ -789,11 +787,18 @@ class Shell(object):
         return platform
 
     @staticmethod
-    def get_pid(name):
+    def get_pid(name, service="psutil"):
         pid = None
-        for proc in psutil.process_iter():
-            if name in proc.name():
-                pid = proc.pid
+
+        if service == "psutil":
+            for proc in psutil.process_iter():
+                if name in proc.name():
+                    pid = proc.pid
+        elif service == 'grep':
+            result = Shell.ps(["-a"])
+            print (result)
+
+
         return pid
 
     @staticmethod
@@ -972,13 +977,13 @@ class Shell(object):
            raise NotImplementedError("Editor not configured for OS")
 
     @classmethod
-    @NotImplementedInWindows
     def lsb_release(cls):
         """
         executes lsb_release command
         :param args:
         :return:
         """
+        NotImplementedInWindows()
         return cls.execute('lsb_release', ['-a'])
 
     @classmethod
