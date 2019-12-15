@@ -25,13 +25,15 @@ import stat
 from pathlib import Path
 
 def NotImplementedInWindows(f):
-    def new_f():
-        if sys.platfom == "win32":
-            Console.error("The method {f.__name__} is not implemented in Windows,"
-                          " please implement, and/or submit an issue.")
-            sys.exit()
-        f()
-    return new_f
+    def arg_catcher(*args):
+        def new_f():
+            if sys.platfom == "win32":
+                Console.error("The method {f.__name__} is not implemented in Windows,"
+                            " please implement, and/or submit an issue.")
+                sys.exit()
+            f(args)
+        return new_f
+    return arg_catcher
 
 
 
@@ -234,8 +236,8 @@ class Shell(object):
         else:
             os.system("python -m webbrowser -t {file}".format(**data))
 
-    @NotImplementedInWindows
     @classmethod
+    @NotImplementedInWindows
     def terminal(cls, command='pwd'):
 
         if platform == 'darwin':
@@ -335,9 +337,15 @@ class Shell(object):
         """
         return subprocess.check_output(*args, **kwargs)
 
+<<<<<<< HEAD
     @NotImplementedInWindows
     @staticmethod
     def ls(path, match):
+=======
+    @classmethod
+    @NotImplementedInWindows
+    def ls(cls, *args):
+>>>>>>> 6d08f214136d27b3083cd63558a83797176e39f0
         """
         executes ls with the given arguments
         :param args: 
@@ -347,8 +355,8 @@ class Shell(object):
         d = glob.glob(path_expand(path), match)
         return d
 
-    @NotImplementedInWindows
     @classmethod
+    @NotImplementedInWindows
     def ps(cls, *args):
         """
         executes ps with the given arguments
@@ -368,8 +376,8 @@ class Shell(object):
         """
         return cls.execute('bash', args)
 
-    @NotImplementedInWindows
     @classmethod
+    @NotImplementedInWindows
     def brew(cls, *args):
         """
         executes bash with the given arguments
@@ -378,8 +386,8 @@ class Shell(object):
         """
         return cls.execute('brew', args)
 
-    @NotImplementedInWindows
     @classmethod
+    @NotImplementedInWindows
     def cat(cls, *args):
         """
         executes cat with the given arguments
@@ -451,8 +459,8 @@ class Shell(object):
         """
         return cls.execute('cmsd', args)
 
-    @NotImplementedInWindows
     @classmethod
+    @NotImplementedInWindows
     def head(cls, *args):
         """
         executes head with the given arguments
@@ -471,8 +479,8 @@ class Shell(object):
         """
         return cls.execute('keystone', args)
 
-    @NotImplementedInWindows
     @classmethod
+    @NotImplementedInWindows
     def kill(cls, *args):
         """
         executes kill with the given arguments
@@ -505,8 +513,8 @@ class Shell(object):
                                                             count=count,
                                                             host=host))
 
-    @NotImplementedInWindows
     @classmethod
+    @NotImplementedInWindows
     def pwd(cls, *args):
         """
         executes pwd with the given arguments
@@ -526,8 +534,8 @@ class Shell(object):
         """
         return cls.execute('rackdiag', args)
 
-    @NotImplementedInWindows
     @classmethod
+    @NotImplementedInWindows
     def rm(cls, *args):
         """
         executes rm with the given arguments
@@ -555,8 +563,8 @@ class Shell(object):
         """
         return cls.execute('scp', args)
 
-    @NotImplementedInWindows
     @classmethod
+    @NotImplementedInWindows
     def sort(cls, *args):
         """
         executes sort with the given arguments
@@ -584,8 +592,8 @@ class Shell(object):
         """
         return cls.execute('ssh', args)
 
-    @NotImplementedInWindows
     @classmethod
+    @NotImplementedInWindows
     def sudo(cls, *args):
         """
         executes sudo with the given arguments
@@ -595,8 +603,8 @@ class Shell(object):
         # TODO: https://stackoverflow.com/questions/9652720/how-to-run-sudo-command-in-windows
         return cls.execute('sudo', args)
 
-    @NotImplementedInWindows
     @classmethod
+    @NotImplementedInWindows
     def tail(cls, *args):
         """
         executes tail with the given arguments
@@ -633,8 +641,8 @@ class Shell(object):
         """
         return cls.execute('mongod', args)
 
-    @NotImplementedInWindows
     @classmethod
+    @NotImplementedInWindows
     def dialog(cls, *args):
         """
         executes dialof with the given arguments
@@ -652,8 +660,8 @@ class Shell(object):
         """
         return cls.execute('pip', args)
 
-    @NotImplementedInWindows
     @classmethod
+    @NotImplementedInWindows
     def fgrep(cls, *args):
         """
         executes fgrep with the given arguments
@@ -663,8 +671,8 @@ class Shell(object):
         # TODO: see cm_grep
         return cls.execute('fgrep', args)
 
-    @NotImplementedInWindows
     @classmethod
+    @NotImplementedInWindows
     def grep(cls, *args):
         """
         executes grep with the given arguments
@@ -960,8 +968,8 @@ class Shell(object):
         else:
            raise NotImplementedError("Editor not configured for OS")
 
-    @NotImplementedInWindows
     @classmethod
+    @NotImplementedInWindows
     def lsb_release(cls):
         """
         executes lsb_release command
