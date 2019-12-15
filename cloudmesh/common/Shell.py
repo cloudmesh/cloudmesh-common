@@ -336,15 +336,16 @@ class Shell(object):
         return subprocess.check_output(*args, **kwargs)
 
     @NotImplementedInWindows
-    @classmethod
-    def ls(cls, *args):
+    @staticmethod
+    def ls(path, match):
         """
         executes ls with the given arguments
         :param args: 
         :return: 
         """
         # TODO: replace with glob
-        return cls.execute('ls', args)
+        d = glob.glob(path_expand(path), match)
+        return d
 
     @NotImplementedInWindows
     @classmethod
