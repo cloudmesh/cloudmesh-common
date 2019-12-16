@@ -25,6 +25,17 @@ import psutil
 import stat
 from pathlib import Path
 
+#from functools import wraps
+#def timer(func):
+#    @wraps(func)
+#    def wrapper(*args,**kwargs):
+#        print(f"{func.__name__!r} begins")
+#        start_time = time.time()
+#        result = func(*args,**kwargs)
+#        print(f"{func.__name__!r} ends in {time.time()-start_time}  secs")
+#        return result
+#    return wrapper
+
 #def NotImplementedInWindows(f):
 #    def new_f(*args):
 #        if sys.platform == "win32":
@@ -239,8 +250,8 @@ class Shell(object):
         else:
             os.system("python -m webbrowser -t {file}".format(**data))
 
-    @classmethod
     # @NotImplementedInWindows
+    @classmethod
     def terminal(cls, command='pwd'):
         NotImplementedInWindows()
         if platform == 'darwin':
