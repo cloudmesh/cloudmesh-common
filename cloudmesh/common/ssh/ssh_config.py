@@ -55,7 +55,7 @@ class ssh_config(object):
         hosts = {}
         host = "NA"
         for line in content:
-            if line[0].startswith('#') or line[0] is '':
+            if line[0].startswith('#') or line[0] == '':
                 pass  # ignore line
             else:
                 attribute = line[0]

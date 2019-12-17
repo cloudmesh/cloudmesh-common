@@ -40,7 +40,6 @@ Console.msg("this is a msg printed in black")
 Console.ok("this is an ok message printed in green")
 ``` 
 
-
 ## Shell
 
 We have lots of shell commands that call linux commands, but also have a
