@@ -11,6 +11,7 @@ import tempfile
 import time
 from contextlib import contextmanager
 import collections
+import warnings
 
 try:
     collectionsAbc = collections.abc
@@ -333,7 +334,7 @@ def copy_files(files_glob, source_dir, dest_dir):
     """
     copies the files to the destination
 
-    :param files_glob: \*.yaml
+    :param files_glob: *.yaml
     :param source_dir: source directory
     :param dest_dir: destination directory
 
@@ -352,7 +353,7 @@ def readfile(filename, mode='r'):
     :return: 
     """
     if mode != 'r' and mode != 'rb':
-        Console.error( f"incorrect mode : expected \'r\' or \'rb\' given {mode}\n")
+        Console.error( f"incorrect mode : expected 'r' or 'rb' given {mode}")
     else:
         with open(path_expand(filename), mode)as f:
             content = f.read()
@@ -381,7 +382,7 @@ def writefd(filename, content, mode='w', flags = os.O_RDWR|os.O_CREAT, mask=0o60
     :param mask: the mask that the permissions will be applied to
     """
     if mode != 'w' and mode != 'wb':
-        Console.error( f"incorrect mode : expected \'w\' or \'wb\' given {mode}\n")
+        Console.error( f"incorrect mode : expected 'w' or 'wb' given {mode}")
 
     with os.fdopen(os.open(filename, flags, mask), mode) as outfile:
         outfile.write(content)
