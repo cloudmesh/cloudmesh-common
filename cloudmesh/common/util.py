@@ -369,6 +369,7 @@ def writefile(filename, content):
     """
     with open(path_expand(filename), 'w') as outfile:
         outfile.write(content)
+        outfile.truncate()
 
 def writefd(filename, content, mode='w', flags = os.O_RDWR|os.O_CREAT, mask=0o600):
     """
@@ -384,6 +385,7 @@ def writefd(filename, content, mode='w', flags = os.O_RDWR|os.O_CREAT, mask=0o60
 
     with os.fdopen(os.open(filename, flags, mask), mode) as outfile:
         outfile.write(content)
+        outfile.truncate()
         outfile.close()
 
 # Reference: http://interactivepython.org/runestone/static/everyday/2013/01/3_password.html
