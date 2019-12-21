@@ -13,6 +13,12 @@ class Default(object):
         return str(context) + "," + str(key)
 
     def __init__(self, filename=None):
+        """
+        initializes the default variables. The default file is in
+        "~/.cloudmesh/default-data"
+
+        :param filename:
+        """
         if filename is None:
             self.filename = Path(path_expand("~/.cloudmesh/default-data"))
 

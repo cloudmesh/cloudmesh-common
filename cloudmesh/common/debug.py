@@ -12,6 +12,9 @@ import traceback
 verbose_lock = threading.Lock()
 
 def TRACE():
+    """
+    prints the current trace stack
+    """
     traceback.print_stack()
 
 def tracefunc(frame, event, arg, indent=[0]):

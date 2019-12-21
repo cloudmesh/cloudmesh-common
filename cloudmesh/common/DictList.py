@@ -36,6 +36,7 @@ class DictList(dict):
 
     def __init__(self, entries=None, key='name', position='x'):
         """
+        initializes the DotDict List
 
         :param entries: a list of dict
         :param key: a key that is used as name within the dict
@@ -55,6 +56,11 @@ class DictList(dict):
             raise ValueError(f"type not supported")
 
     def list(self):
+        """
+        Lists the entries
+
+        :return:
+        """
         return list(self.values())
 
 
