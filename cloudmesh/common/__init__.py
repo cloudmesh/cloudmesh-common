@@ -19,3 +19,5 @@ from cloudmesh.common.debug import VERBOSE
 from cloudmesh.common.dotdict import dotdict
 from cloudmesh.common.FlatDict import FlatDict
 from cloudmesh.common.variables import Variables
+
+__version__ = "4.2.26"
