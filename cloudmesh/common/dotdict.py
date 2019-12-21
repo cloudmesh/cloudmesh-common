@@ -11,6 +11,12 @@ class dotdict(dict):
     """
 
     def __getattr__(self, attr):
+        """
+        retirns an element
+
+        :param attr: the attribute key
+        :return: teh value
+        """
         return self.get(attr)
 
     __setattr__ = dict.__setitem__

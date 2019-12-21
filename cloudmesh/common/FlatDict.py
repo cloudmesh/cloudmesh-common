@@ -70,15 +70,25 @@ def flatten(d, parent_key='', sep='__'):
 
 class FlatDict(dict):
     """
-    A data structure to manage a flattened dict. It is initialized by passing the dict
-    at time of initialization.
+    A data structure to manage a flattened dict. It is initialized by passing
+    the dict at time of initialization.
     """
 
     @property
     def dict(self):
+        """
+        returns the dict
+        :return: dict
+        """
         return self.__dict__
 
     def __init__(self, d, sep="__"):
+        """
+        initializes the flat dics
+
+        :param d: the dict data
+        :param sep: The character used to indicate an hirachie a__b
+        """
         self.__dict__ = flatten(d, sep=sep)
 
     def __setitem__(self, key, item):
@@ -91,24 +101,56 @@ class FlatDict(dict):
         self.__dict__[key] = item
 
     def __getitem__(self, key):
+        """
+        gets an item form the key
+
+        :param key: the key
+        :return: the value
+        """
         return self.__dict__[key]
 
     def __repr__(self):
         return repr(self.__dict__)
 
     def __str__(self):
+        """
+        The string representation of the dict
+
+        :return: str
+        """
         return str(self.__dict__)
 
     def __len__(self):
+        """
+        number of elements in the dict
+
+        :return: int
+        """
         return len(self.__dict__)
 
     def __delitem__(self, key):
+        """
+        delete the specified item
+
+        :param key: key of the item
+        :return: dict with the elementremoved
+        """
         del self.__dict__[key]
 
     def keys(self):
+        """
+        returns the keys
+
+        :return: list of keys
+        """
         return list(self.__dict__.keys())
 
     def values(self):
+        """
+        list of all values
+
+        :return: list
+        """
         return list(self.__dict__.values())
 
     def __cmp__(self, dictionary):

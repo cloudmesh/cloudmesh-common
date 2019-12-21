@@ -5,6 +5,7 @@ import sys
 import traceback
 from cloudmesh.common.console import Console
 
+
 #
 # TODO: this class seems to replicate some portions of what Console does
 #
@@ -20,6 +21,7 @@ class Error(object):
     def msg(cls, error=None, debug=True, trace=True):
         """
         prints the error message
+
         :param error: the error message
         :param debug: only prints it if debug is set to true
         :param trace: if true prints the trace
@@ -34,6 +36,7 @@ class Error(object):
     def traceback(cls, error=None, debug=True, trace=True):
         """
         prints the trace
+
         :param error: a message preceding the trace
         :param debug: prints it if debug is set to true
         :param trace: 
@@ -45,7 +48,8 @@ class Error(object):
     @classmethod
     def info(cls, msg, debug=True):
         """
-        prints an info msg. 
+        prints an info msg.
+
         :param msg: the message
         :return: 
         """
@@ -55,7 +59,8 @@ class Error(object):
     @classmethod
     def warning(cls, msg, debug=True):
         """
-        prints a warning message. 
+        prints a warning message.
+
         :param msg: 
         :return: 
         """
@@ -66,6 +71,7 @@ class Error(object):
     def debug(cls, msg, debug=True):
         """
         prints a debug message.
+
         :param msg: the message
         :return: 
         """
@@ -76,6 +82,7 @@ class Error(object):
     def exit(cls, msg):
         """
         call a system exit
+
         :param msg: 
         :return: 
         """

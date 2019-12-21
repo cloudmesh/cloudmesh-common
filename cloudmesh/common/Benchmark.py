@@ -14,6 +14,14 @@ class Benchmark(object):
 
     @staticmethod
     def debug():
+        """
+        sets the cms shell variables
+
+          trace = True
+          debug = True
+          verbose = 10
+
+        """
         variables = Variables()
         variables["trace"] = True
         variables["debug"] = True

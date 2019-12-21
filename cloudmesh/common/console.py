@@ -95,10 +95,16 @@ class Console(object):
 
     @staticmethod
     def init():
+        """
+        initializes the Console
+        """
         colorama.init()
 
     @staticmethod
     def terminate():
+        """
+        terminates the program
+        """
         os._exit(1)
 
 
@@ -106,6 +112,7 @@ class Console(object):
     def set_debug(cls, on=True):
         """
         sets debugging on or of
+
         :param on: if on debugging is set
         :return: 
         """
@@ -115,6 +122,7 @@ class Console(object):
     def set_theme(color=True):
         """
         defines if the console messages are printed in color
+
         :param color: if True its printed in color
         :return: 
         """
@@ -128,6 +136,7 @@ class Console(object):
     def get(name):
         """
         returns the default theme for printing console messages
+
         :param name: the name of the theme
         :return: 
         """
@@ -140,6 +149,7 @@ class Console(object):
     def txt_msg(message, width=79):
         """
         prints a message to the screen
+
         :param message: the message to print
         :param width: teh width of the line
         :return: 
@@ -150,16 +160,29 @@ class Console(object):
     def msg(*message):
         """
         prints a message
+
         :param message: the message to print
         :return: 
         """
         str = " ".join(message)
         print(str)
 
+    @staticmethod
+    def bullets(elements):
+        """
+        prints elemnets of a list as bullet list
+
+        :param elements: the list
+        """
+        for name in elements:
+            print("*", name)
+
+
     @classmethod
     def error(cls, message, prefix=True, traceflag=False):
         """
         prints an error message
+
         :param message: the message
         :param prefix: a prefix for the message
         :param traceflag: if true the stack trace is retrieved and printed
@@ -191,6 +214,7 @@ class Console(object):
     def TODO(message, prefix=True, traceflag=True):
         """
         prints an TODO message
+
         :param message: the message
         :param prefix: if set to true it prints TODO: as prefix
         :param traceflag: if true the stack trace is retrieved and printed
@@ -217,6 +241,7 @@ class Console(object):
     def debug_msg(message):
         """
         print a debug message
+
         :param message: the message
         :return: 
         """
@@ -230,6 +255,7 @@ class Console(object):
     def info(message):
         """
         prints an informational message
+
         :param message: the message
         :return: 
         """
@@ -243,6 +269,7 @@ class Console(object):
     def warning(message):
         """
         prints a warning
+
         :param message: the message
         :return: 
         """
@@ -256,6 +283,7 @@ class Console(object):
     def ok(message):
         """
         prints an ok message
+
         :param message: the message<
         :return: 
         """
@@ -269,6 +297,7 @@ class Console(object):
     def cprint(color="BLUE", prefix="", message=""):
         """
         prints a message in a given color
+
         :param color: the color as defined in the theme
         :param prefix: the prefix (a string)
         :param message: the message
@@ -286,6 +315,7 @@ class Console(object):
     def text(color='RED', prefix=None, message=None):
         """
         returns a message in a given color
+
         :param color: the color as defined in the theme
         :param prefix: the prefix (a string)
         :param message: the message
