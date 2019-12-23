@@ -353,16 +353,24 @@ class Shell(object):
 
     @classmethod
     # @NotImplementedInWindows
-    def ls(cls, path, match):
+    def ls(cls, match="."):
         """
         executes ls with the given arguments
         :param args: 
-        :return: 
+        :return: list
         """
-        NotImplementedInWindows()
-        # TODO: replace with glob
-        d = glob.glob(path_expand(path), match)
+        d = glob.glob(match)
         return d
+
+    @classmethod
+    # @NotImplementedInWindows
+    def unix_ls(cls, *args):
+        """
+        executes ls with the given arguments
+        :param args:
+        :return:
+        """
+        return cls.execute('ls', args)
 
     @classmethod
     # @NotImplementedInWindows
@@ -1099,10 +1107,17 @@ def main():
     r = Shell.execute('ls', "-l -a")
     print(r)
 
-    r = Shell.ls("-aux")
+    if sys.platform != "win32":
+        r = Shell.unix_ls("-aux")
+        print(r)
+
+        r = Shell.unix_ls("-a", "-u", "-x")
+        print(r)
+
+    r = Shell.ls("./*.py")
     print(r)
 
-    r = Shell.ls("-a", "-u", "-x")
+    r = Shell.ls("*/*.py")
     print(r)
 
     r = Shell.pwd()
