@@ -15,11 +15,7 @@ from cloudmesh.common.console import Console
 from cloudmesh.common.todo import TODO
 from cloudmesh.common.util import backup_name
 from cloudmesh.common.util import path_expand
-try:
-    from pathlib import Path
-except:
-    from pathlib2 import Path
-
+from pathlib import Path
 
 def custom_print(data_structure, indent, attribute_indent=4):
     """

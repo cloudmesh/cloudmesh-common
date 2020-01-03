@@ -18,12 +18,7 @@ try:
 except AttributeError:
     collectionsAbc = collections
 
-try:
-    from pathlib import Path
-except:
-    from pathlib2 import Path
-
-from six.moves import input
+from pathlib import Path
 
 from cloudmesh.common.console import Console
 

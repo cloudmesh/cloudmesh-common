@@ -1,9 +1,6 @@
 from cloudmesh.db.strdb import YamlDB
 from cloudmesh.common.util import path_expand
-try:
-    from pathlib import Path
-except:
-    from pathlib2 import Path
+from pathlib import Path
 
 
 class Default(object):
