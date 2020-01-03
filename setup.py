@@ -49,8 +49,6 @@ oyaml
 colorama
 psutil
 pathlib
-pathlib2
-future
 humanize
 python-dateutil
 """.split("\n")
