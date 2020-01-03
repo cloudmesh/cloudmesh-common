@@ -1,8 +1,6 @@
 """
 Convenient methods and classes to print tables.
 """
-from __future__ import print_function
-
 import json
 
 import oyaml as yaml

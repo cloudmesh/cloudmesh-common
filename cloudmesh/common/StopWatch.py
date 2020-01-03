@@ -4,8 +4,6 @@ Class for starting and stopping named timers.
 This class is based on a similar java class in cyberaide, and java cog kit.
 
 """
-from __future__ import print_function
-
 import multiprocessing
 import os
 import time

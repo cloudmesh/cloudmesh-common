@@ -10,7 +10,7 @@ import os
 from cloudmesh.common.parameter import Parameter
 from docopt import docopt
 from cloudmesh.common.console import Console
-from cloudmesh.common3.Shell import Shell
+from cloudmesh.common.Shell import Shell
 
 
 def main():
