@@ -1,7 +1,5 @@
 """Some simple yaml file reader"""
 
-from __future__ import print_function
-
 import ast
 import json
 import os
