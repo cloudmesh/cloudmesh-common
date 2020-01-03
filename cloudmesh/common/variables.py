@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 from cloudmesh.db.strdb import YamlDB
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.parameter import Parameter

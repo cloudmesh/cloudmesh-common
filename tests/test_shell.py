@@ -3,8 +3,6 @@
 # pytest -v --capture=no  tests/test_shell.py
 # pytest -v tests/test_shell.py
 ###############################################################
-from __future__ import print_function
-
 import getpass
 
 from cloudmesh.common.Shell import Shell

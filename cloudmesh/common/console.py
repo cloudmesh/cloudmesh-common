@@ -1,8 +1,6 @@
 """
 Printing messages in a console
 """
-from __future__ import print_function
-
 import textwrap
 import traceback
 import platform

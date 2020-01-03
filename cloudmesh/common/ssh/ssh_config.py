@@ -1,8 +1,6 @@
 """
 Managing ~/.ssh/config
 """
-from __future__ import print_function
-
 import json
 import os
 from textwrap import dedent

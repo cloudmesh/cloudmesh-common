@@ -4,7 +4,6 @@
 # pytest -v  tests/test_stopwatch.py
 ###############################################################
 
-from __future__ import print_function
 from cloudmesh.common.util import HEADING
 from cloudmesh.common.StopWatch import StopWatch
 import pytest
