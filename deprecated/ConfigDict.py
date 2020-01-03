@@ -1,8 +1,6 @@
 """
 Manage the cloudmesh.yaml file
 """
-from __future__ import print_function
-
 import json
 import os.path
 import sys

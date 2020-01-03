@@ -5,8 +5,6 @@ output is returned. FOr many activities in cloudmesh this is sufficient.
 
 """
 
-from __future__ import print_function
-
 import errno
 import glob
 import os
