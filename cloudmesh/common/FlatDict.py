@@ -169,17 +169,32 @@ class FlatDict(dict):
     def __getattr__(self, attr):
         return self.get(attr)
 
-    def search(self, key, value):
+    def search(self, key, value=None):
         """
-        search("cloudmesh.cloud.*.cm.active", True)
-        :param key:
-        :param value:
-        :return:
+
+        returns from a flatdict all keys that match the given pattern and
+        have the given value. If the value None is specified or ommitted, all
+        keys are returned regardless of value.
+
+        Example:
+
+            search("cloudmesh.cloud.*.cm.active", True)
+
+        :param key: The key pattern to be searched (given as regex)
+        :param value: The value
+        :return: keys matching the vakue in flat dict format.
         """
         flat = FlatDict(self.__dict__, sep=".")
         r = re.compile(key)
         result = list(filter(r.match, flat))
-        return result
+        if value == None:
+            found = result
+        else:
+            found = []
+            for entry in result:
+                if str(flat[entry]) == str(value):
+                    found.append(entry)
+        return found
 
 class FlatDict2(object):
     if six.PY2:
