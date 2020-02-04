@@ -1,6 +1,6 @@
 os:
   - linux
-  - windows
+#  - windows
 
 #
 # On OSX we get currently the following error, so we outcomment buildo n osx for now
