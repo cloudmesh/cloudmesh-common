@@ -4,6 +4,7 @@
 #
 #    pip-compile setup.py
 #
+pytz
 colorama==0.4.1
 future==0.17.1
 humanize==0.5.1
