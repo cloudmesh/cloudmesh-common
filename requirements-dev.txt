@@ -7,3 +7,4 @@ pip-tools
 pipdeptree
 wheel
 twine
+pip-tools
