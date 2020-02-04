@@ -138,7 +138,8 @@ class SubprocessError(Exception):
 
 class Subprocess(object):
     """
-    Executes a command. This class should not be directly used, but instead you should use Shell.
+    Executes a command. This class should not be directly used, but
+    instead you should use Shell.
     """
 
     def __init__(self, cmd, cwd=None, stderr=subprocess.PIPE,
