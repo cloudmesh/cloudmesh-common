@@ -12,6 +12,7 @@ from cloudmesh.common.prettytable import PrettyTable
 from cloudmesh.common.util import convert_from_unicode
 from humanize import naturaltime
 from dateutil import parser
+from cloudmesh.common.DateTime import DateTime
 
 
 class Printer(object):
@@ -285,6 +286,8 @@ class Printer(object):
         :type max_width: int
         """
 
+        start = DateTime.now()
+
         def _keys():
             all_keys = []
             for e in d:
@@ -300,7 +303,8 @@ class Printer(object):
                     tmp = show_none
                 elif humanize and key in humanize:
                     tmp = parser.parse(tmp)
-                    tmp = naturaltime(tmp)
+                    tmp = DateTime.humanize(start - tmp)
+                    #tmp = naturaltime(start - tmp)
             except:
                 tmp = ' '
             return tmp
@@ -329,6 +333,7 @@ class Printer(object):
                 sorted_list = d
         else:
             sorted_list = d
+
 
         for element in sorted_list:
             values = []
