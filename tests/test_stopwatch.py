@@ -1,5 +1,5 @@
 ###############################################################
-# pip install .; pytest -v --capture=no tests/test_stopwatch.py:Test_stopwatch.test_001
+# pip install .; pytest -v --capture=no tests/test_stopwatch..py::Test_stopwatch.test_001
 # pytest -v --capture=no tests/test_stopwatch.py
 # pytest -v  tests/test_stopwatch.py
 ###############################################################

@@ -1,5 +1,5 @@
 ###############################################################
-# pip install .; pytest -v --capture=no  tests/test_configdict.py:Test_configdict.test_001
+# pip install .; pytest -v --capture=no  tests/test_configdict..py::Test_configdict.test_001
 # pytest -v --capture=no tests/test_configdictr.py
 # pytest -v  tests/test_configdict.py
 ###############################################################

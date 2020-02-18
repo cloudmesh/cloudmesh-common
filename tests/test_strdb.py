@@ -1,5 +1,5 @@
 ###############################################################
-# pip install .; npytest -v --capture=no  tests/test_strdb.py:Test_strdb.test_001
+# pip install .; npytest -v --capture=no  tests/test_strdb..py::Test_strdb.test_001
 # pytest -v --capture=no  tests/test_strdb.py
 # pytest -v tests/test_strdb.py
 ###############################################################
