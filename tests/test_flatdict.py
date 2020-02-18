@@ -1,5 +1,5 @@
 ###############################################################
-# pip install .; npytest -v --capture=no  tests/test_flatdict.py:Test_flatdict.test_001
+# pip install .; npytest -v --capture=no  tests/test_flatdict..py::Test_flatdict.test_001
 # pytest -v --capture=no  tests/test_flatdict.py
 # pytest -v tests/test_flatdict.py
 ###############################################################

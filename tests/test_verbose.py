@@ -1,5 +1,5 @@
 ###############################################################
-# pytest -v --capture=no  tests/test_verbose.py:Test_verbose.test_001
+# pytest -v --capture=no  tests/test_verbose..py::Test_verbose.test_001
 # pytest -v --capture=no  tests/test_verbose.py
 # pytest -v tests/test_verbose.py
 ###############################################################
