@@ -236,7 +236,8 @@ class StopWatch(object):
 
             # print(Printer.attribute(data_timers, header=["Command", "Time/s"]))
 
-            del data_timers['benchmark_start_stop']
+            if 'benchmark_start_stop' in data_timers:
+                del data_timers['benchmark_start_stop']
 
             for key in data_timers:
                 if key != 'benchmark_start_stop' and data_timers[key]['status'] == None:
