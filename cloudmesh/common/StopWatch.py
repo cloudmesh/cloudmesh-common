@@ -26,11 +26,28 @@ class StopWatch(object):
     timer_end = {}
     # Timer diff
     timer_elapsed = {}
+    # records a status
+    timer_status = {}
 
     @classmethod
     def keys(cls):
         """returns the names of the timers"""
         return list(cls.timer_end.keys())
+
+    @classmethod
+    def status(cls, name, value):
+        """
+        starts a timer with the given name.
+
+        :param name: the name of the timer
+        :type name: string
+        :param status: the name of a status
+        :type status: bool
+
+        """
+        if cls.debug:
+            print("Timer", name, "status", value)
+        cls.timer_status[name] = value
 
     @classmethod
     def start(cls, name):
@@ -44,7 +61,7 @@ class StopWatch(object):
             print("Timer", name, "started ...")
         cls.timer_start[name] = time.time()
         cls.timer_end[name] = None
-
+        cls.timer_status[name] = None
 
     @classmethod
     def stop(cls, name):
@@ -57,6 +74,16 @@ class StopWatch(object):
         cls.timer_end[name] = time.time()
         if cls.debug:
             print("Timer", name, "stopped ...")
+
+    @classmethod
+    def get_status(cls, name):
+        """
+        stops the timer with a given name.
+
+        :param name: the name of the timer
+        :type name: string
+        """
+        return cls.timer_status[name]
 
 
     @classmethod
@@ -109,9 +136,10 @@ class StopWatch(object):
             data = {"label": t,
                     "start": str(cls.timer_start[t]),
                     "end": str(cls.timer_end[t]),
+                    "status": str(cls.timer_status[t]),
                     "elapsed": str(cls.get(t)),
                     "newline": os.linesep}
-            s += "{label} {start} {end} {elapsed} {newline}".format(**data)
+            s += "{label} {start} {end} {elapsed} {status} {newline}".format(**data)
         return s
 
     @classmethod
@@ -194,6 +222,7 @@ class StopWatch(object):
                     'start': time.strftime("%Y-%m-%d %H:%M:%S",
                                            time.gmtime(StopWatch.timer_start[timer])),
                     'time': StopWatch.get(timer, digits=3),
+                    'status': StopWatch.get_status(timer),
                     'timer': timer,
                     'tag': tag or ''
                 }
@@ -206,9 +235,20 @@ class StopWatch(object):
                     data_timers[timer][attribute] = data_platform[attribute]
 
             # print(Printer.attribute(data_timers, header=["Command", "Time/s"]))
+
+            del data_timers['benchmark_start_stop']
+
+            for key in data_timers:
+                if key != 'benchmark_start_stop' and data_timers[key]['status'] == None:
+                    data_timers[key]['status'] = "failed"
+                elif data_timers[key]['status'] != None and data_timers[key]['status'] == True:
+                    data_timers[key]['status'] = "ok"
+
+
             print(Printer.write(
                 data_timers,
                 order=["timer",
+                       "status",
                        "time",
                        "start",
                        "tag",
@@ -223,6 +263,7 @@ class StopWatch(object):
             print()
             if csv:
                 order = ["csv",
+                         "status"
                          "timer",
                          "time",
                          "start"
