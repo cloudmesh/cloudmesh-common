@@ -45,11 +45,18 @@ class Benchmark(object):
         return method
 
     @staticmethod
-    def Start():
+    def Start(status=True):
         """
         starts a timer while using the name of the calling method
         """
         StopWatch.start(Benchmark.name(with_class=True))
+
+    @staticmethod
+    def Status(value):
+        """
+        starts a timer while using the name of the calling method
+        """
+        StopWatch.status(Benchmark.name(with_class=True), value)
 
     @staticmethod
     def Stop():
