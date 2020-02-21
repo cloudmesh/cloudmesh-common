@@ -287,6 +287,7 @@ class Shell(object):
         })
         return data
 
+
     @classmethod
     def get_python(cls):
         """
@@ -928,18 +929,6 @@ class Shell(object):
             print("         We recommend you update your pip  with \n")
             print("             pip install -U pip\n")
 
-    @classmethod
-    def live(cls, command):
-        process = subprocess.Popen(shlex.split(command),
-                                   stdout=subprocess.PIPE)
-        while True:
-            output = process.stdout.readline()
-            if output == '' and process.poll() is not None:
-                break
-            if output:
-                print(str(output.strip()))
-        return_code = process.poll()
-        return return_code
 
     @classmethod
     def execute(cls,
