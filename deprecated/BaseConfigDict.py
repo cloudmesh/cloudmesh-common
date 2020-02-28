@@ -37,7 +37,7 @@ def check_file_for_tabs(filename, verbose=True):
     """
     file_contains_tabs = False
     with open(filename) as f:
-        lines = f.read().split("\n")
+        lines = f.read().splitlines()
 
     line_no = 1
     for line in lines:

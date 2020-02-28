@@ -52,7 +52,7 @@ psutil
 pathlib
 humanize
 python-dateutil
-""".split("\n")
+""".splitlines()
 
 version = readfile("VERSION").strip()
 

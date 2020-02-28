@@ -18,7 +18,7 @@ def main():
     tags = Parameter.expand(arguments["VERSIONS"])
 
 
-    found = Shell.run("git tag").strip().split("\n")
+    found = Shell.run("git tag").strip().splitlines()
 
     # print (found)
 
