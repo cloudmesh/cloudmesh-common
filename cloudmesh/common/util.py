@@ -188,7 +188,7 @@ def banner(txt=None, c="-", prefix="#", debug=True, label=None, color=None):
             output += prefix + " " + label + "\n"
             output += prefix + " " + 70 * c + "\n"
         if txt is not None:
-            for line in txt.split("\n"):
+            for line in txt.splitlines():
                 output += prefix + " " + line + "\n"
             output += prefix + " " + 70 * c + "\n"
     if color is None:
@@ -221,7 +221,7 @@ def str_banner(txt=None, c="-", prefix= "#", debug=True, label=None, color=None)
             output += prefix + " " + label + "\n"
             output += prefix + " " + 70 * c + "\n"
         if txt is not None:
-            for line in txt.split("\n"):
+            for line in txt.splitlines():
                 output += prefix + " " + line + "\n"
             output += prefix + " " + 70 * c + "\n"
     if color is None:

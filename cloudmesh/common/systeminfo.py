@@ -53,7 +53,7 @@ def systeminfo():
     try:
         release_files = Path("/etc").glob("*release")
         for filename in release_files:
-            content = readfile(filename.resolve()).split("\n")
+            content = readfile(filename.resolve()).splitlines()
             for line in content:
                 if "=" in line:
                     attribute, value = line.split("=", 1)

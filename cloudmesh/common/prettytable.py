@@ -75,7 +75,7 @@ PLAIN_COLUMNS = 12
 RANDOM = 20
 
 def _get_size(text):
-    lines = text.split("\n")
+    lines = text.splitlines()
     height = len(lines)
     width = max([_str_block_width(line) for line in lines])
     return (width, height)
@@ -1051,7 +1051,7 @@ class PrettyTable(object):
        
         for index, field, value, width, in zip(range(0,len(row)), self._field_names, row, self._widths):
             # Enforce max widths
-            lines = value.split("\n")
+            lines = value.splitlines()
             new_lines = []
             for line in lines: 
                 if _str_block_width(line) > width:
@@ -1080,7 +1080,7 @@ class PrettyTable(object):
         for field, value, width, in zip(self._field_names, row, self._widths):
 
             valign = self._valign[field]
-            lines = value.split("\n")
+            lines = value.splitlines()
             dHeight = row_height - len(lines)
             if dHeight:
                 if valign == "m":

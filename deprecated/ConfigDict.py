@@ -139,7 +139,7 @@ class Config(object):
         file_contains_tabs = False
 
         with open(filename, 'r') as f:
-            lines = f.read().split("\n")
+            lines = f.read().splitlines()
 
         line_no = 1
         for line in lines:
