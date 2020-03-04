@@ -77,7 +77,10 @@ RANDOM = 20
 def _get_size(text):
     lines = text.splitlines()
     height = len(lines)
-    width = max([_str_block_width(line) for line in lines])
+    if (len(lines) > 0):
+        width = max([_str_block_width(line) for line in lines])
+    else:
+        width = 0
     return (width, height)
         
 class PrettyTable(object):
