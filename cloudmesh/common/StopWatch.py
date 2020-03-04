@@ -1,8 +1,6 @@
 """
 Class for starting and stopping named timers.
 
-This class is based on a similar java class in cyberaide, and java cog kit.
-
 """
 import multiprocessing
 import os
