@@ -4,12 +4,14 @@
 #
 #    pip-compile setup.py
 #
-colorama==0.4.3
-humanize==0.5.1
-oyaml==0.9
-pathlib==1.0.1
-psutil==5.6.7
-python-dateutil==2.8.1
-python-hostlist==1.20
-pytz==2019.3
-simplejson==3.17.0
+colorama==0.4.3           # via cloudmesh-common (setup.py)
+humanize==1.0.0           # via cloudmesh-common (setup.py)
+oyaml==0.9                # via cloudmesh-common (setup.py)
+pathlib==1.0.1            # via cloudmesh-common (setup.py)
+psutil==5.7.0             # via cloudmesh-common (setup.py)
+python-dateutil==2.8.1    # via cloudmesh-common (setup.py)
+python-hostlist==1.20     # via cloudmesh-common (setup.py)
+pytz==2019.3              # via cloudmesh-common (setup.py)
+pyyaml==5.3               # via oyaml
+simplejson==3.17.0        # via cloudmesh-common (setup.py)
+six==1.14.0               # via python-dateutil
