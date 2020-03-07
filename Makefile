@@ -20,8 +20,8 @@ requirements:
 	pip-compile setup.py
 	fgrep -v "# via" requirements.txt | fgrep -v "cloudmesh" >> tmp.txt
 	mv tmp.txt requirements.txt
-	git commit -m "update requirements" requirements.txt
-	git push
+	-git commit -m "update requirements" requirements.txt
+	-git push
 
 
 test:
