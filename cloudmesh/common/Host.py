@@ -168,7 +168,7 @@ class Host(object):
     def generate_key(hosts=None,
                      filename="~/.ssh/id_rsa",
                      username=None,
-                     output="lines",
+                     processors=3,
                      dryrun=False,
                      verbose=True):
         """
@@ -192,7 +192,7 @@ class Host(object):
             command=command,
             username=username,
             key="~/.ssh/id_rsa.pub",
-            processors=3)
+            processors=processors)
 
         keys = []
 
@@ -208,6 +208,7 @@ class Host(object):
         hosts=None,
         filename="~/.ssh/id_rsa.pub",
         key="~/.ssh/id_rsa",
+        processors=3,
         dryrun=False):
         """
         returns in a list the keys of the specified hosts
@@ -226,7 +227,7 @@ class Host(object):
             command=command,
             username=username,
             key=key,
-            processors=3)
+            processors=processors)
 
         pprint(results)
 
