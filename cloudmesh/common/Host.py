@@ -5,7 +5,8 @@ from sys import platform
 
 from cloudmesh.common.parameter import Parameter
 from cloudmesh.common.util import path_expand
-
+import time
+from pprint import pprint
 
 class Host(object):
 
@@ -22,13 +23,14 @@ class Host(object):
         host = args['host']
         username = args['username']
         command = args['command']
+        shell = args['shell'] or False
 
         location = f"{username}@{host}"
         command = ['ssh',
                    "-o", "StrictHostKeyChecking=no",
                    "-o", "UserKnownHostsFile=/dev/null",
                    '-i', key, location, command]
-        result = subprocess.run(command, capture_output=True)
+        result = subprocess.run(command, capture_output=True, shell=shell)
         result.stdout = result.stdout.decode("utf-8")
         result.success = result.returncode == 0
         return result
@@ -38,6 +40,7 @@ class Host(object):
             command=None,
             username=None,
             key="~/.ssh/id_rsa.pub",
+            shell=False,
             processors=3):
         #
         # BUG: this code has a bug and does not deal with different
@@ -64,6 +67,7 @@ class Host(object):
         # wrap ip and count into one list to be sent to Pool map
         args = [{'command': command,
                  'key': key,
+                 'shell': shell,
                  'username': username,
                  'host': host} for host in hosts]
 
@@ -159,3 +163,77 @@ class Host(object):
             res = p.map(Host._ping, args)
 
         return res
+
+    @staticmethod
+    def generate_key(hosts=None,
+                     filename="~/.ssh/id_rsa",
+                     username=None,
+                     output="lines",
+                     dryrun=False,
+                     verbose=True):
+        """
+        generates the keys on the specified hosts
+
+        :param hosts:
+        :param filename:
+        :param username:
+        :param output:
+        :param dryrun:
+        :param verbose:
+        :return:
+        """
+
+        command = f' cat /dev/zero | ssh-keygen -t rsa -b 4096 -q -N "" -P "" -f {filename} -q'
+
+        print(command)
+
+        results = Host.ssh(
+            hosts=hosts,
+            command=command,
+            username=username,
+            key="~/.ssh/id_rsa.pub",
+            processors=3)
+
+        keys = []
+
+        for result in results:
+            key = result.stdout.strip()
+            keys.append(key)
+
+        return keys
+
+    @staticmethod
+    def gather_keys(
+        username=None,
+        hosts=None,
+        filename="~/.ssh/id_rsa.pub",
+        key="~/.ssh/id_rsa",
+        dryrun=False):
+        """
+        returns in a list the keys of the specified hosts
+
+        :param username:
+        :param hosts:
+        :param filename:
+        :param key:
+        :param dryrun:
+        :return:
+        """
+
+        command = f"cat {filename}"
+        results = Host.ssh(
+            hosts=hosts,
+            command=command,
+            username=username,
+            key=key,
+            processors=3)
+
+        pprint(results)
+
+        keys = []
+
+        for result in results:
+            key = result.stdout.strip()
+            keys.append(key)
+
+        return keys
