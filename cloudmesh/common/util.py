@@ -87,13 +87,37 @@ def grep(pattern, filename):
         return ''
 
 def is_gitbash():
+    """
+    returns True if you run in a Windows gitbash
+
+    :return: True if gitbash
+    """
     try:
         exepath = os.environ['EXEPATH']
         return "Git" in exepath
     except:
         return False
 
+def is_powershell():
+    """
+    UNTESTED
+
+    True if you run in powershell
+
+    :return: True if you run in powershell
+
+    """
+    try:
+        return os.environ("host.name") == "ConsoleHost"
+    except:
+        return False
+
 def is_cmd_exe():
+    """
+    return True if you run in a Windows CMD
+
+    :return: True if you run in CMD
+    """
     if is_gitbash():
         return False
     else:
