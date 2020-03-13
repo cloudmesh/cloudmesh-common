@@ -6,3 +6,5 @@ cloudmesh-cmd5
 #
 #    pip-compile setup.py
 #
+pyyaml==5.3               # via oyaml
+six==1.14.0               # via python-dateutil
