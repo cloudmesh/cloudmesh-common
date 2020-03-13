@@ -459,6 +459,21 @@ class Shell(object):
         """
         return cls.execute('keystone', args)
 
+    def kill_pid(self, pid):
+
+        if sys.platform == 'win32':
+            try:
+                result = Shell.run(f"taskkill /IM {pid} /F")
+            except Exception as e:
+                result = str(e)
+        else:
+            try:
+                script = f'kill -2 {pid}'
+                result = Shell.kill("-2", pid)
+            except subprocess.CalledProcessError:
+                result = 'server is already down...'
+        return result
+
     @classmethod
     # @NotImplementedInWindows
     def kill(cls, *args):
