@@ -1,3 +1,4 @@
+import collections
 import glob
 import inspect
 import os
@@ -5,11 +6,10 @@ import random
 import re
 import shutil
 import tempfile
-# import pip
 import time
 from contextlib import contextmanager
-import collections
-import warnings
+
+import psutil
 
 try:
     collectionsAbc = collections.abc
@@ -100,18 +100,15 @@ def is_gitbash():
 
 def is_powershell():
     """
-    UNTESTED
-
     True if you run in powershell
 
     :return: True if you run in powershell
-
     """
-    try:
-        return os.environ("host.name") == "ConsoleHost"
-    except:
-        return False
-
+    # psutil.Process(parent_pid).name() returns -
+    # cmd.exe for CMD
+    # powershell.exe for powershell
+    # bash.exe for git bash
+    return (psutil.Process(os.getppid()).name() == "powershell.exe")
 def is_cmd_exe():
     """
     return True if you run in a Windows CMD
