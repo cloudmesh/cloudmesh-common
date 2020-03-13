@@ -468,7 +468,6 @@ class Shell(object):
                 result = str(e)
         else:
             try:
-                script = f'kill -2 {pid}'
                 result = Shell.kill("-2", pid)
             except subprocess.CalledProcessError:
                 result = 'server is already down...'
