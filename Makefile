@@ -15,14 +15,14 @@ source:
 	pip install -e . -U
 
 requirements:
-	echo "cloudmesh-common" > tmp.txt
-	echo "cloudmesh-cmd5" >> tmp.txt
+	echo "# cloudmesh-common requirements"> tmp.txt
+	#echo "cloudmesh-common" > tmp.txt
+	#echo "cloudmesh-cmd5" >> tmp.txt
 	pip-compile setup.py
-	fgrep -v "# via" requirements.txt | fgrep -v "cloudmesh" >> tmp.txt
+	cat requirements.txt >> tmp.txt
 	mv tmp.txt requirements.txt
 	-git commit -m "update requirements" requirements.txt
 	-git push
-
 
 test:
 	pytest -v --html=.report.html
