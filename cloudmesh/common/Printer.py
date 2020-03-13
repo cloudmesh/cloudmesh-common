@@ -182,6 +182,16 @@ class Printer(object):
                                       humanize=humanize,
                                       sort_keys=sort_keys,
                                       max_width=max_width)
+        elif output == "html": # does not work
+            if d == []:
+                return "Empty data"
+            else:
+                return cls.dict_html(d,
+                                      order=order,
+                                      header=header,
+                                      humanize=humanize,
+                                      sort_keys=sort_keys,
+                                      max_width=max_width)
         elif output == "csv":
             return cls.csv(d,
                            order=order,
@@ -260,6 +270,24 @@ class Printer(object):
                     content.append("None")
             table = table + ",".join([str(e) for e in content]) + "\n"
         return table
+
+    @classmethod
+    def dict_html(cls, d,
+                   order=None,
+                   header=None,
+                   sort_keys=True,
+                   show_none="",
+                   humanize=None,
+                   max_width=48):
+        x= Printer.dict_table(d,
+                           order=order,
+                           header=header,
+                           sort_keys=sort_keys,
+                           show_none=show_none,
+                           humanize=humanize,
+                           max_width=max_width)
+
+        return x.get_html_string()
 
     @classmethod
     def dict_table(cls, d,
