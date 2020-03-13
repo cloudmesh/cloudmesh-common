@@ -459,7 +459,8 @@ class Shell(object):
         """
         return cls.execute('keystone', args)
 
-    def kill_pid(self, pid):
+    @staticmethod
+    def kill_pid(pid):
 
         if sys.platform == 'win32':
             try:
@@ -468,7 +469,7 @@ class Shell(object):
                 result = str(e)
         else:
             try:
-                result = Shell.kill("-2", pid)
+                result = Shell.kill("-9", pid)
             except subprocess.CalledProcessError:
                 result = 'server is already down...'
         return result
