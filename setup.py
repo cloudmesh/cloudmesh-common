@@ -43,6 +43,7 @@ def readfile(filename):
 # pytz==2016.10
 
 requiers = """
+psutil
 pytz
 python-hostlist
 simplejson

@@ -4,6 +4,7 @@
 #
 #    pip-compile setup.py
 #
+psutil
 colorama==0.4.3           # via cloudmesh-common (setup.py)
 humanize==1.0.0           # via cloudmesh-common (setup.py)
 oyaml==0.9                # via cloudmesh-common (setup.py)
