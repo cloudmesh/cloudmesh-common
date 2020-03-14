@@ -57,3 +57,19 @@ class Parameter(object):
 
         return False
 
+    @staticmethod
+    def arguments_to_dict(arguments):
+        """
+        converts a string of the form "a=1,b=2" to a dict
+        {"a":"1", "b":"2"}
+        all values are strings
+
+        :param arguments: the argument string
+        :return: a dic of argument and values
+        """
+        parameters = {}
+        for argument in arguments:
+            key, value = arguments.split("=", 1)
+            parameters[key] = value
+        return parameters
+
