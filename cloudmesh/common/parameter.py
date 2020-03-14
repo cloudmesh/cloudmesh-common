@@ -67,6 +67,8 @@ class Parameter(object):
         :param arguments: the argument string
         :return: a dic of argument and values
         """
+        if arguments is None:
+            return None
         parameters = {}
         for argument in arguments:
             key, value = arguments.split("=", 1)
