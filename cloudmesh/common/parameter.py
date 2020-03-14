@@ -67,7 +67,7 @@ class Parameter(object):
         :param arguments: the argument string
         :return: a dic of argument and values
         """
-        if arguments is None:
+        if arguments is None or len(arguments) == 0:
             return None
         parameters = {}
         for argument in arguments:
