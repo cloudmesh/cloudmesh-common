@@ -310,7 +310,6 @@ class Shell(object):
         return subprocess.check_output(*args, **kwargs)
 
     @classmethod
-    # @NotImplementedInWindows
     def ls(cls, match="."):
         """
         executes ls with the given arguments
