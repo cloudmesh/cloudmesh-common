@@ -52,7 +52,7 @@ class Benchmark(object):
         StopWatch.start(Benchmark.name(with_class=True))
 
     @staticmethod
-    def Status(value):
+    def Status(value=True):
         """
         starts a timer while using the name of the calling method
         """
@@ -64,6 +64,7 @@ class Benchmark(object):
         stops a timer while using the name of the calling method
         """
         StopWatch.stop(Benchmark.name(with_class=True))
+        StopWatch.status(Benchmark.name(with_class=True), True)
 
     @staticmethod
     def print(sysinfo=True, csv=True, tag=None):
