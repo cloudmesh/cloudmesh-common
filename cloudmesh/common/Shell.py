@@ -337,10 +337,24 @@ class Shell(object):
         :param args: 
         :return: 
         """
-        NotImplementedInWindows()
-        # TODO: tasklist in windows
-        # TODO: make tasklist and ps behave similar, e.g. have the same output,
-        return cls.execute('ps', args)
+        # NotImplementedInWindows()
+        print("In Shell.py ps")
+        result = ""
+        if sys.platform == 'win32':
+
+            all_args = ' '.join(('/c',) + args)
+            print("platform before: ", sys.platform)
+            from subprocess import Popen, PIPE
+            with Popen(['tlist', f'{all_args}'], stdout=PIPE, universal_newlines=True) as process:
+                for line in process.stdout:
+                    result = result + line
+            print("platform: ", sys.platform)
+
+        else:
+            result = cls.execute('ps', args)
+
+        print(result.splitlines())
+        return result
 
     @classmethod
     def bash(cls, *args):
