@@ -21,6 +21,7 @@ from cloudmesh.common.dotdict import dotdict
 from cloudmesh.common.util import path_expand, readfile
 import subprocess
 import psutil
+from subprocess import Popen, PIPE
 
 import stat
 from pathlib import Path
@@ -341,14 +342,13 @@ class Shell(object):
         result = ""
         if sys.platform == 'win32':
             all_args = ' '.join(('/c',) + args)
-            from subprocess import Popen, PIPE
+            # tlist requires that Windows debugging tools be installed and environment var for path be updated.
             with Popen(['tlist', f'{all_args}'], stdout=PIPE, universal_newlines=True) as process:
                 for line in process.stdout:
                     result = result + line
         else:
             result = cls.execute('ps', args)
 
-        print(result.splitlines())
         return result
 
     @classmethod
