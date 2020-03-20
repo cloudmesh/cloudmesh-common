@@ -338,18 +338,13 @@ class Shell(object):
         :return: 
         """
         # NotImplementedInWindows()
-        print("In Shell.py ps")
         result = ""
         if sys.platform == 'win32':
-
             all_args = ' '.join(('/c',) + args)
-            print("platform before: ", sys.platform)
             from subprocess import Popen, PIPE
             with Popen(['tlist', f'{all_args}'], stdout=PIPE, universal_newlines=True) as process:
                 for line in process.stdout:
                     result = result + line
-            print("platform: ", sys.platform)
-
         else:
             result = cls.execute('ps', args)
 
