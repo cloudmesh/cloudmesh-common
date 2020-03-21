@@ -24,15 +24,20 @@ class Host(object):
         username = args['username']
         command = args['command']
         shell = args['shell'] or False
+        dryrun = args['dryrun'] or False
 
         location = f"{username}@{host}"
         command = ['ssh',
                    "-o", "StrictHostKeyChecking=no",
                    "-o", "UserKnownHostsFile=/dev/null",
                    '-i', key, location, command]
-        result = subprocess.run(command, capture_output=True, shell=shell)
-        result.stdout = result.stdout.decode("utf-8")
-        result.success = result.returncode == 0
+        if dryrun:
+            result = None
+            print (command)
+        else:
+            result = subprocess.run(command, capture_output=True, shell=shell)
+            result.stdout = result.stdout.decode("utf-8")
+            result.success = result.returncode == 0
         return result
 
     @staticmethod
@@ -41,7 +46,8 @@ class Host(object):
             username=None,
             key="~/.ssh/id_rsa.pub",
             shell=False,
-            processors=3):
+            processors=3,
+            dryrun=False):
         #
         # BUG: this code has a bug and does not deal with different
         #  usernames on the host to be checked.
@@ -69,7 +75,9 @@ class Host(object):
                  'key': key,
                  'shell': shell,
                  'username': username,
-                 'host': host} for host in hosts]
+                 'host': host,
+                 'dryrun':dryrun
+                 } for host in hosts]
 
         with Pool(processors) as p:
             res = p.map(Host._ssh, args)
@@ -183,7 +191,7 @@ class Host(object):
         :return:
         """
 
-        command = f' cat /dev/zero | ssh-keygen -t rsa -b 4096 -q -N "" -P "" -f {filename} -q'
+        command = f'ssh-keygen -t rsa -b 4096 -q -N "" -P "" -f {filename} -q'
 
         print(command)
 
