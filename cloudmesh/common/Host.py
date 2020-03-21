@@ -191,7 +191,7 @@ class Host(object):
         :return:
         """
 
-        command = f'ssh-keygen -t rsa -b 4096 -q -N "" -P "" -f {filename} -q'
+        command = f'echo y | ssh-keygen -t rsa -b 4096 -q -N "" -P "" -f {filename} -q'
 
         print(command)
 
