@@ -94,6 +94,8 @@ class Host(object):
 
         with Pool(processors) as p:
             res = p.map(Host._ssh, args)
+            p.close()
+            p.join()
         return res
 
     @staticmethod
@@ -182,6 +184,8 @@ class Host(object):
 
         with Pool(processors) as p:
             res = p.map(Host._ping, args)
+            p.close()
+            p.join()
 
         return res
 
