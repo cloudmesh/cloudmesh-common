@@ -25,15 +25,26 @@ class Host(object):
         command = args['command']
         shell = args['shell'] or False
         dryrun = args['dryrun'] or False
+        executor = args['executor']
 
-        location = f"{username}@{host}"
+        if username is None:
+            location = f"{host}"
+        else:
+            location = f"{username}@{host}"
+
+
         command = ['ssh',
                    "-o", "StrictHostKeyChecking=no",
                    "-o", "UserKnownHostsFile=/dev/null",
                    '-i', key, location, command]
+
+        print ('Command:', command)
         if dryrun:
             result = None
-            print (command)
+            #print (command)
+        elif executor:
+            executor(' '.join(command))
+            result = ""
         else:
             result = subprocess.run(command, capture_output=True, shell=shell)
             result.stdout = result.stdout.decode("utf-8")
@@ -47,7 +58,8 @@ class Host(object):
             key="~/.ssh/id_rsa.pub",
             shell=False,
             processors=3,
-            dryrun=False):
+            dryrun=False,
+            executor=None):
         #
         # BUG: this code has a bug and does not deal with different
         #  usernames on the host to be checked.
@@ -65,8 +77,8 @@ class Host(object):
         if type(hosts) != list:
             hosts = Parameter.expand(hosts)
 
-        if username is None:
-            username = os.environ['USER']
+        #if username is None:
+        #    username = os.environ['USER']
 
         key = path_expand(key)
 
@@ -76,7 +88,8 @@ class Host(object):
                  'shell': shell,
                  'username': username,
                  'host': host,
-                 'dryrun':dryrun
+                 'dryrun':dryrun,
+                 'executor': executor
                  } for host in hosts]
 
         with Pool(processors) as p:
