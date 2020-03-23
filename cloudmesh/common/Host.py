@@ -197,7 +197,8 @@ class Host(object):
                      dryrun=False,
                      verbose=True):
         """
-        generates the keys on the specified hosts
+        generates the keys on the specified hosts.
+        this fonction does not work well as it still will aski if we overwrite.
 
         :param hosts:
         :param filename:
@@ -208,7 +209,8 @@ class Host(object):
         :return:
         """
 
-        command = f'echo y | ssh-keygen -t rsa -b 4096 -q -N "" -P "" -f {filename} -q'
+        # command = f'echo y | ssh-keygen -t rsa -b 4096 -q -N "" -P "" -f {filename} -q'
+        command = f'ssh-keygen -t rsa -b 4096 -q -N "" -P "" -f {filename} -q'
 
         print(command)
 
