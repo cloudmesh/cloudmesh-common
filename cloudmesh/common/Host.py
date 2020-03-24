@@ -33,23 +33,32 @@ class Host(object):
             location = f"{username}@{host}"
 
 
-        command = ['ssh',
+        ssh_command = ['ssh',
                    "-o", "StrictHostKeyChecking=no",
                    "-o", "UserKnownHostsFile=/dev/null",
                    '-i', key, location, command]
 
-        print ('Command:', command)
+        print ('Command:', ssh_command)
         if dryrun:
             result = None
             #print (command)
         elif executor:
-            executor(' '.join(command))
+            executor(' '.join(ssh_command))
             result = ""
         else:
-            result = subprocess.run(command, capture_output=True, shell=shell)
-            result.stdout = result.stdout.decode("utf-8")
-            result.success = result.returncode == 0
-        return result
+            result = subprocess.run(ssh_command, capture_output=True, shell=shell)
+            result.stdout = result.stdout.decode("utf-8").strip()
+            if result.stderr == b'':
+                result.stderr = None
+            data = {
+                'command': command,
+                'ssh': ' '.join(result.args),
+                'stdout': result.stdout,
+                'stderr': result.stderr,
+                'returncode': result.returncode,
+                'success': result.returncode == 0
+            }
+        return data
 
     @staticmethod
     def ssh(hosts=None,
