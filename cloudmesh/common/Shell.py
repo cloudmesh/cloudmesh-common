@@ -21,7 +21,6 @@ from cloudmesh.common.dotdict import dotdict
 from cloudmesh.common.util import path_expand, readfile
 import subprocess
 import psutil
-from subprocess import Popen, PIPE
 
 import stat
 from pathlib import Path
@@ -339,15 +338,24 @@ class Shell(object):
         :return: 
         """
         # NotImplementedInWindows()
-        result = ""
+        result = cls.execute('ps', args)
+
+        return result
+
+    @classmethod
+    def os_ps(cls):
+        """
+        executes ps but only returns pid commandline
+
+        :param proc_name:
+        :return:
+        """
         if sys.platform == 'win32':
-            all_args = ' '.join(('/c',) + args)
-            # tlist requires that Windows debugging tools be installed and environment var for path be updated.
-            with Popen(['tlist', f'{all_args}'], stdout=PIPE, universal_newlines=True) as process:
-                for line in process.stdout:
-                    result = result + line
+            pre_result = list(filter(None, [line.strip() for line in Shell.run(
+                'wmic process where caption="python.exe" get processid,commandline').strip().splitlines()]))
+            result = '\n'.join(['<sep>'.join((x.split()[-1], ' '.join(x.split()[:-1]))) for x in pre_result])
         else:
-            result = cls.execute('ps', args)
+            result = Shell.ps('-eo pid,comm')
 
         return result
 
