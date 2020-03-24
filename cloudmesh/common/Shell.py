@@ -329,8 +329,12 @@ class Shell(object):
         """
         return cls.execute('ls', args)
 
-    @classmethod
     # @NotImplementedInWindows
+    #
+    # can we find where we use ps and just rplace it with ps_psutil
+    # and than rename psutil to ps ;-)
+    #
+    @classmethod
     def ps(cls, *args):
         """
         executes ps with the given arguments
@@ -341,6 +345,27 @@ class Shell(object):
         # TODO: tasklist in windows
         # TODO: make tasklist and ps behave similar, e.g. have the same output,
         return cls.execute('ps', args)
+
+    @staticmethod
+    def ps_psutil():
+        """
+        using psutil to return the process information pid, name and comdline,
+        cmdline may be a list
+
+        :return: a list of dicts of process information
+        """
+        found = []
+        for proc in psutil.process_iter():
+            try:
+                pinfo = proc.as_dict(attrs=['pid', 'name', 'cmdline'])
+            except psutil.NoSuchProcess:
+                pass
+            else:
+                found.append(pinfo)
+        if len(pinfo) == 0:
+            return None
+        else:
+            return found
 
     @classmethod
     def bash(cls, *args):
