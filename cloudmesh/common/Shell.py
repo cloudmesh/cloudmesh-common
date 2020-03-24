@@ -329,25 +329,9 @@ class Shell(object):
         """
         return cls.execute('ls', args)
 
-    # @NotImplementedInWindows
-    #
-    # can we find where we use ps and just rplace it with ps_psutil
-    # and than rename psutil to ps ;-)
-    #
-    @classmethod
-    def ps(cls, *args):
-        """
-        executes ps with the given arguments
-        :param args: 
-        :return: 
-        """
-        NotImplementedInWindows()
-        # TODO: tasklist in windows
-        # TODO: make tasklist and ps behave similar, e.g. have the same output,
-        return cls.execute('ps', args)
 
     @staticmethod
-    def ps_psutil():
+    def ps():
         """
         using psutil to return the process information pid, name and comdline,
         cmdline may be a list
@@ -824,16 +808,9 @@ class Shell(object):
     @staticmethod
     def get_pid(name, service="psutil"):
         pid = None
-
-        if service == "psutil":
-            for proc in psutil.process_iter():
-                if name in proc.name():
-                    pid = proc.pid
-        elif service == 'grep':
-            result = Shell.ps(["-a"])
-            print (result)
-
-
+        for proc in psutil.process_iter():
+            if name in proc.name():
+                pid = proc.pid
         return pid
 
     @staticmethod
