@@ -26,6 +26,7 @@ class Host(object):
         shell = args['shell'] or False
         dryrun = args['dryrun'] or False
         executor = args['executor']
+        verbose = args['verbose'] or False
 
         if username is None:
             location = f"{host}"
@@ -38,7 +39,8 @@ class Host(object):
                    "-o", "UserKnownHostsFile=/dev/null",
                    '-i', key, location, command]
 
-        print ('Command:', ssh_command)
+        if verbose:
+            print ('Command:', ssh_command)
         if dryrun:
             result = None
             #print (command)
@@ -68,7 +70,8 @@ class Host(object):
             shell=False,
             processors=3,
             dryrun=False,
-            executor=None):
+            executor=None,
+            verbose=False):
         #
         # BUG: this code has a bug and does not deal with different
         #  usernames on the host to be checked.
@@ -98,7 +101,8 @@ class Host(object):
                  'username': username,
                  'host': host,
                  'dryrun':dryrun,
-                 'executor': executor
+                 'executor': executor,
+                 'verbose': verbose
                  } for host in hosts]
 
         with Pool(processors) as p:
