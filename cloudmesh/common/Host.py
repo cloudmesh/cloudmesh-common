@@ -7,71 +7,103 @@ from cloudmesh.common.parameter import Parameter
 from cloudmesh.common.util import path_expand
 import time
 from pprint import pprint
+from cloudmesh.common.Shell import Shell
+
 
 class Host(object):
 
     @staticmethod
-    def _ssh(args):
+    def _run(args):
         """
-        check a vm
 
-        :param args: dict of {key, username, host, command}
-        :return: a dict representing the result, if returncode=0 ping is
-                 successfully
+        An internal command that executes as part of a process map a given
+        command. args is a dict and must include
+
+        * command
+        * shell
+
+        It returns a dict of the form
+
+        * command
+        * stdout
+        & stderr
+        * returncode
+        * success
+
+        :param args: command dict
+        :return:
         """
-        key = args['key']
-        host = args['host']
-        username = args['username']
-        command = args['command']
-        shell = args['shell'] or False
-        dryrun = args['dryrun'] or False
-        executor = args['executor']
-        verbose = args['verbose'] or False
+        command = args.get("command")
+        shell = args.get("shell")
 
-        if username is None:
-            location = f"{host}"
-        else:
-            location = f"{username}@{host}"
-
-
-        ssh_command = ['ssh',
-                   "-o", "StrictHostKeyChecking=no",
-                   "-o", "UserKnownHostsFile=/dev/null",
-                   '-i', key, location, command]
-
-        if verbose:
-            print ('Command:', ssh_command)
-        if dryrun:
-            result = None
-            #print (command)
-        elif executor:
-            executor(' '.join(ssh_command))
-            result = ""
-        else:
-            result = subprocess.run(ssh_command, capture_output=True, shell=shell)
-            result.stdout = result.stdout.decode("utf-8").strip()
-            if result.stderr == b'':
-                result.stderr = None
-            data = {
-                'command': command,
-                'ssh': ' '.join(result.args),
-                'stdout': result.stdout,
-                'stderr': result.stderr,
-                'returncode': result.returncode,
-                'success': result.returncode == 0
-            }
+        result = subprocess.run(command,
+                                capture_output=True,
+                                shell=shell)
+        result.stdout = result.stdout.decode("utf-8").strip()
+        if result.stderr == b'':
+            result.stderr = None
+        data = {
+            'host': args.get("host"),
+            'command': args.get("command"),
+            'stdout': result.stdout,
+            'stderr': result.stderr,
+            'returncode': result.returncode,
+            'success': result.returncode == 0
+        }
         return data
+
+    @staticmethod
+    def run(hosts=None,
+            command=None,
+            processors=3,
+            shell=False,
+            **kwargs):
+        """
+        Executes the command on all hosts. The key values
+        specified in **kwargs will be replaced prior to the
+        execution. Furthermore, {host} will be replaced with the
+        specific hostname.
+
+        :param hosts: The hosts given in parameter notation
+                      Example: red[01-10]
+        :param command: The command to be executed for each host
+                        Example: ssh {host} uname
+        :param username: Specify the username on the host
+        :param processors: The number of parallel processes used
+        :param shell: Set to Tue if the current context of the shell is
+                      to be used. It is by default True
+        :param kwargs: The key value pairs to be replaced in the command
+        :return:
+        """
+
+        if type(hosts) != list:
+            hosts = Parameter.expand(hosts)
+
+        args = [{'command': [c.format(host=host, **kwargs) for c in command],
+                 'shell': shell,
+                 'host': host,
+                 } for host in hosts]
+
+        if "executor" not in args:
+            executor = Host._run
+
+
+
+        with Pool(processors) as p:
+            res = p.map(executor, args)
+            p.close()
+            p.join()
+        return res
 
     @staticmethod
     def ssh(hosts=None,
             command=None,
             username=None,
             key="~/.ssh/id_rsa.pub",
-            shell=False,
             processors=3,
-            dryrun=False,
+            dryrun=False,  # notused
             executor=None,
-            verbose=False):
+            verbose=False):  # not used
         #
         # BUG: this code has a bug and does not deal with different
         #  usernames on the host to be checked.
@@ -89,24 +121,100 @@ class Host(object):
         if type(hosts) != list:
             hosts = Parameter.expand(hosts)
 
-        #if username is None:
-        #    username = os.environ['USER']
+        key = path_expand(key)
+        ssh_command = ['ssh',
+                       '-o', 'StrictHostKeyChecking=no',
+                       '-o', 'UserKnownHostsFile=/dev/null',
+                       '-i', f'{key}',
+                       '{host}',
+                       f'{command}']
+
+        result = Host.run(hosts=hosts,
+                          command=ssh_command,
+                          shell=False,
+                          executor=executor)
+
+        return result
+
+    @staticmethod
+    def _put(args):
+        """
+        check a vm
+
+        :param args: dict of {key, username, host, command}
+        :return: a dict representing the result, if returncode=0 ping is
+                 successfully
+        """
+        host = args['host']
+        key = args['key']
+        username = args['username']
+        source = args['source']
+        destination = args['sectination']
+        shell = args['shell']
+
+        if username is None:
+            destination_location = f"{host}"
+        else:
+            destination_location = f"{username}@{host}"
+
+        scp_command = ['scp',
+                       "-o", "StrictHostKeyChecking=no",
+                       "-o", "UserKnownHostsFile=/dev/null",
+                       '-i', key, source, destination]
+
+        executor = (' '.join(scp_command))
+
+        result = subprocess.run(scp_command, capture_output=True, shell=shell)
+        result.stdout = result.stdout.decode("utf-8").strip()
+        if result.stderr == b'':
+            result.stderr = None
+        data = {
+            'command': scp_command,
+            'scp': ' '.join(result.args),
+            'stdout': result.stdout,
+            'stderr': result.stderr,
+            'returncode': result.returncode,
+            'success': result.returncode == 0
+        }
+        return data
+
+    @staticmethod
+    def put(hosts=None,
+            source=None,
+            destination=None,
+            username=None,
+            key="~/.ssh/id_rsa.pub",
+            shell=False,
+            processors=3,
+            dryrun=False,
+            verbose=False):
+        """
+
+        :param command: the command to be executed
+        :param hosts: a list of hosts to be checked
+        :param username: the usernames for the hosts
+        :param key: the key for logging in
+        :param processors: the number of parallel checks
+        :return: list of dicts representing the ping result
+        """
+
+        if type(hosts) != list:
+            hosts = Parameter.expand(hosts)
 
         key = path_expand(key)
 
-        # wrap ip and count into one list to be sent to Pool map
-        args = [{'command': command,
+        # wrap command  into one list to be sent to Pool map
+
+        args = [{'source': source,
+                 'destination': destination,
                  'key': key,
                  'shell': shell,
                  'username': username,
                  'host': host,
-                 'dryrun':dryrun,
-                 'executor': executor,
-                 'verbose': verbose
                  } for host in hosts]
 
         with Pool(processors) as p:
-            res = p.map(Host._ssh, args)
+            res = p.map(Host._put, args)
             p.close()
             p.join()
         return res
@@ -203,12 +311,12 @@ class Host(object):
         return res
 
     @staticmethod
-    def generate_key(hosts=None,
-                     filename="~/.ssh/id_rsa",
-                     username=None,
-                     processors=3,
-                     dryrun=False,
-                     verbose=True):
+    def ssh_keygen(hosts=None,
+                   filename="~/.ssh/id_rsa",
+                   username=None,
+                   processors=3,
+                   dryrun=False,
+                   verbose=True):
         """
         generates the keys on the specified hosts.
         this fonction does not work well as it still will aski if we overwrite.
@@ -221,26 +329,22 @@ class Host(object):
         :param verbose:
         :return:
         """
+        if type(hosts) != list:
+            hosts = Parameter.expand(hosts)
 
-        # command = f'echo y | ssh-keygen -t rsa -b 4096 -q -N "" -P "" -f {filename} -q'
-        command = f'ssh-keygen -t rsa -b 4096 -q -N "" -P "" -f {filename} -q'
+        command = f'ssh-keygen -q -N "" -f {filename} <<< y'
+        result_keys = Host.ssh(hosts=hosts,
+                               command=command,
+                               username=username,
+                               dryrun=dryrun,
+                               processors=processors,
+                               executor=os.system)
+        result_keys = Host.ssh(hosts=hosts,
+                               processors=processors,
+                               command='cat .ssh/id_rsa.pub',
+                               username=username)
 
-        print(command)
-
-        results = Host.ssh(
-            hosts=hosts,
-            command=command,
-            username=username,
-            key="~/.ssh/id_rsa.pub",
-            processors=processors)
-
-        keys = []
-
-        for result in results:
-            key = result.stdout.strip()
-            keys.append(key)
-
-        return keys
+        return result_keys
 
     @staticmethod
     def gather_keys(
