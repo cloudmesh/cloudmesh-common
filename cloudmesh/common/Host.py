@@ -87,8 +87,6 @@ class Host(object):
         if "executor" not in args:
             executor = Host._run
 
-
-
         with Pool(processors) as p:
             res = p.map(executor, args)
             p.close()
@@ -137,48 +135,6 @@ class Host(object):
         return result
 
     @staticmethod
-    def _put(args):
-        """
-        check a vm
-
-        :param args: dict of {key, username, host, command}
-        :return: a dict representing the result, if returncode=0 ping is
-                 successfully
-        """
-        host = args['host']
-        key = args['key']
-        username = args['username']
-        source = args['source']
-        destination = args['sectination']
-        shell = args['shell']
-
-        if username is None:
-            destination_location = f"{host}"
-        else:
-            destination_location = f"{username}@{host}"
-
-        scp_command = ['scp',
-                       "-o", "StrictHostKeyChecking=no",
-                       "-o", "UserKnownHostsFile=/dev/null",
-                       '-i', key, source, destination]
-
-        executor = (' '.join(scp_command))
-
-        result = subprocess.run(scp_command, capture_output=True, shell=shell)
-        result.stdout = result.stdout.decode("utf-8").strip()
-        if result.stderr == b'':
-            result.stderr = None
-        data = {
-            'command': scp_command,
-            'scp': ' '.join(result.args),
-            'stdout': result.stdout,
-            'stderr': result.stderr,
-            'returncode': result.returncode,
-            'success': result.returncode == 0
-        }
-        return data
-
-    @staticmethod
     def put(hosts=None,
             source=None,
             destination=None,
@@ -203,21 +159,19 @@ class Host(object):
 
         key = path_expand(key)
 
-        # wrap command  into one list to be sent to Pool map
+        command = ['scp',
+                   "-o", "StrictHostKeyChecking=no",
+                   "-o", "UserKnownHostsFile=/dev/null",
+                   '-i', key,
+                   source,
+                   "{host}:{destination}"]
 
-        args = [{'source': source,
-                 'destination': destination,
-                 'key': key,
-                 'shell': shell,
-                 'username': username,
-                 'host': host,
-                 } for host in hosts]
+        result = Host.run(hosts=hosts,
+                          command=command,
+                          destination=destination,
+                          shell=False)
 
-        with Pool(processors) as p:
-            res = p.map(Host._put, args)
-            p.close()
-            p.join()
-        return res
+        return result
 
     @staticmethod
     def check(hosts=None,
@@ -365,20 +319,29 @@ class Host(object):
         :return:
         """
 
-        command = f"cat {filename}"
-        results = Host.ssh(
-            hosts=hosts,
-            command=command,
-            username=username,
-            key=key,
-            processors=processors)
+        names = Parameter.expand(hosts)
 
-        pprint(results)
+        results_key = Host.ssh(hosts=names,
+                               command='cat .ssh/id_rsa.pub',
+                               username=username,
+                               verbose=False)
+        #results_authorized = Host.ssh(hosts=names,
+        #                              command='cat .ssh/id_rsa.pub',
+        #                              username=username,
+        #                              verbose=False)
+        filename = path_expand(filename)
+        localkey = Shell.run(f'cat {filename}').strip()
+        if results_key is None: # and results_authorized is None:
+            return ""
 
-        keys = []
+        # geting the output and also removing duplicates
+        output = list(set(
+            [element["stdout"] for element in results_key]
+            # + [element["stdout"] for element in results_authorized]
+            + [localkey]
 
-        for result in results:
-            key = result.stdout.strip()
-            keys.append(key)
+        ))
 
-        return keys
+        output = '\n'.join(output)
+
+        return output
