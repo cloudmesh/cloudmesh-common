@@ -8,9 +8,44 @@ from cloudmesh.common.util import path_expand
 import time
 from pprint import pprint
 from cloudmesh.common.Shell import Shell
-
+import textwrap
 
 class Host(object):
+
+    @staticmethod
+    def config(hosts=None,
+               ips=None,
+               username=None,
+               key="~/.ssh/id_rsa.pub"):
+
+        if type(hosts) != list:
+            _hosts = Parameter.expand(hosts)
+        if type(ips) != list:
+            _ips = Parameter.expand(ips)
+        if len(_ips) != len(_hosts):
+            raise ValueError("Number of hosts and ips mismatch")
+
+        result = ""
+        for i in range(0,len(_hosts)):
+
+            host = _hosts[i]
+            ip = _ips[i]
+
+            user = f"user {username}"
+            data = textwrap.dedent(f"""
+            Host {host}
+                StrictHostKeyChecking no
+                LogLevel ERROR
+                UserKnownHostsFile /dev/null
+                Hostname {ip}
+                IdentityFile {key}
+            """)
+            if username:
+                data += (f"    {user}\n")
+
+            result += data
+        return result
+
 
     @staticmethod
     def _run(args):
