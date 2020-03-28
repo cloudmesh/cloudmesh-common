@@ -9,6 +9,7 @@ import time
 from pprint import pprint
 from cloudmesh.common.Shell import Shell
 import textwrap
+from cloudmesh.common.DateTime import DateTime
 
 class Host(object):
 
@@ -74,7 +75,9 @@ class Host(object):
         result = subprocess.run(command,
                                 capture_output=True,
                                 shell=shell)
+        now = DateTime.now()
         result.stdout = result.stdout.decode("utf-8").strip()
+
         if result.stderr == b'':
             result.stderr = None
         data = {
@@ -83,7 +86,8 @@ class Host(object):
             'stdout': result.stdout,
             'stderr': result.stderr,
             'returncode': result.returncode,
-            'success': result.returncode == 0
+            'success': result.returncode == 0,
+            'date': now
         }
         return data
 
