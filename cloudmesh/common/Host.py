@@ -10,6 +10,7 @@ from pprint import pprint
 from cloudmesh.common.Shell import Shell
 import textwrap
 from cloudmesh.common.DateTime import DateTime
+import shlex
 
 class Host(object):
 
@@ -69,8 +70,20 @@ class Host(object):
         :param args: command dict
         :return:
         """
-        command = args.get("command")
+        hostname = os.uname()[1]
+        host = args.get("host")
+
+        print ("HHH", hostname, host)
+
+        if host == hostname:
+            command = shlex.split(args.get("execute"))
+            args['command'] = command
+        else:
+            command = args.get("command")
+
         shell = args.get("shell")
+
+        print ("RRR", command)
 
         result = subprocess.run(command,
                                 capture_output=True,
@@ -83,6 +96,7 @@ class Host(object):
         data = {
             'host': args.get("host"),
             'command': args.get("command"),
+            'execute': args.get("execute"),
             'stdout': result.stdout,
             'stderr': result.stderr,
             'returncode': result.returncode,
@@ -94,6 +108,7 @@ class Host(object):
     @staticmethod
     def run(hosts=None,
             command=None,
+            execute=None,
             processors=3,
             shell=False,
             **kwargs):
@@ -121,6 +136,7 @@ class Host(object):
         args = [{'command': [c.format(host=host, **kwargs) for c in command],
                  'shell': shell,
                  'host': host,
+                 'execute': execute,
                  } for host in hosts]
 
         if "executor" not in args:
@@ -168,6 +184,7 @@ class Host(object):
 
         result = Host.run(hosts=hosts,
                           command=ssh_command,
+                          execute=command,
                           shell=False,
                           executor=executor)
 
