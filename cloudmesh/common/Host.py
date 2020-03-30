@@ -73,8 +73,6 @@ class Host(object):
         hostname = os.uname()[1]
         host = args.get("host")
 
-        print ("HHH", hostname, host)
-
         if host == hostname:
             command = shlex.split(args.get("execute"))
             args['command'] = command
@@ -82,8 +80,6 @@ class Host(object):
             command = args.get("command")
 
         shell = args.get("shell")
-
-        print ("RRR", command)
 
         result = subprocess.run(command,
                                 capture_output=True,
