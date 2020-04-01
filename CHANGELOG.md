@@ -19,7 +19,7 @@ Intermediate Releases: 4.2.47 - 4.2.34
 #### Enhancements:
 
 - parallel gather and scetter for keys
-- Shell.ps based on psutil
+- Shell.ps is now based on psutil
 - Shell.kill is now based on psutil
 - Shell.ls is now using glob
 - use splitlines() instead of \n
