@@ -29,11 +29,17 @@ def tracefunc(frame, event, arg, indent=[0]):
 
 # noinspection PyPep8Naming
 def VERBOSE(msg, label=None, color="BLUE", verbose=9, location=True,
-            secrets=["OS_PASSWORD", "OS_USERNAME",
-                     "client_secret", "client_id", "project_id",
-                     "AZURE_TENANT_ID", "AZURE_SUBSCRIPTION_ID",
-                     "AZURE_APPLICATION_ID", "AZURE_SECRET_KEY: TBD",
-                     "EC2_ACCESS_ID: TBD", "EC2_SECRET_KEY",
+            secrets=["OS_PASSWORD",
+                     "OS_USERNAME",
+                     "client_secret",
+                     "client_id",
+                     "project_id",
+                     "AZURE_TENANT_ID",
+                     "AZURE_SUBSCRIPTION_ID",
+                     "AZURE_APPLICATION_ID",
+                     "AZURE_SECRET_KEY: TBD",
+                     "EC2_ACCESS_ID: TBD",
+                     "EC2_SECRET_KEY",
                      "MONGO_PASSWORD"]
             ):
     """
