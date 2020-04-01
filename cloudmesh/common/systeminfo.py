@@ -13,6 +13,14 @@ def systeminfo():
     uname = platform.uname()
     mem = psutil.virtual_memory()
 
+    def add_binary(value):
+        try:
+            r = humanize.naturalsize(value, binary=True)
+        except:
+            r = ""
+        return r
+
+
     data = OrderedDict({
         'uname.system': uname.system,
         'uname.node': uname.node,
@@ -26,14 +34,14 @@ def systeminfo():
         'python.version': sys.version.split(" ",1)[0],
         'python.pip': pip.__version__,
         'user': os.environ['USER'],
-        'mem.total': humanize.naturalsize(mem.total, binary=True),
-        'mem.available': humanize.naturalsize(mem.available, binary=True),
         'mem.percent': str(mem.percent) + " %",
-        'mem.used': humanize.naturalsize(mem.used, binary=True),
-        'mem.free': humanize.naturalsize(mem.free, binary=True),
-        'mem.active': humanize.naturalsize(mem.active, binary=True),
-        'mem.inactive': humanize.naturalsize(mem.inactive, binary=True),
-        'mem.wired': humanize.naturalsize(mem.wired, binary=True)
+        'mem.total': add_binary(mem.total),
+        'mem.available': add_binary(mem.available),
+        'mem.used': add_binary(mem.used),
+        'mem.free': add_binary(mem.free),
+        'mem.active': add_binary(mem.active),
+        'mem.inactive': add_binary(mem.inactive),
+        'mem.wired': add_binary(mem.wired)
     })
 
     # svmem(total=17179869184, available=6552825856, percent=61.9,
