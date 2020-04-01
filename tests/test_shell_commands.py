@@ -1,5 +1,5 @@
 ###############################################################
-# pip install .; npytest -v --capture=no  tests/test_shell..py::Test_shell.test_001
+# npytest -v --capture=no  tests/test_shell..py::Test_shell.test_001
 # pytest -v --capture=no  tests/test_shell.py
 # pytest -v tests/test_shell.py
 ###############################################################

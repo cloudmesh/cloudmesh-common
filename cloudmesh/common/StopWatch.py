@@ -8,7 +8,7 @@ import time
 
 import humanize
 import psutil
-from cloudmesh.common.Printer import Printer
+from cloudmesh.common.Tabulate import Printer
 from cloudmesh.common.systeminfo import systeminfo
 
 
@@ -83,7 +83,6 @@ class StopWatch(object):
         """
         return cls.timer_status[name]
 
-
     @classmethod
     def get(cls, name, digits=None):
         """
@@ -137,14 +136,15 @@ class StopWatch(object):
                     "status": str(cls.timer_status[t]),
                     "elapsed": str(cls.get(t)),
                     "newline": os.linesep}
-            s += "{label} {start} {end} {elapsed} {status} {newline}".format(**data)
+            s += "{label} {start} {end} {elapsed} {status} {newline}".format(
+                **data)
         return s
 
     @classmethod
     def benchmark(cls,
                   sysinfo=True,
                   csv=True,
-                  prefix="#csv",
+                  prefix="# csv",
                   tag=None):
         """
         prints out all timers in a convenient benchmark table
@@ -156,56 +156,17 @@ class StopWatch(object):
         # PRINT PLATFORM
         #
 
-
         print()
         data_platform = systeminfo()
 
         data_platform['cpu_count'] = multiprocessing.cpu_count()
-        mem = psutil.virtual_memory()
-        try:
-            data_platform['mem_total'] = humanize.naturalsize(mem.total, \
-                                                              binary=True)
-        except:
-            pass
-        try:
-            data_platform['mem_available'] = humanize.naturalsize(
-                mem.available, binary=True)
-        except:
-            pass
-        try:
-            data_platform['mem_percent'] = str(mem.percent) + "%"
-        except:
-            pass
-        try:
-            data_platform['mem_used'] = humanize.naturalsize(mem.used,
-                                                             binary=True)
-        except:
-            pass
-        try:
-            data_platform['mem_free'] = humanize.naturalsize(mem.free,
-                                                             binary=True)
-        except:
-            pass
-        try:
-            data_platform['mem_active'] = humanize.naturalsize(mem.active,
-                                                               binary=True)
-        except:
-            pass
-        try:
-            data_platform['mem_inactive'] = humanize.naturalsize(mem.inactive,
-                                                                 binary=True)
-        except:
-            pass
-        try:
-            data_platform['mem_wired'] = humanize.naturalsize(mem.wired,
-                                                              binary=True)
-        except:
-            pass
-        # svmem(total=17179869184, available=6552825856, percent=61.9,
 
         if sysinfo:
-            print(Printer.attribute(data_platform,
-                                    ["Machine Attribute", "Value"]))
+            print(Printer.attribute(
+                data_platform,
+                order=["Machine Attribute", "Value"],
+                output="table"
+            ))
 
         #
         # PRINT TIMERS
@@ -218,18 +179,20 @@ class StopWatch(object):
             for timer in timers:
                 data_timers[timer] = {
                     'start': time.strftime("%Y-%m-%d %H:%M:%S",
-                                           time.gmtime(StopWatch.timer_start[timer])),
+                                           time.gmtime(
+                                               StopWatch.timer_start[timer])),
                     'time': StopWatch.get(timer, digits=3),
                     'status': StopWatch.get_status(timer),
                     'timer': timer,
                     'tag': tag or ''
                 }
-                for attribute in ["node",
+
+                for attribute in ["uname.node",
                                   "user",
-                                  "system",
-                                  "machine",
-                                  "mac_version",
-                                  "win_version"]:
+                                  "uname.system",
+                                  "uname.machine",
+                                  "platform.version",
+                                  "sys.platform"]:
                     data_timers[timer][attribute] = data_platform[attribute]
 
             # print(Printer.attribute(data_timers, header=["Command", "Time/s"]))
@@ -238,47 +201,58 @@ class StopWatch(object):
                 del data_timers['benchmark_start_stop']
 
             for key in data_timers:
-                if key != 'benchmark_start_stop' and data_timers[key]['status'] == None:
+                if key != 'benchmark_start_stop' and data_timers[key][
+                    'status'] == None:
                     data_timers[key]['status'] = "failed"
-                elif data_timers[key]['status'] != None and data_timers[key]['status'] == True:
+                elif data_timers[key]['status'] != None and data_timers[key][
+                    'status'] == True:
                     data_timers[key]['status'] = "ok"
 
 
-            print(Printer.write(
-                data_timers,
-                order=["timer",
-                       "status",
-                       "time",
-                       "start",
-                       "tag",
-                       "node",
-                       "user",
-                       "system",
-                       "mac_version",
-                       "win_version"],
-                max_width=128)
-            )
+            order=[
+                "timer",
+                "status",
+                "time",
+                "start",
+                "tag",
+                "uname.node",
+                "user",
+                "uname.system",
+                "platform.version"
+            ]
+
+            header = [
+                "Name",
+                "Status",
+                "Time",
+                "Start",
+                "tag",
+                "Node",
+                "User",
+                "OS",
+                "Version"
+            ]
 
             print()
-            if csv:
-                order = ["csv",
-                         "status"
-                         "timer",
-                         "time",
-                         "start"
-                         "tag",
-                         "node",
-                         "user",
-                         "system",
-                         "mac_version",
-                         "win_version"]
+            print(Printer.write(
+                data_timers,
+                order=order,
+                header=header,
+                output="table"
 
+            ))
+            print()
+            if csv:
                 if prefix is not None:
                     for entry in data_timers:
-                        data_timers[entry]["csv"] = "#csv"
+                        data_timers[entry]["# csv"] = prefix
+
+
+                    order = ["# csv"] + order
                     print(Printer.write(
                         data_timers,
                         order=order,
+                        header=header,
                         output="csv"
                     ))
                 else:
@@ -291,4 +265,3 @@ class StopWatch(object):
         else:
 
             print("ERROR: No timers found")
-

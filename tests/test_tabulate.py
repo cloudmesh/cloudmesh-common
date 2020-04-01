@@ -1,16 +1,16 @@
 ###############################################################
-# pip install .; pytest -v --capture=no  tests/test_printer..py::Test_printer.test_001
-# pytest -v --capture=no tests/test_printer.py
-# pytest -v  tests/test_printer.py
+# pytest -v --capture=no tests/test_tabulate.py
+# pytest -v --capture=no  tests/test_tabulate..py::Test_tabulate.test_001
+# pytest -v  tests/test_tabulate.py
 ###############################################################
 
-from cloudmesh.common.Printer import Printer
+from cloudmesh.common.Tabulate import Printer
 from cloudmesh.common.util import HEADING
 from pprint import pprint
 import pytest
 
 @pytest.mark.incremental
-class Test_Printer:
+class Test_Tabulate:
 
     def setup(self):
         self.data = [

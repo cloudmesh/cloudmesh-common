@@ -1,6 +1,6 @@
 ###############################################################
-# pip install .; pytest -v --capture=no tests/test_stopwatch..py::Test_stopwatch.test_001
 # pytest -v --capture=no tests/test_stopwatch.py
+# pytest -v --capture=no tests/test_stopwatch..py::Test_stopwatch.test_001
 # pytest -v  tests/test_stopwatch.py
 ###############################################################
 
@@ -18,5 +18,5 @@ class Test_Printer:
         StopWatch.start("sleep 1")
         time.sleep(1)
         StopWatch.stop("sleep 1")
-        StopWatch.benchmark(sysinfo=True)
+        StopWatch.benchmark(sysinfo=True, csv=True)
         assert True
