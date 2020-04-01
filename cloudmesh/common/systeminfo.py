@@ -54,6 +54,8 @@ def systeminfo():
         data['platform.version'] = platform.mac_ver()[0]
     elif data['sys.platform'] == 'win32':
         data['platform.version'] = platform.win32_ver()
+    else:
+        data['platform.version'] = uname.version
 
     try:
         release_files = Path("/etc").glob("*release")
