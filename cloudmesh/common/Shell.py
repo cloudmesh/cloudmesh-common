@@ -25,8 +25,9 @@ import psutil
 import stat
 from pathlib import Path
 
-#from functools import wraps
-#def timer(func):
+
+# from functools import wraps
+# def timer(func):
 #    @wraps(func)
 #    def wrapper(*args,**kwargs):
 #        print(f"{func.__name__!r} begins")
@@ -36,7 +37,7 @@ from pathlib import Path
 #        return result
 #    return wrapper
 
-#def NotImplementedInWindows(f):
+# def NotImplementedInWindows(f):
 #    def new_f(*args):
 #        if sys.platform == "win32":
 #            Console.error("The method {f.__name__} is not implemented in Windows,"
@@ -48,8 +49,9 @@ from pathlib import Path
 def NotImplementedInWindows():
     if sys.platform == "win32":
         Console.error("The method {f.__name__} is not implemented in Windows,"
-                    " please implement, and/or submit an issue.")
+                      " please implement, and/or submit an issue.")
         sys.exit()
+
 
 class Brew(object):
 
@@ -68,7 +70,6 @@ class Brew(object):
         else:
             print(name, "... error")
             Console.error(r)
-
 
     @classmethod
     def version(cls, name):
@@ -287,7 +288,6 @@ class Shell(object):
         })
         return data
 
-
     @classmethod
     def get_python(cls):
         """
@@ -301,7 +301,6 @@ class Shell(object):
         # pip_version = pip.__version__
         pip_version = Shell.pip("--version").split()[1]
         return python_version_s, pip_version
-
 
     @classmethod
     def check_output(cls, *args, **kwargs):
@@ -328,7 +327,6 @@ class Shell(object):
         :return:
         """
         return cls.execute('ls', args)
-
 
     @staticmethod
     def ps():
@@ -735,7 +733,6 @@ class Shell(object):
                 result = result + [line]
         return result
 
-
     # def __init__(cls):
     #     """
     #     identifies parameters for the os
@@ -914,7 +911,9 @@ class Shell(object):
 
         if python_version[0] == 2:
 
-            print("You are running an unsupported version of python: {:}".format(python_version_s))
+            print(
+                "You are running an unsupported version of python: {:}".format(
+                    python_version_s))
 
             # python_version_s = '.'.join(v_string)
             # if (python_version[0] == 2) and (python_version[1] >= 7) and (python_version[2] >= 9):
@@ -926,11 +925,16 @@ class Shell(object):
 
         elif python_version[0] == 3:
 
-            if (python_version[0] == 3) and (python_version[1] >= 7) and (python_version[2] >= 0):
+            if (python_version[0] == 3) and (python_version[1] >= 7) and (
+                python_version[2] >= 0):
 
-                print("You are running a supported version of python: {:}".format(python_version_s))
+                print(
+                    "You are running a supported version of python: {:}".format(
+                        python_version_s))
             else:
-                print("WARNING: You are running an unsupported version of python: {:}".format(python_version_s))
+                print(
+                    "WARNING: You are running an unsupported version of python: {:}".format(
+                        python_version_s))
                 print("         We recommend you update your python")
 
         # pip_version = pip.__version__
@@ -944,7 +948,6 @@ class Shell(object):
                 pip_version))
             print("         We recommend you update your pip  with \n")
             print("             pip install -U pip\n")
-
 
     @classmethod
     def execute(cls,
@@ -1000,18 +1003,20 @@ class Shell(object):
 
                         def __enter__(self):
                             self.old_value = ctypes.c_long()
-                            self.success = self._disable(ctypes.byref(self.old_value))
+                            self.success = self._disable(
+                                ctypes.byref(self.old_value))
 
                         def __exit__(self, type, value, traceback):
                             if self.success:
                                 self._revert(self.old_value)
+
                     if len(os_command) == 1:
                         os_command = os_command[0].split(' ')
                     with disable_file_system_redirection():
                         result = subprocess.check_output(os_command,
-                                                    stderr=subprocess.STDOUT,
-                                                    shell=True,
-                                                    cwd=cwd)
+                                                         stderr=subprocess.STDOUT,
+                                                         shell=True,
+                                                         cwd=cwd)
                 else:
                     result = subprocess.check_output(
                         os_command,
@@ -1084,7 +1089,7 @@ class Shell(object):
         elif platform == "windows":
             os.system("notepad " + filename)
         else:
-           raise NotImplementedError("Editor not configured for OS")
+            raise NotImplementedError("Editor not configured for OS")
 
     @classmethod
     # @NotImplementedInWindows
@@ -1129,12 +1134,15 @@ class Shell(object):
                     for line in r.split():
                         if ":" in line:
                             attribute, value = line.split(":", 1)
-                            attribute = attribute.strip().replace(" ", "_").lower()
+                            attribute = attribute.strip().replace(" ",
+                                                                  "_").lower()
                             value = value.strip()
                             result[attribute] = value
-                    result["distribution"] = result["description"].split(" ")[0].lower()
+                    result["distribution"] = result["description"].split(" ")[
+                        0].lower()
                 except:
-                    Console.error(f"lsb_release not found for the platform {machine}")
+                    Console.error(
+                        f"lsb_release not found for the platform {machine}")
                     raise NotImplementedError
         elif machine == 'darwin':
             result["distribution"] = "macos"
@@ -1194,7 +1202,6 @@ def main():
 
     r = Shell.pwd()
     print(r)
-
 
 
 if __name__ == "__main__":

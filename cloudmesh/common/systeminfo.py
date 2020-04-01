@@ -20,7 +20,6 @@ def systeminfo():
             r = ""
         return r
 
-
     data = OrderedDict({
         'uname.system': uname.system,
         'uname.node': uname.node,
@@ -31,19 +30,23 @@ def systeminfo():
         'uname.processor': uname.processor,
         'sys.platform': sys.platform,
         'python': sys.version,
-        'python.version': sys.version.split(" ",1)[0],
+        'python.version': sys.version.split(" ", 1)[0],
         'python.pip': pip.__version__,
         'user': os.environ['USER'],
         'mem.percent': str(mem.percent) + " %",
-        'mem.total': add_binary(mem.total),
-        'mem.available': add_binary(mem.available),
-        'mem.used': add_binary(mem.used),
-        'mem.free': add_binary(mem.free),
-        'mem.active': add_binary(mem.active),
-        'mem.inactive': add_binary(mem.inactive),
-        'mem.wired': add_binary(mem.wired)
     })
-
+    for attribute in ["total",
+                      "available",
+                      "used",
+                      "free",
+                      "active",
+                      "inactive",
+                      "wired"
+                      ]:
+        try:
+            data[f"mem.{attribute}"] = getattr(mem, attribute)
+        except:
+            pass
     # svmem(total=17179869184, available=6552825856, percent=61.9,
 
     if data['sys.platform'] == 'darwin':

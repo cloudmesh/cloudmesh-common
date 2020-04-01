@@ -182,16 +182,16 @@ class Printer(object):
                                       humanize=humanize,
                                       sort_keys=sort_keys,
                                       max_width=max_width)
-        elif output == "html": # does not work
+        elif output == "html":  # does not work
             if d == []:
                 return "Empty data"
             else:
                 return cls.dict_html(d,
-                                      order=order,
-                                      header=header,
-                                      humanize=humanize,
-                                      sort_keys=sort_keys,
-                                      max_width=max_width)
+                                     order=order,
+                                     header=header,
+                                     humanize=humanize,
+                                     sort_keys=sort_keys,
+                                     max_width=max_width)
         elif output == "csv":
             return cls.csv(d,
                            order=order,
@@ -273,19 +273,19 @@ class Printer(object):
 
     @classmethod
     def dict_html(cls, d,
-                   order=None,
-                   header=None,
-                   sort_keys=True,
-                   show_none="",
-                   humanize=None,
-                   max_width=48):
-        x= Printer.dict_table(d,
-                           order=order,
-                           header=header,
-                           sort_keys=sort_keys,
-                           show_none=show_none,
-                           humanize=humanize,
-                           max_width=max_width)
+                  order=None,
+                  header=None,
+                  sort_keys=True,
+                  show_none="",
+                  humanize=None,
+                  max_width=48):
+        x = Printer.dict_table(d,
+                               order=order,
+                               header=header,
+                               sort_keys=sort_keys,
+                               show_none=show_none,
+                               humanize=humanize,
+                               max_width=max_width)
 
         return x.get_html_string()
 
@@ -332,7 +332,7 @@ class Printer(object):
                 elif humanize and key in humanize:
                     tmp = parser.parse(tmp)
                     tmp = DateTime.humanize(start - tmp)
-                    #tmp = naturaltime(start - tmp)
+                    # tmp = naturaltime(start - tmp)
             except:
                 tmp = ' '
             return tmp
@@ -361,7 +361,6 @@ class Printer(object):
                 sorted_list = d
         else:
             sorted_list = d
-
 
         for element in sorted_list:
             values = []

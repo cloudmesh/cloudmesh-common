@@ -59,20 +59,20 @@ class Printer:
             output = 'fancy_grid'
         elif output == 'csv':
             return Printer.csv(results,
-                        order=order,
-                        header=header,
-                        humanize=humanize,
-                        sort_keys=True)
+                               order=order,
+                               header=header,
+                               humanize=humanize,
+                               sort_keys=True)
 
         if type(results) == dict:
             results = Printer._to_tabulate(results)
 
         return tabulate(
-            Printer.select( results,
-                            order=order,
-                            width=width),
-                            tablefmt=output,
-                            headers=headers
+            Printer.select(results,
+                           order=order,
+                           width=width),
+            tablefmt=output,
+            headers=headers
         )
 
     @staticmethod
@@ -97,7 +97,7 @@ class Printer:
                   show_none="",
                   humanize=None,
                   sep=".",
-                  max_width=48, # deprecated use width
+                  max_width=48,  # deprecated use width
                   width=48
                   ):
         """
@@ -115,11 +115,12 @@ class Printer:
         :type max_width: int
         :return:
         """
-        width = width or max_width # max_width is deprecated. thi is used for those still using it
+        width = width or max_width  # max_width is deprecated. thi is used for those still using it
 
         flat = flatten(table, sep=sep)
 
-        return Printer.write(flat, order=order, header=header, output='table', width=width)
+        return Printer.write(flat, order=order, header=header, output='table',
+                             width=width)
         """
         return Printer.write(flat,
                              sort_keys=sort_keys,
@@ -182,7 +183,6 @@ class Printer:
             output = 'fancy_grid'
 
         return tabulate(x, tablefmt=output, headers=header)
-
 
     @classmethod
     def csv(cls, d, order=None, header=None, humanize=None,

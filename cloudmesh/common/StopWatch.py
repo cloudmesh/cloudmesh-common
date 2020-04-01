@@ -208,8 +208,7 @@ class StopWatch(object):
                     'status'] == True:
                     data_timers[key]['status'] = "ok"
 
-
-            order=[
+            order = [
                 "timer",
                 "status",
                 "time",
@@ -246,7 +245,6 @@ class StopWatch(object):
                 if prefix is not None:
                     for entry in data_timers:
                         data_timers[entry]["# csv"] = prefix
-
 
                     order = ["# csv"] + order
                     print(Printer.write(
