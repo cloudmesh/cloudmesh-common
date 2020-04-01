@@ -52,6 +52,7 @@ colorama
 pathlib
 humanize
 python-dateutil
+tabulate
 """.splitlines()
 
 version = readfile("VERSION").strip()
