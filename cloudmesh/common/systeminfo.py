@@ -44,7 +44,8 @@ def systeminfo():
                       "wired"
                       ]:
         try:
-            data[f"mem.{attribute}"] = getattr(mem, attribute)
+            data[f"mem.{attribute}"] = \
+                humanize.naturalsize(getattr(mem, attribute), binary=True)
         except:
             pass
     # svmem(total=17179869184, available=6552825856, percent=61.9,
