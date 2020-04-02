@@ -24,7 +24,7 @@ import psutil
 
 import stat
 from pathlib import Path
-
+import shutil
 
 # from functools import wraps
 # def timer(func):
@@ -206,30 +206,14 @@ class Shell(object):
     @staticmethod
     def rmdir(top, verbose=False):
 
-        # check if top exists
         p = Path(top)
         if not p.exists():
             return
-
-        for root, dirs, files in os.walk(top, topdown=False):
-            for name in files:
-                try:
-                    filename = os.path.join(root, name)
-                    if verbose:
-                        print("remove", filename)
-                    os.chmod(filename, stat.S_IWUSR)
-                    os.remove(filename)
-                except:
-                    pass
-            for name in dirs:
-                try:
-                    os.rmdir(os.path.join(root, name))
-                except:
-                    pass
         try:
-            os.rmdir(top)
-        except:
-            pass
+            shutil.rmtree(path_expand(top))
+        except OSError as e:
+            print(e.strerror)
+            assert False, "Directory {location} could not be deleted"
 
     @staticmethod
     def dot2svg(filename, engine='dot'):

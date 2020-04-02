@@ -1,5 +1,6 @@
 # Changelog
 
+- move some of the tests that belong into cmd5 from other repos
 
 ## 4.2.50 (04/01/2020)
 
@@ -7,10 +8,14 @@ Intermediate Releases: 4.2.49
 
 #### Enhancements:
 
-- Switch `cloudmesh.common.Stopwatch.benchmark` to tabulate
-- Improve `cloudmesh.common.sysinfo`
+- `cloudmesh.common.Shell.rmdir` uses now `shutil.rmtree`
+- `cloudmesh.common.Stopwatch.benchmark` uses now tabulate
+- `cloudmesh.common.sysinfo` has been improved with getattr for mem and
+  uname
 
 #### Bug Fixes:
+
+- None
 
 ## 4.2.48 (03/30/2020)
 
