@@ -3,7 +3,7 @@ from hostlist import expand_hostlist
 
 class Parameter(object):
     @classmethod
-    def expand(cls, parameter, allow_duplicates=False, sort=False):
+    def expand(cls, parameter, allow_duplicates=False, sort=False, sep=":"):
         """
         Parameter.expand("a[0-1]")  -> ["a0", "a1"]
         :param parameter:
@@ -13,8 +13,33 @@ class Parameter(object):
         """
         if parameter is None:
             return parameter
+
+        parameters = list(expand_hostlist(parameter,
+                                          allow_duplicates=False,
+                                          sort=False))
+
+        print(parameters)
+        results = [t.split(sep, 1) for t in parameters]
+        merge = []
+
+        for entry in results:
+            merge = merge + entry
+
+        if len(merge) == len(parameters):
+            return parameters
+
+        elif len(merge) == len(parameters) + 1 and len(results[0]) == 2:
+
+            prefix = results[0][0]
+            _results = []
+            for i in range(1, len(parameters)):
+                parameters[i] = f"{prefix}:{parameters[i]}"
+
+            return parameters
+
         else:
-            return expand_hostlist(parameter, allow_duplicates=False, sort=False)
+
+            return parameters
 
     @staticmethod
     def find(name, *dicts):
@@ -75,7 +100,8 @@ class Parameter(object):
             parameters[key] = value
         return parameters
 
-    def separate(self, text, sep=":"):
+    @staticmethod
+    def separate(text, sep=":"):
         if sep in text:
             return text.split(sep, 1)
         else:

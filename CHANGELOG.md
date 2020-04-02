@@ -1,5 +1,7 @@
 # Changelog
 
+- `cloudmesh.common.Parameter.expand`: populates missing SERVICE:SOURCE
+  into comma separated services.
 - `cloudmesh.common.Parameter.separate`: separates SERVICE:SOURCE
   This is useful for `cloudmesh-storage`
 - move some of the tests that belong into cmd5 from other repos
