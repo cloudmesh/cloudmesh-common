@@ -1,6 +1,6 @@
 # Changelog
 
-- `cloudmesh.common.Parameter.expand`: populates missing SERVICE:SOURCE
+- `cloudmesh.common.Parameter._expand`: populates missing SERVICE:SOURCE
   into comma separated services.
 - `cloudmesh.common.Parameter.separate`: separates SERVICE:SOURCE
   This is useful for `cloudmesh-storage`
