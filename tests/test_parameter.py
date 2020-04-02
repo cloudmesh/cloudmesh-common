@@ -18,7 +18,7 @@ class Test_Parameter:
         parameter = "a,b,c"
         check = ["a", "b", "c"]
 
-        result = Parameter._expand(parameter)
+        result = Parameter.expand(parameter)
         print(result)
         assert result == check
 
@@ -28,7 +28,7 @@ class Test_Parameter:
         parameter = "a,b,c"
         check = ["a", "b", "c"]
 
-        result = Parameter._expand(parameter)
+        result = Parameter.expand(parameter)
         print(result)
 
         assert result == check
@@ -39,7 +39,7 @@ class Test_Parameter:
         parameter = "local:a,b,c"
         check = ["local:a", "local:b", "local:c"]
 
-        result = Parameter._expand(parameter)
+        result = Parameter.expand(parameter)
         print(result)
 
         assert result == check
@@ -50,7 +50,7 @@ class Test_Parameter:
         parameter = "a:a,b:b,c:c"
         check = ["a:a", "b:b", "c:c"]
 
-        result = Parameter._expand(parameter)
+        result = Parameter.expand(parameter)
         print(result)
 
         assert result == check
@@ -61,7 +61,7 @@ class Test_Parameter:
         parameter = "local:a,b,local:c"
         check = ["local:a", "b", "local:c"]
 
-        result = Parameter._expand(parameter)
+        result = Parameter.expand(parameter)
         print(result)
 
         assert result == check
@@ -72,7 +72,7 @@ class Test_Parameter:
         parameter = "a,b,local:c"
         check = ["a", "b", "local:c"]
 
-        result = Parameter._expand(parameter)
+        result = Parameter.expand(parameter)
         print(result)
 
         assert result == check

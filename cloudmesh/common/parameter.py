@@ -20,26 +20,6 @@ class Parameter(object):
         if parameter is None:
             return parameter
 
-        return list(expand_hostlist(parameter,
-                                    allow_duplicates=False,
-                                    sort=False))
-    @classmethod
-    def _expand(cls, parameter, allow_duplicates=False, sort=False, sep=":"):
-        """
-        Parameter.expand("a[0-1]")  -> ["a0", "a1"]
-        Content sensitive : expansion
-        Parameter.expand("local:a0,a1")  -> ["local:a0", "local:a1"]
-        instead of
-        Parameter.expand("local:[a0,a1]")  -> ["local:a0", "local:a1"]
-
-        :param parameter:
-        :param allow_duplicates:
-        :param sort:
-        :return:
-        """
-        if parameter is None:
-            return parameter
-
         parameters = list(expand_hostlist(parameter,
                                           allow_duplicates=False,
                                           sort=False))
