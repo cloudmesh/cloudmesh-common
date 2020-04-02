@@ -1,5 +1,5 @@
 from hostlist import expand_hostlist
-from cloudmesh.common.dotdict import dotdict
+
 
 class Parameter(object):
     @classmethod
@@ -75,3 +75,8 @@ class Parameter(object):
             parameters[key] = value
         return parameters
 
+    def separate(self, text, sep=":"):
+        if sep in text:
+            return text.split(sep, 1)
+        else:
+            return None, text
