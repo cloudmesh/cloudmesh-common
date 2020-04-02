@@ -1,5 +1,7 @@
 # Changelog
 
+- `cloudmesh.common.Parameter.separate`: separates SERVICE:SOURCE
+  This is useful for `cloudmesh-storage`
 - move some of the tests that belong into cmd5 from other repos
 
 ## 4.2.50 (04/01/2020)
