@@ -399,6 +399,6 @@ class Host(object):
         output = [localkey['stdout']] + \
                  list(set([element["stdout"] for element in results_key]))
 
-        output = '\n'.join(output)
+        output = '\n'.join(output) + "\n"
 
         return output
