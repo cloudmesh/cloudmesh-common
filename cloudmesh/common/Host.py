@@ -21,26 +21,34 @@ class Host(object):
 
         if type(hosts) != list:
             _hosts = Parameter.expand(hosts)
-        if type(ips) != list:
-            _ips = Parameter.expand(ips)
-        if len(_ips) != len(_hosts):
-            raise ValueError("Number of hosts and ips mismatch")
+        if ips is not None:
+            if type(ips) != list:
+                _ips = Parameter.expand(ips)
+            if len(_ips) != len(_hosts):
+                raise ValueError("Number of hosts and ips mismatch")
 
         result = ""
         for i in range(0,len(_hosts)):
 
             host = _hosts[i]
-            ip = _ips[i]
 
+            hostname = ""
             user = f"user {username}"
+            if ips is None:
+                hostanme = ""
+            else:
+                ip = _ips[i]
+                hostname = f"Hostname {ip}"
+
             data = textwrap.dedent(f"""
             Host {host}
                 StrictHostKeyChecking no
                 LogLevel ERROR
                 UserKnownHostsFile /dev/null
-                Hostname {ip}
                 IdentityFile {key}
+                {hostname}
             """)
+
             if username:
                 data += (f"    {user}\n")
 
