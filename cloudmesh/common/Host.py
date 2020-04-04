@@ -6,9 +6,9 @@ from multiprocessing import Pool
 from sys import platform
 
 from cloudmesh.common.DateTime import DateTime
-from cloudmesh.common.Shell import Shell
 from cloudmesh.common.parameter import Parameter
 from cloudmesh.common.util import path_expand
+from cloudmesh.common.util import readfile
 
 
 class Host(object):
@@ -83,7 +83,6 @@ class Host(object):
         result = subprocess.run(command,
                                 capture_output=True,
                                 shell=shell)
-        now = DateTime.now()
         result.stdout = result.stdout.decode("utf-8").strip()
 
         if result.stderr == b'':
@@ -96,7 +95,7 @@ class Host(object):
             'stderr': result.stderr,
             'returncode': result.returncode,
             'success': result.returncode == 0,
-            'date': now
+            'date': DateTime.now()
         }
         return data
 
@@ -382,17 +381,23 @@ class Host(object):
         #                              username=username,
         #                              verbose=False)
         filename = path_expand(filename)
-        localkey = Shell.run(f'cat {filename}').strip()
+        localkey = {
+            'host': "localhost",
+            'command': [''],
+            'execute': "",
+            'stdout': readfile(filename).strip(),
+            'stderr': None,
+            'returncode': True,
+            'success': True,
+            'date': DateTime.now()
+        }
+
         if results_key is None: # and results_authorized is None:
             return ""
 
         # geting the output and also removing duplicates
-        output = list(set(
-            [element["stdout"] for element in results_key]
-            # + [element["stdout"] for element in results_authorized]
-            + [localkey]
-
-        ))
+        output = [localkey['stdout']] + \
+                 list(set([element["stdout"] for element in results_key]))
 
         output = '\n'.join(output)
 
