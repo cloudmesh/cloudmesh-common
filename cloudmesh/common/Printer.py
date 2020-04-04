@@ -4,15 +4,15 @@ Convenient methods and classes to print tables.
 import json
 
 import oyaml as yaml
+from cloudmesh.common.DateTime import DateTime
 from cloudmesh.common.FlatDict import flatten
 from cloudmesh.common.console import Console
+from cloudmesh.common.debug import VERBOSE
 from cloudmesh.common.dotdict import dotdict
 # from prettytable import PrettyTable
 from cloudmesh.common.prettytable import PrettyTable
 from cloudmesh.common.util import convert_from_unicode
-from humanize import naturaltime
 from dateutil import parser
-from cloudmesh.common.DateTime import DateTime
 
 
 class Printer(object):
@@ -172,7 +172,8 @@ class Printer(object):
 
         """
 
-        if output == "table":
+        if output in ["table", "filter"]:
+            VERBOSE(output)
             if d == {}:
                 return None
             else:

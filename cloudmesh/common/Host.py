@@ -1,16 +1,15 @@
 import os
+import shlex
 import subprocess
+import textwrap
 from multiprocessing import Pool
 from sys import platform
 
+from cloudmesh.common.DateTime import DateTime
+from cloudmesh.common.Shell import Shell
 from cloudmesh.common.parameter import Parameter
 from cloudmesh.common.util import path_expand
-import time
-from pprint import pprint
-from cloudmesh.common.Shell import Shell
-import textwrap
-from cloudmesh.common.DateTime import DateTime
-import shlex
+
 
 class Host(object):
 
@@ -171,6 +170,7 @@ class Host(object):
             hosts = Parameter.expand(hosts)
 
         key = path_expand(key)
+
         ssh_command = ['ssh',
                        '-o', 'StrictHostKeyChecking=no',
                        '-o', 'UserKnownHostsFile=/dev/null',

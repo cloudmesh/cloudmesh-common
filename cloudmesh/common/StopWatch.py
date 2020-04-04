@@ -5,9 +5,8 @@ Class for starting and stopping named timers.
 import multiprocessing
 import os
 import time
+from pprint import pprint
 
-import humanize
-import psutil
 from cloudmesh.common.Tabulate import Printer
 from cloudmesh.common.systeminfo import systeminfo
 
@@ -241,12 +240,14 @@ class StopWatch(object):
 
             ))
             print()
+
             if csv:
                 if prefix is not None:
                     for entry in data_timers:
                         data_timers[entry]["# csv"] = prefix
 
                     order = ["# csv"] + order
+
                     print(Printer.write(
                         data_timers,
                         order=order,
@@ -254,6 +255,9 @@ class StopWatch(object):
                         output="csv"
                     ))
                 else:
+
+                    pprint(data_timers)
+
                     print(Printer.write(
                         data_timers,
                         order=order[1:],

@@ -1,13 +1,61 @@
+import json
 import textwrap
-from tabulate import tabulate
-from pprint import pprint
+
+import oyaml as yaml
 from cloudmesh.common.FlatDict import flatten
+from cloudmesh.common.util import convert_from_unicode
+from tabulate import tabulate
 
 
 class Printer:
+    """
+    formats supported dict, yaml, json
+
+    set table.format=table
+    cms flavor list
+    +-----------+---------+-------+--------+
+    | Name      |   VCPUS |   RAM |   Disk |
+    |-----------+---------+-------+--------|
+    | m1.tiny   |       1 |   512 |      1 |
+    | m1.small  |       1 |  2048 |     20 |
+    | m1.medium |       2 |  4096 |     40 |
+    | m1.large  |       4 |  8192 |     40 |
+    | m1.xlarge |       8 | 16384 |     40 |
+    +-----------+---------+-------+--------+
+
+    set table.format=grid
+    cms flavor list
+    ╒═══════════╤═════════╤═══════╤════════╕
+    │ Name      │   VCPUS │   RAM │   Disk │
+    ╞═══════════╪═════════╪═══════╪════════╡
+    │ m1.tiny   │       1 │   512 │      1 │
+    ├───────────┼─────────┼───────┼────────┤
+    │ m1.small  │       1 │  2048 │     20 │
+    ├───────────┼─────────┼───────┼────────┤
+    │ m1.medium │       2 │  4096 │     40 │
+    ├───────────┼─────────┼───────┼────────┤
+    │ m1.large  │       4 │  8192 │     40 │
+    ├───────────┼─────────┼───────┼────────┤
+    │ m1.xlarge │       8 │ 16384 │     40 │
+    ╘═══════════╧═════════╧═══════╧════════╛
+
+    """
+
+    @staticmethod
+    def default():
+        return "psql"
 
     @staticmethod
     def select(results, order=None, width=None):
+        """
+        selects field in the order as defined in order
+        If order is non, all fileds will be taken
+
+        :param results: a flat dict
+        :param order: the order of the fields
+        :param width:
+        :return: a list of dicts
+        """
         if order is None:
             columns = len(results[0])
         else:
@@ -31,8 +79,14 @@ class Printer:
                 i = 0
                 for key in order:
                     if _width[i]:
-                        entry.append("\n".join(
-                            textwrap.wrap(str(result[key]), _width[i])))
+                        try:
+                            field = result[key]
+                            if type(field) == list:
+                                field = ", ".join(field)
+                            entry.append("\n".join(
+                                textwrap.wrap(str(field), _width[i])))
+                        except:
+                            entry.append("")
                     else:
                         entry.append(result[key])
                     i = i + 1
@@ -46,34 +100,70 @@ class Printer:
               output='table',
               width=None,
               humanize=False,
-              max_width=None):
+              max_width=None,
+              sep='.'):
 
         width = width or max_width  # maxwidth is deprecated
 
         if header:
-            headers = list(header)
-        else:
-            headers = list(order)
+            header = list(header)
+        elif order:
+            header = list(order)
 
         if output == 'table':
-            output = 'fancy_grid'
+            output = Printer.default()
+
+        #
+        # Make sure that we have a list of dicts
+        #
+        if type(results) == dict:
+            _results = Printer._to_tabulate(results)
+        else:
+            _results = list(results)
+
+        if output == "json":
+            return json.dumps(_results,
+                              # sort_keys=sort_keys,
+                              indent=4)
+        elif output == "yaml":
+            return yaml.dump(convert_from_unicode(_results),
+                             default_flow_style=False)
+        elif output == "dict":
+            return _results
         elif output == 'csv':
-            return Printer.csv(results,
+            flat = flatten(_results, sep=sep)
+
+            return Printer.csv(flat,
                                order=order,
                                header=header,
                                humanize=humanize,
                                sort_keys=True)
 
-        if type(results) == dict:
-            results = Printer._to_tabulate(results)
+        _results = Printer.select(_results,
+                                  order=order,
+                                  width=width)
 
-        return tabulate(
-            Printer.select(results,
-                           order=order,
-                           width=width),
-            tablefmt=output,
-            headers=headers
-        )
+        if output in ['flat', 'html']:
+
+            if order is not None:
+
+                flat = []
+                for element in results:
+                    _element = {}
+                    for attribute in element:
+                        if attribute in order:
+                            _element[attribute] = element[attribute]
+                    flat.append(_element)
+
+                _results = flat
+
+        if output in ['flat']:
+            return (_results)
+
+        if header:
+            return tabulate(_results, tablefmt=output, headers=header)
+        else:
+            return tabulate(_results, tablefmt=output)
 
     @staticmethod
     def _to_tabulate(d):
@@ -98,7 +188,7 @@ class Printer:
                   humanize=None,
                   sep=".",
                   max_width=48,  # deprecated use width
-                  width=48
+                  width=48,
                   ):
         """
         writes the information given in the table
@@ -119,8 +209,12 @@ class Printer:
 
         flat = flatten(table, sep=sep)
 
-        return Printer.write(flat, order=order, header=header, output='table',
-                             width=width)
+        return Printer.write(flat,
+                             order=order,
+                             header=header,
+                             output=output,
+                             width=width
+                             )
         """
         return Printer.write(flat,
                              sort_keys=sort_keys,
@@ -180,12 +274,15 @@ class Printer:
                 x.append([key, str(d[key]) or ""])
 
         if output == 'table':
-            output = 'fancy_grid'
+            output = Printer.default()
 
         return tabulate(x, tablefmt=output, headers=header)
 
     @classmethod
-    def csv(cls, d, order=None, header=None, humanize=None,
+    def csv(cls, d,
+            order=None,
+            header=None,
+            humanize=None,
             sort_keys=True):
         """
         prints a table in csv format
@@ -202,10 +299,11 @@ class Printer:
         :return: a string representing the table in csv format
         """
 
-        first_element = list(d)[0]
+        if order is None:
+            first_element = list(d)[0]
 
         def _keys():
-            return list(d[first_element])
+            return list(first_element.keys())
 
         # noinspection PyBroadException
         def _get(element, key):
@@ -242,8 +340,9 @@ class Printer:
                     #    content.append(naturaltime(value))
                     #    pass
                     # else:
-                    content.append(d[job][attribute])
-                except:
-                    content.append("None")
+                    content.append(job[attribute])
+
+                except Exception as e:
+                    content.append(e)
             table = table + ",".join([str(e) for e in content]) + "\n"
         return table
