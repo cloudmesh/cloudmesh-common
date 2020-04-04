@@ -9,7 +9,7 @@ from cloudmesh.common.DateTime import DateTime
 from cloudmesh.common.parameter import Parameter
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.util import readfile
-
+from cloudmesh.common.debug import VERBOSE
 
 class Host(object):
 
@@ -91,7 +91,9 @@ class Host(object):
         result = subprocess.run(command,
                                 capture_output=True,
                                 shell=shell)
-        result.stdout = result.stdout.decode("utf-8").strip()
+        VERBOSE(result)
+
+        result.stdout = result.stdout.decode("utf-8", "replace").strip()
 
         if result.stderr == b'':
             result.stderr = None
@@ -276,7 +278,7 @@ class Host(object):
 
         try:
             timers = result.stdout \
-                .decode("utf-8") \
+                .decode("utf-8", "replace") \
                 .split("round-trip min/avg/max/stddev =")[1] \
                 .replace('ms', '').strip() \
                 .split("/")
