@@ -93,7 +93,7 @@ class Host(object):
                                 shell=shell)
         VERBOSE(result)
 
-        result.stdout = result.stdout.decode("utf-8", "replace").strip()
+        result.stdout = result.stdout.decode("utf-8", "ignore").strip()
 
         if result.stderr == b'':
             result.stderr = None
@@ -278,7 +278,7 @@ class Host(object):
 
         try:
             timers = result.stdout \
-                .decode("utf-8", "replace") \
+                .decode("utf-8", "ignore") \
                 .split("round-trip min/avg/max/stddev =")[1] \
                 .replace('ms', '').strip() \
                 .split("/")
