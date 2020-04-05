@@ -84,11 +84,10 @@ class Host(object):
 
         if host == hostname:
             command = args.get("execute")
-            result = subprocess.getoutput(
-                command,
-                capture_output=True,
-                shell=shell)
-
+            result = subprocess.getoutput(command)
+            stderr = ""
+            returncode = 0
+            stdout = result
         else:
             command = args.get("command")
 
@@ -96,20 +95,25 @@ class Host(object):
                 command,
                 capture_output=True,
                 shell=shell)
+
+            result.stdout = result.stdout.decode("utf-8", "ignore").strip()
+            if result.stderr == b'':
+                result.stderr = None
+
+            stderr = result.stderr
+            returncode = result.returncode
+            stdout = result.stdout
+
         VERBOSE(result)
 
-        result.stdout = result.stdout.decode("utf-8", "ignore").strip()
-
-        if result.stderr == b'':
-            result.stderr = None
         data = {
             'host': args.get("host"),
             'command': args.get("command"),
             'execute': args.get("execute"),
-            'stdout': result.stdout,
-            'stderr': result.stderr,
-            'returncode': result.returncode,
-            'success': result.returncode == 0,
+            'stdout': stdout,
+            'stderr': stderr,
+            'returncode': returncode,
+            'success': returncode == 0,
             'date': DateTime.now()
         }
         return data
