@@ -5,7 +5,6 @@ from multiprocessing import Pool
 from sys import platform
 
 from cloudmesh.common.DateTime import DateTime
-from cloudmesh.common.debug import VERBOSE
 from cloudmesh.common.parameter import Parameter
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.util import readfile
@@ -103,8 +102,6 @@ class Host(object):
             stderr = result.stderr
             returncode = result.returncode
             stdout = result.stdout
-
-        VERBOSE(result)
 
         data = {
             'host': args.get("host"),
