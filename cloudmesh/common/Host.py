@@ -1,15 +1,15 @@
 import os
-import shlex
 import subprocess
 import textwrap
 from multiprocessing import Pool
 from sys import platform
 
 from cloudmesh.common.DateTime import DateTime
+from cloudmesh.common.debug import VERBOSE
 from cloudmesh.common.parameter import Parameter
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.util import readfile
-from cloudmesh.common.debug import VERBOSE
+
 
 class Host(object):
 
@@ -80,17 +80,22 @@ class Host(object):
         hostname = os.uname()[1]
         host = args.get("host")
 
+        shell = args.get("shell")
+
         if host == hostname:
-            command = shlex.split(args.get("execute"))
-            args['command'] = command
+            command = args.get("execute")
+            result = subprocess.getoutput(
+                command,
+                capture_output=True,
+                shell=shell)
+
         else:
             command = args.get("command")
 
-        shell = args.get("shell")
-
-        result = subprocess.run(command,
-                                capture_output=True,
-                                shell=shell)
+            result = subprocess.run(
+                command,
+                capture_output=True,
+                shell=shell)
         VERBOSE(result)
 
         result.stdout = result.stdout.decode("utf-8", "ignore").strip()
