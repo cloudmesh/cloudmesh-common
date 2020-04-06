@@ -1,10 +1,17 @@
 from hostlist import expand_hostlist
-from pprint import pprint
+
 
 class Parameter(object):
 
     @staticmethod
     def _expand(values):
+        """
+        given a string of the form "a,g-h,k,x-z"
+        expand it tl a list with all characters between the - being expanded
+
+        :param values: string of the form "a,g-h,k,x-z"
+        :return:
+        """
         if "," in values:
             found = values.split(",")
         elif "-" in values:
@@ -24,10 +31,7 @@ class Parameter(object):
         """
         can expand strings, but only allows either, or - in [] not mixed
 
-        In case of - only a single - is supported and only a characters  are
-        allowd if they ar enot consecutive use all ,
-
-        :param parameter:
+        :param parameter: string of the form prefix[a,g-h,k,x-z]postfix
         :return:
         """
         print ("O", parameter)
