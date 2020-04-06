@@ -12,6 +12,19 @@ from cloudmesh.common.util import HEADING
 @pytest.mark.incremental
 class Test_Parameter:
 
+
+    def test_string_expand_none(self):
+        HEADING()
+
+        parameter = "a"
+        check = ["a"]
+
+        result = Parameter.expand_string(parameter)
+        print(result)
+
+        assert result == check
+
+
     def test_expand(self):
         HEADING()
 
@@ -88,6 +101,29 @@ class Test_Parameter:
 
         assert result == check
 
+    def test_string_expand_comma_no_postfix(self):
+        HEADING()
+
+        parameter = "prefix-[a,b,c]"
+        check = ["prefix-a", "prefix-b", "prefix-c"]
+
+        result = Parameter.expand_string(parameter)
+        print(result)
+
+        assert result == check
+
+    def test_string_expand_comma_no_prefix(self):
+        HEADING()
+
+        parameter = "[a,b,c]-postfix"
+        check = ["a-postfix", "b-postfix", "c-postfix"]
+
+        result = Parameter.expand_string(parameter)
+        print(result)
+
+        assert result == check
+
+
     def test_string_expand_dash(self):
         HEADING()
 
@@ -109,3 +145,15 @@ class Test_Parameter:
         print(result)
 
         assert result == check
+
+    def test_string_expand_mix(self):
+        HEADING()
+
+        parameter = "x[a,b-d,g,x-z]"
+        check =['xa', 'xb', 'xc', 'xd', 'xg', 'xx', 'xy', 'xz']
+
+        result = Parameter.expand_string(parameter)
+        print(result)
+
+        assert result == check
+
