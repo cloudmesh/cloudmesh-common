@@ -1,7 +1,7 @@
 # Changelog
 
 - `cloudmesh.common.Parameter._expand_string`: was added to allow
-  /dev/sd[a-z] expansion
+  `/dev/sd[a-z]` expansion
 - `cloudmesh.common.Parameter._expand`: populates missing SERVICE:SOURCE
   into comma separated services.
 - `cloudmesh.common.Parameter.separate`: separates SERVICE:SOURCE
