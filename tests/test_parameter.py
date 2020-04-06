@@ -76,3 +76,25 @@ class Test_Parameter:
         print(result)
 
         assert result == check
+
+    def test_string_expand_comma(self):
+        HEADING()
+
+        parameter = "prefix-[a,b,c]-postfix"
+        check = ["prefix-a-postfix", "prefix-b-postfix", "prefix-c-postfix"]
+
+        result = Parameter.expand_string(parameter)
+        print(result)
+
+        assert result == check
+
+    def test_string_expand_dash(self):
+        HEADING()
+
+        parameter = "prefix-[a-c]-postfix"
+        check = ["prefix-a-postfix", "prefix-b-postfix", "prefix-c-postfix"]
+
+        result = Parameter.expand_string(parameter)
+        print(result)
+
+        assert result == check

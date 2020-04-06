@@ -1,7 +1,39 @@
 from hostlist import expand_hostlist
-
+from pprint import pprint
 
 class Parameter(object):
+
+    @classmethod
+    def expand_string(cls, parameter):
+        """
+        can expand strings, but only allows either, or - in [] not mixed
+
+        In case of - only a single - is supported and only a characters  are
+        allowd if they ar enot consecutive use all ,
+
+        :param parameter:
+        :return:
+        """
+        prefix, found = parameter.split("[", 1)
+        found, postfix = found.split("]",1)
+        if ',' in found:
+            elements = found.split(',')
+        elif '-' in found:
+            _from, _to = found.split('-')
+            upper = [chr(x) for x in range(65, 91)]
+            lower = [chr(x) for x in range(97, 123)]
+            all = upper + lower
+            i_start = all.index(_from)
+            i_end = all.index(_to)
+            elements = all[i_start:i_end+1] # not sure why there is +1
+
+        else:
+            raise ValueError("the parameter string is not supported")
+
+        print(prefix, elements, postfix)
+        result = [f"{prefix}{x}{postfix}" for x in elements]
+
+        return result
 
     @classmethod
     def expand(cls, parameter, allow_duplicates=False, sort=False, sep=":"):
