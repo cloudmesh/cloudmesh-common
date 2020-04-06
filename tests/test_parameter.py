@@ -98,3 +98,14 @@ class Test_Parameter:
         print(result)
 
         assert result == check
+
+    def test_string_expand_comma(self):
+        HEADING()
+
+        parameter = "a,b,c"
+        check = ["a", "b", "c"]
+
+        result = Parameter.expand_string(parameter)
+        print(result)
+
+        assert result == check

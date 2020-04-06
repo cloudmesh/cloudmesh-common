@@ -14,6 +14,9 @@ class Parameter(object):
         :param parameter:
         :return:
         """
+        if "[" not in parameter:
+            return parameter.split(",")
+
         prefix, found = parameter.split("[", 1)
         found, postfix = found.split("]",1)
         if ',' in found:
