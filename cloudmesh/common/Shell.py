@@ -8,23 +8,23 @@ output is returned. FOr many activities in cloudmesh this is sufficient.
 import errno
 import glob
 import os
+import platform as os_platform
 import shlex
+import shutil
+import subprocess
 import sys
 import zipfile
 from distutils.spawn import find_executable
+from pathlib import Path
 from pipes import quote
 from sys import platform
-import platform as os_platform
 
+import psutil
+from cloudmesh.common.StopWatch import StopWatch
 from cloudmesh.common.console import Console
 from cloudmesh.common.dotdict import dotdict
 from cloudmesh.common.util import path_expand, readfile
-import subprocess
-import psutil
 
-import stat
-from pathlib import Path
-import shutil
 
 # from functools import wraps
 # def timer(func):
@@ -202,6 +202,177 @@ class Shell(object):
     # or do something more simple
     #
     # ls = cls.execute('cmd', args...)
+
+    @staticmethod
+    def run_timed(label, command, encoding=None, service=None):
+        """
+        runs teh command and uses the StopWatch to time it
+        :param label: name of the StopWatch
+        :param command: the command to be executed
+        :param encoding: the encoding
+        :param service: a prefix to the stopwatch label
+        :return:
+        """
+        _label = str(label)
+        print(_label, command)
+        StopWatch.start(f"{service} {_label}")
+        result = Shell.run(command, encoding)
+        StopWatch.stop(f"{service} {_label}")
+        return str(result)
+
+    @staticmethod
+    def run(command, exit="; exit 0", encoding='utf-8'):
+        """
+        executes the command and returns the output as string
+        :param command:
+        :param encoding:
+        :return:
+        """
+
+        if sys.platform == "win32":
+            command = f"{command}"
+        else:
+            command = f"{command} {exit}"
+
+        r = subprocess.check_output(command,
+                                    stderr=subprocess.STDOUT,
+                                    shell=True)
+        if encoding is None or encoding == 'utf-8':
+            return str(r, 'utf-8')
+        else:
+            return r
+
+    @staticmethod
+    def run2(command, encoding='utf-8'):
+        """
+        executes the command and returns the output as string. This command also
+        allows execution of 32 bit commands.
+
+        :param command: the program or command to be executed
+        :param encoding: encoding of the output
+        :return:
+        """
+        if platform.lower() == 'win32':
+            import ctypes
+
+            class disable_file_system_redirection:
+                _disable = ctypes.windll.kernel32.Wow64DisableWow64FsRedirection
+                _revert = ctypes.windll.kernel32.Wow64RevertWow64FsRedirection
+
+                def __enter__(self):
+                    self.old_value = ctypes.c_long()
+                    self.success = self._disable(ctypes.byref(self.old_value))
+
+                def __exit__(self, type, value, traceback):
+                    if self.success:
+                        self._revert(self.old_value)
+
+            with disable_file_system_redirection():
+                command = f"{command}"
+                r = subprocess.check_output(command,
+                                            stderr=subprocess.STDOUT,
+                                            shell=True)
+                if encoding is None or encoding == 'utf-8':
+                    return str(r, 'utf-8')
+                else:
+                    return r
+        elif platform.lower() == 'linux' or platform.lower() == 'darwin':
+            command = f"{command}"
+            r = subprocess.check_output(command,
+                                        stderr=subprocess.STDOUT,
+                                        shell=True)
+            if encoding is None or encoding == 'utf-8':
+                return str(r, 'utf-8')
+            else:
+                return r
+
+    @classmethod
+    def execute(cls,
+                cmd,
+                arguments="",
+                shell=False,
+                cwd=None,
+                traceflag=True,
+                witherror=True):
+        """Run Shell command
+
+        :param witherror: if set to False the error will not be printed
+        :param traceflag: if set to true the trace is printed in case of an error
+        :param cwd: the current working directory in which the command is
+        supposed to be executed.
+        :param shell: if set to true the subprocess is called as part of a shell
+        :param cmd: command to run
+        :param arguments: we do not know yet
+        :return:
+        """
+        # print "--------------"
+        result = None
+        terminal = cls.terminal_type()
+        # print cls.command
+        os_command = [cmd]
+        if terminal in ['linux', 'windows']:
+            os_command = [cmd]
+        elif 'cygwin' in terminal:
+            if not cls.command_exists(cmd):
+                print("ERROR: the command could not be found", cmd)
+                return
+            else:
+                os_command = [cls.command[cls.operating_system()][cmd]]
+
+        if isinstance(arguments, list):
+            os_command = os_command + arguments
+        elif isinstance(arguments, tuple):
+            os_command = os_command + list(arguments)
+        elif isinstance(arguments, str):
+            os_command = os_command + arguments.split()
+        else:
+            print("ERROR: Wrong parameter type", type(arguments))
+
+        if cwd is None:
+            cwd = os.getcwd()
+        try:
+            if shell:
+                if platform.lower() == 'win32':
+                    import ctypes
+                    class disable_file_system_redirection:
+                        _disable = ctypes.windll.kernel32.Wow64DisableWow64FsRedirection
+                        _revert = ctypes.windll.kernel32.Wow64RevertWow64FsRedirection
+
+                        def __enter__(self):
+                            self.old_value = ctypes.c_long()
+                            self.success = self._disable(
+                                ctypes.byref(self.old_value))
+
+                        def __exit__(self, type, value, traceback):
+                            if self.success:
+                                self._revert(self.old_value)
+
+                    if len(os_command) == 1:
+                        os_command = os_command[0].split(' ')
+                    with disable_file_system_redirection():
+                        result = subprocess.check_output(os_command,
+                                                         stderr=subprocess.STDOUT,
+                                                         shell=True,
+                                                         cwd=cwd)
+                else:
+                    result = subprocess.check_output(
+                        os_command,
+                        stderr=subprocess.STDOUT,
+                        shell=True,
+                        cwd=cwd)
+            else:
+                result = subprocess.check_output(
+                    os_command,
+                    # shell=True,
+                    stderr=subprocess.STDOUT,
+                    cwd=cwd)
+        except:
+            if witherror:
+                Console.error("problem executing subprocess",
+                              traceflag=traceflag)
+        if result is not None:
+            result = result.strip().decode()
+        return result
 
     @staticmethod
     def rmdir(top, verbose=False):
@@ -500,17 +671,13 @@ class Shell(object):
                                                             host=host))
 
     @classmethod
-    # @NotImplementedInWindows
     def pwd(cls, *args):
         """
         executes pwd with the given arguments
         :param args: 
         :return: 
         """
-        NotImplementedInWindows()
-        # TODO: implement possibly useing echo %cd%
-        #       there is also python os.getcwd(), check if this works on windows
-        return cls.execute('pwd', args)
+        return os.getcwd()
 
     @classmethod
     def rackdiag(cls, *args):
@@ -523,15 +690,13 @@ class Shell(object):
 
     @classmethod
     # @NotImplementedInWindows
-    def rm(cls, *args):
+    def rm(cls, location):
         """
         executes rm with the given arguments
         :param args: 
         :return: 
         """
-        NotImplementedInWindows()
-        # TODO: replace this with shutil.rmtree
-        return cls.execute('rm', args)
+        shutil.rmtree(path_expand(location))
 
     @classmethod
     def rsync(cls, *args):
@@ -717,30 +882,6 @@ class Shell(object):
                 result = result + [line]
         return result
 
-    # def __init__(cls):
-    #     """
-    #     identifies parameters for the os
-    #     """
-    #     if cls.operating_system() == "windows":
-    #         cls.find_cygwin_executables()
-    #     else:
-    #         pass
-    #         # implement for cmd, for linux we can just pass as it includes everything
-    #
-    # @classmethod
-    # def find_cygwin_executables(cls):
-    #     """
-    #     find the executables in cygwin
-    #     """
-    #     exe_paths = glob.glob(cls.cygwin_path + r'\*.exe')
-    #     # print cls.cygwin_path
-    #     # list all *.exe in  cygwin path, use glob
-    #     for c in exe_paths:
-    #         exe = c.split('\\')
-    #         name = exe[1].split('.')[0]
-    #         # command['windows'][name] = "{:}\{:}.exe".format(cygwin_path, c)
-    #         cls.command['windows'][name] = c
-
     @classmethod
     def terminal_type(cls):
         """
@@ -795,91 +936,9 @@ class Shell(object):
         return pid
 
     @staticmethod
-    def run(command, exit="; exit 0", encoding='utf-8'):
-        """
-        executes the command and returns the output as string
-        :param command:
-        :param encoding:
-        :return:
-        """
-
-        if sys.platform == "win32":
-            command = f"{command}"
-        else:
-            command = f"{command} {exit}"
-
-        r = subprocess.check_output(command,
-                                    stderr=subprocess.STDOUT,
-                                    shell=True)
-        if encoding is None or encoding == 'utf-8':
-            return str(r, 'utf-8')
-        else:
-            return r
-
-    @staticmethod
-    def run2(command, encoding='utf-8'):
-        """
-        executes the command and returns the output as string. This command also
-        allows execution of 32 bit commands.
-
-        :param command: the program or command to be executed
-        :param encoding: encoding of the output
-        :return:
-        """
-        if platform.lower() == 'win32':
-            import ctypes
-
-            class disable_file_system_redirection:
-                _disable = ctypes.windll.kernel32.Wow64DisableWow64FsRedirection
-                _revert = ctypes.windll.kernel32.Wow64RevertWow64FsRedirection
-
-                def __enter__(self):
-                    self.old_value = ctypes.c_long()
-                    self.success = self._disable(ctypes.byref(self.old_value))
-
-                def __exit__(self, type, value, traceback):
-                    if self.success:
-                        self._revert(self.old_value)
-
-            with disable_file_system_redirection():
-                command = f"{command}"
-                r = subprocess.check_output(command,
-                                            stderr=subprocess.STDOUT,
-                                            shell=True)
-                if encoding is None or encoding == 'utf-8':
-                    return str(r, 'utf-8')
-                else:
-                    return r
-        elif platform.lower() == 'linux' or platform.lower() == 'darwin':
-            command = f"{command}"
-            r = subprocess.check_output(command,
-                                        stderr=subprocess.STDOUT,
-                                        shell=True)
-            if encoding is None or encoding == 'utf-8':
-                return str(r, 'utf-8')
-            else:
-                return r
-
-    @staticmethod
     def cms(command, encoding='utf-8'):
         return Shell.run("cms " + command, encoding=encoding)
 
-    @staticmethod
-    def run_timed(label, command, encoding=None, service=None):
-        """
-        runs teh command and uses the StopWatch to time it
-        :param label: name of the StopWatch
-        :param command: the command to be executed
-        :param encoding: the encoding
-        :param service: a prefix to the stopwatch label
-        :return:
-        """
-        _label = str(label)
-        print(_label, command)
-        StopWatch.start(f"{service} {_label}")
-        result = Shell.run(command, encoding)
-        StopWatch.stop(f"{service} {_label}")
-        return str(result)
 
     @classmethod
     def check_python(cls):
@@ -933,93 +992,6 @@ class Shell(object):
             print("         We recommend you update your pip  with \n")
             print("             pip install -U pip\n")
 
-    @classmethod
-    def execute(cls,
-                cmd,
-                arguments="",
-                shell=False,
-                cwd=None,
-                traceflag=True,
-                witherror=True):
-        """Run Shell command
-
-        :param witherror: if set to False the error will not be printed
-        :param traceflag: if set to true the trace is printed in case of an error
-        :param cwd: the current working directory in which the command is
-        supposed to be executed.
-        :param shell: if set to true the subprocess is called as part of a shell
-        :param cmd: command to run
-        :param arguments: we do not know yet
-        :return:
-        """
-        # print "--------------"
-        result = None
-        terminal = cls.terminal_type()
-        # print cls.command
-        os_command = [cmd]
-        if terminal in ['linux', 'windows']:
-            os_command = [cmd]
-        elif 'cygwin' in terminal:
-            if not cls.command_exists(cmd):
-                print("ERROR: the command could not be found", cmd)
-                return
-            else:
-                os_command = [cls.command[cls.operating_system()][cmd]]
-
-        if isinstance(arguments, list):
-            os_command = os_command + arguments
-        elif isinstance(arguments, tuple):
-            os_command = os_command + list(arguments)
-        elif isinstance(arguments, str):
-            os_command = os_command + arguments.split()
-        else:
-            print("ERROR: Wrong parameter type", type(arguments))
-
-        if cwd is None:
-            cwd = os.getcwd()
-        try:
-            if shell:
-                if platform.lower() == 'win32':
-                    import ctypes
-                    class disable_file_system_redirection:
-                        _disable = ctypes.windll.kernel32.Wow64DisableWow64FsRedirection
-                        _revert = ctypes.windll.kernel32.Wow64RevertWow64FsRedirection
-
-                        def __enter__(self):
-                            self.old_value = ctypes.c_long()
-                            self.success = self._disable(
-                                ctypes.byref(self.old_value))
-
-                        def __exit__(self, type, value, traceback):
-                            if self.success:
-                                self._revert(self.old_value)
-
-                    if len(os_command) == 1:
-                        os_command = os_command[0].split(' ')
-                    with disable_file_system_redirection():
-                        result = subprocess.check_output(os_command,
-                                                         stderr=subprocess.STDOUT,
-                                                         shell=True,
-                                                         cwd=cwd)
-                else:
-                    result = subprocess.check_output(
-                        os_command,
-                        stderr=subprocess.STDOUT,
-                        shell=True,
-                        cwd=cwd)
-            else:
-                result = subprocess.check_output(
-                    os_command,
-                    # shell=True,
-                    stderr=subprocess.STDOUT,
-                    cwd=cwd)
-        except:
-            if witherror:
-                Console.error("problem executing subprocess",
-                              traceflag=traceflag)
-        if result is not None:
-            result = result.strip().decode()
-        return result
 
     @classmethod
     def mkdir(cls, directory):
