@@ -7,7 +7,6 @@ import oyaml as yaml
 from cloudmesh.common.DateTime import DateTime
 from cloudmesh.common.FlatDict import flatten
 from cloudmesh.common.console import Console
-from cloudmesh.common.debug import VERBOSE
 from cloudmesh.common.dotdict import dotdict
 # from prettytable import PrettyTable
 from cloudmesh.common.prettytable import PrettyTable
@@ -173,7 +172,6 @@ class Printer(object):
         """
 
         if output in ["table", "filter"]:
-            VERBOSE(output)
             if d == {}:
                 return None
             else:
