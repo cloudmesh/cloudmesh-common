@@ -5,7 +5,7 @@ from cloudmesh.db.strdb import YamlDB
 
 class Variables(object):
     def __init__(self, filename=None):
-        self.filename = path_expand(filename or "~/.cloudmesh/cms burn")
+        self.filename = path_expand(filename or "~/.cloudmesh/variables.dat")
         self.data = YamlDB(self.filename)
 
     def __getitem__(self, key):
