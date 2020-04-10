@@ -28,6 +28,25 @@ class YamlDB(object):
     """A YAML-backed Key-Value database to store strings
     """
 
+    def __init__(self, path):
+
+        self._db = dict()
+
+        self.path = path
+
+        prefix = os.path.dirname(self.path)
+        if not os.path.exists(prefix):
+            os.makedirs(prefix)
+
+        if os.path.exists(self.path):
+            with open(self.path, 'rb') as dbfile:
+                self._db = yaml.safe_load(dbfile) or dict()
+
+        self.flush()
+
+    """
+    TODO:
+    
     _shared_state = None
 
     def __init__(self, path):
@@ -50,6 +69,7 @@ class YamlDB(object):
 
         else:
             self.__dict__ = YamlDB._shared_state
+    """
 
     def flush(self):
         string = yaml.dump(self._db, default_flow_style=False)
