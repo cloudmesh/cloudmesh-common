@@ -1,7 +1,7 @@
 ###############################################################
-# pytest -v --capture=no tests/1_local/test_name.py
-# pytest -v  tests/1_local/test_name.py
-# pytest -v --capture=no  tests/1_local/test_name..py::Test_name::<METHODNAME>
+# pytest -v --capture=no tests/test_ping.py
+# pytest -v  tests/test_ping.py
+# pytest -v --capture=no  tests/test_ping..py::Test_ping::<METHODNAME>
 ###############################################################
 
 import sys
@@ -33,7 +33,7 @@ hosts = ['127.0.0.1',
 
 
 @pytest.mark.incremental
-class TestPing:
+class Test_ping:
 
     def ping(self, processors=1):
         StopWatch.start(f"total p={processors} c=1")

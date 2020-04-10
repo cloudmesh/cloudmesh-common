@@ -9,6 +9,7 @@ import os
 import pytest
 from cloudmesh.common.Benchmark import Benchmark
 from cloudmesh.common.Host import Host
+from cloudmesh.common.Printer import Printer
 from cloudmesh.common.Shell import Shell
 from cloudmesh.common.StopWatch import StopWatch
 
@@ -56,29 +57,9 @@ class TestSsh:
                      command="hostname",
                      processors=processors)
         StopWatch.stop(f"total p={processors} c=1")
+        StopWatch.status(f"total p={processors} c=1", r[0]["success"])
 
         return r
-
-    def test_internal_ssh(self):
-        print()
-        StopWatch.start("total _ssh")
-
-        for host in hosts:
-            location = {
-                'host': host,
-                'username': os.environ['USER'],
-                'key': '~/.ssh/id_rsa.pub',
-                'command': 'uname -a'
-
-            }
-
-            StopWatch.start(f"ssh {host}")
-            result = Host._ssh(location)
-            StopWatch.stop(f"ssh {host}")
-
-            StopWatch.stop("total _ssh")
-
-            assert result.success
 
     def test_ssh_processors(self):
 
@@ -86,9 +67,9 @@ class TestSsh:
         for processors in range(1, len(hosts)):
             print("Processors:", processors)
             results = self.ssh(processors=processors)
-            # print(Printer.write(results))
+            print(Printer.write(results))
             for result in results:
-                assert result.success
+                assert result["success"]
 
     #
     # only works if you have root, so not suitable
