@@ -28,29 +28,28 @@ class YamlDB(object):
     """A YAML-backed Key-Value database to store strings
     """
 
+    _shared_state = None
+
     def __init__(self, path):
-        _shared_state = None
+        if not YamlDB._shared_state:
+            YamlDB._shared_state = self.__dict__
 
-        def __init__(self, directory="~/.cloudmesh"):
-            if not YamlDB._shared_state:
-                YamlDB._shared_state = self.__dict__
+            self._db = dict()
 
-                self._db = dict()
+            self.path = path
 
-                self.path = path
+            prefix = os.path.dirname(self.path)
+            if not os.path.exists(prefix):
+                os.makedirs(prefix)
 
-                prefix = os.path.dirname(self.path)
-                if not os.path.exists(prefix):
-                    os.makedirs(prefix)
+            if os.path.exists(self.path):
+                with open(self.path, 'rb') as dbfile:
+                    self._db = yaml.safe_load(dbfile) or dict()
 
-                if os.path.exists(self.path):
-                    with open(self.path, 'rb') as dbfile:
-                        self._db = yaml.safe_load(dbfile) or dict()
+            self.flush()
 
-                self.flush()
-
-            else:
-                self.__dict__ = YamlDB._shared_state
+        else:
+            self.__dict__ = YamlDB._shared_state
 
     def flush(self):
         string = yaml.dump(self._db, default_flow_style=False)

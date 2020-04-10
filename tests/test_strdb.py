@@ -9,6 +9,7 @@ import pytest
 from tempfile import mkstemp
 import oyaml as yaml
 from cloudmesh.db.strdb import YamlDB
+from cloudmesh.common.StopWatch import StopWatch
 
 @pytest.mark.incremental
 class TestYamlDB:
@@ -63,7 +64,30 @@ class TestYamlDB:
             self.db[k] = k
         assert len(self.db) == len(entries)
 
+    """
+    def test_n_times(self):
+        self.db.clear()
+
+        for invoke in range(0, 100, 10):
+            StopWatch.start(f"invoke {invoke}")
+            for i in range(0,invoke):
+
+                entries = ['a', 'b', 'c']
+                for k in entries:
+                    self.db[k] = k
+
+            StopWatch.start(f"invoke {invoke}")
+            StopWatch.status(f"invoke {invoke}", True)
+
+        assert len(self.db) == len(entries)
+    """
 
     def tearDown(self):
         os.close(self.dbfd)
         os.unlink(self.dbpath)
+
+    """
+    def test_print(self):
+        StopWatch.benchmark(sysinfo=True, csv=True)
+        assert True
+    """

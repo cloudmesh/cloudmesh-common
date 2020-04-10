@@ -30,5 +30,6 @@ class Test_Printer:
         StopWatch.stop("stopwatch sleep 2")
         StopWatch.status("stopwatch sleep 2", True)
 
+    def test_print(self):
         StopWatch.benchmark(sysinfo=True, csv=True)
         assert True
