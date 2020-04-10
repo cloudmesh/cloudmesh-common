@@ -29,19 +29,28 @@ class YamlDB(object):
     """
 
     def __init__(self, path):
-        self._db = dict()
+        _shared_state = None
 
-        self.path = path
+        def __init__(self, directory="~/.cloudmesh"):
+            if not YamlDB._shared_state:
+                YamlDB._shared_state = self.__dict__
 
-        prefix = os.path.dirname(self.path)
-        if not os.path.exists(prefix):
-            os.makedirs(prefix)
+                self._db = dict()
 
-        if os.path.exists(self.path):
-            with open(self.path, 'rb') as dbfile:
-                self._db = yaml.safe_load(dbfile) or dict()
+                self.path = path
 
-        self.flush()
+                prefix = os.path.dirname(self.path)
+                if not os.path.exists(prefix):
+                    os.makedirs(prefix)
+
+                if os.path.exists(self.path):
+                    with open(self.path, 'rb') as dbfile:
+                        self._db = yaml.safe_load(dbfile) or dict()
+
+                self.flush()
+
+            else:
+                self.__dict__ = YamlDB._shared_state
 
     def flush(self):
         string = yaml.dump(self._db, default_flow_style=False)

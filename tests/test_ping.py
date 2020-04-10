@@ -39,6 +39,7 @@ class Test_ping:
         StopWatch.start(f"total p={processors} c=1")
         r = Host.ping(hosts, processors=processors, count=1)
         StopWatch.stop(f"total p={processors} c=1")
+        StopWatch.status(f"total p={processors} c=1", r[0]['success'])
 
         return r
 
@@ -55,8 +56,11 @@ class Test_ping:
             StopWatch.start(f"ping {host}")
             result = Host._ping(location)
             StopWatch.stop(f"ping {host}")
+            StopWatch.status(f"ping {host}", result['success'])
 
             StopWatch.stop("total _ping")
+            StopWatch.status("total _ping", True)
+
             if b'Access denied' in result['stdout'] and sys.platform == "win32":
                 print("ERROR: This test must be run in an administrative "
                       "terminal")

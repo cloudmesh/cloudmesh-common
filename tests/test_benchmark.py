@@ -7,7 +7,7 @@
 import time
 
 import pytest
-from cloudmesh.common.StopWatch import StopWatch
+from cloudmesh.common.Benchmark import Benchmark
 
 from cloudmesh.common.util import HEADING
 
@@ -15,20 +15,18 @@ from cloudmesh.common.util import HEADING
 @pytest.mark.incremental
 class Test_Printer:
 
-    def test_stopwatch_1(self):
+    def test_benchmark_stopwatch_1(self):
         HEADING()
-        StopWatch.start("stopwatch sleep 1")
+        Benchmark.Start()
         time.sleep(0.1)
-        StopWatch.stop("stopwatch sleep 1")
-        StopWatch.status("stopwatch sleep 1", True)
+        Benchmark.Stop()
         assert True
 
-    def test_stopwatch_2(self):
+    def test_benchmark_stopwatch_2(self):
         HEADING()
-        StopWatch.start("stopwatch sleep 2")
+        Benchmark.Start()
         time.sleep(0.1)
-        StopWatch.stop("stopwatch sleep 2")
-        StopWatch.status("stopwatch sleep 2", True)
+        Benchmark.Stop()
 
-        StopWatch.benchmark(sysinfo=True, csv=True)
+        Benchmark.print(sysinfo=True, csv=True)
         assert True
