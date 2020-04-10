@@ -13,7 +13,7 @@ repo = sys.argv[1]
 command = sys.argv[2]
 
 warning = f"""
-> **Note:** The README-old.md page is outomatically generated, do not edit it.
+> **Note:** The README.md page is outomatically generated, do not edit it.
 > To modify  change the content in
 > <https://github.com/cloudmesh/{repo}/blob/master/README-source.md>
 > Curley brackets must use two in README-source.md
@@ -60,4 +60,4 @@ manual = "```bash\n" + manual + "\n```\n"
 #
 source = readfile("README-source.md")
 readme = source.format(**locals())
-writefile("README-old.md", readme)
+writefile("README.md", readme)
