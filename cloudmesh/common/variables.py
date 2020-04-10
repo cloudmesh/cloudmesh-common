@@ -1,11 +1,11 @@
-from cloudmesh.db.strdb import YamlDB
-from cloudmesh.common.util import path_expand
 from cloudmesh.common.parameter import Parameter
+from cloudmesh.common.util import path_expand
+from cloudmesh.db.strdb import YamlDB
 
 
 class Variables(object):
     def __init__(self, filename=None):
-        self.filename = path_expand(filename or "~/.cloudmesh/var-data")
+        self.filename = path_expand(filename or "~/.cloudmesh/cms burn")
         self.data = YamlDB(self.filename)
 
     def __getitem__(self, key):
