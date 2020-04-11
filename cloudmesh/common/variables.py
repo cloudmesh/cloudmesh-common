@@ -1,7 +1,7 @@
 from cloudmesh.common.parameter import Parameter
 from cloudmesh.common.util import path_expand
 from cloudmesh.db.strdb import YamlDB
-
+from cloudmesh.common.console import Console
 
 class Variables(object):
     def __init__(self, filename=None):
@@ -55,6 +55,14 @@ class Variables(object):
         value = str(self.data[attribute])
         expand = Parameter.expand(value)[position]
         return expand
+
+    def boolean(self, key, value):
+        if str(value).lower() in ["true", "on"]:
+            self.data[str(key)] = True
+        elif str(value).lower() in ["false", "off"]:
+            self.data[str(key)] = False
+        else:
+            Console.error("Value is not boolean")
 
 
 if __name__ == "__main__":
