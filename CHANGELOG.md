@@ -18,30 +18,19 @@ Intermediate releases: 4.3.1, 4.3.0
 
 Intermediate Releases: 4.2.49
 
-#### Enhancements:
-
 * `cloudmesh.common.Shell.rmdir` uses now `shutil.rmtree`
 * `cloudmesh.common.Stopwatch.benchmark` uses now tabulate
 * `cloudmesh.common.sysinfo` has been improved with getattr for mem and
   uname
 
-#### Bug Fixes:
-
-* None
-
 ## 4.2.48 (03/30/2020)
 
-Intermediate Releases: 4.2.47 * 4.2.34
-
-#### Enhancements:
+Intermediate Releases: 4.2.47 - 4.2.34
 
 * parallel gather and scetter for keys
 * Shell.ps is now based on psutil
 * Shell.kill is now based on psutil
 * Shell.ls is now using glob
 * use splitlines() instead of \n
-
-#### Bug Fixes:
-
-* fix the parallel SSH command
+* fixed the parallel SSH command
 
