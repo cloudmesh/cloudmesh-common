@@ -4,7 +4,7 @@ simple logging convenience framework
 import logging
 import os
 
-from cloudmesh.common.locations import config_file
+from cloudmesh.common.location import config_file
 from cloudmesh.common.util import grep
 
 

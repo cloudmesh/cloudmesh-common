@@ -4,6 +4,9 @@
 
 Intermediate releases: 4.3.1, 4.3.0
 
+* added the new Location class to `cloudmesh.common.location` so we can
+  use the OS variable `CLOUDMESH_CONFIG_DIR`
+* changed `cloudmesh.common.locations` to `cloudmesh.common.location`
 * `cloudmesh.common.variables.Variables.boolean` was added to allow more
   easily to set boolean variables with on and True.
 * `cloudmesh.common.Parameter._expand_string`: was added to allow
