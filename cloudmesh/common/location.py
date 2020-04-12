@@ -5,6 +5,8 @@ import os
 
 from cloudmesh.common.Shell import Shell
 from cloudmesh.common.util import path_expand
+from cloudmesh.common.util import writefile
+from cloudmesh.common.util import readfile
 from pathlib import Path
 from cloudmesh.common.console import Console
 
@@ -23,6 +25,15 @@ class Location:
         else:
             self.__dict__ = Location._shared_state
 
+    def write(self, filename, content):
+        path = Path(self.directory) / filename
+        directory = os.path.dirname(path)
+        Shell.mkdir(directory)
+        writefile(filename, content)
+
+    def read(self, filename):
+        return readfile(filename)
+
     def file(self, filename):
         """
         The location of the config file in the cloudmesh configuration directory
@@ -32,9 +43,6 @@ class Location:
         return Path(self.directory) / filename
 
     def get(self):
-        return self.directory
-
-    def directory(self):
         return self.directory
 
     def set(self, directory):
