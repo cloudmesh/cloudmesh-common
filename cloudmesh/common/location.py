@@ -26,12 +26,25 @@ class Location:
             self.__dict__ = Location._shared_state
 
     def write(self, filename, content):
+        """
+        Write a file to the configuration directory
+
+        :param filename: The filename
+        :param content:  The content
+        :return:
+        """
         path = Path(self.directory) / filename
         directory = os.path.dirname(path)
         Shell.mkdir(directory)
         writefile(filename, content)
 
     def read(self, filename):
+        """
+        Read a file from the configuration directory
+
+        :param filename: The filename
+        :return: The content
+        """
         return readfile(filename)
 
     def file(self, filename):
