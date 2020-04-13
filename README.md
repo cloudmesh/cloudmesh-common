@@ -1,12 +1,20 @@
 # Cloudmesh Common
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.2656703.svg)](https://doi.org/10.5281/zenodo.2656703)
-[![Version](https://img.shields.io/pypi/v/cloudmesh-common.svg)](https://pypi.python.org/pypi/cloudmesh-common)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/cloudmesh/cloudmesh-common/blob/master/LICENSE)
+
+> **Note:** The README.md page is outomatically generated, do not edit it.
+> To modify  change the content in
+> <https://github.com/cloudmesh/cloudmesh-common/blob/master/README-source.md>
+> Curley brackets must use two in README-source.md
+
+
+
+[![image](https://img.shields.io/pypi/v/cloudmesh-common.svg)](https://pypi.org/project/cloudmesh-common/)
 [![Python](https://img.shields.io/pypi/pyversions/cloudmesh-common.svg)](https://pypi.python.org/pypi/cloudmesh-common)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/cloudmesh/cloudmesh-common/blob/master/LICENSE)
 [![Format](https://img.shields.io/pypi/format/cloudmesh-common.svg)](https://pypi.python.org/pypi/cloudmesh-common)
-[![Format](https://img.shields.io/pypi/status/cloudmesh-common.svg)](https://pypi.python.org/pypi/cloudmesh-common)
+[![Status](https://img.shields.io/pypi/status/cloudmesh-common.svg)](https://pypi.python.org/pypi/cloudmesh-common)
 [![Travis](https://travis-ci.com/cloudmesh/cloudmesh-common.svg?branch=master)](https://travis-ci.com/cloudmesh/cloudmesh-common)
+
 
 ## Installation and Documentation
 
@@ -91,7 +99,7 @@ data = [
         "address": {
             "street": "Funny Lane 11",
             "city": "Cloudville"
-        }
+        {
     },
     {
         "name": "Albert",
