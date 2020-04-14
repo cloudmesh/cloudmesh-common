@@ -8,8 +8,8 @@ import os
 import pytest
 from tempfile import mkstemp
 import oyaml as yaml
-from cloudmesh.db.strdb import YamlDB
-from cloudmesh.common.StopWatch import StopWatch
+from cloudmesh.common.strdb import YamlDB
+
 
 @pytest.mark.incremental
 class TestYamlDB:
@@ -18,7 +18,7 @@ class TestYamlDB:
         self.key = "key"
         self.value = "value"
         self.dbfd, self.dbpath = mkstemp(
-            prefix='cloudmesh.db.strdb.TestYamlDB.'
+            prefix='cloudmesh.common.strdb.TestYamlDB.'
         )
         self.db = YamlDB(path=self.dbpath)
 

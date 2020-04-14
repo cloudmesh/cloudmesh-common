@@ -1,6 +1,6 @@
 from cloudmesh.common.parameter import Parameter
 from cloudmesh.common.util import path_expand
-from cloudmesh.db.strdb import YamlDB
+from cloudmesh.common.strdb import YamlDB
 from cloudmesh.common.console import Console
 
 class Variables(object):
