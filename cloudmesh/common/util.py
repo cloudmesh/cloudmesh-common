@@ -8,7 +8,7 @@ import shutil
 import tempfile
 import time
 from contextlib import contextmanager
-
+import sys
 import psutil
 
 try:
@@ -39,6 +39,20 @@ def tempdir(*args, **kwargs):
     finally:
         shutil.rmtree(d)
 
+def check_root(terminate=True):
+    """
+    Tests if the root user is used
+
+    :param terminate: if true exist the program
+    :return:
+    """
+    uid = os.getuid()
+    if uid == 0:
+        Console.ok("You are executing a a root user")
+    else:
+        Console.error("You do not run as root")
+        if terminate:
+            sys.exit()
 
 def exponential_backoff(fn, sleeptime_s_max=30 * 60):
     """Calls `fn` until it returns True, with an exponentially increasing wait time between calls"""

@@ -1,20 +1,8 @@
 # Cloudmesh Common
 
+{warning}
 
-> **Note:** The README.md page is outomatically generated, do not edit it.
-> To modify  change the content in
-> <https://github.com/cloudmesh/cloudmesh-common/blob/master/README-source.md>
-> Curley brackets must use two in README-source.md
-
-
-
-[![image](https://img.shields.io/pypi/v/cloudmesh-common.svg)](https://pypi.org/project/cloudmesh-common/)
-[![Python](https://img.shields.io/pypi/pyversions/cloudmesh-common.svg)](https://pypi.python.org/pypi/cloudmesh-common)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/cloudmesh/cloudmesh-common/blob/master/LICENSE)
-[![Format](https://img.shields.io/pypi/format/cloudmesh-common.svg)](https://pypi.python.org/pypi/cloudmesh-common)
-[![Status](https://img.shields.io/pypi/status/cloudmesh-common.svg)](https://pypi.python.org/pypi/cloudmesh-common)
-[![Travis](https://travis-ci.com/cloudmesh/cloudmesh-common.svg?branch=master)](https://travis-ci.com/cloudmesh/cloudmesh-common)
-
+{icons}
 
 ## Installation and Documentation
 
@@ -94,20 +82,20 @@ Let us assume we have
 
 ```python
 data = [
-    {
+    {{
         "name": "Gregor",
-        "address": {
+        "address": {{
             "street": "Funny Lane 11",
             "city": "Cloudville"
-        {
-    },
-    {
+        {{
+    }},
+    {{
         "name": "Albert",
-        "address": {
+        "address": {{
             "street": "Memory Lane 1901",
             "city": "Cloudnine"
-        }
-    }
+        }}
+    }}
 ]
 ```
 
@@ -165,7 +153,7 @@ One dimensional Dictionaries in dot format.
 from cloudmesh.common.dotdict import doctict
 
 # convert a simple dict to a dotdict
-d = dotdict({"name": "Gregor"})
+d = dotdict({{"name": "Gregor"}})
 # Now you can say
 print(d["name"])
 print(d.name)

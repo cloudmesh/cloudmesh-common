@@ -1,4 +1,4 @@
-from cloudmesh.db.strdb import YamlDB
+from cloudmesh.common.strdb import YamlDB
 from cloudmesh.common.util import path_expand
 from pathlib import Path
 

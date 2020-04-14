@@ -14,6 +14,12 @@ source:
 	$(call banner, "Install cloudmesh-common")
 	pip install -e . -U
 
+readme:
+	cms timer off
+	python ../cloudmesh-common/bin/readme.py cloudmesh-$(package) $(package)
+	-git commit -m "Upadte Readme" README.md README-source.md
+	-git push
+
 requirements:
 	echo "# cloudmesh-common requirements"> tmp.txt
 	#echo "cloudmesh-common" > tmp.txt
