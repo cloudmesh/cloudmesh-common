@@ -4,8 +4,9 @@ simple logging convenience framework
 import logging
 import os
 
-from cloudmesh.common.locations import config_file
+from cloudmesh.common.location import Location
 from cloudmesh.common.util import grep
+
 
 
 # noinspection PyUnusedLocal,PyPep8Naming
@@ -30,8 +31,11 @@ def LOGGER(filename):
 
     loglevel = logging.CRITICAL
     try:
-        level = grep("loglevel:", config_file(
-            "/cloudmesh_debug.yaml")).strip().split(":")[1].strip().lower()
+        location = Location()
+
+
+        level = grep("loglevel:", location.file("cloudmesh_debug.yaml"))\
+                    .strip().split(":")[1].strip().lower()
 
         if level.upper() == "DEBUG":
             loglevel = logging.DEBUG

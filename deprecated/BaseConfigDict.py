@@ -14,7 +14,7 @@ import oyaml as yaml
 
 from cloudmesh.common.console import Console
 from cloudmesh.common.error import Error
-from cloudmesh.common.locations import config_file
+from cloudmesh.common.location import config_file
 from cloudmesh.common.util import backup_name, path_expand
 
 import warnings
