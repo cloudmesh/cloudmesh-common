@@ -141,8 +141,8 @@ class Host(object):
         :param kwargs: The key value pairs to be replaced in the command
         :return:
         """
-        if type(hosts) != list:
-            hosts = Parameter.expand(hosts)
+
+        hosts = Parameter.expand(hosts)
 
         args = [{'command': [c.format(host=host, **kwargs) for c in command],
                  'shell': shell,
@@ -182,8 +182,7 @@ class Host(object):
         :return: list of dicts representing the ping result
         """
 
-        if type(hosts) != list:
-            hosts = Parameter.expand(hosts)
+        hosts = Parameter.expand(hosts)
 
         key = path_expand(key)
 
@@ -222,8 +221,7 @@ class Host(object):
         :return: list of dicts representing the ping result
         """
 
-        if type(hosts) != list:
-            hosts = Parameter.expand(hosts)
+        hosts = Parameter.expand(hosts)
 
         key = path_expand(key)
 
@@ -258,6 +256,7 @@ class Host(object):
         :param processors: the number of parallel checks
         :return: list of dicts representing the ping result
         """
+        hosts = Parameter.expand(hosts)
 
         result = Host.ssh(hosts=hosts,
                           command='hostname',
@@ -318,11 +317,9 @@ class Host(object):
         """
 
         # first expand the ips to a list
+        hosts = Parameter.expand(hosts)
 
-        if type(hosts) != list:
-            hosts = Parameter.expand(hosts)
-
-            # wrap ip and count into one list to be sent to Pool map
+        # wrap ip and count into one list to be sent to Pool map
         args = [{'ip': ip, 'count': count} for ip in hosts]
 
         with Pool(processors) as p:
@@ -351,8 +348,7 @@ class Host(object):
         :param verbose:
         :return:
         """
-        if type(hosts) != list:
-            hosts = Parameter.expand(hosts)
+        hosts = Parameter.expand(hosts)
 
         command = f'ssh-keygen -q -N "" -f {filename} <<< y'
         result_keys = Host.ssh(hosts=hosts,
@@ -386,7 +382,6 @@ class Host(object):
         :param dryrun:
         :return:
         """
-
         names = Parameter.expand(hosts)
 
         results_key = Host.ssh(hosts=names,
