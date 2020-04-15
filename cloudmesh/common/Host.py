@@ -8,95 +8,9 @@ from cloudmesh.common.DateTime import DateTime
 from cloudmesh.common.parameter import Parameter
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.util import readfile
-from cloudmesh.common.dotdict import dotdict
-from cloudmesh.common.debug import VERBOSE
-
-from pprint import pprint
-
-class Execution:
-
-    @staticmethod
-    def empty():
-        result = subprocess.run("pwd", capture_output=True, shell=True)
-        result.returncode = 1
-        result.stderror = ""
-        result.stderror = ""
-        return result
-
-    @staticmethod
-    def run(host=None, command=None, key="~/.ssh/id_rsa.pub", executor=os.system):
-        """
-        execute a commnd locally including pipes or remotely and return the
-        result in a result structure
-
-        :param host:
-        :param command:
-        :param executor:
-        :return:
-        """
-
-        if host == os.uname()[1]:
-            #
-            # LOCAL COMMAND
-            #
-            cmd = " ".join(command)
-            result = Execution._system(name=host, command=cmd)
-        else:
-            #
-            # REMOTE COMMAND
-            #
-            cmd = Execution._create_ssh_command(host=host,
-                                                command=command,
-                                                key=key,
-                                                executor=executor)
-
-            pass
-
-        data = dotdict({
-            'host': host,
-            'command': command,
-            'cmd': cmd,
-            'stdout': result.stdout,
-            'stderr': result.stderr,
-            'returncode': result.returncode,
-            'success': result.returncode == 0,
-            'date': str(DateTime.now()),
-        })
-
-        return data
-
-    def _create_ssh_command(host=None, command=None, key="~/.ssh/idrsa.pub"):
-        key = path_expand(key)
-        _command = ['ssh',
-                       '-o', 'StrictHostKeyChecking=no',
-                       '-o', 'UserKnownHostsFile=/dev/null',
-                       '-i', f'{key}',
-                       '{host}',
-                       f'"{command}"']
-        return _command
-
-    @staticmethod
-    def _system(name=None, command=None, tmp="/tmp"):
-        result = Execution.empty()
-        result.stderr = os.system(f"{command} | tee {tmp}/cloudmesh.{name}")
-        result.stdout = readfile(f"{tmp}/cloudmesh.{name}").strip()
-        result.args = command
-        return result
-
 
 
 class Host(object):
-
-    @staticmethod
-    def _ssh(command=None, key="~/.ssh/idrsa.pub"):
-        key = path_expand(key)
-        ssh_command = ['ssh',
-                       '-o', 'StrictHostKeyChecking=no',
-                       '-o', 'UserKnownHostsFile=/dev/null',
-                       '-i', f'{key}',
-                       '{host}',
-                       f'{command}']
-        return ssh_command
 
     @staticmethod
     def config(hosts=None,
@@ -140,20 +54,6 @@ class Host(object):
             result += data
         return result
 
-    @staticmethod
-    def _system(host, command):
-        #
-        # fake command
-        #
-        result = subprocess.run("pwd", capture_output=True, shell=True)
-        #
-        # Now run the real command
-        #
-
-        result.stderr = os.system(f"{command} | tee /tmp/cloudmesh.{host}")
-        result.stdout = readfile(f"/tmp/cloudmesh.{host}").strip()
-        result.args = command
-        return result
 
     @staticmethod
     def _run(args):
@@ -176,57 +76,45 @@ class Host(object):
         :param args: command dict
         :return:
         """
-        VERBOSE(args)
         hostname = os.uname()[1]
         host = args.get("host")
 
         shell = args.get("shell")
-        executor = args.get("executor")
 
         if host == hostname:
-
-            print ("LOCALHOST")
-
             command = args.get("execute")
-            if executor == os.system:
-                result = Host._system(host, command)
-            else:
-                result = subprocess.getoutput(command)
-
+            result = subprocess.getoutput(command)
+            stderr = ""
+            returncode = 0
+            stdout = result
         else:
+            command = args.get("command")
 
-            print ("REMOTE")
+            result = subprocess.run(
+                command,
+                capture_output=True,
+                shell=shell)
+
+            result.stdout = result.stdout.decode("utf-8", "ignore").strip()
+            if result.stderr == b'':
+                result.stderr = None
+
+            stderr = result.stderr
+            returncode = result.returncode
+            stdout = result.stdout
 
 
-            if executor == os.system:
-                print ("RUN", host, )
-                command = args.get("execute")
-                if "key" in args:
-                    key=args["key"]
-                else:
-                    key=path_expand("~/.ssh/id_rsa.pub")
-                command = Host._ssh(command, key)
-                print("RUN", host, command)
-                result = Host._system(host, command)
-            else:
-                command = args.get("command")
-
-                result = subprocess.run(command, capture_output=True, shell=shell)
-
-                result.stdout = result.stdout.decode("utf-8", "ignore").strip()
-                if result.stderr == b'':
-                    result.stderr = None
-
-        data = dotdict({
+        data = {
             'host': args.get("host"),
-            'command': command,
+            'command': args.get("command"),
             'execute': args.get("execute"),
-            'stdout': result.stdout,
-            'stderr': result.stderr,
-            'returncode': result.returncode,
-            'success': result.returncode == 0,
+            'stdout': stdout,
+            'stderr': stderr,
+            'returncode': returncode,
+            'success': returncode == 0,
             'date': DateTime.now(),
-        })
+            'cmd': " ".join(args.get("command"))
+        }
         return data
 
     @staticmethod
@@ -235,7 +123,6 @@ class Host(object):
             execute=None,
             processors=3,
             shell=False,
-            executor=None,
             **kwargs):
         """
         Executes the command on all hosts. The key values
@@ -257,24 +144,19 @@ class Host(object):
         if type(hosts) != list:
             hosts = Parameter.expand(hosts)
 
-        if executor is None:
-            executor = Host._run
-
         args = [{'command': [c.format(host=host, **kwargs) for c in command],
                  'shell': shell,
                  'host': host,
                  'execute': execute,
-                 'executor': executor
                  } for host in hosts]
 
-        if len(args) == 1:
-            r = Host._run(args[0])
-            res = [r]
-        else:
-            with Pool(processors) as p:
-                res = p.map(Host._run, args)
-                p.close()
-                p.join()
+        if "executor" not in args:
+            executor = Host._run
+
+        with Pool(processors) as p:
+            res = p.map(executor, args)
+            p.close()
+            p.join()
         return res
 
     @staticmethod
@@ -303,7 +185,14 @@ class Host(object):
         if type(hosts) != list:
             hosts = Parameter.expand(hosts)
 
-        ssh_command = Host._ssh(command, key)
+        key = path_expand(key)
+
+        ssh_command = ['ssh',
+                       '-o', 'StrictHostKeyChecking=no',
+                       '-o', 'UserKnownHostsFile=/dev/null',
+                       '-i', f'{key}',
+                       '{host}',
+                       f'{command}']
 
         result = Host.run(hosts=hosts,
                           command=ssh_command,
