@@ -72,7 +72,7 @@ class Parameter(object):
         :param sort:
         :return:
         """
-        if parameter is None:
+        if type(parameter) == list or parameter is None:
             return parameter
 
         parameters = list(expand_hostlist(parameter,
