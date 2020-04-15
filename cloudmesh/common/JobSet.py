@@ -13,6 +13,58 @@ import threading
 from cloudmesh.common.debug import VERBOSE
 
 class JobSet:
+    """
+    JobSet is a general execution framework for running a set of jobs on which
+    we specify a self defined job executor function. Through this framework it
+    is possible to very flexibly integrate different JobSets on which are
+    executed based on the executor. The jobset is executed in parallel and a run
+    method can be augmented with the number of parallel jobs being executed at
+    the same time. A simple executor that runs commands in the shell is provided
+
+    Basic Example Usage:
+
+        t = JobSet("terminal-commands", executor=JobSet.execute)
+        t.add({"name": "pwd", "command": "pwd"})
+        t.add({"name": "info", "command": "uname -a"})
+        t.add({"name": "uname", "command": "uname"})
+        t.add({"name": "hostname", "command": "hostname"})
+        t.add({"name": "provccesses", "command": "ps"})
+        t.run(parallel=3)
+        t.Print()
+
+    Advanced Example Usage:
+
+        from cloudmesh.common.parameter import Parameter
+
+        def ssh(spec):
+             result = subprocess.check_output("ssh " + spec["command"], shell=True)
+             success = "Error" noyt in result
+             if success:
+                returncode = 0
+                status = 'done'
+            else:
+                returncode = 1
+                status = 'failed'
+
+            return dict({
+                "name": spec["name"],
+                "stdout": result,
+                "stderr": ""
+                "returncode": returncode
+                "status": status
+            })
+
+        t = JobSet("terminal-commands", executor=JobSet.execute)
+        for host in Parameter.expand("red[01-03]"):
+            t.add({"name": "host", "command": "uname -a"})
+        t.run(parallel=3)
+        t.Print()
+
+
+
+
+
+    """
 
     def __init__(self, name, executor=None):
         self.name = name
@@ -57,7 +109,7 @@ class JobSet:
         result["status"] = "done"
         return result
 
-    def run(self, processors=3):
+    def run(self, parallel=3):
 
         joblist = [self.job[x] for x in self.job]
         VERBOSE(joblist)
