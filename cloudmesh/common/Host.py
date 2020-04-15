@@ -99,7 +99,6 @@ class Host(object):
         shell = args.get("shell")
         executor = args.get("executor")
 
-        print (host, hostname)
         if host == hostname:
             command = args.get("execute")
             if executor == os.system:
