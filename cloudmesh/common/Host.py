@@ -103,6 +103,7 @@ class Host(object):
             returncode = result.returncode
             stdout = result.stdout
 
+
         data = {
             'host': args.get("host"),
             'command': args.get("command"),
@@ -111,7 +112,8 @@ class Host(object):
             'stderr': stderr,
             'returncode': returncode,
             'success': returncode == 0,
-            'date': DateTime.now()
+            'date': DateTime.now(),
+            'cmd': " ".join(args.get("command"))
         }
         return data
 
@@ -139,7 +141,6 @@ class Host(object):
         :param kwargs: The key value pairs to be replaced in the command
         :return:
         """
-
         if type(hosts) != list:
             hosts = Parameter.expand(hosts)
 
