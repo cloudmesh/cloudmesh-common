@@ -8,7 +8,10 @@ from cloudmesh.common.DateTime import DateTime
 from cloudmesh.common.parameter import Parameter
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.util import readfile
+from cloudmesh.common.dotdict import dotdict
+from cloudmesh.common.debug import VERBOSE
 
+from pprint import pprint
 
 class Host(object):
 
@@ -54,6 +57,19 @@ class Host(object):
             result += data
         return result
 
+    @staticmethod
+    def _system(host, command):
+        #
+        # fake command
+        #
+        result = subprocess.run("pwd", capture_output=True, shell=True)
+        #
+        # Now run the real command
+        #
+        result.stderr = os.system(f"{command} | tee /tmp/cloudmesh.{host}")
+        result.stdout = readfile(f"/tmp/cloudmesh.{host}").strip()
+        result.args = command
+        return result
 
     @staticmethod
     def _run(args):
@@ -76,45 +92,45 @@ class Host(object):
         :param args: command dict
         :return:
         """
+
         hostname = os.uname()[1]
         host = args.get("host")
 
         shell = args.get("shell")
+        executor = args.get("executor")
 
+        print (host, hostname)
         if host == hostname:
             command = args.get("execute")
-            result = subprocess.getoutput(command)
-            stderr = ""
-            returncode = 0
-            stdout = result
+            if executor == os.system:
+                result = Host._system(host, command)
+            else:
+                result = subprocess.getoutput(command)
+
         else:
-            command = args.get("command")
 
-            result = subprocess.run(
-                command,
-                capture_output=True,
-                shell=shell)
+            if executor == os.system:
+                command = args.get("execute")
+                result = Host._system(host, command)
+            else:
+                command = args.get("command")
 
-            result.stdout = result.stdout.decode("utf-8", "ignore").strip()
-            if result.stderr == b'':
-                result.stderr = None
+                result = subprocess.run(command, capture_output=True, shell=shell)
 
-            stderr = result.stderr
-            returncode = result.returncode
-            stdout = result.stdout
+                result.stdout = result.stdout.decode("utf-8", "ignore").strip()
+                if result.stderr == b'':
+                    result.stderr = None
 
-
-        data = {
+        data = dotdict({
             'host': args.get("host"),
-            'command': args.get("command"),
+            'command': command,
             'execute': args.get("execute"),
-            'stdout': stdout,
-            'stderr': stderr,
-            'returncode': returncode,
-            'success': returncode == 0,
+            'stdout': result.stdout,
+            'stderr': result.stderr,
+            'returncode': result.returncode,
+            'success': result.returncode == 0,
             'date': DateTime.now(),
-            'cmd': " ".join(args.get("command"))
-        }
+        })
         return data
 
     @staticmethod
@@ -123,6 +139,7 @@ class Host(object):
             execute=None,
             processors=3,
             shell=False,
+            executor=None,
             **kwargs):
         """
         Executes the command on all hosts. The key values
@@ -144,19 +161,24 @@ class Host(object):
         if type(hosts) != list:
             hosts = Parameter.expand(hosts)
 
+        if executor is None:
+            executor = Host._run
+
         args = [{'command': [c.format(host=host, **kwargs) for c in command],
                  'shell': shell,
                  'host': host,
                  'execute': execute,
+                 'executor': executor
                  } for host in hosts]
 
-        if "executor" not in args:
-            executor = Host._run
-
-        with Pool(processors) as p:
-            res = p.map(executor, args)
-            p.close()
-            p.join()
+        if len(args) == 1:
+            r = Host._run(args[0])
+            res = [r]
+        else:
+            with Pool(processors) as p:
+                res = p.map(Host._run, args)
+                p.close()
+                p.join()
         return res
 
     @staticmethod
@@ -186,6 +208,7 @@ class Host(object):
             hosts = Parameter.expand(hosts)
 
         key = path_expand(key)
+
 
         ssh_command = ['ssh',
                        '-o', 'StrictHostKeyChecking=no',
