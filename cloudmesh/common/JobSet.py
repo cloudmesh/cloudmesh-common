@@ -16,7 +16,6 @@ from collections import OrderedDict
 from cloudmesh.common.util import readfile
 from cloudmesh.common.Tabulate import Printer
 
-# TODO: implement ssh executor
 # TODO: pytest
 class JobSet:
     """
@@ -69,6 +68,11 @@ class JobSet:
     """
 
     def __init__(self, name, executor=None):
+        self.name = name
+        self.job = OrderedDict({})
+        self.executor = executor or JobSet.execute
+
+    def reset(self, name, executor=None):
         self.name = name
         self.job = OrderedDict({})
         self.executor = executor or JobSet.execute
