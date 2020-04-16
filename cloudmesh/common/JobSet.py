@@ -175,7 +175,7 @@ class JobSet:
         result["status"] = "done"
         return result
 
-    def run(self, processors=3):
+    def run(self, parallel=3):
 
         if len(self.job) == 0:
             res = None
@@ -187,7 +187,7 @@ class JobSet:
         else:
             joblist = [self.job[x] for x in self.job]
             VERBOSE(joblist)
-            with Pool(processors) as p:
+            with Pool(parallel) as p:
                 res = p.map(self._run, joblist)
                 p.close()
                 p.join()
@@ -282,11 +282,12 @@ if __name__ == '__main__':
     t.run()
     t.Print()
 
+    hostname = os.uname()[1]
     t = JobSet("onejob", executor=JobSet.ssh)
     for host in Parameter.expand("red,red[01-03]"):
         t.add({"name": host, "host": host, "command": "uname -a"})
     t.add({"name": hostname, "host": hostname, "command": "uname -a"})
 
-    t.run()
+    t.run(parallel=3)
     print(Printer.write(t.array(),
                         order=["name", "command","status", "stdout","returncode"]))
