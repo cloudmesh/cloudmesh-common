@@ -6,6 +6,7 @@ from cloudmesh.common.Tabulate import Printer
 from pprint import pprint
 from cloudmesh.common.console import Console
 
+
 class JobScript:
 
     def __init__(self):
@@ -33,13 +34,18 @@ class JobScript:
         counter = 0
         for line in lines:
             stripped = line.strip()
-            print (f">{stripped}<")
             if stripped.startswith("#") or stripped == "":
                 pass
             else:
+                tag = counter
+                if "# tag:" in line:
+                    line, tag = line.split("# tag:", 1)
+                    tag = tag.strip()
+                    line = line.strip()
                 jobs.add({
                     "script": name,
-                    "name": f"{name}-{counter}",
+                    "name": tag,
+                    "tag": tag,
                     "line": counter,
                     "host": host,
                     "counter": counter,
@@ -64,6 +70,7 @@ class JobScript:
     def array(self):
         return [self.job[x] for x in self.job]
 
+
 if __name__ == '__main__':
     #
     # Tow ways to run.
@@ -73,12 +80,11 @@ if __name__ == '__main__':
     result = JobScript.execute("""
         # This is a comment
         
-        pwd
+        pwd                             # tag: pwd 
         uname -a
     """)
-    pprint(result)
     print(Printer.write(result,
-                        order=["script", "line", "command", "status", "stdout",
+                        order=["name", "command", "status", "stdout",
                                "returncode"]))
 
     # Variables
@@ -87,9 +93,20 @@ if __name__ == '__main__':
             script="""
                 # This is a comment
         
-                pwd
+                pwd                    # tag: pwd 
                 uname -a
             """)
-    print(Printer.write(job.array(),
-                        order=["script", "line", "command", "status", "stdout",
-                               "returncode"]))
+    print(Printer.write(
+        job.array(),
+        order=["name", "command", "status", "stdout",
+               "returncode"]))
+
+#
+# Partial example output
+#
+# +------+-----------+--------+-------------------------------+--------------+
+# | name | command   | status |                               |   returncode |
+# |------+-----------+--------+-------------------------------+--------------|
+# | pwd  | pwd       | done   | /Users/..../cloudmesh/common  |            0 |
+# | 4    | uname -a  | done   | Darwin gray 19.4.0 Darwin ... |            0 |
+# +------+-----------+--------+-------------------------------+--------------+

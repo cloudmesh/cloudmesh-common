@@ -16,6 +16,7 @@ from collections import OrderedDict
 from cloudmesh.common.util import readfile
 from cloudmesh.common.Tabulate import Printer
 
+
 # TODO: pytest
 class JobSet:
     """
@@ -101,14 +102,13 @@ class JobSet:
         if 'key' not in spec:
             spec.key = path_expand("~/.ssh/id_rsa.pub")
 
-
         ssh = \
-            f'ssh'\
+            f'ssh' \
             f' -o StrictHostKeyChecking=no' \
-            f' -o UserKnownHostsFile=/dev/null'\
+            f' -o UserKnownHostsFile=/dev/null' \
             f' -i {spec.key} {spec.host}'
 
-            # result.stdout = result.stdout.decode("utf-8", "ignore")
+        # result.stdout = result.stdout.decode("utf-8", "ignore")
 
         if "os" in spec:
 
@@ -168,7 +168,8 @@ class JobSet:
         name = spec["name"]
         self.job[name] = spec
         self.job[name]["status"] = "defined"
-        self.job[name]["executor"] = spec.get("executor") or executor or self.executor
+        self.job[name]["executor"] = spec.get(
+            "executor") or executor or self.executor
 
     def _run(self, spec):
         result = dict(spec)
@@ -190,7 +191,7 @@ class JobSet:
             self.job[id].update(res)
         else:
             joblist = [self.job[x] for x in self.job]
-            VERBOSE(joblist)
+            # VERBOSE(joblist)
             with Pool(parallel) as p:
                 res = p.map(self._run, joblist)
                 p.close()
@@ -217,7 +218,7 @@ class JobSet:
         d = dict(self.job)
         for e in d:
             del d[e]["executor"]
-        pprint (d)
+        pprint(d)
 
     def array(self):
         return [self.job[x] for x in self.job]
@@ -233,8 +234,8 @@ if __name__ == '__main__':
             "status": "defined"
         })
 
-    hostname = os.uname()[1]
 
+    hostname = os.uname()[1]
 
     s = JobSet("test", executor=JobSet.identity)
 
@@ -243,11 +244,10 @@ if __name__ == '__main__':
 
     pprint(s.job)
     result = s.run()
-    pprint (result)
+    pprint(result)
 
     pprint(s.job)
     s.Print()
-
 
     t = JobSet("test2", executor=JobSet.execute)
     t.add({"name": "c", "command": "pwd"})
@@ -258,8 +258,8 @@ if __name__ == '__main__':
     t.run()
     t.Print()
 
-    #x = {"name": "x", "command": "ls", "executor": command_execute}
-    #print (command_execute(x))
+    # x = {"name": "x", "command": "ls", "executor": command_execute}
+    # print (command_execute(x))
 
     t = JobSet("onejob", executor=JobSet.execute)
     t.add({"name": "c", "command": "pwd"})
@@ -294,4 +294,5 @@ if __name__ == '__main__':
 
     t.run(parallel=3)
     print(Printer.write(t.array(),
-                        order=["name", "command","status", "stdout","returncode"]))
+                        order=["name", "command", "status", "stdout",
+                               "returncode"]))
