@@ -8,6 +8,58 @@ from cloudmesh.common.console import Console
 
 
 class JobScript:
+    '''
+    The jobscript is a simple mechanism to run a number of commands formylated
+    in a script. The script is interpreted line by line and does not support
+    multi line commands at this time. (Not difficult to implement when
+    looking at \ at the end of a line.)
+
+    It can be either used a static call or as variable invocation. Often the
+    static call will be sufficient.
+
+    Static method::
+
+        from cloudmesh.common.Tabulate import Printer
+
+        result = JobScript.execute("""
+            # This is a comment
+
+            pwd                             # tag: pwd
+            uname -a
+        """)
+        print(Printer.write(result,
+                order=["name", "command", "status", "stdout", "returncode"]))
+
+    Variable invocation::
+
+        from cloudmesh.common.Tabulate import Printer
+
+        job = JobScript()
+        job.run(name="variable script",
+                script="""
+                    # This is a comment
+
+                    pwd                    # tag: pwd
+                    uname -a
+                """)
+        print(Printer.write(
+            job.array(),
+            order=["name", "command", "status", "stdout", "returncode"]))
+
+        Each line is augmented with a name, so you can easily retrive the result
+        content by that name. By default the name is the line number, however it
+        can be overwritten with `# tag:` at the end of the line. The line number
+        starts at 1.
+
+    Partial example output:
+
+        # +------+-----------+--------+------------------------+--------------+
+        # | name | command   | status |                        |   returncode |
+        # |------+-----------+--------+------------------------+--------------|
+        # | pwd  | pwd       | done   | /Users/.../cloudmesh   |            0 |
+        # | 4    | uname -a  | done   | Darwin gray 19.4.0 ... |            0 |
+        # +------+-----------+--------+------------------------+--------------+
+    '''
 
     def __init__(self):
         self.script = None
@@ -31,7 +83,7 @@ class JobScript:
         lines = self.script.splitlines()
         # Add script to jobset and run
         jobs = JobSet("onejob", executor=executor)
-        counter = 0
+        counter = 1
         for line in lines:
             stripped = line.strip()
             if stripped.startswith("#") or stripped == "":
