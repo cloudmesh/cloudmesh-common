@@ -288,7 +288,5 @@ if __name__ == '__main__':
     t.add({"name": hostname, "host": hostname, "command": "uname -a"})
 
     t.run()
-    t.Print()
-    print (t.array())
     print(Printer.write(t.array(),
                         order=["name", "command","status", "stdout","returncode"]))

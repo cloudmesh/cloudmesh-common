@@ -157,3 +157,16 @@ class Test_Parameter:
 
         assert result == check
 
+    def test_mixed_hosts(self):
+        HEADING()
+
+        parameter = "red[01-02],red"
+
+        check =['red01', 'red02', 'red']
+
+        result = Parameter.expand(parameter)
+        print(result)
+
+        assert result == check
+
+
