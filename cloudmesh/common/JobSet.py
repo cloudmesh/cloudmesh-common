@@ -5,6 +5,7 @@ from multiprocessing import Pool
 from sys import platform
 from pprint import pprint
 
+from cloudmesh.common.dotdict import dotdict
 from cloudmesh.common.DateTime import DateTime
 from cloudmesh.common.parameter import Parameter
 from cloudmesh.common.util import path_expand
@@ -12,6 +13,8 @@ from cloudmesh.common.util import readfile
 import threading
 from cloudmesh.common.debug import VERBOSE
 from collections import OrderedDict
+from cloudmesh.common.util import readfile
+from cloudmesh.common.Tabulate import Printer
 
 # TODO: implement ssh executor
 # TODO: pytest
@@ -69,6 +72,70 @@ class JobSet:
         self.name = name
         self.job = OrderedDict({})
         self.executor = executor or JobSet.execute
+
+    @staticmethod
+    def ssh(spec):
+        """
+
+        name: name of the job
+        host: host on which we execute
+        os:   if true use os.system, this uses a temporary file, so be careful
+              if false use subprocess.check_output
+        stderr: result of stderror
+        stdout: result of stdout
+        returncode: 0 is success
+        success: Ture if successfull e.g. returncode == 0
+        status: a status: defined, running, done, failed
+
+        :param spec:
+        :return:
+        """
+        spec = dotdict(spec)
+        hostname = os.uname()[1]
+        local = hostname == spec.host
+
+        if 'key' not in spec:
+            spec.key = path_expand("~/.ssh/id_rsa.pub")
+
+
+        ssh = \
+            f'ssh'\
+            f' -o StrictHostKeyChecking=no' \
+            f' -o UserKnownHostsFile=/dev/null'\
+            f' -i {spec.key} {spec.host}'
+
+            # result.stdout = result.stdout.decode("utf-8", "ignore")
+
+        if "os" in spec:
+
+            if 'tmp' not in spec:
+                spec.tmp = "/tmp"
+            tee = f"tee {spec.tmp}/cloudmesh.{spec.name}"
+            if local:
+                command = f"{spec.command} | {tee}"
+            else:
+                command = f"{ssh} {spec.command} | {tee}"
+            # print ("RUN os.system", command)
+
+            returncode = os.system(command)
+            result = readfile(f"{spec.tmp}/cloudmesh.{spec.name}").strip()
+        else:
+            if local:
+                command = f"{spec.command} "
+            else:
+                command = f"{ssh} {spec.command}"
+            # print ("RUN check_output", command)
+
+            result = subprocess.check_output(command, shell=True)
+            returncode = 0
+
+        return dict({
+            "name": spec.name,
+            "stdout": result,
+            "stderr": "",
+            "returncode": returncode,
+            "status": "defined"
+        })
 
     @staticmethod
     def execute(spec):
@@ -148,6 +215,9 @@ class JobSet:
             del d[e]["executor"]
         pprint (d)
 
+    def array(self):
+        return [self.job[x] for x in self.job]
+
 
 if __name__ == '__main__':
     def command_execute(spec):
@@ -158,6 +228,8 @@ if __name__ == '__main__':
             "returncode": 0,
             "status": "defined"
         })
+
+    hostname = os.uname()[1]
 
 
     s = JobSet("test", executor=JobSet.identity)
@@ -189,3 +261,33 @@ if __name__ == '__main__':
     t.add({"name": "c", "command": "pwd"})
     t.run()
     t.Print()
+
+    t = JobSet("ssh", executor=JobSet.ssh)
+    t.add({"name": hostname, "host": hostname, "command": "pwd"})
+    t.run()
+    t.Print()
+
+    t = JobSet("onejob", executor=JobSet.ssh)
+    t.add({"name": hostname, "host": hostname, "command": "pwd", "os": True})
+    t.run()
+    t.Print()
+
+    t = JobSet("onejob", executor=JobSet.ssh)
+    t.add({"name": hostname, "host": hostname, "command": "pwd", "os": False})
+    t.run()
+    t.Print()
+
+    t = JobSet("onejob", executor=JobSet.ssh)
+    t.add({"name": hostname, "host": "red", "command": "pwd", "os": False})
+    t.run()
+    t.Print()
+
+    t = JobSet("onejob", executor=JobSet.ssh)
+    for host in Parameter.expand("red,red[01-03]"):
+        t.add({"name": host, "host": host, "command": "uname -a"})
+
+    t.run()
+    t.Print()
+    print (t.array())
+    print(Printer.write(t.array(),
+                        order=["name", "command","status", "stdout","returncode"]))
