@@ -4,15 +4,19 @@ import textwrap
 from cloudmesh.common.dotdict import dotdict
 from cloudmesh.common.Tabulate import Printer
 from pprint import pprint
+from cloudmesh.common.console import Console
 
 class JobScript:
 
     def __init__(self):
         self.script = None
 
-    def run(self, script, name="script", host=None, executor=JobSet.ssh,
+    def run(self, script=None, name="script", host=None, executor=JobSet.ssh,
             **kwargs):
         # Prepare parameters
+        if script is None:
+            Console.error("The script is not defined, found None as content")
+            return
         host = host or os.uname()[1]
         if kwargs:
             parameters = dotdict(**kwargs)
@@ -50,7 +54,7 @@ class JobScript:
     def execute(script, name="script", host=None, executor=JobSet.ssh,
                 **kwargs):
         job = JobScript()
-        job.run(script, name=name, host=host, **kwargs)
+        job.run(script=script, name=name, host=host, **kwargs)
         return job.array()
 
     @staticmethod
@@ -61,6 +65,11 @@ class JobScript:
         return [self.job[x] for x in self.job]
 
 if __name__ == '__main__':
+    #
+    # Tow ways to run.
+    #
+
+    # Static method
     result = JobScript.execute("""
         # This is a comment
         
@@ -69,5 +78,18 @@ if __name__ == '__main__':
     """)
     pprint(result)
     print(Printer.write(result,
+                        order=["script", "line", "command", "status", "stdout",
+                               "returncode"]))
+
+    # Variables
+    job = JobScript()
+    job.run(name="variable script",
+            script="""
+                # This is a comment
+        
+                pwd
+                uname -a
+            """)
+    print(Printer.write(job.array(),
                         order=["script", "line", "command", "status", "stdout",
                                "returncode"]))
