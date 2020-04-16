@@ -11,7 +11,10 @@ from cloudmesh.common.util import path_expand
 from cloudmesh.common.util import readfile
 import threading
 from cloudmesh.common.debug import VERBOSE
+from collections import OrderedDict
 
+# TODO: implement ssh executor
+# TODO: pytest
 class JobSet:
     """
     JobSet is a general execution framework for running a set of jobs on which
@@ -60,15 +63,11 @@ class JobSet:
         t.run(parallel=3)
         t.Print()
 
-
-
-
-
     """
 
     def __init__(self, name, executor=None):
         self.name = name
-        self.job = {}
+        self.job = OrderedDict({})
         self.executor = executor or JobSet.execute
 
     @staticmethod
@@ -109,21 +108,35 @@ class JobSet:
         result["status"] = "done"
         return result
 
-    def run(self, parallel=3):
+    def run(self, processors=3):
 
-        joblist = [self.job[x] for x in self.job]
-        VERBOSE(joblist)
-        with Pool(processors) as p:
-            res = p.map(self._run, joblist)
-            p.close()
-            p.join()
+        if len(self.job) == 0:
+            res = None
+        elif len(self.job) == 1:
+            id = next(iter(self.job))
+            job = self.job[id]
+            res = self._run(job)
+            self.job[id].update(res)
+        else:
+            joblist = [self.job[x] for x in self.job]
+            VERBOSE(joblist)
+            with Pool(processors) as p:
+                res = p.map(self._run, joblist)
+                p.close()
+                p.join()
 
-        for entry in res:
-            name = entry['name']
-            for a in entry:
-                self.job[name].update(entry)
+            for entry in res:
+                name = entry['name']
+                for a in entry:
+                    self.job[name].update(entry)
 
         return res
+
+    def __len__(self):
+        return len(self.job)
+
+    def __repr__(self):
+        return str(self.job)
 
     def __str__(self):
         return str(self.job)
@@ -171,3 +184,8 @@ if __name__ == '__main__':
 
     #x = {"name": "x", "command": "ls", "executor": command_execute}
     #print (command_execute(x))
+
+    t = JobSet("onejob", executor=JobSet.execute)
+    t.add({"name": "c", "command": "pwd"})
+    t.run()
+    t.Print()
