@@ -285,6 +285,7 @@ if __name__ == '__main__':
     t = JobSet("onejob", executor=JobSet.ssh)
     for host in Parameter.expand("red,red[01-03]"):
         t.add({"name": host, "host": host, "command": "uname -a"})
+    t.add({"name": hostname, "host": hostname, "command": "uname -a"})
 
     t.run()
     t.Print()
