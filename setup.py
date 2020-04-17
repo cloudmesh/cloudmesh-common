@@ -53,6 +53,7 @@ pathlib
 humanize
 python-dateutil
 tabulate
+requests
 """.splitlines()
 
 version = readfile("VERSION").strip()

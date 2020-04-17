@@ -16,3 +16,4 @@ pytz==2019.3              # via cloudmesh-common (setup.py)
 pyyaml==5.3               # via oyaml
 simplejson==3.17.0        # via cloudmesh-common (setup.py)
 six==1.14.0               # via python-dateutil
+requests
