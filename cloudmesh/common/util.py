@@ -72,14 +72,21 @@ def exponential_backoff(fn, sleeptime_s_max=30 * 60):
             return False
 
 def download(source, destination, force=False):
+    """
+    Downloads the file from source to destination
+
+    :param source: The http source
+    :param destination: The destination in the file system
+    :param force: If True the file will be downloaded even if
+                  it already exists
+    """
     if os.path.isfile(destination) and not force:
         return
     else:
-        os.m
-        r = requests.get(source, allow_redirects=True)
-        open('destination', 'wb').write(r.content)
         directory = os.path.dirname(destination)
         Path(destination).mkdir(parents=True, exist_ok=True)
+        r = requests.get(source, allow_redirects=True)
+        open('destination', 'wb').write(r.content)
 
 def search(lines, pattern):
     """
