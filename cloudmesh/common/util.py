@@ -10,6 +10,8 @@ import time
 from contextlib import contextmanager
 import sys
 import psutil
+import requests
+from  pathlib import Path
 
 try:
     collectionsAbc = collections.abc
@@ -69,6 +71,15 @@ def exponential_backoff(fn, sleeptime_s_max=30 * 60):
         if sleeptime_ms / 1000.0 > sleeptime_s_max:
             return False
 
+def download(source, destination, force=False):
+    if os.path.isfile(destination) and not force:
+        return
+    else:
+        os.m
+        r = requests.get(source, allow_redirects=True)
+        open('destination', 'wb').write(r.content)
+        directory = os.path.dirname(destination)
+        Path(destination).mkdir(parents=True, exist_ok=True)
 
 def search(lines, pattern):
     """
