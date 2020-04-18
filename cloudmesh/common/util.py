@@ -81,12 +81,14 @@ def download(source, destination, force=False):
                   it already exists
     """
     if os.path.isfile(destination) and not force:
-        return
+        Console.warning(f"File {destination} already exists. "
+                        "Skipping download ...")
     else:
+
         directory = os.path.dirname(destination)
-        Path(destination).mkdir(parents=True, exist_ok=True)
+        Path(directory).mkdir(parents=True, exist_ok=True)
         r = requests.get(source, allow_redirects=True)
-        open('destination', 'wb').write(r.content)
+        open(destination, 'wb').write(r.content)
 
 def search(lines, pattern):
     """
