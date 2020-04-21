@@ -898,10 +898,23 @@ class Shell(object):
                 result = result + [line]
         return result
 
+
+    @classmethod
+    def find_lines_between(cls, lines, what_from, what_to):
+        """
+        returns all lines that come between the markers
+        :param lines:
+        :param what:
+        :return:
+        """
+        select = Shell.find_lines_from(lines, what_from)
+        select = Shell.find_lines_to(lines, what_to)
+
+
     @classmethod
     def find_lines_to(cls, lines, what):
         """
-        returns all lines that come after a particular line
+        returns all lines that come before a particular line
         :param lines:
         :param what:
         :return:
