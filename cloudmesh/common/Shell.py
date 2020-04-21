@@ -883,6 +883,39 @@ class Shell(object):
         return result
 
     @classmethod
+    def find_lines_from(cls, lines, what):
+        """
+        returns all lines that come after a particular line
+        :param lines:
+        :param what:
+        :return:
+        """
+        result = []
+        found = False
+        for line in lines:
+            found = found or what in line
+            if found:
+                result = result + [line]
+        return result
+
+    @classmethod
+    def find_lines_to(cls, lines, what):
+        """
+        returns all lines that come after a particular line
+        :param lines:
+        :param what:
+        :return:
+        """
+        result = []
+        found = True
+        for line in lines:
+            if what in line:
+                return result
+            else:
+                result = result + [line]
+        return result
+
+    @classmethod
     def terminal_type(cls):
         """
         returns  darwin, cygwin, cmd, or linux
