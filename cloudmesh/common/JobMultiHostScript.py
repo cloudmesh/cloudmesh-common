@@ -35,17 +35,16 @@ class JobMultiHostScript:
     def run(self, beginLine=None, endLine=None):
         # Prepare script
         self.script = textwrap.dedent(str(self.script))
-        #self.script = self.script.format(**kwargs)
         lines = self.script.splitlines()
 
+        # Truncate lines if begin and/or line parameters are set
         if beginLine is not None and endLine is not None:
             lines = Shell.find_lines_between(lines, beginLine, endLine)
         elif beginLine is not None and endLine is None:
             lines = Shell.find_lines_from(lines, beginLine)
-        elif beingLine is None and endLine is not None:
+        elif beginLine is None and endLine is not None:
             lines = Shell.find_lines_to(lines, endLine)
 
-        print(lines)
         # Loop over each line
         for line in lines:
             stripped = line.strip()
@@ -55,12 +54,12 @@ class JobMultiHostScript:
             else:
                 # Create jobSet per line
                 job = JobSet(self.name, executor=self.executor)
-                tag = counter
                 if "# tag:" in line:
                     line, tag = line.split("# tag:", 1)
                     tag = tag.strip()
                     line = line.strip()
 
+                # Execute jobSet for each host in parallel
                 for host in self.hosts:
                     job.add({"name": host, "host": host, "command": line});
                 job.run(parallel=len(self.hosts))
@@ -76,11 +75,40 @@ class JobMultiHostScript:
     # CMS Function
     def cms(self, arguments):
         # Prepare parameters
-        if script is None:
-            Console.error("The script is not defined, found None as content")
-            return
+        script = None
+        if arguments.script:
+            script = arguments.script
 
-        #TODO rest of arguments
+        hosts = None
+        if arguments.hosts:
+            hosts = arguments.hosts
+
+        name = "script"
+        if arguments.name:
+            name = name
+
+        executor = JobSet.ssh
+        if arguments.executor:
+            executor = arguments.executor
+
+        beginLine = None
+        if arguments.begin:
+            beginLine = arguments.begin
+
+        endLine = None
+        if arguments.end:
+            endLine = arguments.end
+
+        # Execute
+        if script is not None and hosts is not None:
+            job = JobMultiHostScript(name, script, hosts, executor)
+            job.run(beginLine, endLine)
+        else:
+            if hosts is None:
+                Console.error("The hosts are not defined, found None as content")
+            if script is None:
+                Console.error("The script is not defined, found None as content")
+            return
 
 if __name__ == '__main__':
     script = """
