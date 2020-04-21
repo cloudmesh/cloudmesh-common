@@ -47,7 +47,8 @@ tests = " * " + "\n * ".join(links)
 if repo == "cloudmesh-installer":
     manual = Shell.run("cloudmesh-installer --help")
 else:
-    manual = Shell.run("cms help {command}")
+    manual = Shell.run(f"cms help {command}")
+
 man = []
 start = False
 for line in manual.splitlines():
