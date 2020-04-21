@@ -908,8 +908,8 @@ class Shell(object):
         :return:
         """
         select = Shell.find_lines_from(lines, what_from)
-        select = Shell.find_lines_to(lines, what_to)
-
+        select = Shell.find_lines_to(select, what_to)
+        return select
 
     @classmethod
     def find_lines_to(cls, lines, what):
