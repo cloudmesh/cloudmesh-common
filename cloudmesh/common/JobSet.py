@@ -127,10 +127,14 @@ class JobSet:
             if local:
                 command = f"{spec.command} "
             else:
-                command = f"{ssh} {spec.command}"
+                command = f"{ssh} \'{spec.command}\'"
             # print ("RUN check_output", command)
 
-            result = subprocess.check_output(command, shell=True)
+            try:
+                result = subprocess.check_output(command, shell=True)
+            except subprocess.CalledProcessError as grepexc:
+                print("Error Code", grepexc.returncode, grepexc.output)
+                result = "Command could not run | Error Code: ", grepexc.returncode
             returncode = 0
 
         return dict({
