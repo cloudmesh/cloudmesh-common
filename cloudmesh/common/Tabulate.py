@@ -4,7 +4,7 @@ import textwrap
 import oyaml as yaml
 from cloudmesh.common.FlatDict import flatten
 from cloudmesh.common.util import convert_from_unicode
-from tabulate import tabulate
+from tabulate import tabulate as tabulate_printer
 
 
 class Printer:
@@ -161,9 +161,9 @@ class Printer:
             return (_results)
 
         if header:
-            return tabulate(_results, tablefmt=output, headers=header)
+            return tabulate_printer(_results, tablefmt=output, headers=header)
         else:
-            return tabulate(_results, tablefmt=output)
+            return tabulate_printer(_results, tablefmt=output)
 
     @staticmethod
     def _to_tabulate(d):
@@ -276,7 +276,7 @@ class Printer:
         if output == 'table':
             output = Printer.default()
 
-        return tabulate(x, tablefmt=output, headers=header)
+        return tabulate_printer(x, tablefmt=output, headers=header)
 
     @classmethod
     def csv(cls, d,
