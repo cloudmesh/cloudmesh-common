@@ -134,7 +134,8 @@ class JobSet:
                 result = subprocess.check_output(command, shell=True)
             except subprocess.CalledProcessError as grepexc:
                 print("Error Code", grepexc.returncode, grepexc.output)
-                result = "Command could not run | Error Code: ", grepexc.returncode
+                result = f"Command could not run | Error Code: {grepexc.returncode}"
+                result = result.encode('UTF-8')
             returncode = 0
 
         return dict({

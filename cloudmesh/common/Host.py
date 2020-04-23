@@ -8,7 +8,7 @@ from cloudmesh.common.DateTime import DateTime
 from cloudmesh.common.parameter import Parameter
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.util import readfile
-
+from cloudmesh.common.JobSet import JobSet
 
 class Host(object):
 
@@ -225,19 +225,30 @@ class Host(object):
 
         key = path_expand(key)
 
-        command = ['scp',
-                   "-o", "StrictHostKeyChecking=no",
-                   "-o", "UserKnownHostsFile=/dev/null",
-                   '-i', key,
-                   source,
-                   "{host}:{destination}"]
+        # Copy over your file to temporary destination on each host
+        jobSet = JobSet("key_scatter_tmp_file", executor=JobSet.execute)
+        master = os.uname()[1]
+        tmp_destination = "~/scattered_keys"
+        for host in hosts:
+            command = f"scp {source} {username}@{host}:{tmp_destination}"
+            jobSet.add({"name": host, "host": master, "command": command})
+        jobSet.run(parallel=len(hosts))
+        jobSet.Print()
 
-        result = Host.run(hosts=hosts,
-                          command=command,
-                          destination=destination,
-                          shell=False)
+        # Overwrite authorized_keys file with your new file
+        jobSet = JobSet("key_scatter_overwrite", executor=JobSet.ssh)
+        command = f"sudo cp {tmp_destination} {destination}; rm -f {tmp_destination}"
+        for host in hosts:
+            jobSet.add({"name": host, "host": host, "command": command})
+        jobSet.run(parallel=len(hosts))
+        jobSet.Print()
 
-        return result
+        #result = Host.run(hosts=hosts,
+        #                  command=command,
+        #                  destination=destination,
+        #                  shell=False)
+
+        #return jobSet.array()
 
     @staticmethod
     def check(hosts=None,
@@ -351,18 +362,25 @@ class Host(object):
         hosts = Parameter.expand(hosts)
 
         command = f'ssh-keygen -q -N "" -f {filename} <<< y'
-        result_keys = Host.ssh(hosts=hosts,
-                               command=command,
-                               username=username,
-                               dryrun=dryrun,
-                               processors=processors,
-                               executor=os.system)
-        result_keys = Host.ssh(hosts=hosts,
-                               processors=processors,
-                               command='cat .ssh/id_rsa.pub',
-                               username=username)
 
-        return result_keys
+        jobSet = JobSet("ssh_keygen", executor=JobSet.ssh)
+        for host in hosts:
+            jobSet.add({"name": host, "host": host, "command": command})
+        jobSet.run(parallel=len(hosts))
+
+        #result_keys = Host.ssh(hosts=hosts,
+        #                       command=command,
+        #                       username=username,
+        #                       dryrun=dryrun,
+        #                       processors=processors,
+        #                       executor=os.system)
+        #result_keys = Host.ssh(hosts=hosts,
+        #                       processors=processors,
+        #                       command='cat .ssh/id_rsa.pub',
+        #                       username=username)
+
+        jobSet.Print()
+        #return jobSet.array()
 
     @staticmethod
     def gather_keys(
@@ -384,14 +402,30 @@ class Host(object):
         """
         names = Parameter.expand(hosts)
 
-        results_key = Host.ssh(hosts=names,
-                               command='cat .ssh/id_rsa.pub',
-                               username=username,
-                               verbose=False)
+        jobSet = JobSet("ssh_keygen", executor=JobSet.ssh)
+        command = "cat .ssh/id_rsa.pub"
+
+        for host in names:
+            jobSet.add({"name": host, "host": host, "command": command})
+        jobSet.run(parallel=len(hosts))
+
+        results_key = []
+        #jobSet.Print()
+        for key in jobSet.array():
+            stdout = key['stdout'].decode('UTF-8')
+            if "Command could not run" not in stdout:
+                results_key.append(stdout)
+
+        #results_key = Host.ssh(hosts=names,
+        #                       command='cat .ssh/id_rsa.pub',
+        #                       username=username,
+        #                       verbose=False)
+
         #results_authorized = Host.ssh(hosts=names,
         #                              command='cat .ssh/id_rsa.pub',
         #                              username=username,
         #                              verbose=False)
+
         filename = path_expand(filename)
         localkey = {
             'host': "localhost",
@@ -409,7 +443,7 @@ class Host(object):
 
         # geting the output and also removing duplicates
         output = [localkey['stdout']] + \
-                 list(set([element["stdout"] for element in results_key]))
+                 results_key
 
         output = '\n'.join(output) + "\n"
 
