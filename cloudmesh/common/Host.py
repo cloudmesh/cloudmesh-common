@@ -226,17 +226,17 @@ class Host(object):
         key = path_expand(key)
 
         # Copy over your file to temporary destination on each host
-        jobSet = JobSet("key_scatter_tmp_file", executor=JobSet.execute)
+        jobSet = JobSet("put_tmp_file", executor=JobSet.execute)
         master = os.uname()[1]
-        tmp_destination = "~/scattered_keys"
+        tmp_destination = "~/tmp_put_file"
         for host in hosts:
             command = f"scp {source} {username}@{host}:{tmp_destination}"
             jobSet.add({"name": host, "host": master, "command": command})
         jobSet.run(parallel=len(hosts))
         jobSet.Print()
 
-        # Overwrite authorized_keys file with your new file
-        jobSet = JobSet("key_scatter_overwrite", executor=JobSet.ssh)
+        # Overwrite desintation file with your tempoary file
+        jobSet = JobSet("put_overwrite", executor=JobSet.ssh)
         command = f"sudo cp {tmp_destination} {destination}; rm -f {tmp_destination}"
         for host in hosts:
             jobSet.add({"name": host, "host": host, "command": command})
