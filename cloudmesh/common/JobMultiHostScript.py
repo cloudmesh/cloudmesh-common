@@ -6,6 +6,7 @@ from cloudmesh.common.Tabulate import Printer
 from pprint import pprint
 from cloudmesh.common.console import Console
 from cloudmesh.common.parameter import Parameter
+from cloudmesh.common.Shell import Shell
 
 class JobMultiHostScript:
     '''
@@ -25,29 +26,24 @@ class JobMultiHostScript:
         result = JobMultiHostScript.execute(script, "script_name", hosts)
     '''
 
-    def __init__(self, name):
+    def __init__(self, name, script, hosts, executor):
         self.name = name
+        self.script = script
+        self.hosts = hosts
+        self.executor = executor
 
-    def reset(self, name):
-        self.name = name
-
-    def run(self, script=None, hosts=None, executor=JobSet.ssh,
-            **kwargs):
-        # Prepare parameters
-        if script is None:
-            Console.error("The script is not defined, found None as content")
-            return
-
-        if kwargs:
-            parameters = dotdict(**kwargs)
-        else:
-            parameters = dotdict({})
-        #parameters.host = host
-
+    def run(self, beginLine=None, endLine=None):
         # Prepare script
-        self.script = textwrap.dedent(str(script))
-        self.script = self.script.format(**kwargs)
+        self.script = textwrap.dedent(str(self.script))
         lines = self.script.splitlines()
+
+        # Truncate lines if begin and/or line parameters are set
+        if beginLine is not None and endLine is not None:
+            lines = Shell.find_lines_between(lines, beginLine, endLine)
+        elif beginLine is not None and endLine is None:
+            lines = Shell.find_lines_from(lines, beginLine)
+        elif beginLine is None and endLine is not None:
+            lines = Shell.find_lines_to(lines, endLine)
 
         # Loop over each line
         for line in lines:
@@ -57,44 +53,74 @@ class JobMultiHostScript:
                 pass
             else:
                 # Create jobSet per line
-                job = JobSet(line, executor=executor)
-                tag = counter
+                job = JobSet(self.name, executor=self.executor)
                 if "# tag:" in line:
                     line, tag = line.split("# tag:", 1)
                     tag = tag.strip()
                     line = line.strip()
 
-                for host in hosts:
+                # Execute jobSet for each host in parallel
+                for host in self.hosts:
                     job.add({"name": host, "host": host, "command": line});
-                job.run(parallel=len(hosts))
+                job.run(parallel=len(self.hosts))
                 job.Print()
 
 
     @staticmethod
     def execute(script, name="script", hosts=None, executor=JobSet.ssh,
-                **kwargs):
-        job = JobMultiHostScript(name)
-        if hosts is not None:
-            job.run(script=script, name=name, hosts=hosts,
-                                   executor=executor, **kwargs)
+                beginLine=None, endLine=None):
+        job = JobMultiHostScript(name, script, hosts, executor)
+        job.run(beginLine, endLine)
 
-    def __len__(self):
-        return len(self.job)
+    # CMS Function
+    def cms(self, arguments):
+        # Prepare parameters
+        script = None
+        if arguments.script:
+            script = arguments.script
 
-    def __repr__(self):
-        return str(self.job)
+        hosts = None
+        if arguments.hosts:
+            hosts = arguments.hosts
 
-    def __str__(self):
-        return str(self.job)
+        name = "script"
+        if arguments.name:
+            name = name
 
+        executor = JobSet.ssh
+        if arguments.executor:
+            executor = arguments.executor
+
+        beginLine = None
+        if arguments.begin:
+            beginLine = arguments.begin
+
+        endLine = None
+        if arguments.end:
+            endLine = arguments.end
+
+        # Execute
+        if script is not None and hosts is not None:
+            job = JobMultiHostScript(name, script, hosts, executor)
+            job.run(beginLine, endLine)
+        else:
+            if hosts is None:
+                Console.error("The hosts are not defined, found None as content")
+            if script is None:
+                Console.error("The script is not defined, found None as content")
+            return
 
 if __name__ == '__main__':
     script = """
     # This is a comment
+
+    # Task: pwd
     pwd     # tag: pwd
+
+    # Task: uname
     uname -a
     """;
 
     hosts = Parameter.expand("purple[01-02]")
-    print(hosts)
-    result = JobMultiHostScript.execute(script, "script_name", hosts)
+    result = JobMultiHostScript.execute(script, "script_name", hosts,
+                                        beginLine="# Task: pwd", endLine="# Task: uname")
