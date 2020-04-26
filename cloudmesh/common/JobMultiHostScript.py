@@ -1,5 +1,6 @@
 from cloudmesh.common.JobSet import JobSet
 import os
+import sys
 import textwrap
 from cloudmesh.common.dotdict import dotdict
 from cloudmesh.common.Tabulate import Printer
@@ -110,17 +111,40 @@ class JobMultiHostScript:
                 Console.error("The script is not defined, found None as content")
             return
 
+def main():
+    # EXAMPLE FOR TERMINAL - python JobMultiHostScript.py [SCRIPT-FILE] [HOSTS]
+    argumentCounter = 0
+    for arg in sys.argv[1:]:
+        # Script file
+        if argumentCounter == 0:
+            scriptFile = arg
+        # Get hosts
+        else:
+            hosts = arg
+        argumentCounter = argumentCounter + 1
+
+    with open(scriptFile) as f:
+        script = f.readlines()
+
+    script = ''.join(script)
+
+    hosts = Parameter.expand(hosts)
+    result = JobMultiHostScript.execute(script, "terminal_script", hosts)
+
 if __name__ == '__main__':
-    script = """
+    main()
+
+    """script =
     # This is a comment
 
     # Task: pwd
     pwd     # tag: pwd
 
-    # Task: uname
+    # Task:  uname
     uname -a
-    """;
+    "";
 
     hosts = Parameter.expand("purple[01-02]")
     result = JobMultiHostScript.execute(script, "script_name", hosts,
                                         beginLine="# Task: pwd", endLine="# Task: uname")
+    """
