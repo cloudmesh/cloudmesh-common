@@ -411,13 +411,14 @@ class Shell(object):
     @classmethod
     def terminal(cls, command='pwd'):
         NotImplementedInWindows()
+        print (platform)
         if platform == 'darwin':
             os.system(
                 "osascript -e 'tell application \"Terminal\" to do script \"{command}\"'".format(
                     **locals())
             )
-        elif platform == "linus":  # for ubuntu running gnome
-            os.system('gnome-terminal --command="{command}"'.format(**locals()))
+        elif platform == "linux":  # for ubuntu running gnome
+            os.system(f'gnome-terminal -e \'bash -c "{command}; bash"\'')
         else:
             raise NotImplementedError
 
