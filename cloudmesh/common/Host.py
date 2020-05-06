@@ -167,7 +167,8 @@ class Host(object):
             processors=3,
             dryrun=False,  # notused
             executor=None,
-            verbose=False):  # not used
+            verbose=False, # not used
+            **kwargs):
         #
         # BUG: this code has a bug and does not deal with different
         #  usernames on the host to be checked.
