@@ -143,7 +143,6 @@ class Host(object):
         """
 
         hosts = Parameter.expand(hosts)
-
         args = [{'command': [c.format(host=host, **kwargs) for c in command],
                  'shell': shell,
                  'host': host,
@@ -151,10 +150,10 @@ class Host(object):
                  } for host in hosts]
 
         if "executor" not in args:
-            executor = Host._run
+            _executor = Host._run
 
         with Pool(processors) as p:
-            res = p.map(executor, args)
+            res = p.map(_executor, args)
             p.close()
             p.join()
         return res
@@ -193,12 +192,12 @@ class Host(object):
                        '-i', f'{key}',
                        '{host}',
                        f'{command}']
-
         result = Host.run(hosts=hosts,
                           command=ssh_command,
                           execute=command,
                           shell=False,
-                          executor=executor)
+                          executor=executor,
+                          **kwargs)
 
         return result
 
