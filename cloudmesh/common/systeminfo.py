@@ -10,9 +10,9 @@ import humanize
 
 def sys_user():
     if sys.platform == "win32":
-        return os.environ("USERNAME")
+        return os.environ["USERNAME"]
     else:
-        return os.environ("USER")
+        return os.environ["USER"]
 
 def systeminfo():
     uname = platform.uname()
