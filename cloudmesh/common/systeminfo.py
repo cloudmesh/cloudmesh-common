@@ -8,6 +8,11 @@ import pip
 import psutil
 import humanize
 
+def sys_user():
+    if sys.platform == "win32":
+        return osenviron("USERNAME")
+    else:
+        return osenviron("USER")
 
 def systeminfo():
     uname = platform.uname()
@@ -32,7 +37,7 @@ def systeminfo():
         'python': sys.version,
         'python.version': sys.version.split(" ", 1)[0],
         'python.pip': pip.__version__,
-        'user': os.environ['USER'],
+        'user': sys_user(),
         'mem.percent': str(mem.percent) + " %",
     })
     for attribute in ["total",
