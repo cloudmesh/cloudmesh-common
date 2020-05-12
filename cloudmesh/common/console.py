@@ -91,6 +91,18 @@ class Console(object):
 
     theme = theme_color
 
+    # noinspection PyPep8Naming
+    def red(msg):
+        print(Fore.RED + msg + Style.RESET_ALL)
+
+    # noinspection PyPep8Naming
+    def green(msg):
+        print(Fore.GREEN + msg + Style.RESET_ALL)
+
+    # noinspection PyPep8Naming
+    def blue(msg):
+        print(Fore.BLLUE + msg + Style.RESET_ALL)
+
     @staticmethod
     def init():
         """
