@@ -45,7 +45,7 @@ clean:
 	rm -rf docs/build
 	rm -rf build
 	rm -rf dist
-	find . -type d -name __pycache__ -delete
+	find . -name '__pycache__' -type d | xargs rm -fr
 	find . -name '*.pyc' -delete
 	rm -rf .tox
 	rm -f *.whl
@@ -63,7 +63,7 @@ dist:
 	python setup.py sdist bdist_wheel
 	twine check dist/*
 
-patch: clean
+patch: clean twine
 	$(call banner, "patch")
 	bump2version --allow-dirty patch
 	python setup.py sdist bdist_wheel
