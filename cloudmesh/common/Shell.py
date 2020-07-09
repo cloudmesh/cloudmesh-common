@@ -287,10 +287,6 @@ class Shell(object):
                 return r
 
     @classmethod
-    def title(name):
-        os.system(f"echo -n -e "\033]0;{name}\007"")
-
-    @classmethod
     def execute(cls,
                 cmd,
                 arguments="",
@@ -411,13 +407,20 @@ class Shell(object):
         else:
             os.system("python -m webbrowser -t {file}".format(**data))
 
+
+    @staticmethod
+    def terminal_title(name):
+        return f'echo -n -e \"\033]0;{name}\007\"'
+
     @classmethod
-    def terminal(cls, command='pwd')
+    def terminal(cls, command='pwd', title=None):
+        # title nameing not implemented
         print (platform)
         if platform == 'darwin':
+            label = Shell.terminal_title(title)
+
             os.system(
-                "osascript -e 'tell application \"Terminal\" to do script \"{command}\"'".format(
-                    **locals())
+                f"osascript -e 'tell application \"Terminal\" to do script \"{command}\"'"
             )
         elif platform == "linux":  # for ubuntu running gnome
             os.system(f'gnome-terminal -e \'bash -c "{command}; bash"\'')
