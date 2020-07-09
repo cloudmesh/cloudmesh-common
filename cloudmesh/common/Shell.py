@@ -48,7 +48,7 @@ from cloudmesh.common.util import path_expand, readfile
 
 def NotImplementedInWindows():
     if sys.platform == "win32":
-        Console.error("The method {f.__name__} is not implemented in Windows,"
+        Console.error(f"The method {__name__} is not implemented in Windows,"
                       " please implement, and/or submit an issue.")
         sys.exit()
 
@@ -411,10 +411,8 @@ class Shell(object):
         else:
             os.system("python -m webbrowser -t {file}".format(**data))
 
-    # @NotImplementedInWindows
     @classmethod
-    def terminal(cls, command='pwd', title=None):
-        NotImplementedInWindows()
+    def terminal(cls, command='pwd')
         print (platform)
         if platform == 'darwin':
             os.system(
@@ -423,6 +421,14 @@ class Shell(object):
             )
         elif platform == "linux":  # for ubuntu running gnome
             os.system(f'gnome-terminal -e \'bash -c "{command}; bash"\'')
+        elif platform == "win32":
+            if Path.is_dir(Path(r"C:\Program Files\Git\bin")):
+                subprocess.check_call([r"C:\Program Files\Git\bin\sh.exe",
+                                       "-c", f"{command}"])
+            else:
+                Console.error("Git bash is not found, please make sure it "
+                              "is installed.")
+                raise NotImplementedError
         else:
             raise NotImplementedError
 
