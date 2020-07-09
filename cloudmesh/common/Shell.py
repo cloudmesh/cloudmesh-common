@@ -287,6 +287,10 @@ class Shell(object):
                 return r
 
     @classmethod
+    def title(name):
+        os.system(f"echo -n -e "\033]0;{name}\007"")
+
+    @classmethod
     def execute(cls,
                 cmd,
                 arguments="",
@@ -409,7 +413,7 @@ class Shell(object):
 
     # @NotImplementedInWindows
     @classmethod
-    def terminal(cls, command='pwd'):
+    def terminal(cls, command='pwd', title=None):
         NotImplementedInWindows()
         print (platform)
         if platform == 'darwin':
