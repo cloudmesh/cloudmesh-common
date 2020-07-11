@@ -186,3 +186,5 @@ Especially useful are
 ## Changes
 
 * added support for terminals with dark background
+
+.
