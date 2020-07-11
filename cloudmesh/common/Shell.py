@@ -425,8 +425,8 @@ class Shell(object):
         elif platform == "linux":  # for ubuntu running gnome
             os.system(f'gnome-terminal -e \'bash -c "{command}; bash"\'')
         elif platform == "win32":
-            if Path.is_dir(Path(r"C:\Program Files\Git\bin")):
-                subprocess.check_call([r"C:\Program Files\Git\bin\sh.exe",
+            if Path.is_dir(Path(r"C:\Program Files\Git")):
+                subprocess.Popen([r"C:\Program Files\Git\git-bash.exe",
                                        "-c", f"{command}"])
             else:
                 Console.error("Git bash is not found, please make sure it "
