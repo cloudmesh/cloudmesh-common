@@ -423,7 +423,9 @@ class Shell(object):
                 f"osascript -e 'tell application \"Terminal\" to do script \"{command}\"'"
             )
         elif platform == "linux":  # for ubuntu running gnome
-            os.system(f'gnome-terminal -e \'bash -c "{command}; bash"\'')
+            os.system(f"gnome-terminal -e \"bash -c \'{command}; exec $SHELL\'\"")
+
+
         elif platform == "win32":
             if Path.is_dir(Path(r"C:\Program Files\Git")):
                 subprocess.Popen([r"C:\Program Files\Git\git-bash.exe",
