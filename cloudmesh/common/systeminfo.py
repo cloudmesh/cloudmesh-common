@@ -9,7 +9,9 @@ import psutil
 import humanize
 
 def sys_user():
-    if sys.platform == "win32":
+    if "COLAB_GPU" in  os.environ:
+        return "collab"
+    elif sys.platform == "win32":
         return os.environ["USERNAME"]
     else:
         return os.environ["USER"]
