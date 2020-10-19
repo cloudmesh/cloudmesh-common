@@ -39,8 +39,7 @@ clean:
 	rm -rf docs/build
 	rm -rf build
 	rm -rf dist
-	find . -name '__pycache__' -type d | xargs rm -fr
-	find . -name '*.pyc' -delete
+	find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf
 	rm -rf .tox
 	rm -f *.whl
 
