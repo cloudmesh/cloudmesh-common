@@ -25,6 +25,8 @@ class StopWatch(object):
     timer_elapsed = {}
     # records a status
     timer_status = {}
+    # records a dt
+    timer_sum = {}
 
     @classmethod
     def keys(cls):
@@ -53,9 +55,14 @@ class StopWatch(object):
 
         :param name: the name of the timer
         :type name: string
+
+        :param cumulate: add up all times with the same name
+        :type cumulate: bool
         """
         if cls.debug:
             print("Timer", name, "started ...")
+        if name not in cls.timer_sum:
+            cls.timer_sum[name] = 0.0
         cls.timer_start[name] = time.time()
         cls.timer_end[name] = None
         cls.timer_status[name] = None
@@ -67,15 +74,22 @@ class StopWatch(object):
 
         :param name: the name of the timer
         :type name: string
+
+        :param cumulate: add up all times with the same name
+        :type cumulate: bool
         """
         cls.timer_end[name] = time.time()
+        #if cumulate:
+        #    cls.timer_end[name] = cls.timer_end[name] + cls.timer_last[name]
+        cls.timer_sum[name] = cls.timer_sum[name]  +  cls.timer_end[name] - cls.timer_start[name]
+
         if cls.debug:
             print("Timer", name, "stopped ...")
 
     @classmethod
     def get_status(cls, name):
         """
-        stops the timer with a given name.
+        sets the status of the timer with a given name.
 
         :param name: the name of the timer
         :type name: string
@@ -83,7 +97,7 @@ class StopWatch(object):
         return cls.timer_status[name]
 
     @classmethod
-    def get(cls, name, digits=None):
+    def get(cls, name, digits=4):
         """
         returns the time of the timer.
 
@@ -105,12 +119,36 @@ class StopWatch(object):
             return "undefined"
 
     @classmethod
+    def sum(cls, name, digits=4):
+        """
+        returns the time of the timer.
+
+        :param name: the name of the timer
+        :type name: string
+        :rtype: the elapsed time
+        """
+        if name in cls.timer_end:
+            try:
+                diff = cls.timer_sum[name]
+                if round is not None:
+                    return round(diff, digits)
+                else:
+                    return diff
+            except:
+                return None
+        else:
+            return "undefined"
+
+    @classmethod
     def clear(cls):
         """
         clear start and end timer_start
         """
         cls.timer_start.clear()
         cls.timer_end.clear()
+        cls.timer_sum.clear()
+        cls.timer_status.clear()
+        cls.timer_elapsed.clear()
 
     @classmethod
     def print(cls, *args):
@@ -144,7 +182,8 @@ class StopWatch(object):
                   sysinfo=True,
                   csv=True,
                   prefix="# csv",
-                  tag=None):
+                  tag=None,
+                  sum=True):
         """
         prints out all timers in a convenient benchmark table
         :return:
@@ -181,6 +220,7 @@ class StopWatch(object):
                                            time.gmtime(
                                                StopWatch.timer_start[timer])),
                     'time': StopWatch.get(timer, digits=3),
+                    'sum': StopWatch.sum(timer, digits=3),
                     'status': StopWatch.get_status(timer),
                     'timer': timer,
                     'tag': tag or ''
@@ -211,6 +251,7 @@ class StopWatch(object):
                 "timer",
                 "status",
                 "time",
+                "sum",
                 "start",
                 "tag",
                 "uname.node",
@@ -223,6 +264,7 @@ class StopWatch(object):
                 "Name",
                 "Status",
                 "Time",
+                "Sum",
                 "Start",
                 "tag",
                 "Node",

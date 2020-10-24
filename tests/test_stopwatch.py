@@ -30,6 +30,27 @@ class Test_Printer:
         StopWatch.stop("stopwatch sleep 2")
         StopWatch.status("stopwatch sleep 2", True)
 
+    def test_stopwatch_loop(self):
+        HEADING()
+        cumulate = False
+        dt = 0.1
+        n = 10
+        for i in range(0,n):
+            StopWatch.start("stopwatch loop")
+            time.sleep(dt)
+            StopWatch.stop("stopwatch loop")
+            StopWatch.status("stopwatch loop", True)
+            t = StopWatch.get("stopwatch loop")
+            print (t)
+            assert t >= dt
+
+        t = StopWatch.sum("stopwatch loop", digits=4)
+
+        print (t)
+
+        assert t >= n * dt
+
+
     def test_print(self):
-        StopWatch.benchmark(sysinfo=True, csv=True)
+        StopWatch.benchmark(sysinfo=True, csv=True, sum=True)
         assert True
