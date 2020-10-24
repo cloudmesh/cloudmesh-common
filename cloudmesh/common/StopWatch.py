@@ -55,9 +55,6 @@ class StopWatch(object):
 
         :param name: the name of the timer
         :type name: string
-
-        :param cumulate: add up all times with the same name
-        :type cumulate: bool
         """
         if cls.debug:
             print("Timer", name, "started ...")
@@ -74,9 +71,6 @@ class StopWatch(object):
 
         :param name: the name of the timer
         :type name: string
-
-        :param cumulate: add up all times with the same name
-        :type cumulate: bool
         """
         cls.timer_end[name] = time.time()
         #if cumulate:
@@ -121,7 +115,7 @@ class StopWatch(object):
     @classmethod
     def sum(cls, name, digits=4):
         """
-        returns the time of the timer.
+        returns the sum of the timer if used multiple times
 
         :param name: the name of the timer
         :type name: string
