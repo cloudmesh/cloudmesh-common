@@ -5,3 +5,7 @@ include cloudmesh/__init__.py
 
 exclude .gitignore
 exclude .gitreview
+include VERSION
+include *.md
+include LICENSE
+include requirements-dev.txt
