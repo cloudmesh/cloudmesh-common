@@ -4,8 +4,6 @@
 # pytest -v  tests/test_configdict.py
 ###############################################################
 
-from __future__ import print_function
-
 import os
 
 from cloudmesh.common.ConfigDict import ConfigDict
