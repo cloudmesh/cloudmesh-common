@@ -15,7 +15,7 @@ command = sys.argv[2]
 warning = f"""
 > **Note:** The README.md page is outomatically generated, do not edit it.
 > To modify  change the content in
-> <https://github.com/cloudmesh/{repo}/blob/master/README-source.md>
+> <https://github.com/cloudmesh/{repo}/blob/main/README-source.md>
 > Curley brackets must use two in README-source.md
 """
 #
@@ -25,10 +25,10 @@ warning = f"""
 icons = f"""
 [![image](https://img.shields.io/pypi/v/{repo}.svg)](https://pypi.org/project/{repo}/)
 [![Python](https://img.shields.io/pypi/pyversions/{repo}.svg)](https://pypi.python.org/pypi/{repo})
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/cloudmesh/{repo}/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/cloudmesh/{repo}/blob/main/LICENSE)
 [![Format](https://img.shields.io/pypi/format/{repo}.svg)](https://pypi.python.org/pypi/{repo})
 [![Status](https://img.shields.io/pypi/status/{repo}.svg)](https://pypi.python.org/pypi/{repo})
-[![Travis](https://travis-ci.com/cloudmesh/{repo}.svg?branch=master)](https://travis-ci.com/cloudmesh/{repo})
+[![Travis](https://travis-ci.com/cloudmesh/{repo}.svg?branch=main)](https://travis-ci.com/cloudmesh/{repo})
 """
 
 #

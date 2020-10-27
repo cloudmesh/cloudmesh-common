@@ -3,10 +3,10 @@
 
 [![image](https://img.shields.io/pypi/v/cloudmesh-common.svg)](https://pypi.org/project/cloudmesh-common/)
 [![Python](https://img.shields.io/pypi/pyversions/cloudmesh-common.svg)](https://pypi.python.org/pypi/cloudmesh-common)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/cloudmesh/cloudmesh-common/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/cloudmesh/cloudmesh-common/blob/main/LICENSE)
 [![Format](https://img.shields.io/pypi/format/cloudmesh-common.svg)](https://pypi.python.org/pypi/cloudmesh-common)
 [![Status](https://img.shields.io/pypi/status/cloudmesh-common.svg)](https://pypi.python.org/pypi/cloudmesh-common)
-[![Travis](https://travis-ci.com/cloudmesh/cloudmesh-common.svg?branch=master)](https://travis-ci.com/cloudmesh/cloudmesh-common)
+[![Travis](https://travis-ci.com/cloudmesh/cloudmesh-common.svg?branch=main)](https://travis-ci.com/cloudmesh/cloudmesh-common)
 
 
 ## Installation and Documentation
@@ -31,7 +31,7 @@ functions to implement command line programs and shells.
 The console provides convenient way to print colored messages types in the
 terminal, such as errors, info, and regular messages
 
-* [cloudmesh.common.console](https://github.com/cloudmesh/cloudmesh-common/blob/master/cloudmesh/common/console.py)
+* [cloudmesh.common.console](https://github.com/cloudmesh/cloudmesh-common/blob/main/cloudmesh/common/console.py)
 
 ```python
 from cloudmesh.common.console import Console
@@ -48,7 +48,7 @@ convenient execution command that returns the results in a string.
 
 For more information we like you to inspect the source code:
 
-* [cloudmesh.common.Shell](https://github.com/cloudmesh/cloudmesh-common/blob/master/cloudmesh/common/Shell.py)
+* [cloudmesh.common.Shell](https://github.com/cloudmesh/cloudmesh-common/blob/main/cloudmesh/common/Shell.py)
 
 
 ```python
@@ -81,7 +81,7 @@ We have many such build in commands, please see the source
 A convenient way to print dictionaries and lists with repeated
 entries as tables, csv, json, yaml. The dictionaries can even be hierarchical.
 
-* [cloudmesh.common.Printer](https://github.com/cloudmesh/cloudmesh-common/blob/master/cloudmesh/common/Printer.py)
+* [cloudmesh.common.Printer](https://github.com/cloudmesh/cloudmesh-common/blob/main/cloudmesh/common/Printer.py)
 
 Let us assume we have 
 
@@ -123,7 +123,7 @@ the source code.
 ## StopWatch
 
 
-* [cloudmesh.common.StopWatch](https://github.com/cloudmesh/cloudmesh-common/blob/master/cloudmesh/common/StopWatch.py)
+* [cloudmesh.common.StopWatch](https://github.com/cloudmesh/cloudmesh-common/blob/main/cloudmesh/common/StopWatch.py)
 
 A convenient way on using named timers
 
@@ -150,7 +150,7 @@ Stopwatch.benchmark.print()
 ## dotdict
 
 
-* [cloudmesh.common.dotdict](https://github.com/cloudmesh/cloudmesh-common/blob/master/cloudmesh/common/dotdict.py)
+* [cloudmesh.common.dotdict](https://github.com/cloudmesh/cloudmesh-common/blob/main/cloudmesh/common/dotdict.py)
 
 One dimensional Dictionaries in dot format. 
 
@@ -166,7 +166,7 @@ print(d.name)
 
 ## ssh
 
-* [cloudmesh.common.ssh](https://github.com/cloudmesh/cloudmesh-common/blob/master/cloudmesh/common/ssh)
+* [cloudmesh.common.ssh](https://github.com/cloudmesh/cloudmesh-common/blob/main/cloudmesh/common/ssh)
 
   * managing ssh config files
   * managing authorized keys
@@ -176,7 +176,7 @@ print(d.name)
 Very useful functions are included in util
 
 
-* [cloudmesh.common.util](https://github.com/cloudmesh/cloudmesh-common/blob/master/cloudmesh/common/util.py)
+* [cloudmesh.common.util](https://github.com/cloudmesh/cloudmesh-common/blob/main/cloudmesh/common/util.py)
 
 Especially useful are
 
