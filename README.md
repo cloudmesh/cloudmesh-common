@@ -122,6 +122,48 @@ the source code.
 
 ## StopWatch
 
+See: https://colab.research.google.com/drive/1tG7IcP-XMQiNVxU05yazKQYciQ9GpMat#scrollTo=TZAjATZiQh4q&uniqifier=1 for an example
+
+### Using Cloudmesh StopWatch Inline
+
+```python
+from cloudmesh.common.StopWatch import StopWatch
+import time
+
+StopWatch.start("a")
+
+time.sleep(3)
+
+StopWatch.stop("a")
+
+StopWatch.status("a", True)
+
+StopWatch.benchmark()
+```
+
+### Using Cloudmesh Benchmark wrapped in Functions
+
+If it is not wrapped in functions, do not use it this way.
+
+``` python
+from cloudmesh.common.Benchmark import Benchmark
+import time
+  
+def b():
+  Benchmark.Start()
+  time.sleep(3)
+  Benchmark.Stop()
+
+def c():
+  Benchmark.Start()
+  time.sleep(1)
+  Benchmark.Stop()
+
+ b()
+ c()
+
+Benchmark.print()
+```
 
 * [cloudmesh.common.StopWatch](https://github.com/cloudmesh/cloudmesh-common/blob/main/cloudmesh/common/StopWatch.py)
 
