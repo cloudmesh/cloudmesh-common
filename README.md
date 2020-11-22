@@ -165,28 +165,8 @@ def c():
 Benchmark.print()
 ```
 
-* [cloudmesh.common.StopWatch](https://github.com/cloudmesh/cloudmesh-common/blob/main/cloudmesh/common/StopWatch.py)
+* See also: [cloudmesh.common.StopWatch](https://github.com/cloudmesh/cloudmesh-common/blob/main/cloudmesh/common/StopWatch.py)
 
-A convenient way on using named timers
-
-```python
-from cloudmesh.common.StopWatch import StopWatch
-import os
-
-watch = StopWatch()
-
-watch.start("test")
-os.sleep(1)
-watch.stop("test")
-
-print (watch["test"])
-```
-
-To print them, you can aslo use
-
-```python
-Stopwatch.benchmark.print()
-```
     
 
 ## dotdict
