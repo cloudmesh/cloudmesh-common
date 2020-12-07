@@ -18,6 +18,7 @@ from distutils.spawn import find_executable
 from pathlib import Path
 from pipes import quote
 from sys import platform
+import textwrap
 
 import psutil
 from cloudmesh.common.StopWatch import StopWatch
@@ -182,6 +183,19 @@ class Shell(object):
         'linux': {},
         'darwin': {}
     }
+
+
+    @staticmethod
+    def oneline(script):
+        """
+        converts a script to one line command.
+        THis is useful to run a single ssh command and pass a one line script.
+
+        :param script:
+        :return:
+        """
+        return " && ".join(textwrap.dedent(script).strip().splitlines())
+
 
     # TODO
     #
