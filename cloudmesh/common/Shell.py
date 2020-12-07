@@ -18,6 +18,7 @@ from distutils.spawn import find_executable
 from pathlib import Path
 from pipes import quote
 from sys import platform
+import textwrap
 
 import psutil
 from cloudmesh.common.StopWatch import StopWatch
@@ -373,6 +374,17 @@ class Shell(object):
         if result is not None:
             result = result.strip().decode()
         return result
+
+    @staticmethod
+    def oneline(script):
+        """
+        converts a script to one line command.
+        THis is useful to run a single ssh command and pass a one line script.
+
+        :param script:
+        :return:
+        """
+        return " && ".join(textwrap.online(script).strip().splitline())
 
     @staticmethod
     def rmdir(top, verbose=False):
