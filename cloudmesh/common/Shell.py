@@ -384,7 +384,7 @@ class Shell(object):
         :param script:
         :return:
         """
-        return " && ".join(textwrap.online(script).strip().splitline())
+        return " && ".join(textwrap.dedent(script).strip().splitlines())
 
     @staticmethod
     def rmdir(top, verbose=False):
