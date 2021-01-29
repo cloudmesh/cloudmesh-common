@@ -437,6 +437,36 @@ def writefd(filename, content, mode='w', flags = os.O_RDWR|os.O_CREAT, mask=0o60
         outfile.truncate()
         outfile.close()
 
+def sudo_readfile(filename, split=True, trim=False):
+    result = subprocess.getoutput(f"sudo cat {filename}")
+
+    # Trim trailing whitespace
+    # This is useful to prevent empty string entries when splitting by '\n'
+    if trim:
+        result = result.rstrip()
+
+    if split:
+        result = result.split('\n')
+
+    return result
+
+def sudo_writefile(filename, content, append=False):
+    os.system('mkdir -p ~/.cloudmesh/tmp')
+    tmp = "~/.cloudmesh/tmp/tmp.txt"
+
+    if append:
+        content = sudo_readfile(filename, split=False) + content
+
+    writefile(tmp, content)
+
+    result = subprocess.getstatusoutput(f"sudo cp {tmp} {filename}")
+
+    # If exit code is not 0
+    if result[0] != 0:
+        Console.warning(f"{filename} was not created correctly -> {result[1]}")
+
+    return result[1]
+
 # Reference: http://interactivepython.org/runestone/static/everyday/2013/01/3_password.html
 def generate_password(length=8, lower=True, upper=True, number=True):
     """
