@@ -438,10 +438,21 @@ def writefd(filename, content, mode='w', flags = os.O_RDWR|os.O_CREAT, mask=0o60
         outfile.close()
 
 def sudo_readfile(filename, split=True, trim=False):
+    """
+    Reads the content of the file as sudo and returns the result
+
+    @param filename: the filename
+    @type filename: str
+    @param split: uf true returns a list of lines
+    @type split: bool
+    @param trim: trim trailing whitespace. This is useful to
+                 prevent empty string entries when splitting by '\n'
+    @type trim: bool
+    @return: the content
+    @rtype: str or list
+    """
     result = subprocess.getoutput(f"sudo cat {filename}")
 
-    # Trim trailing whitespace
-    # This is useful to prevent empty string entries when splitting by '\n'
     if trim:
         result = result.rstrip()
 
@@ -451,6 +462,18 @@ def sudo_readfile(filename, split=True, trim=False):
     return result
 
 def sudo_writefile(filename, content, append=False):
+    """
+    Writes the content in the the given file.
+
+    @param filename: the filename
+    @type filename: str
+    @param content: the content
+    @type content: str
+    @param append: if true it append it at the end, otherwise the file will be overwritten
+    @type append: bool
+    @return: the output created by the write process
+    @rtype: int
+    """
     os.system('mkdir -p ~/.cloudmesh/tmp')
     tmp = "~/.cloudmesh/tmp/tmp.txt"
 
