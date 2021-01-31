@@ -204,6 +204,7 @@ class Shell(object):
     #
     # ls = cls.execute('cmd', args...)
 
+
     @staticmethod
     def run_timed(label, command, encoding=None, service=None):
         """
@@ -674,6 +675,26 @@ class Shell(object):
         NotImplementedInWindows()
         # TODO: use tasklisk, compare to linux
         return cls.execute('kill', args)
+
+    @classmethod
+    def mount(cls, *args):
+        """
+        mounts a given mountpoint to a file
+        :param args:
+        :return:
+        """
+        return cls.execute('mount', args)
+
+
+    @classmethod
+    def umount(cls, *args):
+        """
+        umounts a given mountpoint to a file
+        :param args:
+        :return:
+        """
+        return cls.execute('umount', args)
+
 
     @classmethod
     def nova(cls, *args):
