@@ -19,6 +19,7 @@ class JobScript:
 
     Static method::
 
+        from cloudmesh.common.JobSet import JobScript
         from cloudmesh.common.Tabulate import Printer
 
         result = JobScript.execute("""
