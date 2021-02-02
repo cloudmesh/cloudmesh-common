@@ -16,6 +16,16 @@ def sys_user():
     else:
         return os.environ["USER"]
 
+def get_platform():
+    if sys.platform =="darwin":
+        return "macos"
+    elif sys.platform == "win32":
+        return "windows"
+    elif sys.platform == "linux" and "raspberrypi" in platform.uname():
+        return "raspberry"
+    else:
+        return sys.platform
+
 def systeminfo():
     uname = platform.uname()
     mem = psutil.virtual_memory()
