@@ -204,7 +204,6 @@ class Shell(object):
     #
     # ls = cls.execute('cmd', args...)
 
-
     @staticmethod
     def run_timed(label, command, encoding=None, service=None):
         """
@@ -386,6 +385,11 @@ class Shell(object):
         :return:
         """
         return " && ".join(textwrap.dedent(script).strip().splitlines())
+
+    @staticmethod
+    def is_root():
+        username = subprocess.getoutput("whoami")
+        return username == "root"
 
     @staticmethod
     def rmdir(top, verbose=False):
