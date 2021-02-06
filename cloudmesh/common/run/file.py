@@ -1,4 +1,3 @@
-import subprocess
 import os
 
 from cloudmesh.common.util import readfile

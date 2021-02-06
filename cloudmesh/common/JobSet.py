@@ -1,20 +1,14 @@
 import os
 import subprocess
-import textwrap
+from collections import OrderedDict
 from multiprocessing import Pool
-from sys import platform
 from pprint import pprint
 
+from cloudmesh.common.Tabulate import Printer
 from cloudmesh.common.dotdict import dotdict
-from cloudmesh.common.DateTime import DateTime
 from cloudmesh.common.parameter import Parameter
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.util import readfile
-import threading
-from cloudmesh.common.debug import VERBOSE
-from collections import OrderedDict
-from cloudmesh.common.util import readfile
-from cloudmesh.common.Tabulate import Printer
 
 
 # TODO: pytest
@@ -237,7 +231,6 @@ if __name__ == '__main__':
             "returncode": 0,
             "status": "defined"
         })
-
 
     hostname = os.uname()[1]
 

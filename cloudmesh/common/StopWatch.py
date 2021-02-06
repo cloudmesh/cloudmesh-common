@@ -108,7 +108,7 @@ class StopWatch(object):
                 else:
                     cls.timer_elapsed[name] = diff
                 return cls.timer_elapsed[name]
-            except:
+            except:  # noqa: E722
                 return None
         else:
             return "undefined"
@@ -129,7 +129,7 @@ class StopWatch(object):
                     return round(diff, digits)
                 else:
                     return diff
-            except:
+            except:  # noqa: E722
                 return None
         else:
             return "undefined"
@@ -149,8 +149,8 @@ class StopWatch(object):
     def print(cls, *args):
         """
         prints a timer. The first argument is the label if it exists, the last is the timer
-        :param args: label, name 
-        :return: 
+        :param args: label, name
+        :return:
         """
         if cls.verbose:
             if len(args) == 2:
@@ -237,7 +237,7 @@ class StopWatch(object):
             for key in data_timers:
                 if key != 'benchmark_start_stop' and data_timers[key]['status'] is None:
                     data_timers[key]['status'] = "failed"
-                elif data_timers[key]['status'] is not None and data_timers[key]['status'] == True:
+                elif data_timers[key]['status'] is not None and data_timers[key]['status']:
                     data_timers[key]['status'] = "ok"
 
             order = [

@@ -133,12 +133,12 @@ if __name__ == '__main__':
     result = JobScript.execute("""
         # This is a comment
         
-        pwd                             # tag: pwd 
+        pwd                             # tag: pwd
         uname -a
     """)
-    print(Printer.write(result,
-                        order=["name", "command", "status", "stdout",
-                               "returncode"]))
+    print(Printer.write(
+        result,
+        order=["name", "command", "status", "stdout", "returncode"]))
 
     # Variables
     job = JobScript()
@@ -146,13 +146,12 @@ if __name__ == '__main__':
             script="""
                 # This is a comment
         
-                pwd                    # tag: pwd 
+                pwd                    # tag: pwd
                 uname -a
             """)
     print(Printer.write(
         job.array(),
-        order=["name", "command", "status", "stdout",
-               "returncode"]))
+        order=["name", "command", "status", "stdout", "returncode"]))
 
 #
 # Partial example output

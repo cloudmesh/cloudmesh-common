@@ -52,9 +52,9 @@ class AuthorizedKeys(object):
     def load(cls, path):
         """
         load the keys from a path
-        
+
         :param path: the filename (path) in which we find the keys
-        :return: 
+        :return:
         """
         auth = cls()
         with open(path) as fd:
@@ -69,7 +69,7 @@ class AuthorizedKeys(object):
         """
         add a public key.
         :param pubkey: the filename to the public key
-        :return: 
+        :return:
         """
         f = get_fingerprint_from_public_key(pubkey)
         if f not in self._keys:
@@ -80,8 +80,9 @@ class AuthorizedKeys(object):
         """
         Removes the public key
         TODO: this method is not implemented
+
         :param pubkey: the filename of the public key
-        :return: 
+        :return:
         """
         raise NotImplementedError()
 

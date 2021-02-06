@@ -47,7 +47,6 @@ def systeminfo():
         'uname.release': uname.release,
         'uname.version': uname.version,
         'uname.machine': uname.machine,
-        'uname.system': uname.system,
         'uname.processor': uname.processor,
         'sys.platform': sys.platform,
         'python': sys.version,

@@ -13,15 +13,12 @@ import sys
 import psutil
 import requests
 from pathlib import Path
+from cloudmesh.common.console import Console
 
 try:
     collectionsAbc = collections.abc
 except AttributeError:
     collectionsAbc = collections
-
-from pathlib import Path
-
-from cloudmesh.common.console import Console
 
 
 @contextmanager
@@ -99,10 +96,10 @@ def search(lines, pattern):
     """
     return all lines that match the pattern
     #TODO: we need an example
-    
-    :param lines: 
-    :param pattern: 
-    :return: 
+
+    :param lines:
+    :param pattern:
+    :return:
     """
     p = pattern.replace("*", ".*")
     test = re.compile(p)
@@ -190,7 +187,7 @@ def convert_from_unicode(data):
     """
     converts unicode data to a string
     :param data: the data to convert
-    :return: 
+    :return:
     """
     # if isinstance(data, basestring):
 
@@ -347,10 +344,10 @@ def auto_create_version(class_name, version, filename="__init__.py"):
     """
     creates a version number in the __init__.py file.
     it can be accessed with __version__
-    :param class_name: 
-    :param version: 
-    :param filename: 
-    :return: 
+    :param class_name:
+    :param version:
+    :param filename:
+    :return:
     """
     version_filename = Path(
         "{classname}/{filename}".format(classname=class_name,
@@ -407,7 +404,7 @@ def readfile(filename, mode='r'):
     """
     returns the content of a file
     :param filename: the filename
-    :return: 
+    :return:
     """
     if mode != 'r' and mode != 'rb':
         Console.error(f"incorrect mode : expected 'r' or 'rb' given {mode}")
@@ -423,7 +420,7 @@ def writefile(filename, content):
     writes the content into the file
     :param filename: the filename
     :param content: teh content
-    :return: 
+    :return:
     """
     with open(path_expand(filename), 'w') as outfile:
         outfile.write(content)
@@ -511,7 +508,7 @@ def generate_password(length=8, lower=True, upper=True, number=True):
     :param lower: True of lower case characters are allowed
     :param upper: True if upper case characters are allowed
     :param number: True if numbers are allowed
-    :return: 
+    :return:
     """
     lletters = "abcdefghijklmnopqrstuvwxyz"
     uletters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"

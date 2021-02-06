@@ -38,7 +38,7 @@ class DateTime(object):
 
     """
 
-    timezone = time.tzname[0]
+    # timezone = time.tzname[0]
 
     @staticmethod
     def now():

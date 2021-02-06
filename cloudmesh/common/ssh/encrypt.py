@@ -56,4 +56,3 @@ if __name__ == "__main__":
     e = EncryptFile('file.txt', 'secret.txt')
     e.encrypt()
     e.decrypt()
-

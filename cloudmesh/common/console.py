@@ -19,7 +19,7 @@ def indent(text, indent=2, width=128):
     :param text: the text to print
     :param indent: indent characters
     :param width: the width of the text
-    :return: 
+    :return:
     """
     return "\n".join(
         textwrap.wrap(text,
@@ -123,7 +123,7 @@ class Console(object):
         sets debugging on or of
 
         :param on: if on debugging is set
-        :return: 
+        :return:
         """
         cls.debug = on
 
@@ -133,7 +133,7 @@ class Console(object):
         defines if the console messages are printed in color
 
         :param color: if True its printed in color
-        :return: 
+        :return:
         """
         if color:
             Console.theme = Console.theme_color
@@ -147,7 +147,7 @@ class Console(object):
         returns the default theme for printing console messages
 
         :param name: the name of the theme
-        :return: 
+        :return:
         """
         if name in Console.theme:
             return Console.theme[name]
@@ -161,7 +161,7 @@ class Console(object):
 
         :param message: the message to print
         :param width: teh width of the line
-        :return: 
+        :return:
         """
         return textwrap.fill(message, width=width)
 
@@ -171,7 +171,7 @@ class Console(object):
         prints a message
 
         :param message: the message to print
-        :return: 
+        :return:
         """
         str = " ".join(message)
         print(str)
@@ -194,7 +194,7 @@ class Console(object):
         :param message: the message
         :param prefix: a prefix for the message
         :param traceflag: if true the stack trace is retrieved and printed
-        :return: 
+        :return:
         """
         # print (message, prefix)
         # variables = Variables()
@@ -226,7 +226,7 @@ class Console(object):
         :param message: the message
         :param prefix: if set to true it prints TODO: as prefix
         :param traceflag: if true the stack trace is retrieved and printed
-        :return: 
+        :return:
         """
         message = message or ""
         if prefix:
@@ -251,7 +251,7 @@ class Console(object):
         print a debug message
 
         :param message: the message
-        :return: 
+        :return:
         """
         message = message or ""
         if Console.color:
@@ -265,7 +265,7 @@ class Console(object):
         prints an informational message
 
         :param message: the message
-        :return: 
+        :return:
         """
         message = message or ""
         if Console.color:
@@ -279,7 +279,7 @@ class Console(object):
         prints a warning
 
         :param message: the message
-        :return: 
+        :return:
         """
         message = message or ""
         if Console.color:
@@ -293,7 +293,7 @@ class Console(object):
         prints an ok message
 
         :param message: the message<
-        :return: 
+        :return:
         """
         message = message or ""
         if Console.color:
@@ -309,7 +309,7 @@ class Console(object):
         :param color: the color as defined in the theme
         :param prefix: the prefix (a string)
         :param message: the message
-        :return: 
+        :return:
         """
         message = message or ""
         prefix = prefix or ""

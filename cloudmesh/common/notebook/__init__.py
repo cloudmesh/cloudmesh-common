@@ -7,7 +7,7 @@ try:
     from IPython.core.display import display, HTML
     display(HTML("<style>.container { width:100% !important; }</style>"))
 
-    from pprint import pprint
+    from pprint import pprint  # noqa: F401
 
     from cloudmesh.common.util import banner
 
@@ -15,4 +15,3 @@ try:
 
 except NameError:
     pass
-

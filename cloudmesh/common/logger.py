@@ -67,7 +67,7 @@ def LOGGER(filename):
 def LOGGING_ON(log):
     """
     Switches logging on
-    :param log: the logger for which we switch logging on 
+    :param log: the logger for which we switch logging on
     """
     try:
         log.setLevel(logging.DEBUG)

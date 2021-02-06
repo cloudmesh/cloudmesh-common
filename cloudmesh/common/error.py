@@ -1,5 +1,5 @@
 """
-A simple framework to handle error messages 
+A simple framework to handle error messages
 """
 import sys
 import traceback
@@ -25,7 +25,7 @@ class Error(object):
         :param error: the error message
         :param debug: only prints it if debug is set to true
         :param trace: if true prints the trace
-        :return: 
+        :return:
         """
         if debug and error is not None:
             print(error)
@@ -39,8 +39,8 @@ class Error(object):
 
         :param error: a message preceding the trace
         :param debug: prints it if debug is set to true
-        :param trace: 
-        :return: 
+        :param trace:
+        :return:
         """
         if debug and trace:
             Error.msg(error=error, debug=debug, trace=trace)
@@ -51,7 +51,7 @@ class Error(object):
         prints an info msg.
 
         :param msg: the message
-        :return: 
+        :return:
         """
         if debug:
             Console.info(msg)
@@ -61,8 +61,8 @@ class Error(object):
         """
         prints a warning message.
 
-        :param msg: 
-        :return: 
+        :param msg:
+        :return:
         """
         if debug:
             Console.warning(msg)
@@ -73,7 +73,7 @@ class Error(object):
         prints a debug message.
 
         :param msg: the message
-        :return: 
+        :return:
         """
         if debug:
             Console.msg(msg)
@@ -83,8 +83,8 @@ class Error(object):
         """
         call a system exit
 
-        :param msg: 
-        :return: 
+        :param msg:
+        :return:
         """
         Console.error(msg)
         sys.exit()

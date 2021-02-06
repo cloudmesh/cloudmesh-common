@@ -95,8 +95,8 @@ class Pip(object):
 
 class SubprocessError(Exception):
     """
-    Manages the formatting of the error and stdout. 
-    THis command should not be directly called. Instead use SHell
+    Manages the formatting of the error and stdout.
+    This command should not be directly called. Instead use Shell
     """
 
     def __init__(self, cmd, returncode, stderr, stdout):
@@ -117,10 +117,10 @@ class SubprocessError(Exception):
         def indent(lines, amount, ch=' '):
             """
             indent the lines by multiples of ch
-            :param lines: 
-            :param amount: 
-            :param ch: 
-            :return: 
+            :param lines:
+            :param amount:
+            :param ch:
+            :return:
             """
             padding = amount * ch
             return padding + ('\n' + padding).join(lines.split('\n'))
@@ -152,7 +152,7 @@ class Subprocess(object):
         :param cwd: the directory in which to execute the command
         :param stderr: the pipe for stderror
         :param stdout: the pipe for the stdoutput
-        :param env: 
+        :param env:
         """
         Console.debug_msg('Running cmd: {}'.format(' '.join(map(quote, cmd))))
 
@@ -171,7 +171,7 @@ class Subprocess(object):
 
 class Shell(object):
     """
-    The shell class allowing us to conveniently access many operating system commands. 
+    The shell class allowing us to conveniently access many operating system commands.
     TODO: This works well on Linux and OSX, but has not been tested much on Windows
     """
 
@@ -443,7 +443,6 @@ class Shell(object):
         elif platform == "linux":  # for ubuntu running gnome
             os.system(f"gnome-terminal -e \"bash -c \'{command}; exec $SHELL\'\"")
 
-
         elif platform == "win32":
             if Path.is_dir(Path(r"C:\Program Files\Git")):
                 subprocess.Popen([r"C:\Program Files\Git\git-bash.exe",
@@ -501,7 +500,7 @@ class Shell(object):
     def ls(cls, match="."):
         """
         executes ls with the given arguments
-        :param args: 
+        :param args:
         :return: list
         """
         d = glob.glob(match)
@@ -542,8 +541,8 @@ class Shell(object):
     def bash(cls, *args):
         """
         executes bash with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('bash', args)
 
@@ -552,8 +551,8 @@ class Shell(object):
     def brew(cls, *args):
         """
         executes bash with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         NotImplementedInWindows()
         return cls.execute('brew', args)
@@ -563,8 +562,8 @@ class Shell(object):
     def cat(cls, *args):
         """
         executes cat with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         NotImplementedInWindows()
         # TODO: replace with file read and reading the content. We need to deal
@@ -576,8 +575,8 @@ class Shell(object):
     def git(cls, *args):
         """
         executes git with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         NotImplementedInWindows()
         return cls.execute('git', args)
@@ -587,8 +586,8 @@ class Shell(object):
     def VBoxManage(cls, *args):
         """
         executes VboxManage with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
 
         if platform == "darwin":
@@ -601,8 +600,8 @@ class Shell(object):
     def blockdiag(cls, *args):
         """
         executes blockdiag with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('blockdiag', args)
 
@@ -610,8 +609,8 @@ class Shell(object):
     def cm(cls, *args):
         """
         executes cm with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('cm', args)
 
@@ -638,8 +637,8 @@ class Shell(object):
     def head(cls, *args):
         """
         executes head with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         NotImplementedInWindows()
         # TODO: reimplement with readlines
@@ -649,8 +648,8 @@ class Shell(object):
     def keystone(cls, *args):
         """
         executes keystone with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('keystone', args)
 
@@ -674,8 +673,8 @@ class Shell(object):
     def kill(cls, *args):
         """
         executes kill with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         NotImplementedInWindows()
         # TODO: use tasklisk, compare to linux
@@ -703,8 +702,8 @@ class Shell(object):
     def nova(cls, *args):
         """
         executes nova with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('nova', args)
 
@@ -712,9 +711,9 @@ class Shell(object):
     def ping(cls, host=None, count=1):
         """
         execute ping
-        :param host: the host to ping 
+        :param host: the host to ping
         :param count: the number of pings
-        :return: 
+        :return:
         """
         option = '-n' if platform == 'windows' else '-c'
         return cls.execute('ping',
@@ -726,8 +725,8 @@ class Shell(object):
     def pwd(cls, *args):
         """
         executes pwd with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return os.getcwd()
 
@@ -735,8 +734,8 @@ class Shell(object):
     def rackdiag(cls, *args):
         """
         executes rackdiag with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('rackdiag', args)
 
@@ -745,8 +744,8 @@ class Shell(object):
     def rm(cls, location):
         """
         executes rm with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         shutil.rmtree(path_expand(location))
 
@@ -754,8 +753,8 @@ class Shell(object):
     def rsync(cls, *args):
         """
         executes rsync with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('rsync', args)
 
@@ -763,8 +762,8 @@ class Shell(object):
     def scp(cls, *args):
         """
         executes scp with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('scp', args)
 
@@ -773,8 +772,8 @@ class Shell(object):
     def sort(cls, *args):
         """
         executes sort with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         NotImplementedInWindows()
         # TODO: https://superuser.com/questions/1316317/is-there-a-windows-equivalent-to-the-unix-uniq
@@ -784,8 +783,8 @@ class Shell(object):
     def sh(cls, *args):
         """
         executes sh with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('sh', args)
 
@@ -793,8 +792,8 @@ class Shell(object):
     def ssh(cls, *args):
         """
         executes ssh with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('ssh', args)
 
@@ -803,8 +802,8 @@ class Shell(object):
     def sudo(cls, *args):
         """
         executes sudo with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         NotImplementedInWindows()
         # TODO: https://stackoverflow.com/questions/9652720/how-to-run-sudo-command-in-windows
@@ -816,7 +815,7 @@ class Shell(object):
         """
         executes tail with the given arguments
         :param args:
-        :return: 
+        :return:
         """
         NotImplementedInWindows()
         # TODO: implement with realines on a file.
@@ -826,8 +825,8 @@ class Shell(object):
     def vagrant(cls, *args):
         """
         executes vagrant with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('vagrant', args, shell=True)
 
@@ -835,8 +834,8 @@ class Shell(object):
     def pandoc(cls, *args):
         """
         executes vagrant with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('pandoc', args)
 
@@ -844,8 +843,8 @@ class Shell(object):
     def mongod(cls, *args):
         """
         executes mongod with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('mongod', args)
 
@@ -854,8 +853,8 @@ class Shell(object):
     def dialog(cls, *args):
         """
         executes dialof with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         NotImplementedInWindows()
         return cls.execute('dialog', args)
@@ -864,8 +863,8 @@ class Shell(object):
     def pip(cls, *args):
         """
         executes pip with the given arguments
-        :param args: 
-        :return: 
+        :param args:
+        :return:
         """
         return cls.execute('pip', args)
 
@@ -910,9 +909,9 @@ class Shell(object):
     def remove_line_with(cls, lines, what):
         """
         returns all lines that do not contain what
-        :param lines: 
-        :param what: 
-        :return: 
+        :param lines:
+        :param what:
+        :return:
         """
         result = []
         for line in lines:
@@ -924,9 +923,9 @@ class Shell(object):
     def find_lines_with(cls, lines, what):
         """
         returns all lines that contain what
-        :param lines: 
-        :param what: 
-        :return: 
+        :param lines:
+        :param what:
+        :return:
         """
         result = []
         for line in lines:
@@ -1011,8 +1010,8 @@ class Shell(object):
     def command_exists(cls, name):
         """
         returns True if the command exists
-        :param name: 
-        :return: 
+        :param name:
+        :return:
         """
         return cls.which(name) is not None
 
@@ -1092,7 +1091,7 @@ class Shell(object):
         """
         creates a directory with all its parents in ots name
         :param directory: the path of the directory
-        :return: 
+        :return:
         """
         directory = path_expand(directory)
         try:
@@ -1210,7 +1209,7 @@ class Shell(object):
 def main():
     """
     a test that should actually be added into a pytest
-    :return: 
+    :return:
     """
 
     print(Shell.terminal_type())

@@ -75,7 +75,7 @@ class Printer(object):
         :param show_none: passed along to the list or dict printer
         :param max_width: maximum width for a cell
         :type max_width: int
-        :return: 
+        :return:
         """
         if output == "raw":
             return table
@@ -233,7 +233,7 @@ class Printer(object):
         def _get(element, key):
             try:
                 tmp = str(d[element][key])
-            except:
+            except:  # noqa: E722
                 tmp = ' '
             return tmp
 
@@ -265,7 +265,7 @@ class Printer(object):
                     #    pass
                     # else:
                     content.append(d[job][attribute])
-                except:
+                except:  # noqa: E722
                     content.append("None")
             table = table + ",".join([str(e) for e in content]) + "\n"
         return table
@@ -332,7 +332,7 @@ class Printer(object):
                     tmp = parser.parse(tmp)
                     tmp = DateTime.humanize(start - tmp)
                     # tmp = naturaltime(start - tmp)
-            except:
+            except:  # noqa: E722
                 tmp = ' '
             return tmp
 
@@ -425,14 +425,14 @@ class Printer(object):
         prints a list
         :param l: the list
         :param output: the output, default is a table
-        :return: 
+        :return:
         """
 
         def dict_from_list(l):
             """
             returns a dict from a list for printing
             :param l: the list
-            :return: 
+            :return:
             """
             d = dict([(idx, item) for idx, item in enumerate(l)])
             return d

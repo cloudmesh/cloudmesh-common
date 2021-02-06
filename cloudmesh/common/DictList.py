@@ -53,7 +53,7 @@ class DictList(dict):
             # noinspection PyUnusedLocal
             self = entries
         else:
-            raise ValueError(f"type not supported")
+            raise ValueError("type not supported")
 
     def list(self):
         """
