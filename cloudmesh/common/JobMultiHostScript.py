@@ -8,6 +8,7 @@ from cloudmesh.common.console import Console
 from cloudmesh.common.parameter import Parameter
 from cloudmesh.common.Shell import Shell
 
+
 class JobMultiHostScript:
     '''
     The JobMultiHostScript is a simple mechanism to run a number of commands formylated
@@ -65,7 +66,6 @@ class JobMultiHostScript:
                 job.run(parallel=len(self.hosts))
                 job.Print()
 
-
     @staticmethod
     def execute(script, name="script", hosts=None, executor=JobSet.ssh,
                 beginLine=None, endLine=None):
@@ -109,6 +109,7 @@ class JobMultiHostScript:
             if script is None:
                 Console.error("The script is not defined, found None as content")
             return
+
 
 if __name__ == '__main__':
     script = """

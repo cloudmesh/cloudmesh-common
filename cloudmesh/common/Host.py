@@ -27,7 +27,7 @@ class Host(object):
                 raise ValueError("Number of hosts and ips mismatch")
 
         result = ""
-        for i in range(0,len(_hosts)):
+        for i in range(0, len(_hosts)):
 
             host = _hosts[i]
 
@@ -53,7 +53,6 @@ class Host(object):
 
             result += data
         return result
-
 
     @staticmethod
     def _run(args):
@@ -102,7 +101,6 @@ class Host(object):
             stderr = result.stderr
             returncode = result.returncode
             stdout = result.stdout
-
 
         data = {
             'host': args.get("host"),
@@ -166,7 +164,7 @@ class Host(object):
             processors=3,
             dryrun=False,  # notused
             executor=None,
-            verbose=False, # not used
+            verbose=False,  # not used
             **kwargs):
         #
         # BUG: this code has a bug and does not deal with different
@@ -266,7 +264,7 @@ class Host(object):
 
         return result
 
-    # noinspection PyBroadException
+    # noinspection PyBroadException,PyPep8
     @staticmethod
     def _ping(args):
         """
@@ -388,7 +386,7 @@ class Host(object):
                                command='cat .ssh/id_rsa.pub',
                                username=username,
                                verbose=False)
-        #results_authorized = Host.ssh(hosts=names,
+        # results_authorized = Host.ssh(hosts=names,
         #                              command='cat .ssh/id_rsa.pub',
         #                              username=username,
         #                              verbose=False)
@@ -404,7 +402,7 @@ class Host(object):
             'date': DateTime.now()
         }
 
-        if results_key is None: # and results_authorized is None:
+        if results_key is None:  # and results_authorized is None:
             return ""
 
         # geting the output and also removing duplicates

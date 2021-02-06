@@ -8,7 +8,6 @@ from cloudmesh.common.location import Location
 from cloudmesh.common.util import grep
 
 
-
 # noinspection PyUnusedLocal,PyPep8Naming
 def LOGGER(filename):
     """creates a logger with the given name.
@@ -33,9 +32,8 @@ def LOGGER(filename):
     try:
         location = Location()
 
-
-        level = grep("loglevel:", location.file("cloudmesh_debug.yaml"))\
-                    .strip().split(":")[1].strip().lower()
+        level = grep("loglevel:", location.file("cloudmesh_debug.yaml")) \
+            .strip().split(":")[1].strip().lower()
 
         if level.upper() == "DEBUG":
             loglevel = logging.DEBUG

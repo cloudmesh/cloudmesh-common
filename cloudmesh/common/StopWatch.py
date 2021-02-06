@@ -73,9 +73,9 @@ class StopWatch(object):
         :type name: string
         """
         cls.timer_end[name] = time.time()
-        #if cumulate:
+        # if cumulate:
         #    cls.timer_end[name] = cls.timer_end[name] + cls.timer_last[name]
-        cls.timer_sum[name] = cls.timer_sum[name]  +  cls.timer_end[name] - cls.timer_start[name]
+        cls.timer_sum[name] = cls.timer_sum[name] + cls.timer_end[name] - cls.timer_start[name]
 
         if cls.debug:
             print("Timer", name, "stopped ...")
@@ -90,6 +90,7 @@ class StopWatch(object):
         """
         return cls.timer_status[name]
 
+    # noinspection PyPep8
     @classmethod
     def get(cls, name, digits=4):
         """
@@ -234,11 +235,9 @@ class StopWatch(object):
                 del data_timers['benchmark_start_stop']
 
             for key in data_timers:
-                if key != 'benchmark_start_stop' and data_timers[key][
-                    'status'] == None:
+                if key != 'benchmark_start_stop' and data_timers[key]['status'] is None:
                     data_timers[key]['status'] = "failed"
-                elif data_timers[key]['status'] != None and data_timers[key][
-                    'status'] == True:
+                elif data_timers[key]['status'] is not None and data_timers[key]['status'] == True:
                     data_timers[key]['status'] = "ok"
 
             order = [

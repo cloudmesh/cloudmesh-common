@@ -3,6 +3,7 @@ from cloudmesh.common.util import path_expand
 from pathlib import Path
 
 
+# noinspection PyPep8
 class Default(object):
     def _index(self, context, key):
         return str(context) + "," + str(key)
@@ -20,6 +21,7 @@ class Default(object):
         self.data = YamlDB(str(self.filename))
 
     def __getitem__(self, context_key):
+        # noinspection PyPep8
         try:
             if type(context_key) == tuple:
                 context, key = context_key

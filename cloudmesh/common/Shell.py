@@ -331,10 +331,12 @@ class Shell(object):
 
         if cwd is None:
             cwd = os.getcwd()
+        # noinspection PyPep8
         try:
             if shell:
                 if platform.lower() == 'win32':
                     import ctypes
+
                     class disable_file_system_redirection:
                         _disable = ctypes.windll.kernel32.Wow64DisableWow64FsRedirection
                         _revert = ctypes.windll.kernel32.Wow64RevertWow64FsRedirection
@@ -424,7 +426,6 @@ class Shell(object):
         else:
             os.system("python -m webbrowser -t {file}".format(**data))
 
-
     @staticmethod
     def terminal_title(name):
         return f'echo -n -e \"\033]0;{name}\007\"'
@@ -432,7 +433,7 @@ class Shell(object):
     @classmethod
     def terminal(cls, command='pwd', title=None):
         # title nameing not implemented
-        print (platform)
+        print(platform)
         if platform == 'darwin':
             label = Shell.terminal_title(title)
 
@@ -446,7 +447,7 @@ class Shell(object):
         elif platform == "win32":
             if Path.is_dir(Path(r"C:\Program Files\Git")):
                 subprocess.Popen([r"C:\Program Files\Git\git-bash.exe",
-                                       "-c", f"{command}"])
+                                  "-c", f"{command}"])
             else:
                 Console.error("Git bash is not found, please make sure it "
                               "is installed.")
@@ -689,7 +690,6 @@ class Shell(object):
         """
         return cls.execute('mount', args)
 
-
     @classmethod
     def umount(cls, *args):
         """
@@ -698,7 +698,6 @@ class Shell(object):
         :return:
         """
         return cls.execute('umount', args)
-
 
     @classmethod
     def nova(cls, *args):
@@ -951,7 +950,6 @@ class Shell(object):
                 result = result + [line]
         return result
 
-
     @classmethod
     def find_lines_between(cls, lines, what_from, what_to):
         """
@@ -1038,7 +1036,6 @@ class Shell(object):
     def cms(command, encoding='utf-8'):
         return Shell.run("cms " + command, encoding=encoding)
 
-
     @classmethod
     def check_python(cls):
         """
@@ -1067,8 +1064,7 @@ class Shell(object):
 
         elif python_version[0] == 3:
 
-            if (python_version[0] == 3) and (python_version[1] >= 7) and (
-                python_version[2] >= 0):
+            if (python_version[0] == 3) and (python_version[1] >= 7) and (python_version[2] >= 0):
 
                 print(
                     "You are running a supported version of python: {:}".format(
@@ -1090,7 +1086,6 @@ class Shell(object):
                 pip_version))
             print("         We recommend you update your pip  with \n")
             print("             pip install -U pip\n")
-
 
     @classmethod
     def mkdir(cls, directory):

@@ -6,9 +6,9 @@ try:
 except AttributeError:
     collectionsAbc = collections
 
-
 import six
 import sys
+
 
 def key_prefix_replace(d, prefix, new_prefix=""):
     """
@@ -61,7 +61,6 @@ def flatten(d, parent_key='', sep='__'):
                 items.extend(flatten(v, new_key, sep=sep).items())
             else:
                 items.append((new_key, v))
-
 
         return dict(items)
 
@@ -187,7 +186,7 @@ class FlatDict(dict):
         flat = FlatDict(self.__dict__, sep=".")
         r = re.compile(key)
         result = list(filter(r.match, flat))
-        if value == None:
+        if value is None:
             found = result
         else:
             found = []
@@ -195,6 +194,7 @@ class FlatDict(dict):
                 if str(flat[entry]) == str(value):
                     found.append(entry)
         return found
+
 
 class FlatDict2(object):
     if six.PY2:

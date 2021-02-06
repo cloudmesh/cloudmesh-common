@@ -9,11 +9,13 @@ import traceback
 
 verbose_lock = threading.Lock()
 
+
 def TRACE():
     """
     prints the current trace stack
     """
     traceback.print_stack()
+
 
 def tracefunc(frame, event, arg, indent=[0]):
     if event == "call":
@@ -23,6 +25,7 @@ def tracefunc(frame, event, arg, indent=[0]):
         print("<" + "-" * indent[0], "exit function", frame.f_code.co_name)
         indent[0] -= 2
     return tracefunc
+
 
 # sys.settrace(tracefunc)
 

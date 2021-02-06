@@ -3,6 +3,7 @@ from cloudmesh.common.util import path_expand
 from cloudmesh.common.strdb import YamlDB
 from cloudmesh.common.console import Console
 
+
 class Variables(object):
     def __init__(self, filename=None):
         self.filename = path_expand(filename or "~/.cloudmesh/variables.dat")

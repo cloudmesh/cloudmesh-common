@@ -8,8 +8,8 @@ import colorama
 from colorama import Fore, Back, Style
 import os
 
-# from cloudmesh.common.variables import Variables
 
+# from cloudmesh.common.variables import Variables
 
 
 def indent(text, indent=2, width=128):
@@ -69,7 +69,7 @@ class Console(object):
         'BOLD': Style.BRIGHT,
         'NORMAL': Style.NORMAL
         # 'ENDC': '\033[0m',
-        #'BOLD': "\033[1m",
+        # 'BOLD': "\033[1m",
     }
 
     theme_bw = {
@@ -116,7 +116,6 @@ class Console(object):
         terminates the program
         """
         os._exit(1)
-
 
     @classmethod
     def set_debug(cls, on=True):
@@ -187,7 +186,6 @@ class Console(object):
         for name in elements:
             print("*", name)
 
-
     @classmethod
     def error(cls, message, prefix=True, traceflag=False):
         """
@@ -199,8 +197,8 @@ class Console(object):
         :return: 
         """
         # print (message, prefix)
-        #variables = Variables()
-        #traceflag = traceflag or variables['trace']
+        # variables = Variables()
+        # traceflag = traceflag or variables['trace']
 
         message = message or ""
         if prefix:

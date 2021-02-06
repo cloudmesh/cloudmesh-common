@@ -34,7 +34,7 @@ class Parameter(object):
         :param parameter: string of the form prefix[a,g-h,k,x-z]postfix
         :return:
         """
-        print ("O", parameter)
+        print("O", parameter)
 
         if "[" not in parameter and "-" not in parameter and "," in parameter:
             return parameter.split(",")

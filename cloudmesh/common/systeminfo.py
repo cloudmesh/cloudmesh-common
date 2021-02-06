@@ -8,16 +8,18 @@ import pip
 import psutil
 import humanize
 
+
 def sys_user():
-    if "COLAB_GPU" in  os.environ:
+    if "COLAB_GPU" in os.environ:
         return "collab"
     elif sys.platform == "win32":
         return os.environ["USERNAME"]
     else:
         return os.environ["USER"]
 
+
 def get_platform():
-    if sys.platform =="darwin":
+    if sys.platform == "darwin":
         return "macos"
     elif sys.platform == "win32":
         return "windows"
@@ -26,10 +28,12 @@ def get_platform():
     else:
         return sys.platform
 
+
 def systeminfo():
     uname = platform.uname()
     mem = psutil.virtual_memory()
 
+    # noinspection PyPep8
     def add_binary(value):
         try:
             r = humanize.naturalsize(value, binary=True)

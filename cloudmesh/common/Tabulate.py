@@ -7,6 +7,7 @@ from cloudmesh.common.util import convert_from_unicode
 from tabulate import tabulate as tabulate_printer
 
 
+# noinspection PyPep8
 class Printer:
     """
     formats supported dict, yaml, json

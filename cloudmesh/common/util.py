@@ -12,7 +12,7 @@ from contextlib import contextmanager
 import sys
 import psutil
 import requests
-from  pathlib import Path
+from pathlib import Path
 
 try:
     collectionsAbc = collections.abc
@@ -42,6 +42,7 @@ def tempdir(*args, **kwargs):
     finally:
         shutil.rmtree(d)
 
+
 def check_root(terminate=True):
     """
     Tests if the root user is used
@@ -57,6 +58,7 @@ def check_root(terminate=True):
         if terminate:
             sys.exit()
 
+
 def exponential_backoff(fn, sleeptime_s_max=30 * 60):
     """Calls `fn` until it returns True, with an exponentially increasing wait time between calls"""
 
@@ -71,6 +73,7 @@ def exponential_backoff(fn, sleeptime_s_max=30 * 60):
 
         if sleeptime_ms / 1000.0 > sleeptime_s_max:
             return False
+
 
 def download(source, destination, force=False):
     """
@@ -90,6 +93,7 @@ def download(source, destination, force=False):
         Path(directory).mkdir(parents=True, exist_ok=True)
         r = requests.get(source, allow_redirects=True)
         open(destination, 'wb').write(r.content)
+
 
 def search(lines, pattern):
     """
@@ -121,6 +125,8 @@ def grep(pattern, filename):
     except StopIteration:
         return ''
 
+
+# noinspection PyPep8
 def is_gitbash():
     """
     returns True if you run in a Windows gitbash
@@ -133,6 +139,7 @@ def is_gitbash():
     except:
         return False
 
+
 def is_powershell():
     """
     True if you run in powershell
@@ -144,6 +151,8 @@ def is_powershell():
     # powershell.exe for powershell
     # bash.exe for git bash
     return (psutil.Process(os.getppid()).name() == "powershell.exe")
+
+
 def is_cmd_exe():
     """
     return True if you run in a Windows CMD
@@ -157,6 +166,7 @@ def is_cmd_exe():
             return os.environ['OS'] == 'Windows_NT'
         except:
             return False
+
 
 def path_expand(text):
     """ returns a string with expanded variable.
@@ -174,6 +184,7 @@ def path_expand(text):
         result = result.replace("/", "\\")
 
     return result
+
 
 def convert_from_unicode(data):
     """
@@ -253,7 +264,7 @@ def banner(txt=None, c="-", prefix="#", debug=True, label=None, color=None):
     Console.cprint(color, "", output)
 
 
-def str_banner(txt=None, c="-", prefix= "#", debug=True, label=None, color=None):
+def str_banner(txt=None, c="-", prefix="#", debug=True, label=None, color=None):
     """
     prints a banner of the form with a frame of # around the txt::
 
@@ -286,8 +297,6 @@ def str_banner(txt=None, c="-", prefix= "#", debug=True, label=None, color=None)
     return output
 
 
-
-
 # noinspection PyPep8Naming
 def HEADING(txt=None, c="#", color="HEADER"):
     """
@@ -307,7 +316,6 @@ def HEADING(txt=None, c="#", color="HEADER"):
         msg = "{} {} {}".format(method, filename, line)
     else:
         msg = "{}\n {} {} {}".format(txt, method, filename, line)
-
 
     print()
     banner(msg, c=c, color=color)
@@ -402,7 +410,7 @@ def readfile(filename, mode='r'):
     :return: 
     """
     if mode != 'r' and mode != 'rb':
-        Console.error( f"incorrect mode : expected 'r' or 'rb' given {mode}")
+        Console.error(f"incorrect mode : expected 'r' or 'rb' given {mode}")
     else:
         with open(path_expand(filename), mode)as f:
             content = f.read()
@@ -421,7 +429,8 @@ def writefile(filename, content):
         outfile.write(content)
         outfile.truncate()
 
-def writefd(filename, content, mode='w', flags = os.O_RDWR|os.O_CREAT, mask=0o600):
+
+def writefd(filename, content, mode='w', flags=os.O_RDWR | os.O_CREAT, mask=0o600):
     """
     writes the content into the file and control permissions
     :param filename: the full or relative path to the filename
@@ -431,12 +440,13 @@ def writefd(filename, content, mode='w', flags = os.O_RDWR|os.O_CREAT, mask=0o60
     :param mask: the mask that the permissions will be applied to
     """
     if mode != 'w' and mode != 'wb':
-        Console.error( f"incorrect mode : expected 'w' or 'wb' given {mode}")
+        Console.error(f"incorrect mode : expected 'w' or 'wb' given {mode}")
 
     with os.fdopen(os.open(filename, flags, mask), mode) as outfile:
         outfile.write(content)
         outfile.truncate()
         outfile.close()
+
 
 def sudo_readfile(filename, split=True, trim=False):
     """
@@ -461,6 +471,7 @@ def sudo_readfile(filename, split=True, trim=False):
         result = result.split('\n')
 
     return result
+
 
 def sudo_writefile(filename, content, append=False):
     """
@@ -490,6 +501,7 @@ def sudo_writefile(filename, content, append=False):
         Console.warning(f"{filename} was not created correctly -> {result[1]}")
 
     return result[1]
+
 
 # Reference: http://interactivepython.org/runestone/static/everyday/2013/01/3_password.html
 def generate_password(length=8, lower=True, upper=True, number=True):

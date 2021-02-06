@@ -10,6 +10,7 @@ from cloudmesh.common.util import readfile
 from pathlib import Path
 from cloudmesh.common.console import Console
 
+
 class Location:
     _shared_state = None
 
