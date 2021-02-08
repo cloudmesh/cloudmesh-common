@@ -23,9 +23,13 @@ def get_platform():
         return "macos"
     elif sys.platform == "win32":
         return "windows"
-    elif sys.platform == "linux" and "raspberrypi" in platform.uname():
-        return "raspberry"
-    else:
+    try:
+        content = readfile('/etc/os-release')
+        if sys.platform == 'linux' and "raspbian" in content:
+            return "raspberry"
+        else:
+            return sys.platform
+    except:
         return sys.platform
 
 
