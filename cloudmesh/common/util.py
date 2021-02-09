@@ -484,7 +484,7 @@ def sudo_writefile(filename, content, append=False):
     :rtype: int
     """
 
-    tmp_dir = {path_expand("~/.cloudmesh/tmp")}
+    tmp_dir = path_expand("~/.cloudmesh/tmp")
     os.system(f'mkdir -p {tmp_dir}')
     tmp = path_expand("~/.cloudmesh/tmp/tmp.txt")
 
