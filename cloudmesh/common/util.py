@@ -483,8 +483,10 @@ def sudo_writefile(filename, content, append=False):
     :return: the output created by the write process
     :rtype: int
     """
-    os.system('mkdir -p ~/.cloudmesh/tmp')
-    tmp = "~/.cloudmesh/tmp/tmp.txt"
+
+    tmp_dir = path_expand("~/.cloudmesh/tmp")
+    os.system(f'mkdir -p {tmp_dir}')
+    tmp = path_expand("~/.cloudmesh/tmp/tmp.txt")
 
     if append:
         content = sudo_readfile(filename, split=False) + content
@@ -496,6 +498,11 @@ def sudo_writefile(filename, content, append=False):
     # If exit code is not 0
     if result[0] != 0:
         Console.warning(f"{filename} was not created correctly -> {result[1]}")
+
+    try:
+        os.remove(tmp)
+    except:
+        Console.warning(f"{tmp} was not removed correctly.")
 
     return result[1]
 
