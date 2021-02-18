@@ -28,7 +28,7 @@ class Wifi:
         country={country}
 
         network={{
-                ssid="{network}"
+                ssid="{ssid}"
                 key_mgmt=NONE
         }}
     """)
@@ -74,11 +74,14 @@ class Wifi:
         :rtype: bool
         """
 
-        if ssid is None or password is None:
+        if ssid is None or (psk and password is None):
             Console.error("SSID or password not set")
             return False
 
-        config = Wifi.template.format(**locals())
+        if psk:
+            config = Wifi.template.format(**locals())
+        else:
+            config = Wifi.template_key.format(**locals())
         try:
             if sudo:
                 sudo_writefile(location, config)
