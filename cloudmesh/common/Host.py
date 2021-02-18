@@ -160,7 +160,7 @@ class Host(object):
     def ssh(hosts=None,
             command=None,
             username=None,
-            key="~/.ssh/id_rsa.pub",
+            key="~/.ssh/id_rsa",
             processors=3,
             dryrun=False,  # notused
             executor=None,
@@ -204,7 +204,7 @@ class Host(object):
             source=None,
             destination=None,
             username=None,
-            key="~/.ssh/id_rsa.pub",
+            key="~/.ssh/id_rsa",
             shell=False,
             processors=3,
             dryrun=False,
@@ -240,7 +240,7 @@ class Host(object):
     @staticmethod
     def check(hosts=None,
               username=None,
-              key="~/.ssh/id_rsa.pub",
+              key="~/.ssh/id_rsa",
               processors=3):
         #
         # BUG: this code has a bug and does not deal with different
