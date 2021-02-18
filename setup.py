@@ -54,6 +54,7 @@ humanize
 python-dateutil
 tabulate
 requests
+pyfiglet
 """.splitlines()
 
 version = readfile("VERSION").strip()

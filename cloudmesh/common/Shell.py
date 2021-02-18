@@ -743,7 +743,7 @@ class Shell(object):
     # @NotImplementedInWindows
     def rm(cls, location):
         """
-        executes rm with the given arguments
+        executes rm tree with the given arguments
         :param args:
         :return:
         """

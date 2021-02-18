@@ -14,6 +14,7 @@ import psutil
 import requests
 from pathlib import Path
 from cloudmesh.common.console import Console
+import pyfiglet
 
 try:
     collectionsAbc = collections.abc
@@ -228,7 +229,9 @@ def yn_choice(message, default='y', tries=None):
                 tries -= 1
 
 
-def banner(txt=None, c="-", prefix="#", debug=True, label=None, color=None):
+def str_banner(txt=None, c="-", prefix="#", debug=True, label=None,
+               color="BLUE", padding=False,
+               figlet=False, font="big"):
     """
     prints a banner of the form with a frame of # around the txt::
 
@@ -248,50 +251,49 @@ def banner(txt=None, c="-", prefix="#", debug=True, label=None, color=None):
     if debug:
         output = "\n"
         output += prefix + " " + 70 * c + "\n"
+        if padding:
+            output += prefix + "\n"
         if label is not None:
             output += prefix + " " + label + "\n"
             output += prefix + " " + 70 * c + "\n"
+
         if txt is not None:
+
+            if figlet:
+               txt = pyfiglet.figlet_format(txt,font=font)
+
             for line in txt.splitlines():
                 output += prefix + " " + line + "\n"
+            if padding:
+                output += prefix + "\n"
             output += prefix + " " + 70 * c + "\n"
-    if color is None:
-        color = "BLUE"
-
-    Console.cprint(color, "", output)
-
-
-def str_banner(txt=None, c="-", prefix="#", debug=True, label=None, color=None):
-    """
-    prints a banner of the form with a frame of # around the txt::
-
-    # --------------------------
-    # txt
-    # --------------------------
-
-    :param color: prints in the given color
-    :param label: adds a label
-    :param debug: prints only if debug is true
-    :param txt: a text message to be printed
-    :type txt: string
-    :param c: the character used instead of c
-    :type c: character
-    """
-    output = ""
-    if debug:
-        output = "\n"
-        output += prefix + " " + 70 * c + "\n"
-        if label is not None:
-            output += prefix + " " + label + "\n"
-            output += prefix + " " + 70 * c + "\n"
-        if txt is not None:
-            for line in txt.splitlines():
-                output += prefix + " " + line + "\n"
-            output += prefix + " " + 70 * c + "\n"
-    if color is None:
-        color = "BLUE"
 
     return output
+
+def banner(txt=None, c="-", prefix="#", debug=True, label=None,
+           color="BLUE", padding=False,
+           figlet=False, font="big"):
+    """
+    prints a banner of the form with a frame of # around the txt::
+
+    # --------------------------
+    # txt
+    # --------------------------
+
+    :param color: prints in the given color
+    :param label: adds a label
+    :param debug: prints only if debug is true
+    :param txt: a text message to be printed
+    :type txt: string
+    :param c: the character used instead of c
+    :type c: character
+    :param padding: ads additional comment line around the text so the banner is larger
+    :type padding: bool
+    """
+
+    output = str_banner(txt=txt, c=c, prefix=prefix, debug=debug, label=label,
+                        color=color, padding=padding, figlet=figlet, font=font)
+    Console.cprint(color, "", output)
 
 
 # noinspection PyPep8Naming
