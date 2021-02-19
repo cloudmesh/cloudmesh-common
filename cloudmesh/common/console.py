@@ -14,7 +14,7 @@ import os
 def indent(text, indent=2, width=128):
     """
     indents the given text by the indent specified and wrapping to the given width
-    
+
     :param text: the text to print
     :param indent: indent characters
     :param width: the width of the text
@@ -313,10 +313,7 @@ class Console(object):
         message = message or ""
         prefix = prefix or ""
 
-        print(Console.theme_color[color] +
-              prefix +
-              message +
-              Console.theme_color['ENDC'])
+        print(Console.theme_color[color] + prefix + message + Console.theme_color['ENDC'])
 
     @staticmethod
     def text(color='RED', prefix=None, message=None):
@@ -330,10 +327,7 @@ class Console(object):
         """
         message = message or ""
         prefix = prefix or ""
-        return (Console.theme[color] +
-                prefix +
-                message +
-                Console.theme['ENDC'])
+        return (Console.theme[color] + prefix + message + Console.theme['ENDC'])
 
 
 #

@@ -11,7 +11,7 @@ class JobScript:
     The jobscript is a simple mechanism to run a number of commands formylated
     in a script. The script is interpreted line by line and does not support
     multi line commands at this time. (Not difficult to implement when
-    looking at \ at the end of a line.)
+    looking at \\ at the end of a line.)
 
     It can be either used a static call or as variable invocation. Often the
     static call will be sufficient.
@@ -131,7 +131,6 @@ if __name__ == '__main__':
     # Static method
     result = JobScript.execute("""
         # This is a comment
-        
         pwd                             # tag: pwd
         uname -a
     """)
@@ -144,7 +143,6 @@ if __name__ == '__main__':
     job.run(name="variable script",
             script="""
                 # This is a comment
-        
                 pwd                    # tag: pwd
                 uname -a
             """)

@@ -45,7 +45,6 @@ class Wifi:
         }}
     """)  # noqa: W293
 
-
     template = template_psk
 
     @staticmethod

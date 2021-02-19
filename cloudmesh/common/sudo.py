@@ -2,6 +2,7 @@ import os
 import subprocess
 from cloudmesh.common.util import banner
 
+
 class Sudo:
 
     @staticmethod

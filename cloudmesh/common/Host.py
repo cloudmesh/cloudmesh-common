@@ -405,9 +405,8 @@ class Host(object):
         if results_key is None:  # and results_authorized is None:
             return ""
 
-        # geting the output and also removing duplicates
-        output = [localkey['stdout']] + \
-                 list(set([element["stdout"] for element in results_key]))
+        # getting the output and also removing duplicates
+        output = [localkey['stdout']] + list(set([element["stdout"] for element in results_key]))
 
         output = '\n'.join(output) + "\n"
 

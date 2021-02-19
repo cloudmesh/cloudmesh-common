@@ -105,7 +105,7 @@ def search(lines, pattern):
     p = pattern.replace("*", ".*")
     test = re.compile(p)
     result = []
-    for l in lines:
+    for l in lines:  # noqa: E741
         if test.search(l):
             result.append(l)
     return result
@@ -260,7 +260,7 @@ def str_banner(txt=None, c="-", prefix="#", debug=True, label=None,
         if txt is not None:
 
             if figlet:
-               txt = pyfiglet.figlet_format(txt,font=font)
+               txt = pyfiglet.figlet_format(txt, font=font)
 
             for line in txt.splitlines():
                 output += prefix + " " + line + "\n"
@@ -269,6 +269,7 @@ def str_banner(txt=None, c="-", prefix="#", debug=True, label=None,
             output += prefix + " " + 70 * c + "\n"
 
     return output
+
 
 def banner(txt=None, c="-", prefix="#", debug=True, label=None,
            color="BLUE", padding=False,
@@ -470,7 +471,6 @@ def sudo_readfile(filename, split=True, trim=False):
         result = result.split('\n')
 
     return result
-
 
 
 # Reference: http://interactivepython.org/runestone/static/everyday/2013/01/3_password.html

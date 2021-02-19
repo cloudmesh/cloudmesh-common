@@ -11,14 +11,14 @@ class JobMultiHostScript:
     The JobMultiHostScript is a simple mechanism to run a number of commands formylated
     in a script in parallel over the hosts provided. The script is interpreted line
     by line and does not support multi line commands at this time. (Not difficult
-    to implement when looking at \ at the end of a line.)
+    to implement when looking at \\ at the end of a line.)
 
     Static method::
         script = """
           # This is a comment
           pwd     # tag: pwd
           uname -a
-        """;
+        """
 
         hosts = Parameter.expand("purple[01-02]")
         result = JobMultiHostScript.execute(script, "script_name", hosts)
@@ -59,7 +59,7 @@ class JobMultiHostScript:
 
                 # Execute jobSet for each host in parallel
                 for host in self.hosts:
-                    job.add({"name": host, "host": host, "command": line});
+                    job.add({"name": host, "host": host, "command": line})
                 job.run(parallel=len(self.hosts))
                 job.Print()
 
@@ -117,7 +117,7 @@ if __name__ == '__main__':
 
     # Task: uname
     uname -a
-    """;
+    """
 
     hosts = Parameter.expand("purple[01-02]")
     result = JobMultiHostScript.execute(script, "script_name", hosts,
