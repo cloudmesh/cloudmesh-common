@@ -1,11 +1,6 @@
 import os
 import subprocess
-import sys
 from cloudmesh.common.util import banner
-from cloudmesh.common.util import writefile
-from cloudmesh.common.util import path_expand
-
-from cloudmesh.common.console import Console
 
 class Sudo:
 
@@ -34,6 +29,7 @@ class Sudo:
         :rtype:
         """
 
+        Sudo.password()
         if type(command) == str:
             sudo_command = "sudo " + command
             sudo_command = sudo_command.split(" ")
@@ -71,6 +67,7 @@ class Sudo:
         :return: the content
         :rtype: str or list
         """
+        Sudo.password()
         os.system("sync")
         result = Sudo.execute(f"cat {filename}", decode=decode)
 
@@ -100,10 +97,10 @@ class Sudo:
         :rtype: int
         """
 
+        Sudo.password()
         if append:
             content = Sudo.readfile(filename, split=False, decode=True) + content
 
-        print (f">{content}<")
         os.system(f"echo '{content}' | sudo cp /dev/stdin {filename}")
         os.system("sync")
 

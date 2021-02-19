@@ -1,11 +1,7 @@
 import datetime as TIME
-from datetime import timezone
 import humanize as HUMANIZE
 from dateutil import parser
-import time
 import calendar
-
-import pytz
 
 
 class DateTime(object):

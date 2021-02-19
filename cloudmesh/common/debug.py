@@ -4,7 +4,6 @@ from pprint import pformat
 import inspect
 import os
 import threading
-import sys
 import traceback
 
 verbose_lock = threading.Lock()

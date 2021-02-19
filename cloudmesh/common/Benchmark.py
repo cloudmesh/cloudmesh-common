@@ -6,7 +6,6 @@ import yaml
 from cloudmesh.common.StopWatch import StopWatch
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.variables import Variables
-from pathlib import Path
 
 
 # noinspection PyPep8Naming

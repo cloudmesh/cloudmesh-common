@@ -106,7 +106,7 @@ class Printer(object):
 
     @classmethod
     def list(cls,
-             l,
+             l,                 # noqa: E741
              order=None,
              header=None,
              output="table",
@@ -420,7 +420,7 @@ class Printer(object):
             return cls.dict({output: d}, output=output)
 
     @classmethod
-    def print_list(cls, l, output='table'):
+    def print_list(cls, l, output='table'):    # noqa: E741
         """
         prints a list
         :param l: the list
@@ -428,7 +428,7 @@ class Printer(object):
         :return:
         """
 
-        def dict_from_list(l):
+        def dict_from_list(l):   # noqa: E741
             """
             returns a dict from a list for printing
             :param l: the list

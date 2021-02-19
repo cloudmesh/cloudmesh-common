@@ -3,7 +3,6 @@ Printing messages in a console
 """
 import textwrap
 import traceback
-import platform
 import colorama
 from colorama import Fore, Back, Style
 import os
