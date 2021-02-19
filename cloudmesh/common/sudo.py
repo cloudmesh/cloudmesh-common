@@ -100,27 +100,11 @@ class Sudo:
         :rtype: int
         """
 
-        os.system("sync")
-        tmp_dir = path_expand("~/.cloudmesh/tmp")
-        os.system(f'mkdir -p {tmp_dir}')
-        tmp = path_expand("~/.cloudmesh/tmp/tmp.txt")
-
         if append:
             content = Sudo.readfile(filename, split=False, decode=True) + content
 
-        writefile(tmp, content)
-
+        print (f">{content}<")
+        os.system(f"echo '{content}' | sudo cp /dev/stdin {filename}")
         os.system("sync")
-        result = Sudo.execute(f"cp {tmp} {filename}")
-        os.system("sync")
-
-        # If exit code is not 0
-        if result.returncode != 0:
-            Console.warning(f"{filename} was not created correctly -> {result.stderr}")
-
-        try:
-            os.remove(tmp)
-        except:
-            Console.warning(f"{tmp} was not removed correctly.")
 
         return content
