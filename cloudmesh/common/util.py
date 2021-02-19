@@ -480,7 +480,8 @@ def sudo_writefile(filename, content, append=False):
     :type filename: str
     :param content: the content
     :type content: str
-    :param append: if true it append it at the end, otherwise the file will be overwritten
+    :param append: if true it append it at the end, otherwise the file will
+                   be overwritten
     :type append: bool
     :return: the output created by the write process
     :rtype: int
