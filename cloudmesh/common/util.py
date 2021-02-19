@@ -472,43 +472,6 @@ def sudo_readfile(filename, split=True, trim=False):
     return result
 
 
-def sudo_writefile(filename, content, append=False):
-    """
-    Writes the content in the the given file.
-
-    :param filename: the filename
-    :type filename: str
-    :param content: the content
-    :type content: str
-    :param append: if true it append it at the end, otherwise the file will
-                   be overwritten
-    :type append: bool
-    :return: the output created by the write process
-    :rtype: int
-    """
-
-    tmp_dir = path_expand("~/.cloudmesh/tmp")
-    os.system(f'mkdir -p {tmp_dir}')
-    tmp = path_expand("~/.cloudmesh/tmp/tmp.txt")
-
-    if append:
-        content = sudo_readfile(filename, split=False) + content
-
-    writefile(tmp, content)
-
-    result = subprocess.getstatusoutput(f"sudo cp {tmp} {filename}")
-
-    # If exit code is not 0
-    if result[0] != 0:
-        Console.warning(f"{filename} was not created correctly -> {result[1]}")
-
-    try:
-        os.remove(tmp)
-    except:
-        Console.warning(f"{tmp} was not removed correctly.")
-
-    return result[1]
-
 
 # Reference: http://interactivepython.org/runestone/static/everyday/2013/01/3_password.html
 def generate_password(length=8, lower=True, upper=True, number=True):

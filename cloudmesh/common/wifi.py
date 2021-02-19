@@ -6,7 +6,7 @@ import textwrap
 
 from cloudmesh.common.console import Console
 from cloudmesh.common.util import writefile
-from cloudmesh.common.util import sudo_writefile
+from cloudmesh.common.sudo import Sudo
 
 
 class Wifi:
@@ -84,7 +84,7 @@ class Wifi:
             config = Wifi.template_key.format(**locals())
         try:
             if sudo:
-                sudo_writefile(location, config)
+                Sudo.writefile(location, config)
             else:
                 writefile(location, config)
 

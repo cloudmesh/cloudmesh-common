@@ -106,7 +106,7 @@ class Sudo:
         tmp = path_expand("~/.cloudmesh/tmp/tmp.txt")
 
         if append:
-            content = Sudo.readfile(filename, split=False) + content
+            content = Sudo.readfile(filename, split=False, decode=True) + content
 
         writefile(tmp, content)
 
