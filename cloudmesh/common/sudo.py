@@ -111,7 +111,7 @@ class Sudo:
         writefile(tmp, content)
 
         os.system("sync")
-        result = Sudo.execute(f"sudo cp {tmp} {filename}")
+        result = Sudo.execute(f"cp {tmp} {filename}")
         os.system("sync")
 
         # If exit code is not 0
