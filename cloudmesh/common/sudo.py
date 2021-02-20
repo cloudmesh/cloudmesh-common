@@ -98,6 +98,7 @@ class Sudo:
         :rtype: int
         """
 
+        os.system("sync")
         Sudo.password()
         if append:
             content = Sudo.readfile(filename, split=False, decode=True) + content
