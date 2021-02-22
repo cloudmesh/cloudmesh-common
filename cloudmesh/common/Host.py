@@ -13,6 +13,30 @@ from cloudmesh.common.util import readfile
 class Host(object):
 
     @staticmethod
+    def get_hostnames(names):
+        """
+        Given a list of host names it identifies if they have numbers in them. If so, they are assumed workers.
+        If not, it is a manager. There can only be one manager.
+
+        @param names: list of names
+        @type names: str
+        @return: manager, worker as list
+        @rtype: tuple
+        """
+        manager = None
+        workers = []
+        for name in names:
+            if any(map(str.isdigit, name)):
+                workers.append(name)
+            else:
+                manager = name
+
+        if len(workers) == 0:
+            workers = None
+
+        return manager, workers
+
+    @staticmethod
     def config(hosts=None,
                ips=None,
                username=None,
