@@ -5,8 +5,11 @@ import json
 import os
 from textwrap import dedent
 
-from cloudmesh.common.console import Console
 from cloudmesh.common.Shell import Shell
+from cloudmesh.common.console import Console
+from cloudmesh.common.util import path_expand
+from cloudmesh.common.util import readfile
+from cloudmesh.common.util import writefile
 
 
 # noinspection PyPep8Naming
@@ -14,6 +17,7 @@ class ssh_config(object):
     """
     Managing the config in .ssh
     """
+
     def __init__(self, filename=None):
         if filename is not None:
             # load
@@ -45,6 +49,9 @@ class ssh_config(object):
     # noinspection PyAttributeOutsideInit
     def load(self):
         """list the hosts defined in the ssh config file"""
+        if not os.path.exists(self.filename):
+            self.hosts = {}
+            return self.hosts
         with open(self.filename) as f:
             content = f.readlines()
         content = [" ".join(x.split()).strip('\n').lstrip().split(' ', 1) for x in content]
@@ -98,7 +105,7 @@ class ssh_config(object):
         :param name: the name of the host as defined in the config file
         :return:
         """
-        os.system("ssh {0}".format(name))
+        os.system(f"ssh {name}")
 
     def execute(self, name, command):
         """
@@ -132,6 +139,23 @@ class ssh_config(object):
         else:
             return None
 
+    @staticmethod
+    def delete(name):
+        filename = path_expand("~/.ssh/config")
+        content = readfile(filename).splitlines()
+        result = []
+        remove = False
+        for line in content:
+            if line.strip().startswith(f"Host {name}"):
+                remove = True
+            elif line.strip().startswith("Host "):
+                remove = False
+            if not remove:
+                result.append(line)
+        result = "\n".join(result)
+
+        writefile(filename, result)
+
     def generate(self,
                  host="india",
                  hostname="india.futuresystems.org",
@@ -153,12 +177,12 @@ class ssh_config(object):
             Console.error(f"{host} already in ~/.ssh/config", traceflag=False)
             return ""
         else:
-            entry = dedent("""
+            entry = dedent(f"""
             Host {host}
                 Hostname {hostname}
                 User {user}
                 IdentityFile {identity}
-            """.format(**locals()))
+            """)
         try:
             with open(self.filename, "a") as config_ssh:
                 config_ssh.write(entry)
@@ -170,7 +194,7 @@ class ssh_config(object):
             if verbose:
                 Console.error(e.message)
 
-
+"""
 if __name__ == "__main__":
     from cloudmesh.common.ConfigDict import ConfigDict
 
@@ -199,3 +223,4 @@ if __name__ == "__main__":
     print(r)
 
     # hosts.login("india")
+"""
