@@ -15,14 +15,18 @@ source:
 	pip install -e . -U
 
 flake8:
-	flake8 --max-line-length 124 --ignore=E722 cloudmesh
-	flake8 --max-line-length 124 --ignore=E722 tests
+	cd ..; flake8 --max-line-length 124 --ignore=E722 cloudmesh-$(package)/cloudmesh
+	cd ..; flake8 --max-line-length 124 --ignore=E722 cloudmesh-$(package)/tests
+
+pylint:
+	cd ..; pylint --rcfile=cloudmesh-$(package)/.pylintrc  cloudmesh-$(package)/cloudmesh
+	cd ..; pylint --rcfile=cloudmesh-$(package)/.pylintrc  --disable=F0010 cloudmesh-$(package)/tests
 
 requirements:
 	echo "# cloudmesh-common requirements"> tmp.txt
 	#echo "cloudmesh-common" > tmp.txt
 	#echo "cloudmesh-cmd5" >> tmp.txt
-	pip-compile setup.py
+	# pip-compile setup.py
 	cat requirements.txt >> tmp.txt
 	mv tmp.txt requirements.txt
 	-git commit -m "update requirements" requirements.txt

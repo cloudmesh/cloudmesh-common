@@ -7,7 +7,7 @@ from cloudmesh.common.StopWatch import StopWatch
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.variables import Variables
 
-
+# pylint: disable=C0103
 # noinspection PyPep8Naming
 class Benchmark(object):
 

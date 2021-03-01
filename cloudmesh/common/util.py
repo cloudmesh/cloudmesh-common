@@ -260,7 +260,7 @@ def str_banner(txt=None, c="-", prefix="#", debug=True, label=None,
         if txt is not None:
 
             if figlet:
-               txt = pyfiglet.figlet_format(txt, font=font)
+                txt = pyfiglet.figlet_format(txt, font=font)
 
             for line in txt.splitlines():
                 output += prefix + " " + line + "\n"

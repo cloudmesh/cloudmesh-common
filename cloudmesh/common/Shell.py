@@ -81,11 +81,11 @@ class Brew(object):
 class Pip(object):
     @classmethod
     def install(cls, name):
-        r = Shell.pip("install", "esptool")
-        if "already satisfied: esptool" in r:
+        r = Shell.pip("install", name)
+        if f"already satisfied: {name}" in r:
             print(name, "... already installed")
             Console.ok(r)
-        elif "Successfully installed esptool":
+        elif f"Successfully installed {name}":
             print(name, "... installed")
             Console.ok(r)
         else:
@@ -818,7 +818,7 @@ class Shell(object):
         :return:
         """
         NotImplementedInWindows()
-        # TODO: implement with realines on a file.
+        # TODO: implement with readlines on a file.
         return cls.execute('tail', args)
 
     @classmethod
