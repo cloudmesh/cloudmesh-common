@@ -10,7 +10,7 @@ class Sudo:
         """
         Asks for the Sudo password
         """
-        os.system(f'sudo -p "{msg}"  echo ""')
+        os.system(f'sudo -p "{msg}"  echo "" > /dev/null')
 
     @staticmethod
     def expire():
