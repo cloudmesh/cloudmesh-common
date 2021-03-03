@@ -4,7 +4,6 @@ that this method requires that the command be completely execute before the
 output is returned. FOr many activities in cloudmesh this is sufficient.
 
 """
-
 import errno
 import glob
 import os
@@ -13,18 +12,20 @@ import shlex
 import shutil
 import subprocess
 import sys
+import textwrap
 import zipfile
 from distutils.spawn import find_executable
 from pathlib import Path
 from pipes import quote
 from sys import platform
-import textwrap
 
 import psutil
 from cloudmesh.common.StopWatch import StopWatch
 from cloudmesh.common.console import Console
 from cloudmesh.common.dotdict import dotdict
-from cloudmesh.common.util import path_expand, readfile
+from cloudmesh.common.systeminfo import get_platform
+from cloudmesh.common.util import path_expand
+from cloudmesh.common.util import readfile
 
 
 # from functools import wraps
@@ -46,6 +47,17 @@ from cloudmesh.common.util import path_expand, readfile
 #            sys.exit()
 #        f(args)
 #    return new_f
+
+def windows_not_supported(f):
+    def wrapper(*args, **kwargs):
+        host = get_platform()
+        if host == "windows":
+            Console.error("Not supported on windows")
+            return ""
+        else:
+            return f(*args, **kwargs)
+
+    return wrapper
 
 def NotImplementedInWindows():
     if sys.platform == "win32":
