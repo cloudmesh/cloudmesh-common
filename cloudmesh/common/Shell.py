@@ -61,8 +61,7 @@ def windows_not_supported(f):
 
 def NotImplementedInWindows():
     if sys.platform == "win32":
-        Console.error(f"The method {__name__} is not implemented in Windows,"
-                      " please implement, and/or submit an issue.")
+        Console.error(f"The method {__name__} is not implemented in Windows.")
         sys.exit()
 
 
