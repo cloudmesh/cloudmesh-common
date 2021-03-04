@@ -217,7 +217,7 @@ class Shell(object):
     @staticmethod
     def timezone():
         result = Shell.run("ls -l /etc/localtime").strip().split("/")
-        return result[7] + "/" + result[8]
+        return result[6] + "/" + result[8]
 
     @staticmethod
     def run_timed(label, command, encoding=None, service=None):
