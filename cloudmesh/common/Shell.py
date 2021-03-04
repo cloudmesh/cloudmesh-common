@@ -216,8 +216,12 @@ class Shell(object):
     # ls = cls.execute('cmd', args...)
     @staticmethod
     def timezone():
-        result = Shell.run("ls -l /etc/localtime").strip().split("/")
-        return result[6] + "/" + result[8]
+        # result = Shell.run("ls -l /etc/localtime").strip().split("/")
+        try:
+            result = Shell.run("ls -l /etc/localtime").strip().split("zoneinfo")[1][1:]
+            return result
+        except IndexError as e:
+            return "America/Indiana/Indianapolis"
 
     @staticmethod
     def run_timed(label, command, encoding=None, service=None):
