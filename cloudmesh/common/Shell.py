@@ -222,7 +222,7 @@ class Shell(object):
     @staticmethod
     def run_timed(label, command, encoding=None, service=None):
         """
-        runs teh command and uses the StopWatch to time it
+        runs the command and uses the StopWatch to time it
         :param label: name of the StopWatch
         :param command: the command to be executed
         :param encoding: the encoding
