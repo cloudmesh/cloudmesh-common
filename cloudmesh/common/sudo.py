@@ -38,7 +38,7 @@ class Sudo:
             sudo_command = ["sudo"] + command
         if msg is None:
             pass
-        elif msg is "command":
+        elif msg == "command":
             print("Executing:", " ".join(sudo_command))
         else:
             print("Executing:", " ".join(msg))
