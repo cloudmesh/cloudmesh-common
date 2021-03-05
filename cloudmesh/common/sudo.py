@@ -20,7 +20,7 @@ class Sudo:
         os.system("sudo -k")
 
     @staticmethod
-    def execute(command, decode="True", debug=False):
+    def execute(command, decode="True", debug=False, msg=None):
         """
         Executes the command
 
@@ -36,7 +36,12 @@ class Sudo:
             sudo_command = sudo_command.split(" ")
         else:
             sudo_command = ["sudo"] + command
-        print("Executing:", " ".join(sudo_command))
+        if msg is None:
+            pass
+        elif msg is "command":
+            print("Executing:", " ".join(sudo_command))
+        else:
+            print("Executing:", " ".join(msg))
         os.system("sync")
         result = subprocess.run(sudo_command, capture_output=True)
         os.system("sync")
