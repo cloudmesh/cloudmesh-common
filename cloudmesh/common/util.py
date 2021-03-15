@@ -212,13 +212,12 @@ def yn_choice(message, default='y', tries=None):
     # http://stackoverflow.com/questions/3041986/python-command-line-yes-no-input"""
     choices = 'Y/n' if default.lower() in ('y', 'yes') else 'y/N'
     if tries is None:
-        choice = input("%s (%s) " % (message, choices))
+        choice = input(f"{message} ({choices}) ")
         values = ('y', 'yes', '') if default == 'y' else ('y', 'yes')
         return True if choice.strip().lower() in values else False
     else:
         while tries > 0:
-            choice = input(
-                "%s (%s) (%s)" % (message, choices, "'q' to discard"))
+            choice = input(f"{message} ({choices}) ('q' to discard)")
             choice = choice.strip().lower()
             if choice in ['y', 'yes']:
                 return True
