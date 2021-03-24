@@ -460,7 +460,9 @@ class Shell(object):
                 f"osascript -e 'tell application \"Terminal\" to do script \"{command}\"'"
             )
         elif platform == "linux":  # for ubuntu running gnome
-            os.system(f"gnome-terminal -e \"bash -c \'{command}; exec $SHELL\'\"")
+            dist = os_platform.linux_distribution()[0]
+            linux_apps = {'ubuntu': 'gnome-terminal', 'debian':'lxterminal'}
+            os.system(f"{linux_apps[dist]} -e \"bash -c \'{command}; exec $SHELL\'\"")
 
         elif platform == "win32":
             if Path.is_dir(Path(r"C:\Program Files\Git")):
