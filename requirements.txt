@@ -28,7 +28,7 @@ python-hostlist==1.20
     # via cloudmesh-common (setup.py)
 pytz==2019.3
     # via cloudmesh-common (setup.py)
-pyyaml==5.3
+pyyaml==5.4
     # via oyaml
 requests==2.25.1
     # via cloudmesh-common (setup.py)
