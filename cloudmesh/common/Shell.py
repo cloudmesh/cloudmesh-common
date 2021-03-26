@@ -224,6 +224,16 @@ class Shell(object):
             return "America/Indiana/Indianapolis"
 
     @staticmethod
+    @windows_not_supported
+    def locale():
+        try:
+            result = Shell.run('locale').split('\n')[0].split('_')[1].split('.')[0].lower()
+            return result
+        except IndexError as e:
+            Console.warning('Could not determine locale. Defaulting to "us"')
+            return 'us'
+
+    @staticmethod
     def run_timed(label, command, encoding=None, service=None):
         """
         runs the command and uses the StopWatch to time it
