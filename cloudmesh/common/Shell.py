@@ -8,6 +8,7 @@ import errno
 import glob
 import os
 import platform as os_platform
+import requests
 import shlex
 import shutil
 import subprocess
@@ -18,6 +19,7 @@ from distutils.spawn import find_executable
 from pathlib import Path
 from pipes import quote
 from sys import platform
+from tqdm import tqdm
 
 import psutil
 from cloudmesh.common.StopWatch import StopWatch
@@ -710,6 +712,41 @@ class Shell(object):
         NotImplementedInWindows()
         # TODO: use tasklisk, compare to linux
         return cls.execute('kill', args)
+
+    @classmethod
+    def download(cls, source, destination, force=False, provider=None, chunk_size=128):
+        """
+        Given a source url and a destination filename, download the file at the source url
+        to the destination.
+
+        If provider is None, the request lib is used
+        If provider is 'system', wget, curl, and requests lib are attempted in that order
+        """
+        if provider == 'system':
+            # First try wget
+            Console.info('Trying to use wget')
+            wget_return = os.system(f'wget -O {destination} {source}')
+            if wget_return == 0:
+                return destination
+            # Then curl
+            curl_return = os.system(f'curl -L -o {destination} {source}')
+            if curl_return == 0:
+                return destination
+            else:
+                Console.info('curl could not be used')
+        # Default is requests lib. If provider is None, or if provider == 'system'
+        # but wget and curl fail, default here
+        r = requests.get(source, stream=True, allow_redirects=True)
+        total_size = int(r.headers.get('content-length'))
+
+        with open(destination, 'wb') as fd:
+            with tqdm(total=total_size, unit="B",
+               unit_scale=True, desc=destination, initial=0, ascii=True) as pbar:
+                for chunk in r.iter_content(chunk_size=chunk_size):
+                    fd.write(chunk)
+                    pbar.update(len(chunk))
+
+            return destination
 
     @classmethod
     def mount(cls, *args):
