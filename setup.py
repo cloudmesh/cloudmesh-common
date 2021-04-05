@@ -55,6 +55,7 @@ python-dateutil
 tabulate
 requests
 pyfiglet
+tqdm
 """.splitlines()
 
 version = readfile("VERSION").strip()
