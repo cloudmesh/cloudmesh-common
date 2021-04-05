@@ -40,3 +40,4 @@ tabulate==0.8.8
     # via cloudmesh-common (setup.py)
 urllib3==1.26.3
     # via requests
+tqdm==4.59.0
