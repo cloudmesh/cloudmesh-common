@@ -77,6 +77,8 @@ def download(source, destination, force=False):
     """
     Downloads the file from source to destination
 
+    For large files, see cloudmesh.common.Shell.download
+
     :param source: The http source
     :param destination: The destination in the file system
     :param force: If True the file will be downloaded even if

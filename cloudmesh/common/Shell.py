@@ -722,18 +722,18 @@ class Shell(object):
         If provider is None, the request lib is used
         If provider is 'system', wget, curl, and requests lib are attempted in that order
         """
+        destination = path_expand(destination)
         if provider == 'system':
             # First try wget
-            Console.info('Trying to use wget')
             wget_return = os.system(f'wget -O {destination} {source}')
             if wget_return == 0:
+                Console.info('Used wget')
                 return destination
             # Then curl
             curl_return = os.system(f'curl -L -o {destination} {source}')
             if curl_return == 0:
+                Console.info('Used curl')
                 return destination
-            else:
-                Console.info('curl could not be used')
         # Default is requests lib. If provider is None, or if provider == 'system'
         # but wget and curl fail, default here
         r = requests.get(source, stream=True, allow_redirects=True)
