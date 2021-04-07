@@ -723,6 +723,10 @@ class Shell(object):
         If provider is 'system', wget, curl, and requests lib are attempted in that order
         """
         destination = path_expand(destination)
+
+        if os.path.exists(destination) and not force:
+            return destination
+
         if provider == 'system':
             # First try wget
             wget_return = os.system(f'wget -O {destination} {source}')
