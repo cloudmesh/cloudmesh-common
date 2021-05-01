@@ -40,7 +40,7 @@ class Host(object):
     def config(hosts=None,
                ips=None,
                username=None,
-               key="~/.ssh/id_rsa.pub"):
+               key="~/.ssh/id_rsa"):
 
         if type(hosts) != list:
             _hosts = Parameter.expand(hosts)
