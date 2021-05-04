@@ -254,8 +254,11 @@ class Host(object):
                    source,
                    "{host}:{destination}"]
 
+        execute = f"cp {source} {destination}"
+
         result = Host.run(hosts=hosts,
                           command=command,
+                          execute=execute,
                           destination=destination,
                           shell=False)
 
