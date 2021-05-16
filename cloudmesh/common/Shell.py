@@ -217,14 +217,20 @@ class Shell(object):
     #
     # ls = cls.execute('cmd', args...)
     @staticmethod
-    def timezone():
-        # result = Shell.run("ls -l /etc/localtime").strip().split("/")
-        try:
-            result = Shell.run("ls -l /etc/localtime").strip().split("zoneinfo")[1][1:]
-            return result
-        except IndexError as e:
-            return "America/Indiana/Indianapolis"
-
+    @staticmethod
+    def timezone(default="America/Indiana/Indianapolis"):
+        # BUG we need to be able to pass the default from the cmdline
+        host = get_platform()
+        if host == "windows":
+            return default
+        else:
+            # result = Shell.run("ls -l /etc/localtime").strip().split("/")
+            try:
+                result = Shell.run("ls -l /etc/localtime").strip().split("zoneinfo")[1][1:]
+                return result
+            except IndexError as e:
+                return default
+            
     @staticmethod
     @windows_not_supported
     def locale():
