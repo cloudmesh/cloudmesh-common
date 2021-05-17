@@ -217,7 +217,6 @@ class Shell(object):
     #
     # ls = cls.execute('cmd', args...)
     @staticmethod
-    @staticmethod
     def timezone(default="America/Indiana/Indianapolis"):
         # BUG we need to be able to pass the default from the cmdline
         host = get_platform()
@@ -230,7 +229,7 @@ class Shell(object):
                 return result
             except IndexError as e:
                 return default
-            
+
     @staticmethod
     @windows_not_supported
     def locale():
