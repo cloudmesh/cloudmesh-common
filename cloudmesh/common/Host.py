@@ -40,7 +40,7 @@ class Host(object):
     def config(hosts=None,
                ips=None,
                username=None,
-               key="~/.ssh/id_rsa.pub"):
+               key="~/.ssh/id_rsa"):
 
         if type(hosts) != list:
             _hosts = Parameter.expand(hosts)
@@ -254,8 +254,11 @@ class Host(object):
                    source,
                    "{host}:{destination}"]
 
+        execute = f"cp {source} {destination}"
+
         result = Host.run(hosts=hosts,
                           command=command,
+                          execute=execute,
                           destination=destination,
                           shell=False)
 

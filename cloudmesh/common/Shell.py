@@ -8,6 +8,7 @@ import errno
 import glob
 import os
 import platform as os_platform
+import requests
 import shlex
 import shutil
 import subprocess
@@ -18,6 +19,7 @@ from distutils.spawn import find_executable
 from pathlib import Path
 from pipes import quote
 from sys import platform
+from tqdm import tqdm
 
 import psutil
 from cloudmesh.common.StopWatch import StopWatch
@@ -215,13 +217,28 @@ class Shell(object):
     #
     # ls = cls.execute('cmd', args...)
     @staticmethod
-    def timezone():
-        # result = Shell.run("ls -l /etc/localtime").strip().split("/")
+    def timezone(default="America/Indiana/Indianapolis"):
+        # BUG we need to be able to pass the default from the cmdline
+        host = get_platform()
+        if host == "windows":
+            return default
+        else:
+            # result = Shell.run("ls -l /etc/localtime").strip().split("/")
+            try:
+                result = Shell.run("ls -l /etc/localtime").strip().split("zoneinfo")[1][1:]
+                return result
+            except IndexError as e:
+                return default
+
+    @staticmethod
+    @windows_not_supported
+    def locale():
         try:
-            result = Shell.run("ls -l /etc/localtime").strip().split("zoneinfo")[1][1:]
+            result = Shell.run('locale').split('\n')[0].split('_')[1].split('.')[0].lower()
             return result
         except IndexError as e:
-            return "America/Indiana/Indianapolis"
+            Console.warning('Could not determine locale. Defaulting to "us"')
+            return 'us'
 
     @staticmethod
     def run_timed(label, command, encoding=None, service=None):
@@ -460,7 +477,9 @@ class Shell(object):
                 f"osascript -e 'tell application \"Terminal\" to do script \"{command}\"'"
             )
         elif platform == "linux":  # for ubuntu running gnome
-            os.system(f"gnome-terminal -e \"bash -c \'{command}; exec $SHELL\'\"")
+            dist = os_platform.linux_distribution()[0]
+            linux_apps = {'ubuntu': 'gnome-terminal', 'debian':'lxterminal'}
+            os.system(f"{linux_apps[dist]} -e \"bash -c \'{command}; exec $SHELL\'\"")
 
         elif platform == "win32":
             if Path.is_dir(Path(r"C:\Program Files\Git")):
@@ -698,6 +717,45 @@ class Shell(object):
         NotImplementedInWindows()
         # TODO: use tasklisk, compare to linux
         return cls.execute('kill', args)
+
+    @classmethod
+    def download(cls, source, destination, force=False, provider=None, chunk_size=128):
+        """
+        Given a source url and a destination filename, download the file at the source url
+        to the destination.
+
+        If provider is None, the request lib is used
+        If provider is 'system', wget, curl, and requests lib are attempted in that order
+        """
+        destination = path_expand(destination)
+
+        if os.path.exists(destination) and not force:
+            return destination
+
+        if provider == 'system':
+            # First try wget
+            wget_return = os.system(f'wget -O {destination} {source}')
+            if wget_return == 0:
+                Console.info('Used wget')
+                return destination
+            # Then curl
+            curl_return = os.system(f'curl -L -o {destination} {source}')
+            if curl_return == 0:
+                Console.info('Used curl')
+                return destination
+        # Default is requests lib. If provider is None, or if provider == 'system'
+        # but wget and curl fail, default here
+        r = requests.get(source, stream=True, allow_redirects=True)
+        total_size = int(r.headers.get('content-length'))
+
+        with open(destination, 'wb') as fd:
+            with tqdm(total=total_size, unit="B",
+               unit_scale=True, desc=destination, initial=0, ascii=True) as pbar:
+                for chunk in r.iter_content(chunk_size=chunk_size):
+                    fd.write(chunk)
+                    pbar.update(len(chunk))
+
+            return destination
 
     @classmethod
     def mount(cls, *args):

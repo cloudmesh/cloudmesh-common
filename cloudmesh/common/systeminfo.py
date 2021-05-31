@@ -20,8 +20,13 @@ def sys_user():
         except:
             if os.environ["HOME"] == "/root":
                 return "root"
+<<<<<<< HEAD
             else:
                 return "None"
+=======
+    return "None"
+
+>>>>>>> 6b2486413c6c27b3928dcfca671bb2231a5bf711
 
 def get_platform():
     if sys.platform == "darwin":

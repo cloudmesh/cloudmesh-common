@@ -1,12 +1,5 @@
 import collections
 import re
-
-try:
-    collectionsAbc = collections.abc
-except AttributeError:
-    collectionsAbc = collections
-
-import six
 import sys
 
 
@@ -22,7 +15,7 @@ def key_prefix_replace(d, prefix, new_prefix=""):
     :return: the dict with the keys replaced as specified
     """
     items = []
-    for k, v in d.items():
+    for k, v in list(d.items()):
         new_key = k
         for p in prefix:
             new_key = new_key.replace(p, new_prefix, 1)
@@ -54,11 +47,11 @@ def flatten(d, parent_key='', sep='__'):
         return flat
     else:
         items = []
-        for k, v in d.items():
+        for k, v in list(d.items()):
             new_key = parent_key + sep + k if parent_key else k
 
-            if isinstance(v, collectionsAbc.MutableMapping):
-                items.extend(flatten(v, new_key, sep=sep).items())
+            if isinstance(v, collections.abc.MutableMapping):
+                items.extend(list(flatten(v, new_key, sep=sep).items()))
             else:
                 items.append((new_key, v))
 
@@ -197,10 +190,7 @@ class FlatDict(dict):
 
 
 class FlatDict2(object):
-    if six.PY2:
-        primitive = (int, str, bool, unicode, dict, list)
-    elif six.PY3:
-        primitive = (int, str, bool, str, bytes, dict, list)
+    primitive = (int, str, bool, str, bytes, dict, list)
 
     @classmethod
     def is_primitive(cls, thing):

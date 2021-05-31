@@ -82,3 +82,6 @@ class YamlDB(object):
 
     def dict(self):
         return self._db
+
+    def get(self, key, value=None):
+        self._db.get(key, value)

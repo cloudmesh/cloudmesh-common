@@ -65,7 +65,7 @@ class StopWatch(object):
         cls.timer_status[name] = None
 
     @classmethod
-    def stop(cls, name):
+    def stop(cls, name, state=True):
         """
         stops the timer with a given name.
 
@@ -76,6 +76,7 @@ class StopWatch(object):
         # if cumulate:
         #    cls.timer_end[name] = cls.timer_end[name] + cls.timer_last[name]
         cls.timer_sum[name] = cls.timer_sum[name] + cls.timer_end[name] - cls.timer_start[name]
+        cls.timer_status[name] = state
 
         if cls.debug:
             print("Timer", name, "stopped ...")

@@ -58,7 +58,7 @@ class AuthorizedKeys(object):
         """
         auth = cls()
         with open(path) as fd:
-            for pubkey in itertools.imap(str.strip, fd):
+            for pubkey in map(str.strip, fd):
                 # skip empty lines
                 if not pubkey:
                     continue
