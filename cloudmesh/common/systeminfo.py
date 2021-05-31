@@ -15,8 +15,13 @@ def sys_user():
     elif sys.platform == "win32":
         return os.environ["USERNAME"]
     else:
-        return os.environ["USER"]
-
+        try:
+            return os.environ["USER"]
+        except:
+            if os.environ["HOME"] == "/root":
+                return "root"
+            else:
+                return "None"
 
 def get_platform():
     if sys.platform == "darwin":
