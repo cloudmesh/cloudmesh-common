@@ -27,6 +27,8 @@ class StopWatch(object):
     timer_status = {}
     # records a dt
     timer_sum = {}
+    # msg
+    timer_msg = {}
 
     @classmethod
     def keys(cls):
@@ -40,13 +42,38 @@ class StopWatch(object):
 
         :param name: the name of the timer
         :type name: string
-        :param status: the name of a status
-        :type status: bool
+        :param value: value of the nameed of a status
+        :type value: bool
 
         """
         if cls.debug:
             print("Timer", name, "status", value)
         cls.timer_status[name] = value
+
+    @classmethod
+    def get_message(cls, name):
+        """
+        starts a timer with the given name.
+
+        :param name: the name of the timer
+        :type name: string
+
+        """
+        return cls.timer_msg[name]
+
+    @classmethod
+    def message(cls, name, value):
+        """
+        starts a timer with the given name.
+
+        :param name: the name of the timer
+        :type name: string
+        :param value: the value of the message
+        :type value: bool
+
+        """
+        cls.timer_msg[name] = value
+
 
     @classmethod
     def start(cls, name):
@@ -63,6 +90,7 @@ class StopWatch(object):
         cls.timer_start[name] = time.time()
         cls.timer_end[name] = None
         cls.timer_status[name] = None
+        cls.timer_msg[name] = None
 
     @classmethod
     def stop(cls, name, state=True):
@@ -145,6 +173,7 @@ class StopWatch(object):
         cls.timer_sum.clear()
         cls.timer_status.clear()
         cls.timer_elapsed.clear()
+        cls.timer_msg.clear()
 
     @classmethod
     def print(cls, *args):
@@ -218,6 +247,7 @@ class StopWatch(object):
                     'time': StopWatch.get(timer, digits=3),
                     'sum': StopWatch.sum(timer, digits=3),
                     'status': StopWatch.get_status(timer),
+                    'msg': StopWatch.get_message(timer),
                     'timer': timer,
                     'tag': tag or ''
                 }
@@ -248,6 +278,7 @@ class StopWatch(object):
                 "sum",
                 "start",
                 "tag",
+                "msg",
                 "uname.node",
                 "user",
                 "uname.system",
@@ -261,6 +292,7 @@ class StopWatch(object):
                 "Sum",
                 "Start",
                 "tag",
+                "msg",
                 "Node",
                 "User",
                 "OS",
