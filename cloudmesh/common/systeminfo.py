@@ -7,6 +7,7 @@ from collections import OrderedDict
 import pip
 import psutil
 import humanize
+import re
 
 
 def sys_user():
@@ -49,7 +50,27 @@ def systeminfo():
             r = ""
         return r
 
+    frequency = psutil.cpu_freq()
+
+    operating_system = get_platform()
+
+    description = ""
+    try:
+        if operating_system == "macos":
+            description = os.popen("sysctl -n machdep.cpu.brand_string").read()
+        elif operating_system == "win32":
+            description = platform.processor()
+        elif operating_system == "linux":
+            lines = readfile("/proc/cpuinfo").strip().splitlines()
+            for line in lines:
+                if "model name" in line:
+                    description = re.sub(".*model name.*:", "", line, 1)
+    except:
+        pass
+
+
     data = OrderedDict({
+        'cpu': description,
         'uname.system': uname.system,
         'uname.node': uname.node,
         'uname.release': uname.release,
@@ -62,6 +83,7 @@ def systeminfo():
         'python.pip': pip.__version__,
         'user': sys_user(),
         'mem.percent': str(mem.percent) + " %",
+        'frequency': frequency
     })
     for attribute in ["total",
                       "available",
