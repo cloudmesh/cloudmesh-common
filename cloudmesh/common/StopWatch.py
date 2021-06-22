@@ -8,7 +8,7 @@ import time
 from pprint import pprint
 
 from cloudmesh.common.Tabulate import Printer
-from cloudmesh.common.systeminfo import systeminfo
+from cloudmesh.common.systeminfo import systeminfo as cm_systeminfo
 
 
 class StopWatch(object):
@@ -203,12 +203,26 @@ class StopWatch(object):
         return s
 
     @classmethod
+    def systeminfo(cls):
+        data_platform = cm_systeminfo()
+
+        data_platform['cpu_count'] = multiprocessing.cpu_count()
+
+        return Printer.attribute(
+            data_platform,
+            order=["Machine Attribute", "Value"],
+            output="table"
+        )
+
+    @classmethod
     def benchmark(cls,
                   sysinfo=True,
                   csv=True,
                   prefix="# csv",
                   tag=None,
-                  sum=True):
+                  sum=True,
+                  node=None,
+                  user=None):
         """
         prints out all timers in a convenient benchmark table
         :return:
@@ -220,7 +234,7 @@ class StopWatch(object):
         #
 
         print()
-        data_platform = systeminfo()
+        data_platform = cm_systeminfo()
 
         data_platform['cpu_count'] = multiprocessing.cpu_count()
 
@@ -258,7 +272,13 @@ class StopWatch(object):
                                   "uname.machine",
                                   "platform.version",
                                   "sys.platform"]:
-                    data_timers[timer][attribute] = data_platform[attribute]
+                    if attribute == "user" and user is not None:
+                        data_timers[timer][attribute] = user
+                    elif attribute == "uname.node" and node is not None:
+                        data_timers[timer][attribute] = node
+                    else:
+                        data_timers[timer][attribute] = data_platform[attribute]
+
 
             # print(Printer.attribute(data_timers, header=["Command", "Time/s"]))
 
