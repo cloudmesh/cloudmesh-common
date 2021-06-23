@@ -202,11 +202,10 @@ class StopWatch(object):
         return s
 
     @classmethod
-    def systeminfo(cls):
+    def systeminfo(cls, data=None):
         data_platform = cm_systeminfo()
-
-        data_platform['cpu_count'] = multiprocessing.cpu_count()
-
+        if data is not None:
+            data_platform.update(data)
         return Printer.attribute(
             data_platform,
             order=["Machine Attribute", "Value"],

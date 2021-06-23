@@ -19,8 +19,12 @@ def sys_user():
         try:
             return os.environ["USER"]
         except:
-            if os.environ["HOME"] == "/root":
-                return "root"
+            pass
+        try:
+            os.environ["HOME"] == "/root"
+            return "root"
+        except:
+            pass
     return "None"
 
 def get_platform():
@@ -38,7 +42,7 @@ def get_platform():
         return sys.platform
 
 
-def systeminfo():
+def systeminfo(info=None):
     uname = platform.uname()
     mem = psutil.virtual_memory()
 
@@ -119,5 +123,6 @@ def systeminfo():
                     data[attribute] = value
     except:
         pass
-
+    if info is not None:
+        data.update(info)
     return dict(data)
