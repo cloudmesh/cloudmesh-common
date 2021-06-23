@@ -8,7 +8,7 @@ import pip
 import psutil
 import humanize
 import re
-
+import multiprocessing
 
 def sys_user():
     if "COLAB_GPU" in os.environ:
@@ -70,7 +70,8 @@ def systeminfo():
 
 
     data = OrderedDict({
-        'cpu': description,
+        'cpu': description.strip(),
+        'cpu_count': multiprocessing.cpu_count(),
         'uname.system': uname.system,
         'uname.node': uname.node,
         'uname.release': uname.release,

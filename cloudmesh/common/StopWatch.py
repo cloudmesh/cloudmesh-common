@@ -2,7 +2,6 @@
 Class for starting and stopping named timers.
 
 """
-import multiprocessing
 import os
 import time
 from pprint import pprint
@@ -235,9 +234,6 @@ class StopWatch(object):
 
         print()
         data_platform = cm_systeminfo()
-
-        data_platform['cpu_count'] = multiprocessing.cpu_count()
-
         if sysinfo:
             print(Printer.attribute(
                 data_platform,
