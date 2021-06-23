@@ -13,14 +13,21 @@ import multiprocessing
 def sys_user():
     if "COLAB_GPU" in os.environ:
         return "collab"
-    elif sys.platform == "win32":
-        return os.environ["USERNAME"]
-    else:
-        try:
-            return os.environ["USER"]
-        except:
-            if os.environ["HOME"] == "/root":
-                return "root"
+    try:
+        if sys.platform == "win32":
+            return os.environ["USERNAME"]
+    except:
+        pass
+    try:
+        return os.environ["USER"]
+    except:
+        pass
+    try:
+        if os.environ["HOME"] == "/root":
+            return "root"
+    except:
+        pass
+
     return "None"
 
 def get_platform():
