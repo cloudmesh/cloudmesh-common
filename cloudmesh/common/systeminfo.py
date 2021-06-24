@@ -59,6 +59,11 @@ def systeminfo(info=None):
 
     frequency = psutil.cpu_freq()
 
+    try:
+        cores = psutil.cpu_count(logical=False)
+    except:
+        cores = "unkown"
+
     operating_system = get_platform()
 
     description = ""
@@ -79,6 +84,8 @@ def systeminfo(info=None):
     data = OrderedDict({
         'cpu': description.strip(),
         'cpu_count': multiprocessing.cpu_count(),
+        'cpu_threads': multiprocessing.cpu_count(),
+        'cpu_cores': cores,
         'uname.system': uname.system,
         'uname.node': uname.node,
         'uname.release': uname.release,
