@@ -1,4 +1,5 @@
 import os
+import platform
 import subprocess
 import textwrap
 from multiprocessing import Pool
@@ -99,7 +100,7 @@ class Host(object):
         :param args: command dict
         :return:
         """
-        hostname = os.uname()[1]
+        hostname = platform.uname()[1]
         host = args.get("host")
 
         shell = args.get("shell")

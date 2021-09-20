@@ -1,5 +1,6 @@
 from cloudmesh.common.JobSet import JobSet
 import os
+import platform
 import textwrap
 from cloudmesh.common.dotdict import dotdict
 from cloudmesh.common.Tabulate import Printer
@@ -70,7 +71,7 @@ class JobScript:
         if script is None:
             Console.error("The script is not defined, found None as content")
             return
-        host = host or os.uname()[1]
+        host = host or platform.uname()[1]
         if kwargs:
             parameters = dotdict(**kwargs)
         else:
