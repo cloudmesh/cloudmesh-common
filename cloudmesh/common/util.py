@@ -15,6 +15,8 @@ import requests
 from pathlib import Path
 from cloudmesh.common.console import Console
 import pyfiglet
+import socket
+import platform
 
 try:
     collectionsAbc = collections.abc
@@ -125,6 +127,22 @@ def grep(pattern, filename):
     except StopIteration:
         return ''
 
+
+
+def is_local(host):
+    """
+    Checks if the host is the localhost
+
+    :param host: The hotsname or ip
+    :return: True if the host is the localhost
+    """
+    return host in ["127.0.0.1",
+                    "localhost",
+                    socket.gethostname(),
+                    # just in case socket.gethostname() does not work  we also try the following:
+                    platform.node(),
+                    socket.gethostbyaddr(socket.gethostname())[0]
+                    ]
 
 # noinspection PyPep8
 def is_gitbash():

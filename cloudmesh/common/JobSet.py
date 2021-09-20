@@ -126,16 +126,20 @@ class JobSet:
             # print ("RUN check_output", command)
 
             try:
-                result = subprocess.check_output(command, shell=True)
+                stderr = ""
+                returncode = 0
+                result = subprocess.check_output(command, shell=True,stderr=subprocess.PIPE)
             except subprocess.CalledProcessError as grepexc:
-                print("Error Code", grepexc.returncode, grepexc.output)
+                #print("Error Code", grepexc.returncode, grepexc.output)
                 result = "Command could not run | Error Code: ", grepexc.returncode
-            returncode = 0
+                #result = grepexc.stdout
+                stderr = grepexc.stderr
+                returncode = grepexc.returncode
 
         return dict({
             "name": spec.name,
             "stdout": result,
-            "stderr": "",
+            "stderr": stderr,
             "returncode": returncode,
             "status": "defined"
         })
