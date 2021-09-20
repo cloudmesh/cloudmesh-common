@@ -1,4 +1,5 @@
 import os
+import platform
 import subprocess
 from collections import OrderedDict
 from multiprocessing import Pool
@@ -90,7 +91,7 @@ class JobSet:
         :return:
         """
         spec = dotdict(spec)
-        hostname = os.uname()[1]
+        hostname = platform.uname()[1]
         local = hostname == spec.host
 
         if 'key' not in spec:
@@ -232,7 +233,7 @@ if __name__ == '__main__':
             "status": "defined"
         })
 
-    hostname = os.uname()[1]
+    hostname = platform.uname()[1]
 
     s = JobSet("test", executor=JobSet.identity)
 
@@ -283,7 +284,7 @@ if __name__ == '__main__':
     t.run()
     t.Print()
 
-    hostname = os.uname()[1]
+    hostname = platform.uname()[1]
     t = JobSet("onejob", executor=JobSet.ssh)
     for host in Parameter.expand("red,red[01-03]"):
         t.add({"name": host, "host": host, "command": "uname -a"})
