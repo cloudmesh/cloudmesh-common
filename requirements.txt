@@ -7,7 +7,6 @@
 colorama
 humanize
 oyaml
-pathlib
 psutil
 pyfiglet
 python-dateutil

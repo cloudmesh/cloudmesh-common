@@ -49,7 +49,6 @@ python-hostlist
 simplejson
 oyaml
 colorama
-pathlib
 humanize
 python-dateutil
 tabulate
