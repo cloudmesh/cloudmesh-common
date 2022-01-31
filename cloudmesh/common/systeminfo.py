@@ -57,7 +57,10 @@ def systeminfo(info=None):
             r = ""
         return r
 
-    frequency = psutil.cpu_freq()
+    try:
+        frequency = psutil.cpu_freq()
+    except:
+        frequency = None
 
     try:
         cores = psutil.cpu_count(logical=False)

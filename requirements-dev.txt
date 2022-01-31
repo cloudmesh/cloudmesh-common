@@ -1,10 +1,9 @@
-pytest
-coverage
-flake8
+wheel
 bump2version
-pytest-cov
 pip-tools
 pipdeptree
-wheel
-pip-tools
+pytest
+pytest-cov
+coverage
+flake8
 
