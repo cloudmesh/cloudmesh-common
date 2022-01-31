@@ -439,7 +439,7 @@ class Shell(object):
             shutil.rmtree(path_expand(top))
         except OSError as e:
             print(e.strerror)
-            assert False, "Directory {location} could not be deleted"
+            assert False, f"Directory {top} could not be deleted"
 
     @staticmethod
     def dot2svg(filename, engine='dot'):
