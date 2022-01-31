@@ -438,8 +438,9 @@ class Shell(object):
         try:
             shutil.rmtree(path_expand(top))
         except OSError as e:
-            print(e.strerror)
-            assert False, f"Directory {top} could not be deleted"
+            pass
+            # print(e.strerror)
+            # assert False, f"Directory {top} could not be deleted"
 
     @staticmethod
     def dot2svg(filename, engine='dot'):
