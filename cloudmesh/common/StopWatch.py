@@ -220,7 +220,8 @@ class StopWatch(object):
                   tag=None,
                   sum=True,
                   node=None,
-                  user=None):
+                  user=None,
+                  attributes=None):
         """
         prints out all timers in a convenient benchmark table
         :return:
@@ -286,34 +287,46 @@ class StopWatch(object):
                 elif data_timers[key]['status'] is not None and data_timers[key]['status']:
                     data_timers[key]['status'] = "ok"
 
-            order = [
-                "timer",
-                "status",
-                "time",
-                "sum",
-                "start",
-                "tag",
-                "msg",
-                "uname.node",
-                "user",
-                "uname.system",
-                "platform.version"
-            ]
+            if attributes is None:
+                order = [
+                    "timer",
+                    "status",
+                    "time",
+                    "sum",
+                    "start",
+                    "tag",
+                    "msg",
+                    "uname.node",
+                    "user",
+                    "uname.system",
+                    "platform.version"
+                ]
 
-            header = [
-                "Name",
-                "Status",
-                "Time",
-                "Sum",
-                "Start",
-                "tag",
-                "msg",
-                "Node",
-                "User",
-                "OS",
-                "Version"
-            ]
+                header = [
+                    "Name",
+                    "Status",
+                    "Time",
+                    "Sum",
+                    "Start",
+                    "tag",
+                    "msg",
+                    "Node",
+                    "User",
+                    "OS",
+                    "Version"
+                ]
+            elif attributes == "short":
+                order = [
+                    "timer",
+                    "status",
+                    "time"
+                ]
 
+                header = [
+                    "Name",
+                    "Status",
+                    "Time"
+                ]
             print()
             print(Printer.write(
                 data_timers,
