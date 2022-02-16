@@ -9,6 +9,33 @@ from pprint import pprint
 from cloudmesh.common.Tabulate import Printer
 from cloudmesh.common.systeminfo import systeminfo as cm_systeminfo
 
+def rename(newname):
+    """
+    decorator to rename a function
+    :param newname: function name
+    :type newname: str
+    :return: renamed function
+    :rtype: object
+    """
+    def decorator(f):
+        f.__name__ = newname
+        return f
+    return decorator
+
+def benchmark(func):
+    """
+    decorator to benchmark a function
+    :param func: function
+    :type func: object
+    :return: function with benchmarks based on the name of the function
+    :rtype: object
+    """
+    @rename(func.__name__)
+    def wrapper(*args, **kwargs):
+        StopWatch.start(func.__name__)
+        func(*args, **kwargs)
+        StopWatch.stop(func.__name__)
+    return wrapper
 
 class StopWatch(object):
     """
@@ -189,6 +216,11 @@ class StopWatch(object):
 
     @classmethod
     def __str__(cls):
+        """
+        returns the string representation of the StopWatch
+        :return: string of the StopWatch
+        :rtype: str
+        """
         s = ""
         for t in cls.timer_end:
             data = {"label": t,
@@ -203,6 +235,14 @@ class StopWatch(object):
 
     @classmethod
     def systeminfo(cls, data=None):
+        """
+        Print information about the system
+
+        :param data: additional data to be integrated
+        :type data: dict
+        :return: a table with data
+        :rtype: str
+        """
         data_platform = cm_systeminfo()
         if data is not None:
             data_platform.update(data)
@@ -224,8 +264,25 @@ class StopWatch(object):
                   attributes=None):
         """
         prints out all timers in a convenient benchmark table
-        :return:
-        :rtype:
+
+        :param sysinfo: controls if system info shoul be printed.
+        :type sysinfo: bool
+        :param csv: contols if the data should be printed also as csv strings
+        :type csv: bool
+        :param prefix: The prefix used for the csv string
+        :type prefix: str
+        :param tag: overwrites the tag
+        :type tag: str
+        :param sum: prints the sums (not used)
+        :type sum: bool
+        :param node: overwrites the name of the node
+        :type node: str
+        :param user: overwrites the name of the user
+        :type user: str
+        :param attributes: list of additional attributes to print
+        :type attributes: list
+        :return: prints the information
+        :rtype: stdout
         """
 
         #

@@ -95,7 +95,7 @@ class JobScript:
                     line, tag = line.split("# tag:", 1)
                     tag = tag.strip()
                     line = line.strip()
-                jobs.add({
+                jobs.add_directory({
                     "script": name,
                     "name": tag,
                     "tag": tag,

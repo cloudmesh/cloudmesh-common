@@ -59,7 +59,7 @@ class JobMultiHostScript:
 
                 # Execute jobSet for each host in parallel
                 for host in self.hosts:
-                    job.add({"name": host, "host": host, "command": line})
+                    job.add_directory({"name": host, "host": host, "command": line})
                 job.run(parallel=len(self.hosts))
                 job.Print()
 

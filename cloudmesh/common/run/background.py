@@ -3,7 +3,7 @@ import subprocess
 
 class run(object):
     """
-    A class to simply execute a comman.
+    A class to simply execute a common.
 
     Example:
 
