@@ -15,7 +15,6 @@ import subprocess
 import sys
 import textwrap
 import zipfile
-from distutils.spawn import find_executable
 from pathlib import Path
 from pipes import quote
 from sys import platform
@@ -1082,7 +1081,7 @@ class Shell(object):
         :param command: teh command
         :return: the path
         """
-        return find_executable(command)
+        return shutil.which(command)
 
     @classmethod
     def command_exists(cls, name):

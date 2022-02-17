@@ -89,6 +89,12 @@ class Console(object):
     }
 
     theme = theme_color
+    size = os.get_terminal_size()
+    columns = size.columns
+    lines = size.lines
+
+    def line(self, c="="):
+        print(Console.columns * c)
 
     # noinspection PyPep8Naming
     def red(msg):
@@ -340,6 +346,7 @@ if __name__ == "__main__":
 
     print(Console.theme)
 
+    Console.line()
     Console.warning("Warning")
     Console.error("Error")
     Console.info("Info")
@@ -355,3 +362,4 @@ if __name__ == "__main__":
     print(Style.DIM + 'and in dim text')
     print(Fore.RESET + Back.RESET + Style.RESET_ALL)
     print('back to normal now')
+    Console.line()
