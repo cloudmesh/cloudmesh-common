@@ -261,7 +261,8 @@ class StopWatch(object):
                   sum=True,
                   node=None,
                   user=None,
-                  attributes=None):
+                  attributes=None,
+                  total=False):
         """
         prints out all timers in a convenient benchmark table
 
@@ -302,7 +303,7 @@ class StopWatch(object):
         # PRINT TIMERS
         #
         timers = StopWatch.keys()
-
+        total_time = 0.0
         if len(timers) > 0:
 
             data_timers = {}
@@ -318,6 +319,7 @@ class StopWatch(object):
                     'timer': timer,
                     'tag': tag or ''
                 }
+                total_time = total_time + StopWatch.get(timer)
 
                 for attribute in ["uname.node",
                                   "user",
@@ -392,6 +394,8 @@ class StopWatch(object):
                 output="table"
 
             ))
+            if total:
+                print("Total:", total_time)
             print()
 
             if csv:
