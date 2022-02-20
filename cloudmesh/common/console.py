@@ -89,9 +89,13 @@ class Console(object):
     }
 
     theme = theme_color
-    size = os.get_terminal_size()
-    columns = size.columns
-    lines = size.lines
+    try:
+        size = os.get_terminal_size()
+        columns = size.columns
+        lines = size.lines
+    except:
+        columns = 79
+        lines = 24
 
     def line(self, c="="):
         print(Console.columns * c)
