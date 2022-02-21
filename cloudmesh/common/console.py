@@ -89,6 +89,7 @@ class Console(object):
     }
 
     theme = theme_color
+
     try:
         size = os.get_terminal_size()
         columns = size.columns
@@ -97,8 +98,17 @@ class Console(object):
         columns = 79
         lines = 24
 
+
     def line(self, c="="):
-        print(Console.columns * c)
+        try:
+            size = os.get_terminal_size()
+            columns = size.columns
+        except:
+            columns = 79
+
+        # lines = size.lines
+
+        print(columns * c)
 
     # noinspection PyPep8Naming
     def red(msg):
