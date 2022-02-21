@@ -293,6 +293,11 @@ class StopWatch(object):
         print()
         data_platform = cm_systeminfo()
         if sysinfo:
+            if node is not None:
+                data_platform["uname.node"] = node
+            if user is not None:
+                data_platform["user"] = user
+
             print(Printer.attribute(
                 data_platform,
                 order=["Machine Attribute", "Value"],
