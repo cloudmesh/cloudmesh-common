@@ -45,7 +45,7 @@ def get_platform():
         return sys.platform
 
 
-def systeminfo(info=None):
+def systeminfo(info=None, user=None, node=None):
     uname = platform.uname()
     mem = psutil.virtual_memory()
 
@@ -138,4 +138,8 @@ def systeminfo(info=None):
         pass
     if info is not None:
         data.update(info)
+    if user is not None:
+        data["user"] = user
+    if node is not None:
+        data["uname.node"] = node
     return dict(data)

@@ -1,6 +1,26 @@
 """
 Class for starting and stopping named timers.
 
+Here is a simple example. the user and node parameters can be ommitted, but they help in case you like
+to change the system retrieved values.
+
+from pprint import pprint
+from cloudmesh.common.StopWatch import StopWatch
+
+import time
+
+user="gregor"
+node="5950x"
+
+for t in ["a", "b"]:
+    StopWatch.start(t)
+    time.sleep(0.1)
+    StopWatch.stop(t)
+
+pprint(StopWatch.get_benchmark(user=user, node=node))
+
+StopWatch.benchmark(user=user, node=node)
+
 """
 import os
 import time
@@ -252,6 +272,110 @@ class StopWatch(object):
             output="table"
         )
 
+
+    @classmethod
+    def get_sysinfo(cls,
+                    node=None,
+                    user=None):
+        data_platform = cm_systeminfo(node=node, user=user)
+        return data_platform
+
+
+    @classmethod
+    def get_benchmark(cls,
+                  sysinfo=True,
+                  tag=None,
+                  node=None,
+                  user=None,
+                  total=False,
+                ):
+        """
+        prints out all timers in a convenient benchmark table
+
+        :param sysinfo: controls if system info shoul be printed.
+        :type sysinfo: bool
+        :param csv: contols if the data should be printed also as csv strings
+        :type csv: bool
+        :param prefix: The prefix used for the csv string
+        :type prefix: str
+        :param tag: overwrites the tag
+        :type tag: str
+        :param sum: prints the sums (not used)
+        :type sum: bool
+        :param node: overwrites the name of the node
+        :type node: str
+        :param user: overwrites the name of the user
+        :type user: str
+        :param attributes: list of additional attributes to print
+        :type attributes: list
+        :return: prints the information
+        :rtype: stdout
+        """
+
+        #
+        # PRINT PLATFORM
+        #
+
+        data_platform = cm_systeminfo(user=user, node=node)
+        if sysinfo:
+            print(Printer.attribute(
+                data_platform,
+                output="table"
+            ))
+
+        benchmark_data = {
+            'sysinfo': data_platform,
+        }
+
+        #
+        # GET TIMERS
+        #
+        timers = StopWatch.keys()
+        total_time = 0.0
+        if len(timers) > 0:
+
+            data_timers = {}
+            for timer in timers:
+                data_timers[timer] = {
+                    'start': time.strftime("%Y-%m-%d %H:%M:%S",
+                                           time.gmtime(
+                                               StopWatch.timer_start[timer])),
+                    'stop': time.strftime("%Y-%m-%d %H:%M:%S",
+                                           time.gmtime(
+                                               StopWatch.timer_end[timer])),
+                    'time': StopWatch.get(timer, digits=3),
+                    'sum': StopWatch.sum(timer, digits=3),
+                    'status': StopWatch.get_status(timer),
+                    'msg': StopWatch.get_message(timer),
+                    'timer': timer,
+                    'tag': tag or ''
+                }
+                total_time = total_time + StopWatch.get(timer)
+
+
+
+            # print(Printer.attribute(data_timers, header=["Command", "Time/s"]))
+
+            if 'benchmark_start_stop' in data_timers:
+                del data_timers['benchmark_start_stop']
+
+            for key in data_timers:
+                if key != 'benchmark_start_stop' and data_timers[key]['status'] is None:
+                    data_timers[key]['status'] = "failed"
+                elif data_timers[key]['status'] is not None and data_timers[key]['status']:
+                    data_timers[key]['status'] = "ok"
+
+            if total:
+                print("Total:", total_time)
+
+
+            benchmark_data["benchmark"] = data_timers
+
+        else:
+            print("ERROR: No timers found")
+
+        return benchmark_data
+
     @classmethod
     def benchmark(cls,
                   sysinfo=True,
@@ -291,13 +415,8 @@ class StopWatch(object):
         #
 
         print()
-        data_platform = cm_systeminfo()
+        data_platform = cm_systeminfo(user=user, node=node)
         if sysinfo:
-            if node is not None:
-                data_platform["uname.node"] = node
-            if user is not None:
-                data_platform["user"] = user
-
             print(Printer.attribute(
                 data_platform,
                 order=["Machine Attribute", "Value"],
