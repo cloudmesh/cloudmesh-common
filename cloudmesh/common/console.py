@@ -120,7 +120,7 @@ class Console(object):
 
     # noinspection PyPep8Naming
     def blue(msg):
-        print(Fore.BLLUE + msg + Style.RESET_ALL)
+        print(Fore.BLUE + msg + Style.RESET_ALL)
 
     @staticmethod
     def init():

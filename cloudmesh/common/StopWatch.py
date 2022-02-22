@@ -1,7 +1,7 @@
 """
 Class for starting and stopping named timers.
 
-Here is a simple example. the user and node parameters can be ommitted, but they help in case you like
+Here is a simple example. the user and node parameters can be omitted, but they help in case you like
 to change the system retrieved values.
 
 from pprint import pprint
