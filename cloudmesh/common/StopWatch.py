@@ -443,8 +443,10 @@ class StopWatch(object):
                     'timer': timer,
                     'tag': tag or ''
                 }
-                total_time = total_time + StopWatch.get(timer)
-
+                try:
+                    total_time = total_time + StopWatch.get(timer)
+                except:
+                    pass
                 for attribute in ["uname.node",
                                   "user",
                                   "uname.system",
