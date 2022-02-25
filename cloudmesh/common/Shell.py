@@ -425,12 +425,27 @@ class Shell(object):
 
     @staticmethod
     def is_root():
+        """
+        checks if the user is root
+
+        :return: True if the user is root
+        :rtype: boolean
+        """
         username = subprocess.getoutput("whoami")
         return username == "root"
 
     @staticmethod
     def rmdir(top, verbose=False):
+        """
+        removes a directory
 
+        :param top: removes the directory tree from the top
+        :type top: str
+        :param verbose: unused
+        :type verbose: unused
+        :return: void
+        :rtype: void
+        """
         p = Path(top)
         if not p.exists():
             return
@@ -464,10 +479,30 @@ class Shell(object):
 
     @staticmethod
     def terminal_title(name):
+        """
+        sets the title of the terminal
+
+        :param name: the title
+        :type name: str
+        :return: void
+        :rtype: void
+        """
         return f'echo -n -e \"\033]0;{name}\007\"'
 
     @classmethod
-    def terminal(cls, command='pwd', title=None):
+    def terminal(cls, command='pwd', title=None, kind=None):
+        """
+        starts a terminal and executes the command in that terminal
+
+        :param command: the command to be executed
+        :type command: str
+        :param title: the title
+        :type title: str
+        :param kind: for windows you can set "cmd", "powershell", or "gitbash"
+        :type kind: str
+        :return: void
+        :rtype: void
+        """
         # title nameing not implemented
         print(platform)
         if platform == 'darwin':
@@ -482,12 +517,20 @@ class Shell(object):
             os.system(f"{linux_apps[dist]} -e \"bash -c \'{command}; exec $SHELL\'\"")
 
         elif platform == "win32":
-            if Path.is_dir(Path(r"C:\Program Files\Git")):
+            if kind is None:
+                if Path.is_dir(Path(r"C:\Program Files\Git")):
+                    kind = "gitbash"
+            kind = kind.lower()
+            if kind == "gitbash":
                 subprocess.Popen([r"C:\Program Files\Git\git-bash.exe",
                                   "-c", f"{command}"])
+            elif kind == "cmd":
+                Console.error(f"Command not implemented for {kind}")
+            elif kind == "powershell":
+                Console.error(f"Command not implemented for {kind}")
             else:
                 Console.error("Git bash is not found, please make sure it "
-                              "is installed.")
+                              "is installed. Other terminals not supported.")
                 raise NotImplementedError
         else:
             raise NotImplementedError
