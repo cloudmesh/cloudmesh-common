@@ -29,6 +29,7 @@ from pprint import pprint
 from cloudmesh.common.Tabulate import Printer
 from cloudmesh.common.systeminfo import systeminfo as cm_systeminfo
 
+
 def rename(newname):
     """
     decorator to rename a function
@@ -37,10 +38,13 @@ def rename(newname):
     :return: renamed function
     :rtype: object
     """
+
     def decorator(f):
         f.__name__ = newname
         return f
+
     return decorator
+
 
 def benchmark(func):
     """
@@ -50,12 +54,15 @@ def benchmark(func):
     :return: function with benchmarks based on the name of the function
     :rtype: object
     """
+
     @rename(func.__name__)
     def wrapper(*args, **kwargs):
         StopWatch.start(func.__name__)
         func(*args, **kwargs)
         StopWatch.stop(func.__name__)
+
     return wrapper
+
 
 class StopWatch(object):
     """
@@ -119,7 +126,6 @@ class StopWatch(object):
 
         """
         cls.timer_msg[name] = value
-
 
     @classmethod
     def start(cls, name):
@@ -272,7 +278,6 @@ class StopWatch(object):
             output="table"
         )
 
-
     @classmethod
     def get_sysinfo(cls,
                     node=None,
@@ -280,15 +285,14 @@ class StopWatch(object):
         data_platform = cm_systeminfo(node=node, user=user)
         return data_platform
 
-
     @classmethod
     def get_benchmark(cls,
-                  sysinfo=True,
-                  tag=None,
-                  node=None,
-                  user=None,
-                  total=False,
-                ):
+                      sysinfo=True,
+                      tag=None,
+                      node=None,
+                      user=None,
+                      total=False,
+                      ):
         """
         prints out all timers in a convenient benchmark table
 
@@ -341,8 +345,8 @@ class StopWatch(object):
                                            time.gmtime(
                                                StopWatch.timer_start[timer])),
                     'stop': time.strftime("%Y-%m-%d %H:%M:%S",
-                                           time.gmtime(
-                                               StopWatch.timer_end[timer])),
+                                          time.gmtime(
+                                              StopWatch.timer_end[timer])),
                     'time': StopWatch.get(timer, digits=3),
                     'sum': StopWatch.sum(timer, digits=3),
                     'status': StopWatch.get_status(timer),
@@ -351,8 +355,6 @@ class StopWatch(object):
                     'tag': tag or ''
                 }
                 total_time = total_time + StopWatch.get(timer)
-
-
 
             # print(Printer.attribute(data_timers, header=["Command", "Time/s"]))
 
@@ -367,7 +369,6 @@ class StopWatch(object):
 
             if total:
                 print("Total:", total_time)
-
 
             benchmark_data["benchmark"] = data_timers
 
@@ -460,7 +461,6 @@ class StopWatch(object):
                     else:
                         data_timers[timer][attribute] = data_platform[attribute]
 
-
             # print(Printer.attribute(data_timers, header=["Command", "Time/s"]))
 
             if 'benchmark_start_stop' in data_timers:
@@ -550,3 +550,54 @@ class StopWatch(object):
         else:
 
             print("ERROR: No timers found")
+
+    def load(filename,
+             label=["name"], label_split_char=" ",
+             attributes=['timer',
+                         'status',
+                         'time',
+                         'sum',
+                         'start',
+                         'tag',
+                         'msg',
+                         'uname.node',
+                         'user',
+                         'uname.system',
+                         'platform.version']):
+        """
+        Loads data written to a file from the #csv lines.
+        If the timer name has spaces in it, it must also have a label tag in which each lable is the name when
+        splitting up the timer name. The list of attributes is the list specified plus the once generated from the
+        timer name by splitting.
+
+        Example:
+            data = StopWatch.load(logfile, label=["name", "n"], attributes=["timer", "time", "user", "uname.node"])
+
+
+        :param label:
+        :type label:
+        :param attributes:
+        :type attributes:
+        :return:
+        :rtype:
+        """
+        data = []
+        headers = []
+        content = readfile(logfile)
+        lines = Shell.find_lines_with(content, what="# csv")
+        data_attributes = lines[0].split(",")
+        index_attributes = []
+        for attribute in attributes:
+            index_attributes.append(data_attributes.index(attribute))
+        print(index_attributes)
+        headers = attributes + label
+        del lines[0]
+        for line in lines:
+            entry = line.split(",")
+            entry = [entry[i] for i in index_attributes]
+            label_tags = entry[0].split(label_split_char)
+            entry = entry + label_tags
+            data.append(entry)
+
+        return {"headers": headers,
+                "data": data}

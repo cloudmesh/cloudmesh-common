@@ -1019,8 +1019,12 @@ class Shell(object):
         :param what:
         :return:
         """
+        if type(lines) == str:
+            _lines = lines.splitlines()
+        else:
+            _lines = lines
         result = []
-        for line in lines:
+        for line in _lines:
             if what in line:
                 result.append(line)
         return result
@@ -1033,8 +1037,12 @@ class Shell(object):
         :param what:
         :return:
         """
+        if type(lines) == str:
+            _lines = lines.splitlines()
+        else:
+            _lines = lines
         result = []
-        for line in lines:
+        for line in _lines:
             if what not in line:
                 result = result + [line]
         return result
@@ -1047,8 +1055,12 @@ class Shell(object):
         :param what:
         :return:
         """
+        if type(lines) == str:
+            _lines = lines.splitlines()
+        else:
+            _lines = lines
         result = []
-        for line in lines:
+        for line in _lines:
             if what in line:
                 result = result + [line]
         return result
@@ -1061,9 +1073,13 @@ class Shell(object):
         :param what:
         :return:
         """
+        if type(lines) == str:
+            _lines = lines.splitlines()
+        else:
+            _lines = lines
         result = []
         found = False
-        for line in lines:
+        for line in _lines:
             found = found or what in line
             if found:
                 result = result + [line]
@@ -1089,9 +1105,13 @@ class Shell(object):
         :param what:
         :return:
         """
+        if type(lines) == str:
+            _lines = lines.splitlines()
+        else:
+            _lines = lines
         result = []
         found = True
-        for line in lines:
+        for line in _lines:
             if what in line:
                 return result
             else:

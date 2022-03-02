@@ -1,6 +1,5 @@
-package=common
+package=sys
 UNAME=$(shell uname)
-export ROOT_DIR=${PWD}/cloudmesh/rest/server
 VERSION=`head -1 VERSION`
 
 .PHONY: conda
@@ -129,23 +128,4 @@ log:
 #	python setup.py sdist bdist_wheel upload
 #	bumpversion --no-tag patch
 #	git push origin main --tags
-
-
-# API_JSON=$(printf '{"tag_name": "v%s","target_commitish": "main","name": "v%s","body": "Release of version %s","draft": false,"prerelease": false}' $VERSION $VERSION $VERSION)
-# curl --data "$API_JSON" https://api.github.com/repos/:owner/:repository/releases?access_token=:access_token
-
-conda:
-	conda config --set anaconda_upload no
-	rm -rf conda/cloudmesh-$(package)
-	cd conda; conda skeleton pypi cloudmesh-$(package)
-	cat conda/cloudmesh-$(package)/meta.yaml | sed "s/your-github-id-here/laszewsk/g" > conda/cloudmesh-$(package)/meta-new.yaml
-	mv conda/cloudmesh-$(package)/meta-new.yaml conda/cloudmesh-$(package)/meta.yaml
-	cd conda; conda-build -c conda-forge cloudmesh-$(package)
-	# conda install --use-local cloudmesh-$(package)
-	# cd conda/cloudmesh-$(package); conda-build cloudmesh-$(package)
-	# cd conda/cloudmesh-$(package); conda install cloudmesh-$(package)
-	# conda list | fgrep cloudmesh-$(package)
-
-# /Users/AAA/opt/miniconda3/conda-bld/osx-64/cloudmesh-common-4.3.67-py39_0.tar.bz2
-# /Users/AAA/opt/miniconda3/pkgs/cloudmesh-common-4.3.67-py39_0.tar.bz2
 
