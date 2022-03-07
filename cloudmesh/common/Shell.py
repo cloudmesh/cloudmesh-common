@@ -1132,7 +1132,7 @@ class Shell(object):
             kind = 'darwin'
         elif 'cygwin' in what:
             kind = 'cygwin'
-        elif 'windows' in what:
+        elif what in ['windows', 'win32']:
             kind = 'windows'
 
         return kind
