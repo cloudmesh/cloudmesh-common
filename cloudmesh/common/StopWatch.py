@@ -241,6 +241,15 @@ class StopWatch(object):
                 raise Exception("StopWatch: wrong number of arguments")
 
     @classmethod
+    def output(cls, name):
+        """
+        prints a timer. The first argument is the label if it exists, the last is the timer
+        :param args: label, name
+        :return:
+        """
+        print(name, str("{0:.2f}".format(cls.get(name))), "s")
+
+    @classmethod
     def __str__(cls):
         """
         returns the string representation of the StopWatch
