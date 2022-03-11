@@ -1234,9 +1234,11 @@ class Shell(object):
         :return:
         """
         directory = path_expand(directory)
-        try:
-            os.makedirs(directory)
-        except OSError as e:
+        Path(directory).mkdir(parents=True, exist_ok=True)
+
+        #try:
+        #    os.makedirs(directory)
+        #except OSError as e:
 
             # EEXIST (errno 17) occurs under two conditions when the path exists:
             # - it is a file
@@ -1244,10 +1246,10 @@ class Shell(object):
             #
             # if it is a file, this is a valid error, otherwise, all
             # is fine.
-            if e.errno == errno.EEXIST and os.path.isdir(directory):
-                pass
-            else:
-                raise
+        #    if e.errno == errno.EEXIST and os.path.isdir(directory):
+        #        pass
+        #    else:
+        #        raise
 
     def unzip(cls, source_filename, dest_dir):
         """

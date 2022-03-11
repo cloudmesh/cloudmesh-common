@@ -195,7 +195,7 @@ def path_expand(text):
     """
     result = os.path.expandvars(os.path.expanduser(text))
 
-    if result.startswith("."):
+    if result.startswith("./"):
         result = result.replace(".", os.getcwd(), 1)
 
     if is_gitbash() or is_cmd_exe():
