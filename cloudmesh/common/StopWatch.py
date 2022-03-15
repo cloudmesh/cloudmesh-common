@@ -21,13 +21,55 @@ pprint(StopWatch.get_benchmark(user=user, node=node))
 
 StopWatch.benchmark(user=user, node=node)
 
+## Context Block
+
+StoWatch alos comes with a context block allowing to use the convenient with statement. However thi sis only recommended
+when the block is small as it is easy to lose the indentation in larger code. You can also certainly split the code up in
+functions so it is easier managable.
+
+Here is a simple example on how to use the with statement, showing that is can be used for streams and files.
+The mode tetermins if the file will be recreated, or if it will be appanded on. In addition there is the ability to
+write metadata into the record with a dict that can optionally be passed along.
+
+    from cloudmesh.common.StopWatch import StopWatchBlock
+    from cloudmesh.common.StopWatch import StopWatch
+    from cloudmesh.common.util import readfile
+    import time
+
+    data = {"variable": "value"}
+
+    with StopWatchBlock("total"):
+        time.sleep(1.0)
+
+    with StopWatchBlock("dict", data=data):
+        time.sleep(1.0)
+        data["step"] = 1
+
+    with StopWatchBlock("file", data=data, log="a.log", mode="w"):
+        time.sleep(1.0)
+        data["step"] = 2
+
+    with StopWatchBlock("append", data=data, log="a.log", mode="a"):
+        time.sleep(1.0)
+        data["step"] = 3
+
+    content = readfile ("a.log")
+    print (79*"=")
+    print (content.strip())
+    print (79*"=")
+
+    StopWatch.benchmark(sysinfo=False, user="gregor", node="computer", attributes="short")
+
 """
 import os
 import time
+import datetime
 from pprint import pprint
+import sys
 
 from cloudmesh.common.Tabulate import Printer
 from cloudmesh.common.systeminfo import systeminfo as cm_systeminfo
+from time import perf_counter
 
 
 def rename(newname):
@@ -62,7 +104,6 @@ def benchmark(func):
         StopWatch.stop(func.__name__)
 
     return wrapper
-
 
 class StopWatch(object):
     """
@@ -610,3 +651,34 @@ class StopWatch(object):
 
         return {"headers": headers,
                 "data": data}
+
+
+
+class StopWatchBlock:
+
+    def __init__(self, name, data=None, log=sys.stdout, mode="w"):
+        self.name = name
+        self.data = data
+        self.log = log
+        self.is_file = False
+        self.start = datetime.datetime.now()
+        if type(log) == str:
+            self.is_file = True
+            self.log = open(log, mode)
+
+
+    def __enter__(self):
+        StopWatch.start(self.name)
+        return StopWatch.get(self.name)
+
+    def __exit__(self, type, value, traceback):
+        self.stop = datetime.datetime.now()
+        StopWatch.stop(self.name)
+        entry = StopWatch.get(self.name)
+        if self.data:
+            print (f"# {self.name}, {entry}, {self.start}, {self.stop}, {self.data}", file=self.log)
+        else:
+            print (f"# {self.name}, {entry}, {self.start}, {self.stop}", file=self.log)
+        if self.is_file:
+            self.log.close()
+
