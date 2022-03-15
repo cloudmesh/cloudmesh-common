@@ -34,9 +34,12 @@ write metadata into the record with a dict that can optionally be passed along.
     from cloudmesh.common.StopWatch import StopWatchBlock
     from cloudmesh.common.StopWatch import StopWatch
     from cloudmesh.common.util import readfile
+
     import time
 
-    data = {"variable": "value"}
+    data = {"step": "value"}
+
+    StopWatch.event("event-start")
 
     with StopWatchBlock("total"):
         time.sleep(1.0)
@@ -58,7 +61,14 @@ write metadata into the record with a dict that can optionally be passed along.
     print (content.strip())
     print (79*"=")
 
-    StopWatch.benchmark(sysinfo=False, user="gregor", node="computer", attributes="short")
+
+    StopWatch.event("event-stop")
+
+    StopWatch.benchmark(sysinfo=False, user="gregor", node="computer",
+                        attributes=["timer", "status", "time", "start"]
+)
+
+
 
 """
 import os
@@ -167,6 +177,18 @@ class StopWatch(object):
 
         """
         cls.timer_msg[name] = value
+
+    @classmethod
+    def event(cls, name):
+        """
+        adds an event with a given name, where start and stop is the same tme.
+
+        :param name: the name of the timer
+        :type name: string
+        """
+        StopWatch.start(name)
+        StopWatch.stop(name)
+        StopWatch.timer_end[name] = StopWatch.timer_start[name]
 
     @classmethod
     def start(cls, name):
@@ -562,6 +584,9 @@ class StopWatch(object):
                     "Status",
                     "Time"
                 ]
+            else:
+                order = attributes
+                header = attributes
             print()
             print(Printer.write(
                 data_timers,
