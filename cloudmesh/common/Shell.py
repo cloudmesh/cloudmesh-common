@@ -522,8 +522,9 @@ class Shell(object):
                     kind = "gitbash"
             kind = kind.lower()
             if kind == "gitbash":
-                subprocess.Popen([r"C:\Program Files\Git\git-bash.exe",
+                p = subprocess.Popen([r"C:\Program Files\Git\git-bash.exe",
                                   "-c", f"{command}"])
+                return p.pid
             elif kind == "cmd":
                 Console.error(f"Command not implemented for {kind}")
             elif kind == "powershell":
