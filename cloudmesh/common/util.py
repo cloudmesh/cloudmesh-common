@@ -60,8 +60,16 @@ def check_root(terminate=True):
 
 
 def exponential_backoff(fn, sleeptime_s_max=30 * 60):
-    """Calls `fn` until it returns True, with an exponentially increasing wait time between calls"""
+    """
+    Calls `fn` until it returns True, with an exponentially increasing wait
+    time between calls
 
+    :param fn: the function to be called that returns Truw or False
+    :type fn: object
+    :param sleeptime_s_max: the sleep time in milliseconds
+    :type sleeptime_s_max: int
+    :return: None
+    """
     sleeptime_ms = 500
     while True:
         if fn():
