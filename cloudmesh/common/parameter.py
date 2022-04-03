@@ -1,7 +1,43 @@
 from hostlist import expand_hostlist
-
+from cloudmesh.common.dotdict import dotdict
 
 class Parameter(object):
+
+    @staticmethod
+    def parse(arguments, **kwargs):
+        """
+        parses arguments based on their cind and aplies Parameter.expand or
+        Parameter.arguments.dict. It is defined by specifying the name in arguments,
+        followed by the keyword, expand,or dict. Example
+
+        kind={'parameter': 'expand', 'experiment': 'dict', 'COMMAND': "str'}
+
+        arguments = parse(arguments, **kind)
+        or
+        arguments = parse(parameter='expand', experiment='dict', COMMAND='str')
+
+        here the it will be applied
+           arguments.parameter = Parameter.expand(arguments.paramete)
+           arguments.experiment = Parameeter.arguments_to_dict(arguments.experiment)
+
+        :param arguments: the dict or doctdict with the arguments
+        :type arguments: dict or doctdict
+        :param kind: dict with the names of the arguments that need to be remapped
+        :type kind: dict
+        :return: a doctdict with parsed and remapped arguments
+        :rtype: dotdict
+        """
+        result =  dotdict(arguments)
+        if kwargs is not None:
+            for k,value in kwargs.items():
+                if value == 'expand':
+                    result[k] = Parameter.expand(result[k])
+                elif value == 'dict':
+                    result[k] = Parameter.expand(result[k])
+                    result[k] = Parameter.arguments_to_dict(result[k])
+                elif value == 'str':
+                    result[k] = ' '.join(result[k])
+        return result
 
     @staticmethod
     def _expand(values):

@@ -10,6 +10,7 @@ import os
 
 # from cloudmesh.common.variables import Variables
 
+colorama.init()
 
 def indent(text, indent=2, width=128):
     """
