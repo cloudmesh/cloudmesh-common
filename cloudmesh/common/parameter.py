@@ -155,8 +155,8 @@ class Parameter(object):
         if arguments is None or len(arguments) == 0:
             return None
         parameters = {}
-        for argument in arguments:
-            key, value = arguments.split("=", 1)
+        for argument in Parameter.expand(arguments):
+            key, value = argument.split("=", 1)
             parameters[key] = value
         return parameters
 
