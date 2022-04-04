@@ -418,24 +418,33 @@ class Host(object):
         #                              command='cat .ssh/id_rsa.pub',
         #                              username=username,
         #                              verbose=False)
+
+
         filename = path_expand(filename)
+        content = readfile(filename).strip()
         localkey = {
             'host': "localhost",
             'command': [''],
             'execute': "",
-            'stdout': readfile(filename).strip(),
+            'stdout': content,
             'stderr': None,
             'returncode': True,
             'success': True,
             'date': DateTime.now()
         }
-
         if results_key is None:  # and results_authorized is None:
             return ""
 
         # getting the output and also removing duplicates
-        output = [localkey['stdout']] + list(set([element["stdout"] for element in results_key]))
 
-        output = '\n'.join(output) + "\n"
+        keys = [localkey['stdout'].strip()]
+        for element in results_key:
+            if element['stdout'] != '':
+                keys.append(element['stdout'].strip())
+
+        output = list(set(keys))
+
+        output = '\n'.join(output)
+        print (output)
 
         return output
