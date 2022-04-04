@@ -165,6 +165,7 @@ class Host(object):
         :return:
         """
 
+        print ("RRR", hosts)
         hosts = Parameter.expand(hosts)
         args = [{'command': [c.format(host=host, **kwargs) for c in command],
                  'shell': shell,
@@ -174,7 +175,9 @@ class Host(object):
 
         if "executor" not in args:
             _executor = Host._run
-
+        from pprint import pprint
+        os.sync()
+        pprint(args)
         with Pool(processors) as p:
             res = p.map(_executor, args)
             p.close()
@@ -411,7 +414,7 @@ class Host(object):
         names = Parameter.expand(hosts)
 
         results_key = Host.ssh(hosts=names,
-                               command='cat .ssh/id_rsa.pub',
+                               command='cat ~/.ssh/id_rsa.pub',
                                username=username,
                                verbose=False)
         # results_authorized = Host.ssh(hosts=names,
