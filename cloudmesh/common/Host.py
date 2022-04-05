@@ -4,6 +4,8 @@ import subprocess
 import textwrap
 from multiprocessing import Pool
 from sys import platform
+from time import sleep
+from random import randint
 
 from cloudmesh.common.DateTime import DateTime
 from cloudmesh.common.parameter import Parameter
@@ -100,44 +102,50 @@ class Host(object):
         :param args: command dict
         :return:
         """
-        hostname = platform_module.uname()[1]
-        host = args.get("host")
+        try:
+            # experimental sleep as we get a block on ssh commands
 
-        shell = args.get("shell")
+            hostname = platform_module.uname()[1]
+            host = args.get("host")
 
-        if host == hostname:
-            command = args.get("execute")
-            result = subprocess.getoutput(command)
-            stderr = ""
-            returncode = 0
-            stdout = result
-        else:
-            command = args.get("command")
+            shell = args.get("shell")
 
-            result = subprocess.run(
-                command,
-                capture_output=True,
-                shell=shell)
+            if host == hostname:
+                command = args.get("execute")
+                result = subprocess.getoutput(command)
+                stderr = ""
+                returncode = 0
+                stdout = result
+            else:
+                command = args.get("command")
 
-            result.stdout = result.stdout.decode("utf-8", "ignore").strip()
-            if result.stderr == b'':
-                result.stderr = None
+                result = subprocess.run(
+                    command,
+                    capture_output=True,
+                    shell=shell)
 
-            stderr = result.stderr
-            returncode = result.returncode
-            stdout = result.stdout
+                result.stdout = result.stdout.decode("utf-8", "ignore").strip()
+                if result.stderr == b'':
+                    result.stderr = None
 
-        data = {
-            'host': args.get("host"),
-            'command': args.get("command"),
-            'execute': args.get("execute"),
-            'stdout': stdout,
-            'stderr': stderr,
-            'returncode': returncode,
-            'success': returncode == 0,
-            'date': DateTime.now(),
-            'cmd': " ".join(args.get("command"))
-        }
+                stderr = result.stderr
+                returncode = result.returncode
+                stdout = result.stdout
+
+            data = {
+                'host': args.get("host"),
+                'command': args.get("command"),
+                'execute': args.get("execute"),
+                'stdout': stdout,
+                'stderr': stderr,
+                'returncode': returncode,
+                'success': returncode == 0,
+                'date': DateTime.now(),
+                'cmd': " ".join(args.get("command"))
+            }
+        except Exception as e:
+            print (e)
+            data = None
         return data
 
     @staticmethod
@@ -165,7 +173,6 @@ class Host(object):
         :return:
         """
 
-        print ("RRR", hosts)
         hosts = Parameter.expand(hosts)
         args = [{'command': [c.format(host=host, **kwargs) for c in command],
                  'shell': shell,
@@ -175,9 +182,9 @@ class Host(object):
 
         if "executor" not in args:
             _executor = Host._run
-        from pprint import pprint
-        os.sync()
-        pprint(args)
+        #from pprint import pprint
+        # os.sync()
+        # pprint(args)
         with Pool(processors) as p:
             res = p.map(_executor, args)
             p.close()
@@ -215,7 +222,7 @@ class Host(object):
         ssh_command = ['ssh',
                        '-o', 'StrictHostKeyChecking=no',
                        '-o', 'UserKnownHostsFile=/dev/null',
-                       '-i', f'{key}',
+                       '-i', key,
                        '{host}',
                        f'{command}']
         result = Host.run(hosts=hosts,
