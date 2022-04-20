@@ -30,7 +30,7 @@ class Test_Printer:
         StopWatch.stop("stopwatch sleep 2")
         StopWatch.status("stopwatch sleep 2", True)
 
-    def test_stopwatch_loop(self):
+    def test_stopwatch_loop_sum(self):
         HEADING()
         cumulate = False
         dt = 0.1
@@ -50,7 +50,34 @@ class Test_Printer:
 
         assert t >= n * dt
 
+    def test_stopwatch_loop_individual(self):
+        HEADING()
+        cumulate = False
+        dt = 0.1
+        n = 10
+        for i in range(0,n):
+            StopWatch.start(f"stopwatch loop {i}")
+            time.sleep(dt)
+            StopWatch.stop(f"stopwatch loop {i}")
+            StopWatch.message(f"stopwatch loop {i}", i)
+            StopWatch.status(f"stopwatch loop {i}", True)
+            t = StopWatch.get(f"stopwatch loop {i}")
+            print (t)
+            assert t >= dt
+
+        t = StopWatch.sum("stopwatch loop", digits=4)
+
+        print (t)
+
+        assert t >= n * dt
+
+
+    def test_stopwatch_event(self):
+        HEADING()
+        data = {"a": 1}
+        t = StopWatch.event("stopwtch event", msg=data)
+
 
     def test_print(self):
-        StopWatch.benchmark(sysinfo=True, csv=True, sum=True)
+        StopWatch.benchmark(sysinfo=True, csv=True, sum=True, tag="pytest")
         assert True
