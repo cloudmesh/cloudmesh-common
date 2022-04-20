@@ -66,11 +66,18 @@ write metadata into the record with a dict that can optionally be passed along.
 
     StopWatch.event("event-stop")
 
-    StopWatch.benchmark(sysinfo=False, user="gregor", node="computer",
-                        attributes=["timer", "status", "time", "start"]
+    StopWatch.benchmark(sysinfo=False,
+                        tag="myexperiment",
+                        user="gregor",
+                        node="computer",
+                        attributes=["timer", "status", "time", "start", "tag", "msg"]
+
+    # for more examples, see our pytest:
+    # * <https://github.com/cloudmesh/cloudmesh-common/blob/main/tests/test_stopwatch.py>
+    #
+    # there we demonstrate how to timers in a loop as individual timers and as sum.
+    # We also showcase how to add a message to timers
 )
-
-
 
 """
 import os
