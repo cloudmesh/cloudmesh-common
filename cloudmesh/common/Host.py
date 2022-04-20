@@ -11,9 +11,19 @@ from cloudmesh.common.DateTime import DateTime
 from cloudmesh.common.parameter import Parameter
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.util import readfile
-
+from pprint import pprint
+from cloudmesh.common.Printer import Printer
 
 class Host(object):
+
+    def _print(results, output='table'):
+
+        if output in ['table', 'yaml']:
+            print(Printer.write(results,
+                                order=['host', 'success', 'stdout', 'stderr'],
+                                output=output))
+        else:
+            pprint(results)
 
     @staticmethod
     def get_hostnames(names):
@@ -385,7 +395,6 @@ class Host(object):
         :return:
         """
         hosts = Parameter.expand(hosts)
-
         command = f'ssh-keygen -q -N "" -f {filename} <<< y'
         result_keys = Host.ssh(hosts=hosts,
                                command=command,
@@ -393,11 +402,11 @@ class Host(object):
                                dryrun=dryrun,
                                processors=processors,
                                executor=os.system)
+        Host._print(result_keys)
         result_keys = Host.ssh(hosts=hosts,
                                processors=processors,
                                command='cat .ssh/id_rsa.pub',
                                username=username)
-
         return result_keys
 
     @staticmethod

@@ -6,7 +6,7 @@ class Parameter(object):
     @staticmethod
     def parse(arguments, **kwargs):
         """
-        parses arguments based on their cind and aplies Parameter.expand or
+        parses arguments based on their kind and aplies Parameter.expand or
         Parameter.arguments.dict. It is defined by specifying the name in arguments,
         followed by the keyword, expand,or dict. Example
 

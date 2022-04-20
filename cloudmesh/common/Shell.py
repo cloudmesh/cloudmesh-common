@@ -413,7 +413,7 @@ class Shell(object):
         return result
 
     @staticmethod
-    def oneline(script):
+    def oneline(script, seperator=" && "):
         """
         converts a script to one line command.
         THis is useful to run a single ssh command and pass a one line script.
@@ -421,7 +421,7 @@ class Shell(object):
         :param script:
         :return:
         """
-        return " && ".join(textwrap.dedent(script).strip().splitlines())
+        return seperator.join(textwrap.dedent(script).strip().splitlines())
 
     @staticmethod
     def is_root():

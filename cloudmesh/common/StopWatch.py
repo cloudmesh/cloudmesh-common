@@ -40,6 +40,8 @@ write metadata into the record with a dict that can optionally be passed along.
     data = {"step": "value"}
 
     StopWatch.event("event-start")
+    d = {"key": "value"}
+    StopWatch.event("event-with-value", d)
 
     with StopWatchBlock("total"):
         time.sleep(1.0)
@@ -179,16 +181,20 @@ class StopWatch(object):
         cls.timer_msg[name] = value
 
     @classmethod
-    def event(cls, name):
+    def event(cls, name, msg=None):
         """
         adds an event with a given name, where start and stop is the same tme.
 
         :param name: the name of the timer
         :type name: string
+        :param data: data that is associated with the event that is converted to a string
+        :type data: object
         """
         StopWatch.start(name)
         StopWatch.stop(name)
         StopWatch.timer_end[name] = StopWatch.timer_start[name]
+        if msg is not None:
+            StopWatch.message(name, str(msg))
 
     @classmethod
     def start(cls, name):
