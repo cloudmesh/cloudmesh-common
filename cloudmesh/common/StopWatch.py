@@ -31,6 +31,8 @@ Here is a simple example on how to use the with statement, showing that is can b
 The mode tetermins if the file will be recreated, or if it will be appanded on. In addition there is the ability to
 write metadata into the record with a dict that can optionally be passed along.
 
+In order not to overwrite the value of an event, you must give it a unique name.
+
     from cloudmesh.common.StopWatch import StopWatchBlock
     from cloudmesh.common.StopWatch import StopWatch
     from cloudmesh.common.util import readfile
