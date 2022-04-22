@@ -15,6 +15,12 @@ from cloudmesh.common.util import HEADING
 @pytest.mark.incremental
 class Test_Printer:
 
+    def test_stopwatch_activate_mllog(self):
+        HEADING()
+        StopWatch.activate_mllog()
+        print(StopWatch.mllogging)
+        assert StopWatch.mllogging == True
+
     def test_stopwatch_1(self):
         HEADING()
         StopWatch.start("stopwatch sleep 1")

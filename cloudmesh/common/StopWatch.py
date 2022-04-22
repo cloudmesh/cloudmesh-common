@@ -102,14 +102,11 @@ import datetime
 from pprint import pprint
 import sys
 
+from cloudmesh.common.console import Console
 from cloudmesh.common.Tabulate import Printer
 from cloudmesh.common.systeminfo import systeminfo as cm_systeminfo
 from time import perf_counter
 
-try:
-    from mlperf_logging import mllog
-except:
-    pass
 def rename(newname):
     """
     decorator to rename a function
@@ -166,23 +163,25 @@ class StopWatch(object):
     mllogger = None
 
     @classmethod
-    def activate_mllog(cls, on=False, config=None):
-        cls.mllogging = on
-        if cls.mllogging:
-            cls.mllogger = mllog.getmllogger()
-            if config is None:
-                mllog.config(
-                    default_namespace="cloudmesh"
-                    # not sure what to do with stack offset yet
-                    # default_stack_offset=1,
-                    # not sure what to do wyr clear line yet
-                    # default_clear_line=False,
-                    # not sure waht to do with rrotdir yet
-                    #root_dir=os.path.normpath(
-                    #    os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", ".."))
-                )
-            else:
-                mllog.config(**config)
+    def activate_mllog(cls, filename="cloudmesh_mllog.log"):
+        try:
+            from mlperf_logging import mllog
+        except:
+            Console.error("You need to install mllogging to use it")
+            sys.exit()
+
+        print ("AAAA")
+        cls.mllogging = True
+        cls.mllogger = mllog.get_mllogger()
+        mllog.config(filename=filename)
+        mllog.config(
+            default_namespace="cloudmesh",
+            default_stack_offset=1,
+            default_clear_line=False,
+            # useful when refering to linenumbers in separate code
+            # root_dir=os.path.normpath(
+            #    os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", ".."))
+        )
 
     @classmethod
     def keys(cls):
