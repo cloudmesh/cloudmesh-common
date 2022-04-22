@@ -99,12 +99,14 @@ We will add here aditional information, such as setting up the configuration for
 import os
 import time
 import datetime
-from pprint import pprint
+import pprint
+
 import sys
 
 from cloudmesh.common.console import Console
 from cloudmesh.common.Tabulate import Printer
 from cloudmesh.common.systeminfo import systeminfo as cm_systeminfo
+from cloudmesh.common.util import writefile
 from time import perf_counter
 
 def rename(newname):
@@ -519,7 +521,8 @@ class StopWatch(object):
                   node=None,
                   user=None,
                   attributes=None,
-                  total=False):
+                  total=False,
+                  filename=None):
         """
         prints out all timers in a convenient benchmark table
 
@@ -546,15 +549,16 @@ class StopWatch(object):
         #
         # PRINT PLATFORM
         #
+        content = "\n"
 
-        print()
         data_platform = cm_systeminfo(user=user, node=node)
         if sysinfo:
-            print(Printer.attribute(
+            content = content + Printer.attribute(
                 data_platform,
                 order=["Machine Attribute", "Value"],
                 output="table"
-            ))
+            )
+            content = content + "\n"
 
         #
         # PRINT TIMERS
@@ -647,17 +651,19 @@ class StopWatch(object):
             else:
                 order = attributes
                 header = attributes
-            print()
-            print(Printer.write(
+            content = content + "\n"
+            content = content + Printer.write(
                 data_timers,
                 order=order,
                 header=header,
                 output="table"
 
-            ))
+            )
+
             if total:
-                print("Total:", total_time)
-            print()
+                content = content + f"Total: {total_time}"
+
+            content = content + "\n"
 
             if csv:
                 if prefix is not None:
@@ -666,25 +672,31 @@ class StopWatch(object):
 
                     order = ["# csv"] + order
 
-                    print(Printer.write(
+                    content = content + Printer.write(
                         data_timers,
                         order=order,
                         header=header,
                         output="csv"
-                    ))
+                    )
                 else:
 
-                    pprint(data_timers)
+                    content = content + pprint.pformat(data_timers, indent=4)
+                    content = content + "\n"
 
-                    print(Printer.write(
+                    content = content + Printer.write(
                         data_timers,
                         order=order[1:],
                         output="csv"
-                    ))
+                    )
+                    content = content + "\n"
 
         else:
+            content = content + "ERROR: No timers found\n"
 
-            print("ERROR: No timers found")
+        print(content)
+        if filename:
+            writefile(filename, content)
+
 
     def load(filename,
              label=["name"], label_split_char=" ",

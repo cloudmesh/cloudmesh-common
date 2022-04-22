@@ -81,3 +81,7 @@ class Test_Printer:
     def test_print(self):
         StopWatch.benchmark(sysinfo=True, csv=True, sum=True, tag="pytest")
         assert True
+
+    def test_write_to_file(self):
+        StopWatch.benchmark(filename="cloudmesh.log", sysinfo=True, csv=True, sum=True, tag="pytest")
+        assert True
