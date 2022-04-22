@@ -108,10 +108,8 @@ from time import perf_counter
 
 try:
     from mlperf_logging import mllog
-    mllogging = True
 except:
-    mllogging = False
-
+    pass
 def rename(newname):
     """
     decorator to rename a function
@@ -163,11 +161,15 @@ class StopWatch(object):
     timer_sum = {}
     # msg
     timer_msg = {}
+    # mllogger
+    mllogging = False
+    mllogger = None
 
     @classmethod
-    def activate_mllog(cls, config=None):
-        if mllogging:
-            mllogger = mllog.getmllogger()
+    def activate_mllog(cls, on=False, config=None):
+        cls.mllogging = on
+        if cls.mllogging:
+            cls.mllogger = mllog.getmllogger()
             if config is None:
                 mllog.config(
                     default_namespace="cloudmesh"
@@ -241,8 +243,8 @@ class StopWatch(object):
         StopWatch.timer_end[name] = StopWatch.timer_start[name]
         if msg is not None:
             StopWatch.message(name, str(msg))
-        if mllogging:
-            mllogger.event(key=f"mllog-event-{name}")
+        if cls.mllogging:
+            cls.mllogger.event(key=f"mllog-event-{name}")
 
     @classmethod
     def start(cls, name):
@@ -260,8 +262,8 @@ class StopWatch(object):
         cls.timer_end[name] = None
         cls.timer_status[name] = None
         cls.timer_msg[name] = None
-        if mllogging:
-            mllogger.start(key=f"mllog-start-{name}")
+        if cls.mllogging:
+            cls.mllogger.start(key=f"mllog-start-{name}")
 
     @classmethod
     def stop(cls, name, state=True):
@@ -277,8 +279,8 @@ class StopWatch(object):
         cls.timer_sum[name] = cls.timer_sum[name] + cls.timer_end[name] - cls.timer_start[name]
         cls.timer_status[name] = state
 
-        if mllogging:
-            mllogger.end(key=f"mllog-start-{name}")
+        if cls.mllogging:
+            cls.mllogger.end(key=f"mllog-start-{name}")
 
         if cls.debug:
             print("Timer", name, "stopped ...")
