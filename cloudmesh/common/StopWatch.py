@@ -81,6 +81,20 @@ In order not to overwrite the value of an event, you must give it a unique name.
     # We also showcase how to add a message to timers
 )
 
+Integration with MLPerf Logging
+
+To also produce output that conforms to MLPerf, cloudmesh. STopWatch will detect if you have mperf logging installed.
+We recommend tho install the newest version as follows
+
+
+::
+    git clone https://github.com/mlperf/logging.git mlperf-logging
+    pip install -e mlperf-logging
+
+Now you can just use the STopwatch as before.
+
+We will add here aditional information, such as setting up the configuration for mlperf logging
+
 """
 import os
 import time
@@ -92,6 +106,11 @@ from cloudmesh.common.Tabulate import Printer
 from cloudmesh.common.systeminfo import systeminfo as cm_systeminfo
 from time import perf_counter
 
+try:
+    from mlperf_logging import mllog
+    mllogging = True
+except:
+    mllogging = False
 
 def rename(newname):
     """
@@ -144,6 +163,24 @@ class StopWatch(object):
     timer_sum = {}
     # msg
     timer_msg = {}
+
+    @classmethod
+    def activate_mllog(cls, config=None):
+        if mllogging:
+            mllogger = mllog.getmllogger()
+            if config is None:
+                mllog.config(
+                    default_namespace="cloudmesh"
+                    # not sure what to do with stack offset yet
+                    # default_stack_offset=1,
+                    # not sure what to do wyr clear line yet
+                    # default_clear_line=False,
+                    # not sure waht to do with rrotdir yet
+                    #root_dir=os.path.normpath(
+                    #    os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", ".."))
+                )
+            else:
+                mllog.config(**config)
 
     @classmethod
     def keys(cls):
@@ -204,6 +241,8 @@ class StopWatch(object):
         StopWatch.timer_end[name] = StopWatch.timer_start[name]
         if msg is not None:
             StopWatch.message(name, str(msg))
+        if mllogging:
+            mllogger.event(key=f"mllog-event-{name}")
 
     @classmethod
     def start(cls, name):
@@ -221,6 +260,8 @@ class StopWatch(object):
         cls.timer_end[name] = None
         cls.timer_status[name] = None
         cls.timer_msg[name] = None
+        if mllogging:
+            mllogger.start(key=f"mllog-start-{name}")
 
     @classmethod
     def stop(cls, name, state=True):
@@ -235,6 +276,9 @@ class StopWatch(object):
         #    cls.timer_end[name] = cls.timer_end[name] + cls.timer_last[name]
         cls.timer_sum[name] = cls.timer_sum[name] + cls.timer_end[name] - cls.timer_start[name]
         cls.timer_status[name] = state
+
+        if mllogging:
+            mllogger.end(key=f"mllog-start-{name}")
 
         if cls.debug:
             print("Timer", name, "stopped ...")
