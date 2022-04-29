@@ -257,7 +257,7 @@ class Shell(object):
         return str(result)
 
     @staticmethod
-    def run(command, exit="; exit 0", encoding='utf-8'):
+    def run(command, exit="; exit 0", encoding='utf-8', replace=True):
         """
         executes the command and returns the output as string
         :param command:
@@ -266,7 +266,11 @@ class Shell(object):
         """
 
         if sys.platform == "win32":
-            command = f"{command}"
+            if replace:
+                c = "&"
+            else:
+                c = ";"
+            command = f"{command}".replace(";",c)
         else:
             command = f"{command} {exit}"
 
