@@ -532,3 +532,7 @@ def generate_password(length=8, lower=True, upper=True, number=True):
         else:
             mypw = mypw + _random_character(alphabet)
     return mypw
+
+
+def str_bool(value):
+    return str(value).lower() in ['yes', '1', 'y', 'true', 't']
