@@ -324,6 +324,7 @@ def banner(txt=None, c="-", prefix="#", debug=True, label=None,
     Console.cprint(color, "", output)
 
 
+
 # noinspection PyPep8Naming
 def HEADING(txt=None, c="#", color="HEADER"):
     """
@@ -347,6 +348,17 @@ def HEADING(txt=None, c="#", color="HEADER"):
     print()
     banner(msg, c=c, color=color)
 
+# noinspection PyPep8Naming
+def FUNCTIONNAME():
+    """
+    Returns the anme of a function.
+    """
+    frame = inspect.getouterframes(inspect.currentframe())
+
+    filename = frame[1][1].replace(os.getcwd(), "")
+    line = frame[1][2] - 1
+    method = frame[1][3]
+    return method
 
 def backup_name(filename):
     """
