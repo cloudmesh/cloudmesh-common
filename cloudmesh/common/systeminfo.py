@@ -10,6 +10,56 @@ import humanize
 import re
 import multiprocessing
 
+
+def os_is_windows():
+    """
+    Checks if the os is windows
+
+    :return: True is windows
+    :rtype: bool
+    """
+    return platform.system() == "Windows"
+
+
+# noinspection PyBroadException
+def os_is_linux():
+    """
+    Checks if the os is linux
+
+    :return: True is linux
+    :rtype: bool
+    """
+    try:
+        content = readfile('/etc/os-release')
+        return platform.system() == "Linux" and "raspbian" not in content
+    except:  # noqa: E722
+        return False
+
+
+def os_is_mac():
+    """
+    Checks if the os is macOS
+
+    :return: True is macOS
+    :rtype: bool
+    """
+    return platform.system() == "Darwin"
+
+
+# noinspection PyBroadException
+def os_is_pi():
+    """
+    Checks if the os is Raspberry OS
+
+    :return: True is Raspberry OS
+    :rtype: bool
+    """
+    try:
+        content = readfile('/etc/os-release')
+        return platform.system() == "Linux" and "raspbian" in content
+    except:  # noqa: E722
+        return False
+
 def sys_user():
     if "COLAB_GPU" in os.environ:
         return "collab"
