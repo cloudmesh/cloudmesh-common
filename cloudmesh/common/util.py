@@ -10,11 +10,14 @@ import tempfile
 import time
 from contextlib import contextmanager
 import sys
+import psutil
 import requests
 from pathlib import Path
 from cloudmesh.common.console import Console
 from cloudmesh.common.systeminfo import is_gitbash, is_cmd_exe
 import pyfiglet
+import socket
+import platform
 
 
 try:
@@ -52,9 +55,9 @@ def check_root(dryrun=False, terminate=True):
     """
     uid = os.getuid()
     if uid == 0:
-        print("You are executing as a root user")
+        Console.ok("You are executing as a root user")
     else:
-        print("You do not run as root")
+        Console.error("You do not run as root")
         if terminate and not dryrun:
             sys.exit()
 
@@ -134,6 +137,65 @@ def grep(pattern, filename):
         return next((L for L in open(filename) if L.find(pattern) >= 0))
     except StopIteration:
         return ''
+
+
+def is_local(host):
+    """
+    Checks if the host is the localhost
+
+    :param host: The hostname or ip
+    :return: True if the host is the localhost
+    """
+    return host in ["127.0.0.1",
+                    "localhost",
+                    socket.gethostname(),
+                    # just in case socket.gethostname() does not work  we also try the following:
+                    platform.node(),
+                    socket.gethostbyaddr(socket.gethostname())[0]
+                    ]
+
+
+# noinspection PyPep8
+def is_gitbash():
+    """
+    returns True if you run in a Windows gitbash
+
+    :return: True if gitbash
+    """
+    try:
+        exepath = os.environ['EXEPATH']
+        return "Git" in exepath
+    except:
+        return False
+
+
+def is_powershell():
+    """
+    True if you run in powershell
+
+    :return: True if you run in powershell
+    """
+    # psutil.Process(parent_pid).name() returns -
+    # cmd.exe for CMD
+    # powershell.exe for powershell
+    # bash.exe for git bash
+    return (psutil.Process(os.getppid()).name() == "powershell.exe")
+
+
+def is_cmd_exe():
+    """
+    return True if you run in a Windows CMD
+
+    :return: True if you run in CMD
+    """
+    if is_gitbash():
+        return False
+    else:
+        try:
+            return os.environ['OS'] == 'Windows_NT'
+        except:
+            return False
+
 
 
 def path_expand(text):

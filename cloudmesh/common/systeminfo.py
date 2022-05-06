@@ -4,6 +4,10 @@ import os
 import socket
 from pathlib import Path
 from cloudmesh.common.util import readfile
+from cloudmesh.common.util import is_gitbash
+from cloudmesh.common.util import is_powershell
+from cloudmesh.common.util import is_cmd_exe
+from cloudmesh.common.util import is_local
 from collections import OrderedDict
 import pip
 import psutil
@@ -80,64 +84,6 @@ def sys_user():
         pass
 
     return "None"
-
-
-# noinspection PyPep8
-def is_gitbash():
-    """
-    returns True if you run in a Windows gitbash
-
-    :return: True if gitbash
-    """
-    try:
-        exepath = os.environ['EXEPATH']
-        return "Git" in exepath
-    except:
-        return False
-
-
-def is_powershell():
-    """
-    True if you run in powershell
-
-    :return: True if you run in powershell
-    """
-    # psutil.Process(parent_pid).name() returns -
-    # cmd.exe for CMD
-    # powershell.exe for powershell
-    # bash.exe for git bash
-    return (psutil.Process(os.getppid()).name() == "powershell.exe")
-
-
-def is_cmd_exe():
-    """
-    return True if you run in a Windows CMD
-
-    :return: True if you run in CMD
-    """
-    if is_gitbash():
-        return False
-    else:
-        try:
-            return os.environ['OS'] == 'Windows_NT'
-        except:
-            return False
-
-
-def is_local(host):
-    """
-    Checks if the host is the localhost
-
-    :param host: The hostname or ip
-    :return: True if the host is the localhost
-    """
-    return host in ["127.0.0.1",
-                    "localhost",
-                    socket.gethostname(),
-                    # just in case socket.gethostname() does not work  we also try the following:
-                    platform.node(),
-                    socket.gethostbyaddr(socket.gethostname())[0]
-                    ]
 
 
 def get_platform():
