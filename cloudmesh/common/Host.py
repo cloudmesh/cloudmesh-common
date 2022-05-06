@@ -71,7 +71,7 @@ class Host(object):
             hostname = ""
             user = f"user {username}"
             if ips is None:
-                hostanme = ""
+                hostname = ""
             else:
                 ip = _ips[i]
                 hostname = f"Hostname {ip}"
