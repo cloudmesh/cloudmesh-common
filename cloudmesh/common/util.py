@@ -14,9 +14,11 @@ import psutil
 import requests
 from pathlib import Path
 from cloudmesh.common.console import Console
+from cloudmesh.common.systeminfo import is_gitbash, is_cmd_exe
 import pyfiglet
 import socket
 import platform
+
 
 try:
     collectionsAbc = collections.abc
@@ -43,19 +45,20 @@ def tempdir(*args, **kwargs):
         shutil.rmtree(d)
 
 
-def check_root(terminate=True):
+def check_root(dryrun=False, terminate=True):
     """
-    Tests if the root user is used
-
-    :param terminate: if true exist the program
-    :return:
+    check if I am the root user. If not, simply exits the program.
+    :param dryrun: if set to true, does not terminate if not root user
+    :type dryrun: bool
+    :param terminate: terminates if not root user and dryrun is False
+    :type terminate: bool
     """
     uid = os.getuid()
     if uid == 0:
-        Console.ok("You are executing a a root user")
+        Console.ok("You are executing as a root user")
     else:
         Console.error("You do not run as root")
-        if terminate:
+        if terminate and not dryrun:
             sys.exit()
 
 
@@ -136,12 +139,11 @@ def grep(pattern, filename):
         return ''
 
 
-
 def is_local(host):
     """
     Checks if the host is the localhost
 
-    :param host: The hotsname or ip
+    :param host: The hostname or ip
     :return: True if the host is the localhost
     """
     return host in ["127.0.0.1",
@@ -151,6 +153,7 @@ def is_local(host):
                     platform.node(),
                     socket.gethostbyaddr(socket.gethostname())[0]
                     ]
+
 
 # noinspection PyPep8
 def is_gitbash():
@@ -192,6 +195,7 @@ def is_cmd_exe():
             return os.environ['OS'] == 'Windows_NT'
         except:
             return False
+
 
 
 def path_expand(text):

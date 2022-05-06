@@ -1,8 +1,13 @@
 import platform
 import sys
 import os
+import socket
 from pathlib import Path
 from cloudmesh.common.util import readfile
+from cloudmesh.common.util import is_gitbash
+from cloudmesh.common.util import is_powershell
+from cloudmesh.common.util import is_cmd_exe
+from cloudmesh.common.util import is_local
 from collections import OrderedDict
 import pip
 import psutil
@@ -79,6 +84,7 @@ def sys_user():
         pass
 
     return "None"
+
 
 def get_platform():
     if sys.platform == "darwin":
