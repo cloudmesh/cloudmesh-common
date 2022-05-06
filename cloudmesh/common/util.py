@@ -14,7 +14,6 @@ import psutil
 import requests
 from pathlib import Path
 from cloudmesh.common.console import Console
-from cloudmesh.common.systeminfo import is_gitbash, is_cmd_exe
 import pyfiglet
 import socket
 import platform
