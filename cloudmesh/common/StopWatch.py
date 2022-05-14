@@ -107,6 +107,8 @@ from cloudmesh.common.console import Console
 from cloudmesh.common.Tabulate import Printer
 from cloudmesh.common.systeminfo import systeminfo as cm_systeminfo
 from cloudmesh.common.util import writefile
+from cloudmesh.common.util import readfile
+
 from time import perf_counter
 
 def rename(newname):
@@ -161,6 +163,7 @@ class StopWatch(object):
     # msg
     timer_msg = {}
     # mllogger
+    timer_values = {}
     mllogging = False
     mllogger = None
 
@@ -172,7 +175,6 @@ class StopWatch(object):
             Console.error("You need to install mllogging to use it")
             sys.exit()
 
-        print ("AAAA")
         cls.mllogging = True
         cls.mllogger = mllog.get_mllogger()
         mllog.config(filename=filename)
@@ -184,6 +186,19 @@ class StopWatch(object):
             # root_dir=os.path.normpath(
             #    os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", ".."))
         )
+
+    @classmethod
+    def organization_mllog(cls, configfile, **argv):
+        import mllog
+        import yaml
+        config = yaml.safe_load(readfile(configfile).strip())
+        config["benchmark"].update(argv)
+        cls.mllogger.event(key=mllog.constants.SUBMISSION_BENCHMARK, value=config["benchmark"]['name'])
+        cls.mllogger.event(key=mllog.constants.SUBMISSION_ORG, value=config["benchmark"]['organisation'])
+        cls.mllogger.event(key=mllog.constants.SUBMISSION_DIVISION, value=config["benchmark"]['division'])
+        cls.mllogger.event(key=mllog.constants.SUBMISSION_STATUS, value=config["benchmark"]['status'])
+        cls.mllogger.event(key=mllog.constants.SUBMISSION_PLATFORM, value=config["benchmark"]['platform'])
+
 
     @classmethod
     def keys(cls):
@@ -230,7 +245,7 @@ class StopWatch(object):
         cls.timer_msg[name] = value
 
     @classmethod
-    def event(cls, name, msg=None):
+    def event(cls, name, msg=None, values=None):
         """
         adds an event with a given name, where start and stop is the same tme.
 
@@ -242,13 +257,19 @@ class StopWatch(object):
         StopWatch.start(name)
         StopWatch.stop(name)
         StopWatch.timer_end[name] = StopWatch.timer_start[name]
+        if values:
+            StopWatch.timer_values[name] = values
+
         if msg is not None:
             StopWatch.message(name, str(msg))
         if cls.mllogging:
-            cls.mllogger.event(key=f"mllog-event-{name}")
+            if values is not None:
+                cls.mllogger.event(key=f"mllog-event-{name}", value=str(values))
+            else:
+                cls.mllogger.event(key=f"mllog-event-{name}")
 
     @classmethod
-    def start(cls, name):
+    def start(cls, name, values=None):
         """
         starts a timer with the given name.
 
@@ -263,11 +284,17 @@ class StopWatch(object):
         cls.timer_end[name] = None
         cls.timer_status[name] = None
         cls.timer_msg[name] = None
+        if values:
+            StopWatch.timer_values[name] = values
+
         if cls.mllogging:
-            cls.mllogger.start(key=f"mllog-start-{name}")
+            if values is not None:
+                cls.mllogger.start(key=f"mllog-timer-{name}", value=str(values))
+            else:
+                cls.mllogger.start(key=f"mllog-timer-{name}")
 
     @classmethod
-    def stop(cls, name, state=True):
+    def stop(cls, name, state=True, values=None):
         """
         stops the timer with a given name.
 
@@ -279,9 +306,15 @@ class StopWatch(object):
         #    cls.timer_end[name] = cls.timer_end[name] + cls.timer_last[name]
         cls.timer_sum[name] = cls.timer_sum[name] + cls.timer_end[name] - cls.timer_start[name]
         cls.timer_status[name] = state
+        if values:
+            StopWatch.timer_values[name] = values
 
         if cls.mllogging:
-            cls.mllogger.end(key=f"mllog-start-{name}")
+            if values is not None:
+                cls.mllogger.end(key=f"mllog-timer-{name}", value=str(values))
+            else:
+                cls.mllogger.end(key=f"mllog-timer-{name}")
+
 
         if cls.debug:
             print("Timer", name, "stopped ...")
