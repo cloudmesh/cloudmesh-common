@@ -9,6 +9,7 @@ import shutil
 import tempfile
 import time
 from contextlib import contextmanager
+from getpass import getpass
 import sys
 import psutil
 import requests
@@ -551,3 +552,36 @@ def generate_password(length=8, lower=True, upper=True, number=True):
 
 def str_bool(value):
     return str(value).lower() in ['yes', '1', 'y', 'true', 't']
+
+
+def get_password(prompt):
+    from cloudmesh.common.systeminfo import os_is_windows
+    if os_is_windows() and is_gitbash():
+        continuing = True
+        while continuing:
+
+            sys.stdout.write(prompt)
+            sys.stdout.flush()
+            subprocess.check_call(["stty", "-echo"])
+            password = input()
+            subprocess.check_call(["stty", "echo"])
+            sys.stdout.write('Please retype the password:\n')
+            sys.stdout.flush()
+            subprocess.check_call(["stty", "-echo"])
+            password2 = input()
+            subprocess.check_call(["stty", "echo"])
+            if password == password2:
+                continuing = False
+            else:
+                Console.error('Passwords do not match\n')
+        return password
+    else:
+        continuing = True
+        while continuing:
+            password = getpass(prompt)
+            password2 = getpass('Please retype the password:\n')
+            if password == password2:
+                continuing = False
+            else:
+                Console.error('Passwords do not match\n')
+        return password
