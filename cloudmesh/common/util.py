@@ -556,32 +556,38 @@ def str_bool(value):
 
 def get_password(prompt):
     from cloudmesh.common.systeminfo import os_is_windows
-    if os_is_windows() and is_gitbash():
-        continuing = True
-        while continuing:
+    try:
+        if os_is_windows() and is_gitbash():
+            continuing = True
+            while continuing:
 
-            sys.stdout.write(prompt)
-            sys.stdout.flush()
-            subprocess.check_call(["stty", "-echo"])
-            password = input()
+                sys.stdout.write(prompt)
+                sys.stdout.flush()
+                subprocess.check_call(["stty", "-echo"])
+                password = input()
+                subprocess.check_call(["stty", "echo"])
+                sys.stdout.write('Please retype the password:\n')
+                sys.stdout.flush()
+                subprocess.check_call(["stty", "-echo"])
+                password2 = input()
+                subprocess.check_call(["stty", "echo"])
+                if password == password2:
+                    continuing = False
+                else:
+                    Console.error('Passwords do not match\n')
+            return password
+        else:
+            continuing = True
+            while continuing:
+                password = getpass(prompt)
+                password2 = getpass('Please retype the password:\n')
+                if password == password2:
+                    continuing = False
+                else:
+                    Console.error('Passwords do not match\n')
+            return password
+    except KeyboardInterrupt:
+        #Console.error('Detected Ctrl + C. Quitting...')
+        if is_gitbash():
             subprocess.check_call(["stty", "echo"])
-            sys.stdout.write('Please retype the password:\n')
-            sys.stdout.flush()
-            subprocess.check_call(["stty", "-echo"])
-            password2 = input()
-            subprocess.check_call(["stty", "echo"])
-            if password == password2:
-                continuing = False
-            else:
-                Console.error('Passwords do not match\n')
-        return password
-    else:
-        continuing = True
-        while continuing:
-            password = getpass(prompt)
-            password2 = getpass('Please retype the password:\n')
-            if password == password2:
-                continuing = False
-            else:
-                Console.error('Passwords do not match\n')
-        return password
+        raise ValueError('Detected Ctrl + C. Quitting...')
