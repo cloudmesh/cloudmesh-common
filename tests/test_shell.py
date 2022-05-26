@@ -1,7 +1,7 @@
 ###############################################################
-# npytest -v --capture=no  tests/test_shell..py::Test_shell.test_001
 # pytest -v --capture=no  tests/test_shell.py
 # pytest -v tests/test_shell.py
+# npytest -v --capture=no  tests/test_shell.py::Test_shell.test_001
 ###############################################################
 import getpass
 
@@ -33,3 +33,9 @@ class Test_shell(object):
         r = run("whoami")
         print(r)
         assert getpass.getuser() in r
+
+    def test_which(self):
+        HEADING()
+        r = Shell.run("which python")
+        print(r)
+        assert r is not None
