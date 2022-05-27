@@ -66,6 +66,12 @@ def os_is_pi():
         return False
 
 def sys_user():
+    """
+    TODO
+
+    Returns:
+
+    """
     if "COLAB_GPU" in os.environ:
         return "collab"
     try:
@@ -87,6 +93,12 @@ def sys_user():
 
 
 def get_platform():
+    """
+    TODO
+
+    Returns:
+
+    """
     if sys.platform == "darwin":
         return "macos"
     elif sys.platform == "win32":
@@ -102,6 +114,17 @@ def get_platform():
 
 
 def systeminfo(info=None, user=None, node=None):
+    """
+    TODO
+
+    Args:
+        info (TODO):  TODO
+        user (str): TODO
+        node (str): TODO
+
+    Returns: dict of the info
+
+    """
     uname = platform.uname()
     mem = psutil.virtual_memory()
 
