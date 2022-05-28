@@ -27,6 +27,7 @@ from cloudmesh.common.dotdict import dotdict
 from cloudmesh.common.systeminfo import get_platform
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.util import readfile
+from cloudmesh.common.systeminfo import os_is_windows
 
 
 # from functools import wraps
@@ -1149,7 +1150,10 @@ class Shell(object):
         :param command: teh command
         :return: the path
         """
-        return shutil.which(command)
+        if os_is_windows():
+            return Shell.run(f"where {command}")
+        else:
+            return shutil.which(command)
 
     @classmethod
     def command_exists(cls, name):

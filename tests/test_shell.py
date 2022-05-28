@@ -4,9 +4,11 @@
 # npytest -v --capture=no  tests/test_shell.py::Test_shell.test_001
 ###############################################################
 import getpass
+import subprocess
 
 from cloudmesh.common.Shell import Shell
 from cloudmesh.common.util import HEADING
+from cloudmesh.common.systeminfo import os_is_windows
 import pytest
 
 
@@ -28,14 +30,20 @@ class Test_shell(object):
     def setup(self):
         pass
 
-    def test_001(self):
-        HEADING("check if we can run help:return: ")
-        r = run("whoami")
-        print(r)
-        assert getpass.getuser() in r
+    def test_whoami(self):
+        HEADING()
+        try:
+            r = Shell.run("whoami").strip()
+        except Exception as e:
+            print(e)
+        print("whoami:",r)
+        if os_is_windows:
+            assert r is not ''
+        else:
+            assert getpass.getuser() in r
 
     def test_which(self):
         HEADING()
-        r = Shell.run("which python")
+        r = Shell.which("python")
         print(r)
         assert r is not None
