@@ -547,6 +547,7 @@ class StopWatch(object):
     @classmethod
     def benchmark(cls,
                   sysinfo=True,
+                  timers=True,
                   csv=True,
                   prefix="# csv",
                   tag=None,
@@ -593,138 +594,140 @@ class StopWatch(object):
             )
             content = content + "\n"
 
-        #
-        # PRINT TIMERS
-        #
-        timers = StopWatch.keys()
-        total_time = 0.0
-        if len(timers) > 0:
+        if timers:
 
-            data_timers = {}
-            for timer in timers:
-                data_timers[timer] = {
-                    'start': time.strftime("%Y-%m-%d %H:%M:%S",
-                                           time.gmtime(
-                                               StopWatch.timer_start[timer])),
-                    'time': StopWatch.get(timer, digits=3),
-                    'sum': StopWatch.sum(timer, digits=3),
-                    'status': StopWatch.get_status(timer),
-                    'msg': StopWatch.get_message(timer),
-                    'timer': timer,
-                    'tag': tag or ''
-                }
-                try:
-                    total_time = total_time + StopWatch.get(timer)
-                except:
-                    pass
-                for attribute in ["uname.node",
-                                  "user",
-                                  "uname.system",
-                                  "uname.machine",
-                                  "platform.version",
-                                  "sys.platform"]:
-                    if attribute == "user" and user is not None:
-                        data_timers[timer][attribute] = user
-                    elif attribute == "uname.node" and node is not None:
-                        data_timers[timer][attribute] = node
-                    else:
-                        data_timers[timer][attribute] = data_platform[attribute]
+            #
+            # PRINT TIMERS
+            #
+            timers = StopWatch.keys()
+            total_time = 0.0
+            if len(timers) > 0:
 
-            # print(Printer.attribute(data_timers, header=["Command", "Time/s"]))
+                data_timers = {}
+                for timer in timers:
+                    data_timers[timer] = {
+                        'start': time.strftime("%Y-%m-%d %H:%M:%S",
+                                               time.gmtime(
+                                                   StopWatch.timer_start[timer])),
+                        'time': StopWatch.get(timer, digits=3),
+                        'sum': StopWatch.sum(timer, digits=3),
+                        'status': StopWatch.get_status(timer),
+                        'msg': StopWatch.get_message(timer),
+                        'timer': timer,
+                        'tag': tag or ''
+                    }
+                    try:
+                        total_time = total_time + StopWatch.get(timer)
+                    except:
+                        pass
+                    for attribute in ["uname.node",
+                                      "user",
+                                      "uname.system",
+                                      "uname.machine",
+                                      "platform.version",
+                                      "sys.platform"]:
+                        if attribute == "user" and user is not None:
+                            data_timers[timer][attribute] = user
+                        elif attribute == "uname.node" and node is not None:
+                            data_timers[timer][attribute] = node
+                        else:
+                            data_timers[timer][attribute] = data_platform[attribute]
 
-            if 'benchmark_start_stop' in data_timers:
-                del data_timers['benchmark_start_stop']
+                # print(Printer.attribute(data_timers, header=["Command", "Time/s"]))
 
-            for key in data_timers:
-                if key != 'benchmark_start_stop' and data_timers[key]['status'] is None:
-                    data_timers[key]['status'] = "failed"
-                elif data_timers[key]['status'] is not None and data_timers[key]['status']:
-                    data_timers[key]['status'] = "ok"
+                if 'benchmark_start_stop' in data_timers:
+                    del data_timers['benchmark_start_stop']
 
-            if attributes is None:
-                order = [
-                    "timer",
-                    "status",
-                    "time",
-                    "sum",
-                    "start",
-                    "tag",
-                    "msg",
-                    "uname.node",
-                    "user",
-                    "uname.system",
-                    "platform.version"
-                ]
+                for key in data_timers:
+                    if key != 'benchmark_start_stop' and data_timers[key]['status'] is None:
+                        data_timers[key]['status'] = "failed"
+                    elif data_timers[key]['status'] is not None and data_timers[key]['status']:
+                        data_timers[key]['status'] = "ok"
 
-                header = [
-                    "Name",
-                    "Status",
-                    "Time",
-                    "Sum",
-                    "Start",
-                    "tag",
-                    "msg",
-                    "Node",
-                    "User",
-                    "OS",
-                    "Version"
-                ]
-            elif attributes == "short":
-                order = [
-                    "timer",
-                    "status",
-                    "time"
-                ]
+                if attributes is None:
+                    order = [
+                        "timer",
+                        "status",
+                        "time",
+                        "sum",
+                        "start",
+                        "tag",
+                        "msg",
+                        "uname.node",
+                        "user",
+                        "uname.system",
+                        "platform.version"
+                    ]
 
-                header = [
-                    "Name",
-                    "Status",
-                    "Time"
-                ]
-            else:
-                order = attributes
-                header = attributes
-            content = content + "\n"
-            content = content + Printer.write(
-                data_timers,
-                order=order,
-                header=header,
-                output="table"
+                    header = [
+                        "Name",
+                        "Status",
+                        "Time",
+                        "Sum",
+                        "Start",
+                        "tag",
+                        "msg",
+                        "Node",
+                        "User",
+                        "OS",
+                        "Version"
+                    ]
+                elif attributes == "short":
+                    order = [
+                        "timer",
+                        "status",
+                        "time"
+                    ]
 
-            )
-
-            if total:
-                content = content + f"Total: {total_time}"
-
-            content = content + "\n"
-
-            if csv:
-                if prefix is not None:
-                    for entry in data_timers:
-                        data_timers[entry]["# csv"] = prefix
-
-                    order = ["# csv"] + order
-
-                    content = content + Printer.write(
-                        data_timers,
-                        order=order,
-                        header=header,
-                        output="csv"
-                    )
+                    header = [
+                        "Name",
+                        "Status",
+                        "Time"
+                    ]
                 else:
+                    order = attributes
+                    header = attributes
+                content = content + "\n"
+                content = content + Printer.write(
+                    data_timers,
+                    order=order,
+                    header=header,
+                    output="table"
 
-                    content = content + pprint.pformat(data_timers, indent=4)
-                    content = content + "\n"
+                )
 
-                    content = content + Printer.write(
-                        data_timers,
-                        order=order[1:],
-                        output="csv"
-                    )
-                    content = content + "\n"
+                if total:
+                    content = content + f"Total: {total_time}"
 
-        else:
-            content = content + "ERROR: No timers found\n"
+                content = content + "\n"
+
+                if csv:
+                    if prefix is not None:
+                        for entry in data_timers:
+                            data_timers[entry]["# csv"] = prefix
+
+                        order = ["# csv"] + order
+
+                        content = content + Printer.write(
+                            data_timers,
+                            order=order,
+                            header=header,
+                            output="csv"
+                        )
+                    else:
+
+                        content = content + pprint.pformat(data_timers, indent=4)
+                        content = content + "\n"
+
+                        content = content + Printer.write(
+                            data_timers,
+                            order=order[1:],
+                            output="csv"
+                        )
+                        content = content + "\n"
+
+            else:
+                content = content + "ERROR: No timers found\n"
 
         print(content)
         if filename:
