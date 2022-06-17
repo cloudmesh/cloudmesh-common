@@ -14,6 +14,7 @@ import psutil
 import humanize
 import re
 import multiprocessing
+from cloudmesh.common.DateTime import DateTime
 
 
 def os_is_windows():
@@ -221,4 +222,5 @@ def systeminfo(info=None, user=None, node=None):
         data["user"] = user
     if node is not None:
         data["uname.node"] = node
+    data["date"] = str(DateTime.now())
     return dict(data)
