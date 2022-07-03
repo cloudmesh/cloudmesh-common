@@ -457,6 +457,7 @@ class Shell(object):
         try:
             shutil.rmtree(path_expand(top))
         except Exception as e:
+            print(e)
             pass
             # print(e.strerror)
             # assert False, f"Directory {top} could not be deleted"
