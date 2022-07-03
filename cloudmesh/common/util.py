@@ -198,7 +198,7 @@ def is_cmd_exe():
 
 
 
-def path_expand(text):
+def path_expand(text, slashreplace=True):
     """ returns a string with expanded variable.
 
     :param text: the path to be expanded, which can include ~ and environment variables
@@ -211,7 +211,8 @@ def path_expand(text):
         result = result.replace(".", os.getcwd(), 1)
 
     if is_gitbash() or is_cmd_exe():
-        result = result.replace("/", "\\")
+        if slashreplace:
+            result = result.replace("/", "\\")
 
     return result
 

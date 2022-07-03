@@ -1236,6 +1236,16 @@ class Shell(object):
             print("             pip install -U pip\n")
 
     @classmethod
+    def copy(cls, source, destination, expand=False):
+        if expand:
+            s = path_expand(source)
+            d = path_expand(destination)
+        else:
+            s=source
+            d = destination
+        shutil.copy2(s, d)
+
+    @classmethod
     def mkdir(cls, directory):
         """
         creates a directory with all its parents in ots name
