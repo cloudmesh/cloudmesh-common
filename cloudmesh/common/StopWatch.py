@@ -270,6 +270,38 @@ class StopWatch(object):
                 cls.mllogger.event(key=f"mllog-event-{name}")
 
     @classmethod
+    def log_event(cls, config, **argv):
+        """
+        config : import yaml file already parsed by code.
+        """
+        import mllog
+        cls.mllogger.event(key=mllog.constants.SUBMISSION_BENCHMARK, value=config["benchmark"]['name'])
+        cls.mllogger.event(key=mllog.constants.SUBMISSION_ORG, value=config["benchmark"]['organisation'])
+        cls.mllogger.event(key=mllog.constants.SUBMISSION_DIVISION, value=config["benchmark"]['division'])
+        cls.mllogger.event(key=mllog.constants.SUBMISSION_STATUS, value=config["benchmark"]['status'])
+        cls.mllogger.event(key=mllog.constants.SUBMISSION_PLATFORM, value=config["benchmark"]['platform'])
+        cls.mllogger.event(key=mllog.constants.GLOBAL_BATCH_SIZE, value=config["attributes"]['TFTTransformerbatch_size'])
+        cls.mllogger.event(key="total_epochs", value=config["experiments"]['TFTTransformerepochs'])
+        cls.mllogger.event(key="hidden_layer_size", value=config["attributes"]['TFTd_model'])
+        cls.mllogger.event(key="dropout_rate", value=config["attributes"]['TFTdropout_rate'])
+        cls.mllogger.event(key="attention_layers", value=config["attributes"]['TFTnum_AttentionLayers'])
+        cls.mllogger.event(key="num_attention_heads", value=config["attributes"]['TFTnum_heads'])
+        cls.mllogger.event(key="size_of_sequence_window", value=config["attributes"]['Tseq'])
+        cls.mllogger.event(key="gpu", value=config["experiments"]['card_name'])
+        cls.mllogger.event(key="num_of_cpu", value=config["experiments"]['cpu_num'])
+        cls.mllogger.event(key="early_stopping_patience", value=config["attributes"]['early_stopping_patience'])
+        cls.mllogger.event(key="gpu_count", value=config["experiments"]['gpu_count'])
+        cls.mllogger.event(key="global_learning_rate", value=config["attributes"]['learning_rate'])
+        cls.mllogger.event(key=mllog.constants.OPT_GRADIENT_CLIP_NORM, value=config["attributes"]['max_gradient_norm'])
+        cls.mllogger.event(key="ram", value=config["experiments"]['mem'])
+        cls.mllogger.event(key="partition", value=config["attributes"]['system']['partition'])
+        cls.mllogger.event(key="revision", value=config["attributes"]['revision'])
+        cls.mllogger.event(key="git_branch", value=config["attributes"]['run']['branch'])
+        cls.mllogger.event(key="script", value=config["attributes"]['script'])
+        cls.mllogger.event(key="rivanna_run_dir", value=config["dir"])
+        cls.mllogger.event(key="system_host", value=config["attributes"]['system']['host'])
+
+    @classmethod
     def start(cls, name, values=None):
         """
         starts a timer with the given name.
