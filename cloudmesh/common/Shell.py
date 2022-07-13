@@ -28,6 +28,10 @@ from cloudmesh.common.systeminfo import get_platform
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.util import readfile
 from cloudmesh.common.systeminfo import os_is_windows
+from cloudmesh.common.systeminfo import os_is_mac
+from cloudmesh.common.systeminfo import os_is_linux
+from cloudmesh.common.util import is_gitbash
+
 
 
 # from functools import wraps
@@ -473,15 +477,22 @@ class Shell(object):
         os.system(command)
 
     @staticmethod
-    def browser(filename):
-        data = {
-            'engine': 'python -m webbrowser',
-            'file': filename
-        }
-        if 'file:' not in filename and 'http' not in filename:
-            os.system("python -m webbrowser -t file:///{file}".format(**data))
+    def browser(filename=None, engine='python -m webbrowser -t'):
+        if ".svg" in filename:
+            if os_is_linux():
+                if engine.startswith("chrome"):
+                    os.system(f"chromium {filename}")
+                else:
+                    os.system(f"gopen {filename}")
+            elif os_is_mac():
+                raise NotImplementedError("IMplement me in Shell.browser")
+            elif os_is_windows():
+                raise NotImplementedError("IMplement me in Shell.browser")
         else:
-            os.system("python -m webbrowser -t {file}".format(**data))
+            if 'file:' not in filename and 'http' not in filename:
+                os.system(f"{engine} file:///{filename}")
+            else:
+                os.system(f"{engine} {file}".format(**data))
 
     @staticmethod
     def terminal_title(name):
@@ -653,11 +664,11 @@ class Shell(object):
         :param args:
         :return:
         """
-        NotImplementedInWindows()
-        # TODO: replace with file read and reading the content. We need to deal
-        #       with line endings and add maybe a flag endings="unix"/"windows".
-        #       check the finction readlines.
-        return cls.execute('cat', args)
+        if os_is_windows() and is_gitbash():
+            content = readfile(args[0])
+            return content
+        else:
+            return cls.execute('cat', args)
 
     @classmethod
     def git(cls, *args):
@@ -666,7 +677,6 @@ class Shell(object):
         :param args:
         :return:
         """
-        NotImplementedInWindows()
         return cls.execute('git', args)
 
     # noinspection PyPep8Naming
