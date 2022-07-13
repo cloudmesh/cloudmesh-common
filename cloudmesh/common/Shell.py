@@ -1257,12 +1257,22 @@ class Shell(object):
 
     @classmethod
     def copy(cls, source, destination, expand=False):
+        if os_is_windows():
+            user=os.environ["USERNAME"]
+        else:
+            user=os.environ["USER"]
+
         if expand:
             s = path_expand(source)
             d = path_expand(destination)
         else:
-            s=source
+            s = source
             d = destination
+            if str(source).startswith("wsl:"):
+                s = str(source).replace("wsl:",f"/mnt/c/Users/{user}/")
+            if str(destination).startswith("wsl:"):
+                d = str(destination).replace("wsl:",f"/mnt/c/Users/{user}/")
+
         shutil.copy2(s, d)
 
     @classmethod
