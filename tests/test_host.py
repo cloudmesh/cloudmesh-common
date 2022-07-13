@@ -8,16 +8,15 @@ import getpass
 from cloudmesh.common.Shell import Shell
 from cloudmesh.common.util import HEADING
 import pytest
-from cloudmesh.common.Host import Host
-from cloudmesh.common.Host import Execution
+# from cloudmesh.common.Host import Host
 
 
 @pytest.mark.incremental
 class Test_host(object):
 
-    def test_001_pwd(self):
+    def test_001_whoami(self):
         HEADING()
 
-        result = Execution.run("whoami")
+        result = Shell.run("whoami")
         print(result)
-        assert getpass.getuser() in r
+        assert getpass.getuser() in result
