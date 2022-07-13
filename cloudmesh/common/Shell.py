@@ -738,8 +738,9 @@ class Shell(object):
         :param args:
         :return:
         """
-        NotImplementedInWindows()
-        # TODO: reimplement with readlines
+        if not is_gitbash():
+            content = Shell.cat(args[0]).splitlines()
+            return content[0]
         return cls.execute('head', args)
 
     @classmethod
@@ -1013,8 +1014,8 @@ class Shell(object):
         :param args:
         :return:
         """
-        NotImplementedInWindows()
-        # TODO: see cm_grep
+        if os_is_windows() and not is_gitbash():
+            NotImplementedInWindows()
         return cls.execute('fgrep', args)
 
     @classmethod
@@ -1025,7 +1026,8 @@ class Shell(object):
         :param args:
         :return:
         """
-        NotImplementedInWindows()
+        if os_is_windows() and not is_gitbash():
+            NotImplementedInWindows()
         return cls.execute('grep', args)
 
     @classmethod
