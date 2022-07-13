@@ -485,7 +485,7 @@ class Shell(object):
                 else:
                     os.system(f"gopen {filename}")
             elif os_is_mac():
-                raise NotImplementedError("IMplement me in Shell.browser")
+                os.system(f"open {filename}")
             elif os_is_windows():
                 raise NotImplementedError("IMplement me in Shell.browser")
         else:
