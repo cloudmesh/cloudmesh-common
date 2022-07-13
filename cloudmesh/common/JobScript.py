@@ -9,7 +9,7 @@ from cloudmesh.common.console import Console
 
 class JobScript:
     '''
-    The jobscript is a simple mechanism to run a number of commands formylated
+    The jobscript is a simple mechanism to run a number of commands specified
     in a script. The script is interpreted line by line and does not support
     multi line commands at this time. (Not difficult to implement when
     looking at \\ at the end of a line.)
