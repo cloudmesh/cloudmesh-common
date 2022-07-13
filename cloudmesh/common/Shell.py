@@ -477,7 +477,13 @@ class Shell(object):
         os.system(command)
 
     @staticmethod
-    def browser(filename=None, engine='python -m webbrowser -t'):
+    def browser(filename=None, engine='python -m webbrowser -t', browser='chrome'):
+        """
+        :param filename:
+        :param engine:
+        :param browser:
+        :return:
+        """
         if ".svg" in filename:
             if os_is_linux():
                 if engine.startswith("chrome"):
@@ -487,12 +493,13 @@ class Shell(object):
             elif os_is_mac():
                 os.system(f"open {filename}")
             elif os_is_windows():
-                raise NotImplementedError("IMplement me in Shell.browser")
+                cwd = os.getcwd()
+                os.system(f'start {browser} {cwd}\\{filename}')
         else:
             if 'file:' not in filename and 'http' not in filename:
                 os.system(f"{engine} file:///{filename}")
             else:
-                os.system(f"{engine} {file}".format(**data))
+                os.system(f"{engine} {filename}")
 
     @staticmethod
     def terminal_title(name):

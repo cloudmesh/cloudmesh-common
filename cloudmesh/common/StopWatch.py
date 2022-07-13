@@ -100,7 +100,7 @@ import os
 import time
 import datetime
 import pprint
-
+import yaml
 import sys
 
 from cloudmesh.common.console import Console
@@ -145,6 +145,14 @@ def benchmark(func):
 
     return wrapper
 
+def import_mllog():
+    try:
+        from mlperf_logging import mllog
+    except:
+        Console.error("You need to install mllogging to use it")
+        sys.exit()
+    return mllog
+
 class StopWatch(object):
     """
     A class to measure times between events.
@@ -170,11 +178,7 @@ class StopWatch(object):
 
     @classmethod
     def activate_mllog(cls, filename="cloudmesh_mllog.log"):
-        try:
-            from mlperf_logging import mllog
-        except:
-            Console.error("You need to install mllogging to use it")
-            sys.exit()
+        mllog = import_mllog()
 
         cls.mllogging = True
         cls.mllogger = mllog.get_mllogger()
@@ -190,15 +194,29 @@ class StopWatch(object):
 
     @classmethod
     def organization_mllog(cls, configfile, **argv):
-        import mllog
-        import yaml
-        config = yaml.safe_load(readfile(configfile).strip())
+        mllog = import_mllog()
+
+        try:
+           config = yaml.safe_load(readfile(configfile).strip())
+        except:
+            config = {
+                "benchmark": {}
+            }
         config["benchmark"].update(argv)
-        cls.mllogger.event(key=mllog.constants.SUBMISSION_BENCHMARK, value=config["benchmark"]['name'])
-        cls.mllogger.event(key=mllog.constants.SUBMISSION_ORG, value=config["benchmark"]['organisation'])
-        cls.mllogger.event(key=mllog.constants.SUBMISSION_DIVISION, value=config["benchmark"]['division'])
-        cls.mllogger.event(key=mllog.constants.SUBMISSION_STATUS, value=config["benchmark"]['status'])
-        cls.mllogger.event(key=mllog.constants.SUBMISSION_PLATFORM, value=config["benchmark"]['platform'])
+
+        for key, attribute in [
+            (mllog.constants.SUBMISSION_BENCHMARK, 'name'),
+            (mllog.constants.SUBMISSION_POC_NAME, 'user'),
+            (mllog.constants.SUBMISSION_POC_EMAIL, 'email'),
+            (mllog.constants.SUBMISSION_ORG, 'organisation'),
+            (mllog.constants.SUBMISSION_DIVISION, 'division'),
+            (mllog.constants.SUBMISSION_STATUS, 'status'),
+            (mllog.constants.SUBMISSION_PLATFORM, 'platform')
+            ]:
+            try:
+                cls.mllogger.event(key=key, value=config["benchmark"][attribute])
+            except:
+                pass
 
 
     @classmethod
@@ -270,6 +288,34 @@ class StopWatch(object):
                 cls.mllogger.event(key=f"mllog-event-{name}")
 
     @classmethod
+    def log_event(cls, **argv):
+        """
+        import a dictionary into argv
+        """
+        import mllog
+        for name, value in argv:
+            cls.event(name, msg=name, values=value)
+            #cls.mllogger.event(key=name, value=value)
+
+    @classmethod
+    def log_constant(cls, **argv):
+        """
+        name: pass all capatalized constants
+        SUBMISSION_BENCHMARK,
+        SUBMISSION_ORG,
+        SUBMISSION_DIVISION,
+        SUBMISSION_STATUS,
+        SUBMISSION_PLATFORM,
+        GLOBAL_BATCH_SIZE,
+        OPT_GRADIENT_CLIP_NORM
+        """
+        import mllog
+        for name, value in argv:
+            constant=eval(f"mllog.constants.{name}")
+            cls.event(constant, msg=constant, values=value)
+            #cls.mllogger.event(key=constant, value=value)
+
+    @classmethod
     def start(cls, name, values=None):
         """
         starts a timer with the given name.
@@ -290,9 +336,9 @@ class StopWatch(object):
 
         if cls.mllogging:
             if values is not None:
-                cls.mllogger.start(key=f"mllog-timer-{name}", value=str(values))
+                cls.mllogger.start(key=f"mllog-start-{name}", value=str(values))
             else:
-                cls.mllogger.start(key=f"mllog-timer-{name}")
+                cls.mllogger.start(key=f"mllog-start-{name}")
 
     @classmethod
     def stop(cls, name, state=True, values=None):
@@ -312,9 +358,9 @@ class StopWatch(object):
 
         if cls.mllogging:
             if values is not None:
-                cls.mllogger.end(key=f"mllog-timer-{name}", value=str(values))
+                cls.mllogger.end(key=f"mllog-stop-{name}", value=str(values))
             else:
-                cls.mllogger.end(key=f"mllog-timer-{name}")
+                cls.mllogger.end(key=f"mllog-stop-{name}")
 
 
         if cls.debug:
