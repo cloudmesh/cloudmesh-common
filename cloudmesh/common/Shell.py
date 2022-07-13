@@ -735,10 +735,10 @@ class Shell(object):
         :param args:
         :return:
         """
-        #if not is_gitbash():
-        content = Shell.cat(args[0]).splitlines()
-        return content[0]
-        #return cls.execute('head', args)
+        if not is_gitbash():
+            content = Shell.cat(args[0]).splitlines()
+            return content[0]
+        return cls.execute('head', args)
 
     @classmethod
     def keystone(cls, *args):
