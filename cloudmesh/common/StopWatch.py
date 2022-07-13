@@ -286,6 +286,34 @@ class StopWatch(object):
                 cls.mllogger.event(key=f"mllog-event-{name}")
 
     @classmethod
+    def log_event(cls, **argv):
+        """
+        import a dictionary into argv
+        """
+        import mllog
+        for name, value in argv:
+            cls.event(name, msg=name, values=value)
+            #cls.mllogger.event(key=name, value=value)
+
+    @classmethod
+    def log_constant(cls, **argv):
+        """
+        name: pass all capatalized constants
+        SUBMISSION_BENCHMARK,
+        SUBMISSION_ORG,
+        SUBMISSION_DIVISION,
+        SUBMISSION_STATUS,
+        SUBMISSION_PLATFORM,
+        GLOBAL_BATCH_SIZE,
+        OPT_GRADIENT_CLIP_NORM
+        """
+        import mllog
+        for name, value in argv:
+            constant=eval(f"mllog.constants.{name}")
+            cls.event(constant, msg=constant, values=value)
+            #cls.mllogger.event(key=constant, value=value)
+
+    @classmethod
     def start(cls, name, values=None):
         """
         starts a timer with the given name.
