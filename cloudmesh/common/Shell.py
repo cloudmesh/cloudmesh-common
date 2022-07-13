@@ -15,6 +15,7 @@ import subprocess
 import sys
 import textwrap
 import zipfile
+import webbrowser
 from pathlib import Path
 from pipes import quote
 from sys import platform
@@ -477,29 +478,18 @@ class Shell(object):
         os.system(command)
 
     @staticmethod
-    def browser(filename=None, engine='python -m webbrowser -t', browser='chrome'):
+    def browser(filename=None):
         """
         :param filename:
-        :param engine:
         :param browser:
         :return:
         """
-        if ".svg" in filename:
-            if os_is_linux():
-                if engine.startswith("chrome"):
-                    os.system(f"chromium {filename}")
-                else:
-                    os.system(f"gopen {filename}")
-            elif os_is_mac():
-                os.system(f"open {filename}")
-            elif os_is_windows():
-                cwd = os.getcwd()
-                os.system(f'start {browser} {cwd}\\{filename}')
-        else:
-            if 'file:' not in filename and 'http' not in filename:
-                os.system(f"{engine} file:///{filename}")
-            else:
-                os.system(f"{engine} {filename}")
+
+        if not os.path.isabs(filename) and 'http' not in filename:
+            filename = path_expand(filename)
+
+        webbrowser.open(filename, new=2)
+
 
     @staticmethod
     def terminal_title(name):
@@ -745,10 +735,10 @@ class Shell(object):
         :param args:
         :return:
         """
-        if not is_gitbash():
-            content = Shell.cat(args[0]).splitlines()
-            return content[0]
-        return cls.execute('head', args)
+        #if not is_gitbash():
+        content = Shell.cat(args[0]).splitlines()
+        return content[0]
+        #return cls.execute('head', args)
 
     @classmethod
     def keystone(cls, *args):
