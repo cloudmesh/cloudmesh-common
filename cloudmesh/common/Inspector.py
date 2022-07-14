@@ -35,9 +35,9 @@ def inheritors(klass):
     return subclasses
 
 
-d = pydoc.locate("cloudmesh.abstract.ComputeNodeABC")
+# d = pydoc.locate("cloudmesh.abstract.ComputeNodeABC")
 
-print(inheritors(d))
+# print(inheritors(d))
 
 
 def get_all_subclasses(cls):
