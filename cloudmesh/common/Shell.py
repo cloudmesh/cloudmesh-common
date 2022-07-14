@@ -202,6 +202,7 @@ class Shell(object):
         'darwin': {}
     }
 
+
     # TODO
     #
     # how do we now define dynamically functions based on a list that we want to support
@@ -244,6 +245,17 @@ class Shell(object):
         except IndexError as e:
             Console.warning('Could not determine locale. Defaulting to "us"')
             return 'us'
+
+    @staticmethod
+    def ssh_enabled():
+        if os_is_linux():
+            r = Shell.run("service sshd status | fgrep running").strip()
+            return len(r) > 0
+        elif os_is_windows():
+            raise NotImplementedError
+        elif os_is_mac():
+            raise NotImplementedError
+        return False
 
     @staticmethod
     def run_timed(label, command, encoding=None, service=None):

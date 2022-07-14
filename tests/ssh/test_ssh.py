@@ -19,7 +19,7 @@ cloud = "local"
 # multiping only works if you have root, so we can not use it
 # from multiping import MultiPing
 
-thishost = Shell.execute('hostname')
+thishost = Shell.run('hostname')
 
 hosts = ['127.0.0.1',
          'localhost',
@@ -48,6 +48,8 @@ def craete_location(host):
     }
 
 
+
+@pytest.mark.skipif(not Shell.ssh_enabled(), reason="SSH is not aenabled")
 @pytest.mark.incremental
 class TestSsh:
 
