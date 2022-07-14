@@ -14,6 +14,7 @@ import shutil
 import subprocess
 import sys
 import textwrap
+import webbrowser
 import zipfile
 from pathlib import Path
 from pipes import quote
@@ -475,6 +476,19 @@ class Shell(object):
         command = "{engine} -Tsvg {file}.dot > {file}.svg".format(**data)
         print(command)
         os.system(command)
+
+    @staticmethod
+    def browser2(filename=None):
+        """
+        :param filename:
+        :param browser:
+        :return:
+        """
+
+        if not os.path.isabs(filename) and 'http' not in filename:
+            filename = path_expand(filename)
+
+        webbrowser.open(filename, new=2)
 
     @staticmethod
     def browser(filename=None, engine='python -m webbrowser -t', browser='chrome'):
