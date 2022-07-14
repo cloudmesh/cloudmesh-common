@@ -193,6 +193,14 @@ class StopWatch(object):
         )
 
     @classmethod
+    def progress(cls, percent, status="running", pid=None):
+        if pid == None:
+            pid = os.getpid()
+        if "SLURM_JOB_ID" in os.environ:
+            pid = os.environ["SLURM_JOB_ID"]
+        print(f"# cloudmesh status={status} progress={percent} pid={pid}")
+
+    @classmethod
     def organization_mllog(cls, configfile, **argv):
         mllog = import_mllog()
 
