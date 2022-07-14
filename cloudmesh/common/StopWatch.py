@@ -292,7 +292,6 @@ class StopWatch(object):
         """
         import a dictionary into argv
         """
-        import mllog
         for name, value in argv:
             cls.event(name, msg=name, values=value)
             #cls.mllogger.event(key=name, value=value)
@@ -309,7 +308,6 @@ class StopWatch(object):
         GLOBAL_BATCH_SIZE,
         OPT_GRADIENT_CLIP_NORM
         """
-        import mllog
         for name, value in argv:
             constant=eval(f"mllog.constants.{name}")
             cls.event(constant, msg=constant, values=value)
