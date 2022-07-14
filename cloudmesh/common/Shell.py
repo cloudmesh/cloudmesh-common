@@ -478,42 +478,71 @@ class Shell(object):
         os.system(command)
 
     @staticmethod
-    def browser2(filename=None):
-        """
-        :param filename:
-        :param browser:
-        :return:
-        """
+    def map_filename(name):
+        pwd = os.getcwd()
 
-        if not os.path.isabs(filename) and 'http' not in filename:
-            filename = path_expand(filename)
+        _name = str(name)
+        result = dotdict()
 
-        webbrowser.open(filename, new=2)
+        result.user = os.path.basename(os.environ["HOME"])
+        result.host = "localhost"
+        result.protocol = "localhost"
+
+        if _name.startswith("http"):
+            result.path = _name
+            result.protocol = _name.split(':', 1)[0]
+        elif _name.startswith("wsl:"):
+            result.path = _name.replace("wsl:", "")
+            # Abbreviations: replace ~ with home dir and ./ + / with pwd
+            if result.path.startswith("~"):
+                if os_is_linux():
+                    result.path = result.path.replace("~", f"/mnt/c/home/{result.user}")
+                else:
+                    result.path = result.path.replace("~", f"/mnt/c/Users/{result.user}")
+            elif not result.path.startswith("/"):
+                if os_is_windows():
+                    pwd = pwd.replace("C:", "/mnt/c").replace("\\", "/")
+                result.path = pwd + "/" + result.path.replace("./", "")
+            result.protocol = "cp"
+            result.host = "wsl"
+        elif _name.startswith("scp:"):
+            # scp source destination
+            try:
+                result.scp, userhost, result.path = _name.split(":")
+                result.user, result.host = userhost.split("@")
+                result.protocol = "scp"
+            except:
+                Console.error("The format of the name is not supported: {name}")
+        elif _name.startswith("rsync:"):
+            try:
+                result.scp, userhost, result.path = _name.split(":")
+                result.user, result.host = userhost.split("@")
+                result.protocol = "rsync"
+            except:
+                Console.error("The format of the name is not supported: {name}")
+        elif _name.startswith(".") or _name.startswith("~"):
+            result.path = path_expand(_name)
+        elif _name[1] == ":":
+            drive, path = _name.split(":", 1)
+            if os_is_windows():
+                result.path = path_expand(path)
+            else:
+                result.path = drive + ":" + path_expand(path)
+            result.path = result.path.replace("/", "\\")
+        else:
+            result.path = path_expand(_name)
+
+        return result
 
     @staticmethod
-    def browser(filename=None, engine='python -m webbrowser -t', browser='chrome'):
+    def browser(filename=None):
         """
         :param filename:
-        :param engine:
-        :param browser:
         :return:
         """
-        if ".svg" in filename:
-            if os_is_linux():
-                if engine.startswith("chrome"):
-                    os.system(f"chromium {filename}")
-                else:
-                    os.system(f"gopen {filename}")
-            elif os_is_mac():
-                os.system(f"open {filename}")
-            elif os_is_windows():
-                cwd = os.getcwd()
-                os.system(f'start {browser} {cwd}\\{filename}')
-        else:
-            if 'file:' not in filename and 'http' not in filename:
-                os.system(f"{engine} file:///{filename}")
-            else:
-                os.system(f"{engine} {filename}")
+        if not os.path.isabs(filename) and 'http' not in filename:
+            filename = Shell.map_filename(filename).path
+        webbrowser.open(filename, new=2)
 
     @staticmethod
     def terminal_title(name):
@@ -752,17 +781,15 @@ class Shell(object):
         return cls.execute('cmsd', args)
 
     @classmethod
-    # @NotImplementedInWindows
-    def head(cls, *args):
+    def head(cls, filename=None, lines=10):
         """
         executes head with the given arguments
         :param args:
         :return:
         """
-        if not is_gitbash():
-            content = Shell.cat(args[0]).splitlines()
-            return content[0]
-        return cls.execute('head', args)
+        filename = cls.map_filename(filename).path
+        r = Shell.run(f'head -n {lines} {filename}')
+        return r
 
     @classmethod
     def keystone(cls, *args):
@@ -874,11 +901,15 @@ class Shell(object):
         :param count: the number of pings
         :return:
         """
-        option = '-n' if platform == 'windows' else '-c'
-        return cls.execute('ping',
-                           "{option} {count} {host}".format(option=option,
-                                                            count=count,
-                                                            host=host))
+        r = None
+        option = '-n' if os_is_windows() else '-c'
+        parameters = "{option} {count} {host}".format(option=option,
+                                                      count=count,
+                                                      host=host)
+        r = Shell.run(f'ping {parameters}')
+        if r is None:
+            Console.error("ping is not installed")
+        return r
 
     @classmethod
     def pwd(cls, *args):
@@ -899,14 +930,14 @@ class Shell(object):
         return cls.execute('rackdiag', args)
 
     @classmethod
-    # @NotImplementedInWindows
     def rm(cls, location):
         """
-        executes rm tree with the given arguments
+        executes rm with the given arguments
         :param args:
         :return:
         """
-        shutil.rmtree(path_expand(location))
+        location = cls.map_filename(location).path
+        os.remove(location)
 
     @classmethod
     def rsync(cls, *args):
@@ -969,16 +1000,15 @@ class Shell(object):
         return cls.execute('sudo', args)
 
     @classmethod
-    # @NotImplementedInWindows
-    def tail(cls, *args):
+    def tail(cls, filename=None, lines=10):
         """
         executes tail with the given arguments
         :param args:
         :return:
         """
-        NotImplementedInWindows()
-        # TODO: implement with readlines on a file.
-        return cls.execute('tail', args)
+        filename = cls.map_filename(filename).path
+        r = Shell.run(f'tail -n {lines} {filename}')
+        return r
 
     @classmethod
     def vagrant(cls, *args):
@@ -1028,28 +1058,17 @@ class Shell(object):
         return cls.execute('pip', args)
 
     @classmethod
-    # @NotImplementedInWindows
-    def fgrep(cls, *args):
-        """
-        executes fgrep with the given arguments
-        :param args:
-        :return:
-        """
-        if os_is_windows() and not is_gitbash():
-            NotImplementedInWindows()
-        return cls.execute('fgrep', args)
+    def fgrep(cls, string=None, file=None):
+        if not os_is_windows():
+            r = Shell.run(f'fgrep {string} {file}')
+        else:
+            r = Shell.run(f'grep -F {string} {file}')
+        return r
 
     @classmethod
-    # @NotImplementedInWindows
-    def grep(cls, *args):
-        """
-        executes grep with the given arguments
-        :param args:
-        :return:
-        """
-        if os_is_windows() and not is_gitbash():
-            NotImplementedInWindows()
-        return cls.execute('grep', args)
+    def grep(cls, string=None, file=None):
+        r = Shell.run(f'grep {string} {file}')
+        return r
 
     @classmethod
     def cm_grep(cls, lines, what):
@@ -1286,23 +1305,12 @@ class Shell(object):
         :param directory: the path of the directory
         :return:
         """
-        directory = path_expand(directory)
-        Path(directory).mkdir(parents=True, exist_ok=True)
-
-        #try:
-        #    os.makedirs(directory)
-        #except OSError as e:
-
-            # EEXIST (errno 17) occurs under two conditions when the path exists:
-            # - it is a file
-            # - it is a directory
-            #
-            # if it is a file, this is a valid error, otherwise, all
-            # is fine.
-        #    if e.errno == errno.EEXIST and os.path.isdir(directory):
-        #        pass
-        #    else:
-        #        raise
+        directory = cls.map_filename(directory).path
+        try:
+            os.makedirs(directory)
+            return True
+        except OSError as e:
+            return False
 
     def unzip(cls, source_filename, dest_dir):
         """
@@ -1399,6 +1407,23 @@ class Shell(object):
             raise NotImplementedError
 
         return result
+
+    @staticmethod
+    def open(filename=None, program=None):
+        if not os.path.isabs(filename):
+            filename = path_expand(filename)
+
+        if os_is_linux():
+            r = Shell.run(f"gopen {filename}")
+        if os_is_mac():
+            command = f'open {filename}'
+            if program:
+                command += f' -a "{program}"'
+            r = Shell.run(command)
+        if os_is_windows():
+            r = Shell.run(f"start {filename}")
+
+        return r
 
 
 def main():
