@@ -28,6 +28,7 @@ from cloudmesh.common.dotdict import dotdict
 from cloudmesh.common.systeminfo import get_platform
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.util import readfile
+from cloudmesh.common.util import writefile
 from cloudmesh.common.systeminfo import os_is_windows
 from cloudmesh.common.systeminfo import os_is_mac
 from cloudmesh.common.systeminfo import os_is_linux
@@ -555,6 +556,27 @@ class Shell(object):
         if not os.path.isabs(filename) and 'http' not in filename:
             filename = Shell.map_filename(filename).path
         webbrowser.open(filename, new=2)
+
+    @staticmethod
+    def fetch(filename=None, destination=None):
+        _filename = Shell.map_filename(filename)
+
+        content = None
+
+        if _filename.path.startswith('http'):
+            result = requests.get(_filename.path)
+            content = result.text
+
+        else:
+            os.path.exists(_filename.path)
+            content = readfile(_filename.path)
+
+        if destination is not None:
+            destination = Shell.map_filename(destination)
+            writefile(destination, content)
+
+        return content
+
 
     @staticmethod
     def terminal_title(name):
