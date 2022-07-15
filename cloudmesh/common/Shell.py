@@ -253,9 +253,11 @@ class Shell(object):
             r = Shell.run("service sshd status | fgrep running").strip()
             return len(r) > 0
         elif os_is_windows():
-            raise NotImplementedError
+            r = Shell.run("ps | grep -F ssh")
+            return "ssh" in r
         elif os_is_mac():
-            raise NotImplementedError
+            r = Shell.run("ps -ef")
+            return "sshd" in r
         return False
 
     @staticmethod
