@@ -499,10 +499,16 @@ class Shell(object):
         _name = str(name)
         result = dotdict()
 
-        result.user = os.path.basename(os.environ["HOME"])
+        if os_is_windows():
+            if "USERNAME" in os.environ:
+                result.user = os.path.basename(os.environ["USERNAME"])
+            else:
+                Console.error("Could not detect the home directory")
+        else:
+            result.user = os.path.basename(os.environ["HOME"])
         result.host = "localhost"
         result.protocol = "localhost"
-
+        
         if _name.startswith("http"):
             result.path = _name
             result.protocol = _name.split(':', 1)[0]
