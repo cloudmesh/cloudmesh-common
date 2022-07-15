@@ -10,8 +10,8 @@ class Vpn:
     def enabled():
         state = False
         if os_is_windows():
-            result = Shell.run("vpncli")
-            state = "Disconnected" not in result
+            result = Shell.run("route print").strip()
+            state = "Cisco AnyConnect" in result
         elif os_is_mac():
             raise NotImplementedError
         elif os_is_linux():
@@ -31,3 +31,7 @@ class Vpn:
             result = Shell.run("route").strip()
             state = "uva-anywhere" in result
         return state
+
+    @staticmethod
+    def connect(self):
+        raise NotImplementedError
