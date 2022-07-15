@@ -1,7 +1,7 @@
 # ##############################################################
-# pytest -v --capture=no tests/test_shell.py
-# pytest -v  tests/test_shell.py
-# pytest -v --capture=no  tests/test_shell.py::TestShell::<METHODNAME>
+# pytest -v --capture=no tests/test_shell_tests.py
+# pytest -v  tests/test_shell_tests.py
+# pytest -v --capture=no  tests/test_shell_tests.py::TestShell::<METHODNAME>
 # ##############################################################
 
 
@@ -11,17 +11,17 @@ for the purpose of making the workflow more easily synonymous with each of the
 OS we have on the team.
 """
 import os.path
+import pytest
 
-# from cloudmesh.common.Shell import Shell
-from cloudmesh.common.Shell import Shell as Shell
+from cloudmesh.common.Shell import Shell
 from cloudmesh.common.util import HEADING
 from cloudmesh.common.Benchmark import Benchmark
 from cloudmesh.common.util import path_expand
-from cloudmesh.common.util import Console
-from pathlib import Path
 from cloudmesh.common.systeminfo import os_is_windows, os_is_linux, os_is_mac
+from pathlib import Path
 
 import time
+
 
 class TestShell:
 
@@ -136,8 +136,8 @@ class TestShell:
     def test_open(self):
         HEADING()
         Benchmark.Start()
-        r = Shell.open('test-dot.svg')
-        r2 = Shell.open('~/cm/cloudmesh-cc/test-dot.svg')
+        r = Shell.open('~/cm/cloudmesh-common/tests/test.svg')
+        r2 = Shell.open('tests/test.svg')
         if os_is_windows():
             assert 'command not found' and 'cannot find the file' not in r
             assert 'command not found' and 'cannot find the file' not in r2
@@ -149,7 +149,7 @@ class TestShell:
         if os_is_mac():
             assert 'command not found' and 'cannot find the file' and 'Unable to find application' not in r
             assert 'command not found' and 'cannot find the file' and 'Unable to find application' not in r2
-            r3 = Shell.open('test-dot.svg', program='Google Chrome')
+            r3 = Shell.open('test.svg', program='Google Chrome')
             assert 'command not found' and 'cannot find the file' and 'Unable to find application' not in r2
 
             print('c')
@@ -159,33 +159,15 @@ class TestShell:
     def test_shell_head(self):
         HEADING()
         Benchmark.Start()
-        r = Shell.head('requirements.txt')
+        file = path_expand('requirements.txt')
+        r = Shell.head(file)
         Benchmark.Stop()
-        print(r)
-        assert 'docker-composse' not in r
-        assert 'psutil' in r
+        assert 'tqdm' not in r
+        assert 'colorama' in r
         assert '#' in r
-        assert 'starlette' not in r
+        assert 'tabulate' not in r
         r = Shell.head('requirements.txt', lines=1)
-        print('----')
-        print(r)
         assert '#' in r
-        assert 'cloudmesh-sys' not in r
-
-    def test_shell_tail(self):
-        HEADING()
-        Benchmark.Start()
-        r = Shell.tail('requirements.txt')
-        Benchmark.Stop()
-        print(r)
-        assert 'cloudmesh-sys' not in r
-        assert '#' not in r
-        assert 'requests' in r
-        assert 'cloudmesh-cmd5' not in r
-        r = Shell.tail('requirements.txt', lines=1)
-        print('----')
-        print(r)
-        assert 'tqdm' in r
         assert 'cloudmesh-sys' not in r
 
     def test_shell_cat(self):
@@ -194,22 +176,18 @@ class TestShell:
         file = path_expand('requirements.txt')
         r = Shell.cat(file)
         Benchmark.Stop()
-        assert 'requests' in r
-        assert 'psutil' in r
-        assert 'docker-compose' not in r
+        assert 'tqdm' in r
+        assert 'colorama' in r
         assert '#' in r
+        assert 'tabulate' in r
 
     def test_shell_ping(self):
         HEADING()
         Benchmark.Start()
         host = 'www.google.com'
         r = Shell.ping(host)
-        print(r)
         Benchmark.Stop()
-        if 'not found' in r:
-            Console.error('ping not installed')
-            assert False
-        assert 'Packets' or 'packets' in r
+        assert 'packets' or 'Pinging' in r
         assert 'www.google.com' in r
         assert 'time=' in r
 
@@ -218,21 +196,42 @@ class TestShell:
         user_dir = Path.home()
         user_dir = os.path.join(user_dir, 'delete-test-file')
         Benchmark.Start()
-        os.system('touch psuedo-directory')
-        r = Shell.rm('psuedo-directory')
+        os.system('touch psuedo-file')
+        r = Shell.rm('psuedo-file')
         os.system(f'touch {user_dir}')
         r = Shell.rm('~/delete-test-file')
         Benchmark.Stop()
-        assert not os.path.exists(path_expand('psuedo-directory'))
+        assert not os.path.exists(path_expand('psuedo-file'))
         assert not os.path.exists(path_expand('~/delete-test-file'))
+
+    def test_shell_tail(self):
+        HEADING()
+        Benchmark.Start()
+        file = path_expand('requirements.txt')
+        r = Shell.tail(filename=file)
+        Benchmark.Stop()
+        assert 'tqdm' in r
+        assert 'tabulate' in r
+
+    @pytest.mark.skipif(os_is_windows(), reason="Test can not be run on Windows")
+    def test_shell_dialog(self):
+        """
+        This method may be one of the more interactive (visual) methods for testing
+        :return:
+        """
+        HEADING()
+        Benchmark.Start()
+        r = Shell.dialog()
+        Benchmark.Stop()
+        assert True # unless visually the dialog does not work appropriately
 
     def test_shell_fgrep(self):
         HEADING()
         Benchmark.Start()
         file = path_expand('requirements.txt')
-        r = Shell.fgrep('requests', file)
+        r = Shell.fgrep('humanize', file)
         Benchmark.Stop()
-        assert 'requests' in r
+        assert 'humanize' in r
 
     def test_shell_grep(self):
         HEADING()
@@ -265,27 +264,61 @@ class TestShell:
         os.system('rm -rf shell-new-dir/another-dir')
         os.system('rm -rf ~/shell-dir')
 
-    def test_shell_browser(self):
+    def test_map_filename(self):
         HEADING()
         Benchmark.Start()
-        cwd = os.getcwd()
-        # Shell.copy("test-graphviz.svg", '/tmp/test-graphviz.svg')
-        # Shell.copy("test-graphviz.svg", "~/test-graphviz.svg")
-        # r = Shell.browser("~/test-graphviz.svg")
-        # Shell.copy("test-graphviz.svg", f"{Path.home()}/test-graphviz.svg")
-        r = Shell.browser(f'https://google.com')
-        r = Shell.browser(f"{cwd}/tests/test.svg")
-        r = Shell.browser(f"file:///{cwd}/tests/test.svg")
-        # r = Shell.browser(f"~/cm/cloudmesh-cc/test.svg")
-        # r = Shell.browser(f'tests/test.svg')
-        r = Shell.browser(f'./tests/test.svg')
-        # assert r == path_expand(f'~/test-graphviz.svg')
-        # input()
-        # r = Shell.browser("file://~/test-graphviz.svg")
-        # r = Shell.browser("file://test-graphviz.svg")
-        # r = Shell.browser("file://tmp/test-graphviz.svg")
-        print(r)
+        user = os.path.basename(os.environ["HOME"])
+
+        result = Shell.map_filename(name='wsl:~/cm/')
+        assert result.user == user
+        assert result.host == 'wsl'
+        assert result.path == f'/mnt/c/Users/{user}/cm/'
+
+        result = Shell.map_filename(name='wsl:/mnt/c/home/')
+        assert result.user == user
+        assert result.host == 'wsl'
+        assert result.path == f'/mnt/c/Users/{user}/cm'
+
+        result = Shell.map_filename(name='C:~/cm')
+        assert result.user == user
+        assert result.host == 'localhost'
+        assert result.path == f'C:\\Users\\{user}\\cm'
+
+        result = Shell.map_filename(name='scp:user@host:~/cm')
+        assert result.user == "user"
+        assert result.host == 'host'
+        assert result.path == f'~/cm'
+
+        result = Shell.map_filename(name='scp:user@host:/tmp')
+        assert result.user == "user"
+        assert result.host == 'host'
+        assert result.path == f'/tmp'
+
+        result = Shell.map_filename(name='~/cm')
+        assert result.user == user
+        assert result.host == 'localhost'
+        assert result.path == path_expand('~/cm')
+
+        result = Shell.map_filename(name='/tmp')
+        assert result.user == user
+        assert result.host == 'localhost'
+        assert result.path == '/tmp'
+
+        result = Shell.map_filename(name='./cm')
+        assert result.user == user
+        assert result.host == 'localhost'
+        assert result.path == path_expand('./cm')
+
+        result = Shell.map_filename(name='/tmp')
+        assert result.user == user
+        assert result.host == 'localhost'
+        assert result.path == '/tmp'
+
+
         Benchmark.Stop()
+
+
+class Rest:
 
     def test_shell_copy(self):
         HEADING()
