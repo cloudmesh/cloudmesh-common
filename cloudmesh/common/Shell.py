@@ -257,6 +257,10 @@ class Shell(object):
             return "ssh" in r
         elif os_is_mac():
             r = Shell.run("ps -ef")
+            if "sshd" in r:
+                print('IT WORKS!!!!!')
+            else:
+                print('it doenst work :(')
             return "sshd" in r
         return False
 
