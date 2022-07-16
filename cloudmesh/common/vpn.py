@@ -23,15 +23,17 @@ class Vpn:
     @staticmethod
     @property
     def is_uva(self):
-        state = False
-        if os_is_windows():
-            raise NotImplementedError
-        elif os_is_mac():
-            raise NotImplementedError
-        elif os_is_linux():
-            result = Shell.run("route").strip()
-            state = "uva-anywhere" in result
-        return state
+    state = False
+    if os_is_windows(): # works for wsl too (Linux)
+        result = Shell.run("curl ipinfo.io")
+        state = "University of Virginia" in result["org"]
+    elif os_is_mac():
+        raise NotImplementedError
+    elif os_is_linux():
+        result = Shell.run("route").strip()
+        state = "uva-anywhere" in result
+    return state
+   
 
     @staticmethod
     def connect(self):
