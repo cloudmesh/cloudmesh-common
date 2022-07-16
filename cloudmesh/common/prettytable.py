@@ -257,8 +257,8 @@ class PrettyTable(object):
     def _validate_option(self, option, val):
         if option in ("field_names"):
             self._validate_field_names(val)
-        elif option in (
-        "start", "end", "max_width", "padding_width", "left_padding_width", "right_padding_width", "format"):
+        elif option in ("start", "end", "max_width", "padding_width",
+                        "left_padding_width", "right_padding_width", "format"):
             self._validate_nonnegative_int(option, val)
         elif option in ("sortby"):
             self._validate_field_name(option, val)
@@ -291,14 +291,14 @@ class PrettyTable(object):
             try:
                 assert len(val) == len(self._field_names)
             except AssertionError:
-                raise Exception("Field name list has incorrect number of values, (actual) %d!=%d (expected)" % (
-                len(val), len(self._field_names)))
+                raise Exception("Field name list has incorrect number "
+                                "of values, (actual) %d!=%d (expected)" % (len(val), len(self._field_names)))
         if self._rows:
             try:
                 assert len(val) == len(self._rows[0])
             except AssertionError:
-                raise Exception("Field name list has incorrect number of values, (actual) %d!=%d (expected)" % (
-                len(val), len(self._rows[0])))
+                raise Exception("Field name list has incorrect number of values,"
+                                " (actual) %d!=%d (expected)" % (len(val), len(self._rows[0])))
         # Check for uniqueness
         try:
             assert len(val) == len(set(val))

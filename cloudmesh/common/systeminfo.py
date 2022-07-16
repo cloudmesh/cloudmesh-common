@@ -66,6 +66,7 @@ def os_is_pi():
     except:  # noqa: E722
         return False
 
+
 def sys_user():
     """
     TODO
@@ -78,16 +79,16 @@ def sys_user():
     try:
         if sys.platform == "win32":
             return os.environ["USERNAME"]
-    except:
+    except:  # noqa: E722
         pass
     try:
         return os.environ["USER"]
-    except:
+    except:  # noqa: E722
         pass
     try:
         if os.environ["HOME"] == "/root":
             return "root"
-    except:
+    except:  # noqa: E722
         pass
 
     return "None"
@@ -110,7 +111,7 @@ def get_platform():
             return "raspberry"
         else:
             return sys.platform
-    except:
+    except:  # noqa: E722
         return sys.platform
 
 
@@ -133,18 +134,18 @@ def systeminfo(info=None, user=None, node=None):
     def add_binary(value):
         try:
             r = humanize.naturalsize(value, binary=True)
-        except:
+        except:  # noqa: E722
             r = ""
         return r
 
     try:
         frequency = psutil.cpu_freq()
-    except:
+    except:  # noqa: E722
         frequency = None
 
     try:
         cores = psutil.cpu_count(logical=False)
-    except:
+    except:  # noqa: E722
         cores = "unkown"
 
     operating_system = get_platform()
@@ -160,9 +161,8 @@ def systeminfo(info=None, user=None, node=None):
             for line in lines:
                 if "model name" in line:
                     description = re.sub(".*model name.*:", "", line, 1)
-    except:
+    except:  # noqa: E722
         pass
-
 
     data = OrderedDict({
         'cpu': description.strip(),
@@ -194,7 +194,7 @@ def systeminfo(info=None, user=None, node=None):
         try:
             data[f"mem.{attribute}"] = \
                 humanize.naturalsize(getattr(mem, attribute), binary=True)
-        except:
+        except:  # noqa: E722
             pass
     # svmem(total=17179869184, available=6552825856, percent=61.9,
 
@@ -214,7 +214,7 @@ def systeminfo(info=None, user=None, node=None):
                     attribute, value = line.split("=", 1)
                     attribute = attribute.replace(" ", "")
                     data[attribute] = value
-    except:
+    except:  # noqa: E722
         pass
     if info is not None:
         data.update(info)

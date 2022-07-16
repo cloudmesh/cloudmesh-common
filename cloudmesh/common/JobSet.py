@@ -128,11 +128,11 @@ class JobSet:
             try:
                 stderr = ""
                 returncode = 0
-                result = subprocess.check_output(command, shell=True,stderr=subprocess.PIPE)
+                result = subprocess.check_output(command, shell=True, stderr=subprocess.PIPE)
             except subprocess.CalledProcessError as grepexc:
-                #print("Error Code", grepexc.returncode, grepexc.output)
+                # print("Error Code", grepexc.returncode, grepexc.output)
                 result = "Command could not run | Error Code: ", grepexc.returncode
-                #result = grepexc.stdout
+                # result = grepexc.stdout
                 stderr = grepexc.stderr
                 returncode = grepexc.returncode
 
@@ -236,6 +236,7 @@ if __name__ == '__main__':
             "returncode": 0,
             "status": "defined"
         })
+
 
     hostname = platform.uname()[1]
 

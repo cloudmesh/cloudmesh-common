@@ -25,7 +25,7 @@ def LOGGER(filename):
     try:
         (first, name) = name.split("site-packages")
         name += "... site"
-    except:
+    except:  # noqa: E722
         pass
 
     loglevel = logging.CRITICAL
@@ -45,7 +45,7 @@ def LOGGER(filename):
             loglevel = logging.ERROR
         else:
             level = logging.CRITICAL
-    except:
+    except:  # noqa: E722
         # print "LOGLEVEL NOT FOUND"
         loglevel = logging.DEBUG
 
@@ -72,7 +72,7 @@ def LOGGING_ON(log):
     try:
         log.setLevel(logging.DEBUG)
         return True
-    except:
+    except:  # noqa: E722
         return False
 
 
@@ -85,5 +85,5 @@ def LOGGING_OFF(log):
     try:
         log.setLevel(logging.CRITICAL)
         return True
-    except:
+    except:  # noqa: E722
         return False

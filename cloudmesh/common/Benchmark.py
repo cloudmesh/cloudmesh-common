@@ -7,6 +7,7 @@ from cloudmesh.common.StopWatch import StopWatch
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.variables import Variables
 
+
 # pylint: disable=C0103
 # noinspection PyPep8Naming
 class Benchmark(object):
@@ -70,7 +71,7 @@ class Benchmark(object):
               csv=True,
               tag=None,
               node=None,
-              user=None,):
+              user=None, ):
         """
         prints the benchmark information with all timers
         """

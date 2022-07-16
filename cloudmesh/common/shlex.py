@@ -3,6 +3,7 @@
 import sys
 import re
 
+
 def split(s, platform='this'):
     """Multi-platform variant of shlex.split() for command-line splitting.
     For use with subprocess, for argv injection etc. Using fast REGEX.
@@ -22,10 +23,10 @@ def split(s, platform='this'):
         raise AssertionError('unkown platform %r' % platform)
 
     args = []
-    accu = None   # collects pieces of one arg
+    accu = None  # collects pieces of one arg
     for qs, qss, esc, pipe, word, white, fail in re.findall(RE_CMD_LEX, s):
         if word:
-            pass   # most frequent
+            pass  # most frequent
         elif esc:
             word = esc[1]
         elif white or pipe:
@@ -42,7 +43,7 @@ def split(s, platform='this'):
             if platform == 0:
                 word = word.replace('""', '"')
         else:
-            word = qss   # may be even empty; must be last
+            word = qss  # may be even empty; must be last
 
         accu = (accu or '') + word
 

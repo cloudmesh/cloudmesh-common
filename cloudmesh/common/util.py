@@ -19,7 +19,6 @@ import pyfiglet
 import socket
 import platform
 
-
 try:
     collectionsAbc = collections.abc
 except AttributeError:
@@ -165,7 +164,7 @@ def is_gitbash():
     try:
         exepath = os.environ['EXEPATH']
         return "Git" in exepath
-    except:
+    except:  # noqa: E722
         return False
 
 
@@ -193,9 +192,8 @@ def is_cmd_exe():
     else:
         try:
             return os.environ['OS'] == 'Windows_NT'
-        except:
+        except:  # noqa: E722
             return False
-
 
 
 def path_expand(text, slashreplace=True):
@@ -329,7 +327,6 @@ def banner(txt=None, c="-", prefix="#", debug=True, label=None,
     Console.cprint(color, "", output)
 
 
-
 # noinspection PyPep8Naming
 def HEADING(txt=None, c="#", color="HEADER"):
     """
@@ -353,6 +350,7 @@ def HEADING(txt=None, c="#", color="HEADER"):
     print()
     banner(msg, c=c, color=color)
 
+
 # noinspection PyPep8Naming
 def FUNCTIONNAME():
     """
@@ -364,6 +362,7 @@ def FUNCTIONNAME():
     line = frame[1][2] - 1
     method = frame[1][3]
     return method
+
 
 def backup_name(filename):
     """
@@ -421,7 +420,7 @@ def auto_create_requirements(requirements):
     try:
         with open("requirements.txt", "r") as f:
             file_content = f.read()
-    except:
+    except:  # noqa: E722
         file_content = ""
 
     setup_requirements = '\n'.join(requirements)
@@ -588,7 +587,7 @@ def get_password(prompt):
                     Console.error('Passwords do not match\n')
             return password
     except KeyboardInterrupt:
-        #Console.error('Detected Ctrl + C. Quitting...')
+        # Console.error('Detected Ctrl + C. Quitting...')
         if is_gitbash():
             subprocess.check_call(["stty", "echo"])
         raise ValueError('Detected Ctrl + C. Quitting...')
