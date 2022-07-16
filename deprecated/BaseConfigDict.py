@@ -296,7 +296,7 @@ class BaseConfigDict(OrderedDict):
             x = yaml.load(document, Loader=yaml.FullLoader)
             try:
                 self.update(d)
-            except:
+            except:  # noqa: E722
                 print("ERROR: can not find", self["location"])
                 sys.exit()
         else:
@@ -364,7 +364,7 @@ class BaseConfigDict(OrderedDict):
         """
         try:
             log.error("Filename: {0}".format(self['meta']['location']))
-        except:
+        except:  # noqa: E722
             log.error("Filename: {0}".format(self['location']))
         log.error("Key '{0}' does not exist".format('.'.join(keys)))
         indent = ""

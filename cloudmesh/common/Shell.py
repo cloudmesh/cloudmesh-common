@@ -35,7 +35,6 @@ from cloudmesh.common.systeminfo import os_is_linux
 from cloudmesh.common.util import is_gitbash
 
 
-
 # from functools import wraps
 # def timer(func):
 #    @wraps(func)
@@ -66,6 +65,7 @@ def windows_not_supported(f):
             return f(*args, **kwargs)
 
     return wrapper
+
 
 def NotImplementedInWindows():
     if sys.platform == "win32":
@@ -203,7 +203,6 @@ class Shell(object):
         'darwin': {}
     }
 
-
     # TODO
     #
     # how do we now define dynamically functions based on a list that we want to support
@@ -295,7 +294,7 @@ class Shell(object):
                 c = "&"
             else:
                 c = ";"
-            command = f"{command}".replace(";",c)
+            command = f"{command}".replace(";", c)
         else:
             command = f"{command} {exit}"
 
@@ -433,7 +432,7 @@ class Shell(object):
                     # shell=True,
                     stderr=subprocess.STDOUT,
                     cwd=cwd)
-        except:
+        except:  # noqa: E722
             if witherror:
                 Console.error("problem executing subprocess",
                               traceflag=traceflag)
@@ -512,7 +511,7 @@ class Shell(object):
             result.user = os.path.basename(os.environ["HOME"])
         result.host = "localhost"
         result.protocol = "localhost"
-        
+
         if _name.startswith("http"):
             result.path = _name
             result.protocol = _name.split(':', 1)[0]
@@ -536,14 +535,14 @@ class Shell(object):
                 result.scp, userhost, result.path = _name.split(":")
                 result.user, result.host = userhost.split("@")
                 result.protocol = "scp"
-            except:
+            except:  # noqa: E722
                 Console.error("The format of the name is not supported: {name}")
         elif _name.startswith("rsync:"):
             try:
                 result.scp, userhost, result.path = _name.split(":")
                 result.user, result.host = userhost.split("@")
                 result.protocol = "rsync"
-            except:
+            except:  # noqa: E722
                 Console.error("The format of the name is not supported: {name}")
         elif _name.startswith(".") or _name.startswith("~"):
             result.path = path_expand(_name)
@@ -589,7 +588,6 @@ class Shell(object):
 
         return content
 
-
     @staticmethod
     def terminal_title(name):
         """
@@ -626,7 +624,7 @@ class Shell(object):
             )
         elif platform == "linux":  # for ubuntu running gnome
             dist = os_platform.linux_distribution()[0]
-            linux_apps = {'ubuntu': 'gnome-terminal', 'debian':'lxterminal'}
+            linux_apps = {'ubuntu': 'gnome-terminal', 'debian': 'lxterminal'}
             os.system(f"{linux_apps[dist]} -e \"bash -c \'{command}; exec $SHELL\'\"")
 
         elif platform == "win32":
@@ -636,7 +634,8 @@ class Shell(object):
             kind = kind.lower()
             if kind == "gitbash":
                 p = subprocess.Popen([r"C:\Program Files\Git\git-bash.exe",
-                                  "-c", f"{command}"])
+                                      "-c",
+                                      f"{command}"])
                 return p.pid
             elif kind == "cmd":
                 Console.error(f"Command not implemented for {kind}")
@@ -905,7 +904,7 @@ class Shell(object):
 
         with open(destination, 'wb') as fd:
             with tqdm(total=total_size, unit="B",
-               unit_scale=True, desc=destination, initial=0, ascii=True) as pbar:
+                      unit_scale=True, desc=destination, initial=0, ascii=True) as pbar:
                 for chunk in r.iter_content(chunk_size=chunk_size):
                     fd.write(chunk)
                     pbar.update(len(chunk))
@@ -1340,7 +1339,7 @@ class Shell(object):
             s = path_expand(source)
             d = path_expand(destination)
         else:
-            s=source
+            s = source
             d = destination
         shutil.copy2(s, d)
 
@@ -1426,7 +1425,7 @@ class Shell(object):
                 elif "Ubuntu" in result["NAME"]:
                     result["distribution"] = "ubuntu"
 
-            except:
+            except:  # noqa: E722
                 try:
                     r = cls.lsb_release()
                     for line in r.split():
@@ -1438,7 +1437,7 @@ class Shell(object):
                             result[attribute] = value
                     result["distribution"] = result["description"].split(" ")[
                         0].lower()
-                except:
+                except:  # noqa: E722
                     Console.error(
                         f"lsb_release not found for the platform {machine}")
                     raise NotImplementedError

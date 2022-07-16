@@ -7,10 +7,10 @@ import colorama
 from colorama import Fore, Back, Style
 import os
 
-
 # from cloudmesh.common.variables import Variables
 
 colorama.init()
+
 
 def indent(text, indent=2, width=128):
     """
@@ -95,16 +95,15 @@ class Console(object):
         size = os.get_terminal_size()
         columns = size.columns
         lines = size.lines
-    except:
+    except:  # noqa: E722
         columns = 79
         lines = 24
-
 
     def line(self, c="="):
         try:
             size = os.get_terminal_size()
             columns = size.columns
-        except:
+        except:  # noqa: E722
             columns = 79
 
         # lines = size.lines

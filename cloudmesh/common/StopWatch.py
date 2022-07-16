@@ -112,6 +112,7 @@ from cloudmesh.common.DateTime import DateTime
 
 from time import perf_counter
 
+
 def rename(newname):
     """
     decorator to rename a function
@@ -145,13 +146,15 @@ def benchmark(func):
 
     return wrapper
 
+
 def import_mllog():
     try:
         from mlperf_logging import mllog
-    except:
+    except:  # noqa: E722
         Console.error("You need to install mllogging to use it")
         sys.exit()
     return mllog
+
 
 class StopWatch(object):
     """
@@ -194,7 +197,7 @@ class StopWatch(object):
 
     @classmethod
     def progress(cls, percent, status="running", pid=None):
-        if pid == None:
+        if pid is None:
             pid = os.getpid()
         if "SLURM_JOB_ID" in os.environ:
             pid = os.environ["SLURM_JOB_ID"]
@@ -205,8 +208,8 @@ class StopWatch(object):
         mllog = import_mllog()
 
         try:
-           config = yaml.safe_load(readfile(configfile).strip())
-        except:
+            config = yaml.safe_load(readfile(configfile).strip())
+        except:  # noqa: E722
             config = {
                 "benchmark": {}
             }
@@ -220,12 +223,11 @@ class StopWatch(object):
             (mllog.constants.SUBMISSION_DIVISION, 'division'),
             (mllog.constants.SUBMISSION_STATUS, 'status'),
             (mllog.constants.SUBMISSION_PLATFORM, 'platform')
-            ]:
+        ]:
             try:
                 cls.mllogger.event(key=key, value=config["benchmark"][attribute])
-            except:
+            except:  # noqa: E722
                 pass
-
 
     @classmethod
     def keys(cls):
@@ -302,7 +304,7 @@ class StopWatch(object):
         """
         for name, value in argv.items():
             cls.event(name, msg=name, values=value)
-            #cls.mllogger.event(key=name, value=value)
+            # cls.mllogger.event(key=name, value=value)
 
     @classmethod
     def log_constant(cls, **argv):
@@ -317,9 +319,9 @@ class StopWatch(object):
         OPT_GRADIENT_CLIP_NORM
         """
         for name, value in argv.items():
-            constant=eval(f"mllog.constants.{name}")
+            constant = eval(f"mllog.constants.{name}")
             cls.event(constant, msg=constant, values=value)
-            #cls.mllogger.event(key=constant, value=value)
+            # cls.mllogger.event(key=constant, value=value)
 
     @classmethod
     def start(cls, name, values=None):
@@ -367,7 +369,6 @@ class StopWatch(object):
                 cls.mllogger.end(key=f"mllog-stop-{name}", value=str(values))
             else:
                 cls.mllogger.end(key=f"mllog-stop-{name}")
-
 
         if cls.debug:
             print("Timer", name, "stopped ...")
@@ -671,7 +672,7 @@ class StopWatch(object):
                     }
                     try:
                         total_time = total_time + StopWatch.get(timer)
-                    except:
+                    except:  # noqa: E722
                         pass
                     for attribute in ["uname.node",
                                       "user",
@@ -786,7 +787,6 @@ class StopWatch(object):
         if filename:
             writefile(filename, content)
 
-
     def load(filename,
              label=["name"], label_split_char=" ",
              attributes=['timer',
@@ -839,7 +839,6 @@ class StopWatch(object):
                 "data": data}
 
 
-
 class StopWatchBlock:
 
     def __init__(self, name, data=None, log=sys.stdout, mode="w"):
@@ -852,7 +851,6 @@ class StopWatchBlock:
             self.is_file = True
             self.log = open(log, mode)
 
-
     def __enter__(self):
         StopWatch.start(self.name)
         return StopWatch.get(self.name)
@@ -862,9 +860,8 @@ class StopWatchBlock:
         StopWatch.stop(self.name)
         entry = StopWatch.get(self.name)
         if self.data:
-            print (f"# {self.name}, {entry}, {self.start}, {self.stop}, {self.data}", file=self.log)
+            print(f"# {self.name}, {entry}, {self.start}, {self.stop}, {self.data}", file=self.log)
         else:
-            print (f"# {self.name}, {entry}, {self.start}, {self.stop}", file=self.log)
+            print(f"# {self.name}, {entry}, {self.start}, {self.stop}", file=self.log)
         if self.is_file:
             self.log.close()
-
