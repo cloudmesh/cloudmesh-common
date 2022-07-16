@@ -3,6 +3,7 @@ from cloudmesh.common.systeminfo import os_is_windows
 from cloudmesh.common.systeminfo import os_is_mac
 from cloudmesh.common.systeminfo import os_is_linux
 
+
 class Vpn:
 
     @staticmethod

@@ -1,6 +1,7 @@
 from hostlist import expand_hostlist
 from cloudmesh.common.dotdict import dotdict
 
+
 class Parameter(object):
 
     @staticmethod
@@ -27,9 +28,9 @@ class Parameter(object):
         :return: a doctdict with parsed and remapped arguments
         :rtype: dotdict
         """
-        result =  dotdict(arguments)
+        result = dotdict(arguments)
         if kwargs is not None:
-            for k,value in kwargs.items():
+            for k, value in kwargs.items():
                 if value == 'expand':
                     result[k] = Parameter.expand(result[k])
                 elif value == 'dict':

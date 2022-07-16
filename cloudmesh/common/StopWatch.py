@@ -112,6 +112,7 @@ from cloudmesh.common.DateTime import DateTime
 
 from time import perf_counter
 
+
 def rename(newname):
     """
     decorator to rename a function
@@ -145,13 +146,15 @@ def benchmark(func):
 
     return wrapper
 
+
 def import_mllog():
     try:
         from mlperf_logging import mllog
-    except:
+    except:  # noqa: E722
         Console.error("You need to install mllogging to use it")
         sys.exit()
     return mllog
+
 
 class StopWatch(object):
     """
@@ -201,7 +204,7 @@ class StopWatch(object):
 
     @classmethod
     def progress(cls, percent, status="running", pid=None):
-        if pid == None:
+        if pid is None:
             pid = os.getpid()
         if "SLURM_JOB_ID" in os.environ:
             pid = os.environ["SLURM_JOB_ID"] #TODO - may need to be updated (monitor of long running jobs)
@@ -228,6 +231,13 @@ class StopWatch(object):
             msg = msg + f" variable={variable}"
         print(msg)
         return msg
+        try:
+            config = yaml.safe_load(readfile(configfile).strip())
+        except:  # noqa: E722
+            config = {
+                "benchmark": {}
+            }
+        config["benchmark"].update(argv)
 
 
     # @classmethod
@@ -255,7 +265,6 @@ class StopWatch(object):
     #             cls.mllogger.event(key=key, value=config["benchmark"][attribute])
     #         except:
     #             pass
-
 
     @classmethod
     def keys(cls):
@@ -778,7 +787,7 @@ class StopWatch(object):
                     }
                     try:
                         total_time = total_time + StopWatch.get(timer)
-                    except:
+                    except:  # noqa: E722
                         pass
                     for attribute in ["uname.node",
                                       "user",
@@ -893,7 +902,6 @@ class StopWatch(object):
         if filename:
             writefile(filename, content)
 
-
     def load(filename,
              label=["name"], label_split_char=" ",
              attributes=['timer',
@@ -946,7 +954,6 @@ class StopWatch(object):
                 "data": data}
 
 
-
 class StopWatchBlock:
 
     def __init__(self, name, data=None, log=sys.stdout, mode="w"):
@@ -959,7 +966,6 @@ class StopWatchBlock:
             self.is_file = True
             self.log = open(log, mode)
 
-
     def __enter__(self):
         StopWatch.start(self.name)
         return StopWatch.get(self.name)
@@ -969,9 +975,8 @@ class StopWatchBlock:
         StopWatch.stop(self.name)
         entry = StopWatch.get(self.name)
         if self.data:
-            print (f"# {self.name}, {entry}, {self.start}, {self.stop}, {self.data}", file=self.log)
+            print(f"# {self.name}, {entry}, {self.start}, {self.stop}, {self.data}", file=self.log)
         else:
-            print (f"# {self.name}, {entry}, {self.start}, {self.stop}", file=self.log)
+            print(f"# {self.name}, {entry}, {self.start}, {self.stop}", file=self.log)
         if self.is_file:
             self.log.close()
-

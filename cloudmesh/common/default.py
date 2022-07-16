@@ -36,7 +36,7 @@ class Default(object):
                     return None
                 else:
                     return self.__dict__()[context_key]
-        except:
+        except:  # noqa: E722
             return None
 
     def __setitem__(self, context_key, value):

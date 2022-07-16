@@ -86,7 +86,7 @@ class Printer:
                                 field = ", ".join(field)
                             entry.append("\n".join(
                                 textwrap.wrap(str(field), _width[i])))
-                        except:
+                        except:  # noqa: E722
                             entry.append("")
                     else:
                         entry.append(result[key])
@@ -310,7 +310,7 @@ class Printer:
         def _get(element, key):
             try:
                 tmp = str(d[element][key])
-            except:
+            except:  # noqa: E722
                 tmp = ' '
             return tmp
 

@@ -15,6 +15,7 @@ from cloudmesh.common.util import backup_name
 from cloudmesh.common.util import path_expand
 from pathlib import Path
 
+
 def custom_print(data_structure, indent, attribute_indent=4):
     """
     prints the data structure at a given level. This includes dicts and
@@ -109,7 +110,7 @@ def dprint(OD, mode='dict', s="", indent=' ' * 4, level=0):
             s += (level - 1) * indent + kv_tpl % (
                 k, ST + dprint(OD[k], mode=mode,
                                indent=indent, level=level) + (
-                        level - 1) * indent + END)
+                    level - 1) * indent + END)
             level -= 1
         else:
             s += level * indent + kv_tpl % (k, fstr(OD[k]))

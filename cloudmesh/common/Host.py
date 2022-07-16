@@ -14,6 +14,7 @@ from cloudmesh.common.util import readfile
 from pprint import pprint
 from cloudmesh.common.Printer import Printer
 
+
 class Host(object):
 
     def _print(results, output='table'):
@@ -154,7 +155,7 @@ class Host(object):
                 'cmd': " ".join(args.get("command"))
             }
         except Exception as e:
-            print (e)
+            print(e)
             data = None
         return data
 
@@ -192,7 +193,7 @@ class Host(object):
 
         if "executor" not in args:
             _executor = Host._run
-        #from pprint import pprint
+        # from pprint import pprint
         # os.sync()
         # pprint(args)
         with Pool(processors) as p:
@@ -343,7 +344,7 @@ class Host(object):
                 "max": timers[2],
                 "stddev": timers[3]
             }
-        except:
+        except:  # noqa: E722
             data = {
                 "host": ip,
                 "success": result.returncode == 0,
@@ -410,13 +411,12 @@ class Host(object):
         return result_keys
 
     @staticmethod
-    def gather_keys(
-        username=None,
-        hosts=None,
-        filename="~/.ssh/id_rsa.pub",
-        key="~/.ssh/id_rsa",
-        processors=3,
-        dryrun=False):
+    def gather_keys(username=None,
+                    hosts=None,
+                    filename="~/.ssh/id_rsa.pub",
+                    key="~/.ssh/id_rsa",
+                    processors=3,
+                    dryrun=False):
         """
         returns in a list the keys of the specified hosts
 
@@ -437,7 +437,6 @@ class Host(object):
         #                              command='cat .ssh/id_rsa.pub',
         #                              username=username,
         #                              verbose=False)
-
 
         filename = path_expand(filename)
         content = readfile(filename).strip()
@@ -464,6 +463,6 @@ class Host(object):
         output = list(set(keys))
 
         output = '\n'.join(output)
-        print (output)
+        print(output)
 
         return output

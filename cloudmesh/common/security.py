@@ -1,6 +1,7 @@
 import random
 import string
 
+
 def generate_strong_pass():
     """
     Generates a password from letters, digits and punctuation
@@ -14,4 +15,3 @@ def generate_strong_pass():
         string.digits + \
         string.punctuation
     return ''.join(random.choice(password_characters) for i in range(length))
-
