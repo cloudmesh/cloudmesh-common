@@ -177,16 +177,23 @@ class StopWatch(object):
     mllogger = None
 
     @classmethod
-    def activate_mllog(cls, filename="cloudmesh_mllog.log"):
-        mllog = import_mllog()
+    def activate_mllog(cls, filename="cloudmesh_mllog.log", config=None):
+        # global mllog
+        cls._mllog_import = import_mllog()
+
+        if config is None:
+            cms_mllog = dict(
+                default_namespace="cloudmesh",
+                default_stack_offset=1,
+                default_clear_line=False
+            )
+        else:
+            cms_mllog = config
 
         cls.mllogging = True
-        cls.mllogger = mllog.get_mllogger()
-        mllog.config(filename=filename)
-        mllog.config(
-            default_namespace="cloudmesh",
-            default_stack_offset=1,
-            default_clear_line=False,
+        cls.mllogger = cls._mllog_import.get_mllogger()
+        cls._mllog_import.config(filename=filename)
+        cls._mllog_import.config(**cms_mllog
             # useful when refering to linenumbers in separate code
             # root_dir=os.path.normpath(
             #    os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", ".."))
@@ -197,34 +204,57 @@ class StopWatch(object):
         if pid == None:
             pid = os.getpid()
         if "SLURM_JOB_ID" in os.environ:
-            pid = os.environ["SLURM_JOB_ID"]
+            pid = os.environ["SLURM_JOB_ID"] #TODO - may need to be updated (monitor of long running jobs)
         print(f"# cloudmesh status={status} progress={percent} pid={pid}")
 
     @classmethod
-    def organization_mllog(cls, configfile, **argv):
-        mllog = import_mllog()
+    def progress(cls, percent, status="running", pid=None, variable=None):
+        """Prints progress of an event, recording against a pid and providing additional variable.
 
-        try:
-           config = yaml.safe_load(readfile(configfile).strip())
-        except:
-            config = {
-                "benchmark": {}
-            }
-        config["benchmark"].update(argv)
+        :percent: 0-100 value
+        :status: Message to associate to the recording, default - running
+        :pid: The associated Process ID for this event.
+        :variable: Any valid python type with a __str__ method.
 
-        for key, attribute in [
-            (mllog.constants.SUBMISSION_BENCHMARK, 'name'),
-            (mllog.constants.SUBMISSION_POC_NAME, 'user'),
-            (mllog.constants.SUBMISSION_POC_EMAIL, 'email'),
-            (mllog.constants.SUBMISSION_ORG, 'organisation'),
-            (mllog.constants.SUBMISSION_DIVISION, 'division'),
-            (mllog.constants.SUBMISSION_STATUS, 'status'),
-            (mllog.constants.SUBMISSION_PLATFORM, 'platform')
-            ]:
-            try:
-                cls.mllogger.event(key=key, value=config["benchmark"][attribute])
-            except:
-                pass
+        :returns: The progress message as a string
+        """
+        if pid is None:
+            pid = os.getpid()
+        if "SLURM_JOB_ID" in os.environ:
+            # TODO - may need to be updated (monitor of long running jobs)
+            pid = os.environ["SLURM_JOB_ID"]
+        msg = f"# cloudmesh status={status} progress={percent} pid={pid}"
+        if variable is not None:
+            msg = msg + f" variable={variable}"
+        print(msg)
+        return msg
+
+
+    # @classmethod
+    # def organization_mllog(cls, configfile, **argv):
+    #     mllog = import_mllog()
+    #
+    #     try:
+    #        config = yaml.safe_load(readfile(configfile).strip())
+    #     except:
+    #         config = {
+    #             "benchmark": {}
+    #         }
+    #     config["benchmark"].update(argv)
+    #
+    #     for key, attribute in [
+    #         (mllog.constants.SUBMISSION_BENCHMARK, 'name'),
+    #         (mllog.constants.SUBMISSION_POC_NAME, 'user'),
+    #         (mllog.constants.SUBMISSION_POC_EMAIL, 'email'),
+    #         (mllog.constants.SUBMISSION_ORG, 'organisation'),
+    #         (mllog.constants.SUBMISSION_DIVISION, 'division'),
+    #         (mllog.constants.SUBMISSION_STATUS, 'status'),
+    #         (mllog.constants.SUBMISSION_PLATFORM, 'platform')
+    #         ]:
+    #         try:
+    #             cls.mllogger.event(key=key, value=config["benchmark"][attribute])
+    #         except:
+    #             pass
 
 
     @classmethod
@@ -272,104 +302,181 @@ class StopWatch(object):
         cls.timer_msg[name] = value
 
     @classmethod
-    def event(cls, name, msg=None, values=None):
+    def event(cls, name, msg=None, values=None, suppress_stopwatch=False, suppress_mllog=False):
         """
-        adds an event with a given name, where start and stop is the same tme.
+        Adds an event with a given name, where start and stop is the same time.
 
         :param name: the name of the timer
         :type name: string
-        :param data: data that is associated with the event that is converted to a string
-        :type data: object
-        """
-        StopWatch.start(name)
-        StopWatch.stop(name)
-        StopWatch.timer_end[name] = StopWatch.timer_start[name]
-        if values:
-            StopWatch.timer_values[name] = values
+        :param msg: a message to attach to this event
+        :type msg: string
+        :param values: data that is associated with the event that is converted
+                       to a string
+        :type values: object
+        :param suppress_stopwatch: suppresses executing any stopwatch code.
+                                Useful when only logging an mllog event.
+        :type suppress_stopwatch: bool
+        :param suppress_mllog: suppresses executing any mllog code.  Useful
+                               when only interacting with stopwatch timers.
+        :type suppress_mllog: bool
 
-        if msg is not None:
-            StopWatch.message(name, str(msg))
-        if cls.mllogging:
+        :returns: None
+        :rtype: None
+        """
+        if not suppress_stopwatch:
+            StopWatch.start(name, suppress_mllog=True)
+            StopWatch.stop(name, suppress_mllog=True)
+            StopWatch.timer_end[name] = StopWatch.timer_start[name]
+            if values:
+                StopWatch.timer_values[name] = values
+
+            if msg is not None:
+                StopWatch.message(name, str(msg))
+        if cls.mllogging and not suppress_mllog:
             if values is not None:
-                cls.mllogger.event(key=f"mllog-event-{name}", value=str(values))
+                cls.mllogger.event(key=name, value=str(values))
             else:
-                cls.mllogger.event(key=f"mllog-event-{name}")
+                cls.mllogger.event(key=name)
 
     @classmethod
-    def log_event(cls, **argv):
+    def log_event(cls, **kwargs):
+        """Logs an event using the passed keywords as parameters to be logged,
+           prefiltered by mlperf_logging's standard api.
+
+        :param kwargs: an unpacked dictionary of key=value entries to be
+                       leveraged when logging an event to both the cloudmesh
+                       stopwatch and mllog.  If the keyword matches
+                       mlperf_logging's constants, the value will be replaced
+                       with the standardized string
+        :type kwargs: dict
         """
-        import a dictionary into argv
-        """
-        for name, value in argv.items():
-            cls.event(name, msg=name, values=value)
-            #cls.mllogger.event(key=name, value=value)
+        for key, value in kwargs.items():
+            mlkey = cls.mllog_lookup(key)
+            cls.event(mlkey, msg=mlkey, values=value)
+
 
     @classmethod
-    def log_constant(cls, **argv):
-        """
-        name: pass all capatalized constants
-        SUBMISSION_BENCHMARK,
-        SUBMISSION_ORG,
-        SUBMISSION_DIVISION,
-        SUBMISSION_STATUS,
-        SUBMISSION_PLATFORM,
-        GLOBAL_BATCH_SIZE,
-        OPT_GRADIENT_CLIP_NORM
-        """
-        for name, value in argv.items():
-            constant=eval(f"mllog.constants.{name}")
-            cls.event(constant, msg=constant, values=value)
-            #cls.mllogger.event(key=constant, value=value)
+    def log_constant(cls, **kwargs):
+        """Deprecated.  Use `log_event`."""
+        cls.log_event(**kwargs)
 
     @classmethod
-    def start(cls, name, values=None):
+    def mllog_lookup(cls, key: str) -> str:
+        """Performs a dynamic lookup for the string representation of a
+           mlperf constant.  If the value isn't found, it will return a string
+           of the pattern mllog-event-{key}
+
+        :param key: The name of the constant to look up
+        :type key: string
+
+        :returns: The decoded value of the constant.
+        :rtype: string
+        """
+        try:
+            from mlperf_logging.mllog import constants as mlconst
+        except ImportError as e:
+            Console.error("You need to install mlperf_logging to use it")
+            raise e
+        try:
+            key_str = getattr(mlconst, key)
+        except AttributeError as e:
+            key_str = f"mllog-event-{key}"
+        return key_str
+
+
+    @classmethod
+    def start(cls, name, values=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False):
         """
         starts a timer with the given name.
 
         :param name: the name of the timer
         :type name: string
-        """
-        if cls.debug:
-            print("Timer", name, "started ...")
-        if name not in cls.timer_sum:
-            cls.timer_sum[name] = 0.0
-        cls.timer_start[name] = time.time()
-        cls.timer_end[name] = None
-        cls.timer_status[name] = None
-        cls.timer_msg[name] = None
-        if values:
-            StopWatch.timer_values[name] = values
+        :param values: any python object with a __str__ method to record with
+                       the event.
+        :type values: object
+        :param mllog_key: Specifies the string name of an mllog constant to
+                          associate to this timer start.  If no value is passed
+                          and mllogging is enabled, then `name` is used.
+        :type mllog_key: string
+        :param suppress_stopwatch: When true, prevents all traditional
+                                   stopwatch logic from running.  This is
+                                   useful when attempting to interact with
+                                   mllog-only.
+        :type suppress_stopwatch: bool
+        :param suppress_mllog: When true, prevents all mllog events from
+                               executing.  Useful when working with stopwatch
+                               timers-only.
 
-        if cls.mllogging:
-            if values is not None:
-                cls.mllogger.start(key=f"mllog-start-{name}", value=str(values))
+        :returns: None
+        :rtype: None
+        """
+        if not suppress_stopwatch:
+            if cls.debug:
+                print("Timer", name, "started ...")
+            if name not in cls.timer_sum:
+                cls.timer_sum[name] = 0.0
+            cls.timer_start[name] = time.time()
+            cls.timer_end[name] = None
+            cls.timer_status[name] = None
+            cls.timer_msg[name] = None
+            if values:
+                StopWatch.timer_values[name] = values
+
+        if cls.mllogging and not suppress_mllog:
+            if mllog_key is None:
+                key = name
             else:
-                cls.mllogger.start(key=f"mllog-start-{name}")
+                key = cls.mllog_lookup(mllog_key)
+            if values is not None:
+                cls.mllogger.start(key=key, value=str(values))
+            else:
+                cls.mllogger.start(key=key)
 
     @classmethod
-    def stop(cls, name, state=True, values=None):
+    def stop(cls, name, state=True, values=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False):
         """
         stops the timer with a given name.
 
         :param name: the name of the timer
         :type name: string
+        :param state: When true, updates the status of the timer.
+        :type state: bool
+        :param mllog_key: Specifies the string name of an mllog constant to
+                          associate to this timer start.  If no value is passed
+                          and mllogging is enabled, then `name` is used.
+        :type mllog_key: string
+        :param suppress_stopwatch: When true, prevents all traditional
+                                   stopwatch logic from running.  This is
+                                   useful when attempting to interact with
+                                   mllog-only.
+        :type suppress_stopwatch: bool
+        :param suppress_mllog: When true, prevents all mllog events from
+                               executing.  Useful when working with stopwatch
+                               timers-only.
+
+        :returns: None
+        :rtype: None
         """
-        cls.timer_end[name] = time.time()
-        # if cumulate:
-        #    cls.timer_end[name] = cls.timer_end[name] + cls.timer_last[name]
-        cls.timer_sum[name] = cls.timer_sum[name] + cls.timer_end[name] - cls.timer_start[name]
-        cls.timer_status[name] = state
-        if values:
-            StopWatch.timer_values[name] = values
+        if not suppress_stopwatch:
+            cls.timer_end[name] = time.time()
+            # if cumulate:
+            #    cls.timer_end[name] = cls.timer_end[name] + cls.timer_last[name]
+            cls.timer_sum[name] = cls.timer_sum[name] + cls.timer_end[name] - cls.timer_start[name]
+            cls.timer_status[name] = state
+            if values:
+                StopWatch.timer_values[name] = values
 
-        if cls.mllogging:
-            if values is not None:
-                cls.mllogger.end(key=f"mllog-stop-{name}", value=str(values))
+        if cls.mllogging and not suppress_mllog:
+            if mllog_key is None:
+                key = name
             else:
-                cls.mllogger.end(key=f"mllog-stop-{name}")
+                key = cls.mllog_lookup(mllog_key)
+            if values is not None:
+                cls.mllogger.end(key=key, value=str(values))
+            else:
+                cls.mllogger.end(key=key)
 
-
-        if cls.debug:
+        if cls.debug and not suppress_stopwatch:
             print("Timer", name, "stopped ...")
 
     @classmethod
