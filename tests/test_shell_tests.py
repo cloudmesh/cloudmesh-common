@@ -17,6 +17,7 @@ from cloudmesh.common.Shell import Shell
 from cloudmesh.common.util import HEADING
 from cloudmesh.common.Benchmark import Benchmark
 from cloudmesh.common.util import path_expand
+from cloudmesh.common.StopWatch import StopWatch
 from cloudmesh.common.systeminfo import os_is_windows, os_is_linux, os_is_mac
 from pathlib import Path
 
@@ -264,8 +265,6 @@ class TestShell:
         os.system('rm -rf shell-new-dir/another-dir')
         os.system('rm -rf ~/shell-dir')
 
-class Rest:
-
     def test_shell_copy(self):
         HEADING()
         Shell.mkdir('shell-directory')
@@ -286,5 +285,32 @@ class Rest:
     #     file = path_expand('requirements.txt')
     #     r = Shell.rsync(file)
     #     Benchmark.Stop()
+
+    # def test_shell_browser(self):
+    #     HEADING()
+    #     Shell = Shell_path
+    #     Benchmark.Start()
+    #     dir = os.path.join(Path.home(), 'cm/cloudmesh-cc/test-dot.svg')
+    #     # Shell.copy("test-graphviz.svg", '/tmp/test-graphviz.svg')
+    #     # Shell.copy("test-graphviz.svg", "~/test-graphviz.svg")
+    #     # r = Shell.browser("~/test-graphviz.svg")
+    #     #Shell.copy("test-graphviz.svg", f"{Path.home()}/test-graphviz.svg")
+    #     r = Shell.browser(f'https://google.com')
+    #     r = Shell.browser(dir)
+    #     r = Shell.browser(f"file:///{dir}")
+    #     r = Shell.browser(f"~/cm/cloudmesh-cc/test-dot.svg")
+    #     r = Shell.browser(f'test-dot.svg')
+    #     r = Shell.browser(f'./test-dot.svg')
+    #     # assert r == path_expand(f'~/test-graphviz.svg')
+    #     # input()
+    #     # r = Shell.browser("file://~/test-graphviz.svg")
+    #     # r = Shell.browser("file://test-graphviz.svg")
+    #     # r = Shell.browser("file://tmp/test-graphviz.svg")
+    #     print(r)
+    #     Benchmark.Stop()
+
+    def test_benchmark(self):
+        HEADING()
+        StopWatch.benchmark(sysinfo=False, tag="common-shell", user="test", node="test")
 
 
