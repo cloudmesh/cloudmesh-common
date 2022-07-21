@@ -1465,7 +1465,8 @@ class Shell(object):
             filename = path_expand(filename)
 
         if os_is_linux():
-            r = Shell.run(f"gopen {filename}")
+            os.system(f"gopen {filename}")
+            r = 0
         if os_is_mac():
             command = f'open {filename}'
             if program:
