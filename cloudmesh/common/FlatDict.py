@@ -80,6 +80,7 @@ class FlatDict(dict):
         :param sep: The character used to indicate an hirachie a__b
         """
         self.__dict__ = flatten(d, sep=sep)
+        self.sep = sep
 
     def __setitem__(self, key, item):
         """
@@ -188,6 +189,26 @@ class FlatDict(dict):
                     found.append(entry)
         return found
 
+    # Modified idea from  
+    # https://stackoverflow.com/questions/50607128/creating-a-nested-dictionary-from-a-flattened-dictionary
+    def unflatten(self):
+        """
+        unflattens the falt dict bac to a regular dict
+
+        Returns:
+        """
+        result = {}
+        for k, v in self.__dict__.items():
+            self._unflatten_entry(k, v, result)
+        return result
+
+    def _unflatten_entry(self, k, v, out):
+        k, *rest = k.split(self.sep, 1)
+        if rest:
+            self._unflatten_entry(rest[0], v, out.setdefault(k, {}))
+        else:
+            out[k] = v
+
 
 class FlatDict2(object):
     primitive = (int, str, bool, str, bytes, dict, list)
@@ -238,6 +259,7 @@ class FlatDict2(object):
             elif cls.is_primitive(obj):
                 return obj
         return dict_obj
+
 
 
 '''
