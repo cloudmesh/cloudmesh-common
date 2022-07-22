@@ -189,7 +189,7 @@ class FlatDict(dict):
                     found.append(entry)
         return found
 
-    # Modified idea from  
+    # Modified idea from
     # https://stackoverflow.com/questions/50607128/creating-a-nested-dictionary-from-a-flattened-dictionary
     def unflatten(self):
         """

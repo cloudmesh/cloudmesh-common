@@ -727,7 +727,9 @@ class Shell(object):
         found = []
         for proc in psutil.process_iter():
             try:
-                pinfo = proc.as_dict(attrs=['pid', 'name', 'cmdline', 'ppid'])
+                pinfo = proc.as_dict(attrs=['pid', 'name', 'cmdline', 'ppid', 'username',
+                                            'status', 'create_time', 'terminal', 'cwd',
+                                            'open_files'])
             except psutil.NoSuchProcess:
                 pass
             else:
