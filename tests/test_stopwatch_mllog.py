@@ -34,8 +34,22 @@ mllog_constants=dict(
 )
 
 @contextlib.contextmanager
-def yaml_generator(filename):
-    mllog_sampleyaml="""
+def yaml_generator(filename, prefix="general", flat=False):
+    if flat:
+        mllog_sampleyaml = f"""
+name: ignored
+{prefix}.name: Earthquake
+{prefix}.user: Gregor von Laszewski
+{prefix}.e-mail: laszewski@gmail.com
+{prefix}.organisation:  University of Virginia
+{prefix}.division: BII
+{prefix}.status: submission
+{prefix}.platform: rivanna
+{prefix}.badkey: ignored
+followon: ignored
+"""
+    else:
+        mllog_sampleyaml="""
 name: ignored
 benchmark:
   name: Earthquake
@@ -263,21 +277,22 @@ class Test_Printer:
         log_text = log_stream.getvalue()
 
     def test_stopwatch_organization_mllog(self):
-        with yaml_generator('test.yml') as f:
-            with intercept_mllogger() as log_stream:
-                StopWatch.start("Test Notebook", mllog_key="BLOCK_START")
-                StopWatch.organization_mllog(f)
-                StopWatch.stop("Test Notebook", mllog_key="BLOCK_STOP")
-            log_text = log_stream.getvalue()
-            assert ':::MLLOG' in log_text, 'logger must have mllog entries when activated'
-            log_object = convert_mllog_to_object(log_stream)
-            assert log_object[1]['key'] == "submission_benchmark" and log_object[1]['value'] == "Earthquake" and \
-                   log_object[2]['key'] == "submission_poc_name" and log_object[2]['value'] == "Gregor von Laszewski" and \
-                   log_object[3]['key'] == "submission_poc_email" and log_object[3]['value'] == "laszewski@gmail.com" and \
-                   log_object[4]['key'] == "submission_org" and log_object[4]['value'] == "University of Virginia" and \
-                   log_object[5]['key'] == "submission_division" and log_object[5]['value'] == "BII" and \
-                   log_object[6]['key'] == "submission_status" and log_object[6]['value'] == "submission" and \
-                   log_object[7]['key'] == "submission_platform" and log_object[7]['value'] == "rivanna"
-            assert not any([obj['value'] == "ignored" for obj in log_object])
+        for method in (True, False):
+            with yaml_generator('test.yml', flat=method) as f:
+                with intercept_mllogger() as log_stream:
+                    StopWatch.start("Test Notebook", mllog_key="BLOCK_START")
+                    StopWatch.organization_mllog(f, prefix_="general", flatdict_=method)
+                    StopWatch.stop("Test Notebook", mllog_key="BLOCK_STOP")
+                log_text = log_stream.getvalue()
+                assert ':::MLLOG' in log_text, 'logger must have mllog entries when activated'
+                log_object = convert_mllog_to_object(log_stream)
+                assert log_object[1]['key'] == "submission_benchmark" and log_object[1]['value'] == "Earthquake" and \
+                       log_object[2]['key'] == "submission_poc_name" and log_object[2]['value'] == "Gregor von Laszewski" and \
+                       log_object[3]['key'] == "submission_poc_email" and log_object[3]['value'] == "laszewski@gmail.com" and \
+                       log_object[4]['key'] == "submission_org" and log_object[4]['value'] == "University of Virginia" and \
+                       log_object[5]['key'] == "submission_division" and log_object[5]['value'] == "BII" and \
+                       log_object[6]['key'] == "submission_status" and log_object[6]['value'] == "submission" and \
+                       log_object[7]['key'] == "submission_platform" and log_object[7]['value'] == "rivanna"
+                assert not any([obj['value'] == "ignored" for obj in log_object])
 
 
