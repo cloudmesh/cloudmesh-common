@@ -67,6 +67,13 @@ def os_is_pi():
         return False
 
 
+def has_window_manager():
+    if os_is_mac() or os_is_windows():
+        return True
+    else:
+        return "GNOME_TERMINAL_SCREEN" in os.environ or "GNOME_TERMINAL_SERVICE" in os.environ
+
+
 def sys_user():
     """
     TODO
