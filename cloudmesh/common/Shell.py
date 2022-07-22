@@ -281,7 +281,7 @@ class Shell(object):
         return str(result)
 
     @staticmethod
-    def run(command, exit="; exit 0", encoding='utf-8', replace=True):
+    def run(command, exit="; exit 0", encoding='utf-8', replace=True, timeout=None):
         """
         executes the command and returns the output as string
         :param command:
@@ -298,9 +298,15 @@ class Shell(object):
         else:
             command = f"{command} {exit}"
 
-        r = subprocess.check_output(command,
-                                    stderr=subprocess.STDOUT,
-                                    shell=True)
+        if timeout is not None:
+            r = subprocess.check_output(command,
+                                        stderr=subprocess.STDOUT,
+                                        shell=True,
+                                        timeout=timeout)
+        else:
+            r = subprocess.check_output(command,
+                                        stderr=subprocess.STDOUT,
+                                        shell=True)
         if encoding is None or encoding == 'utf-8':
             return str(r, 'utf-8')
         else:
@@ -1459,7 +1465,7 @@ class Shell(object):
             filename = path_expand(filename)
 
         if os_is_linux():
-            r = Shell.run(f"gopen {filename}")
+            r = os.system(f"gopen {filename}")
         if os_is_mac():
             command = f'open {filename}'
             if program:
