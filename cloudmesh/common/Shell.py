@@ -697,12 +697,13 @@ class Shell(object):
         return subprocess.check_output(*args, **kwargs)
 
     @classmethod
-    def ls(cls, match="."):
+    def ls(cls, directory=".", match=None):
         """
         executes ls with the given arguments
         :param args:
         :return: list
         """
+        raise ValueError("Please implement me")
         d = glob.glob(match)
         return d
 
