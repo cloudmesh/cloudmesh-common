@@ -703,9 +703,11 @@ class Shell(object):
         :param args:
         :return: list
         """
-        raise ValueError("Please implement me")
-        d = glob.glob(match)
-        return d
+        if match == None:
+            files = os.listdir('.')
+        else:
+            files = [f for f in os.listdir('.') if re.match(match, f)]
+        return files
 
     @classmethod
     # @NotImplementedInWindows
