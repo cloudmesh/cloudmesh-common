@@ -697,14 +697,17 @@ class Shell(object):
         return subprocess.check_output(*args, **kwargs)
 
     @classmethod
-    def ls(cls, match="."):
+    def ls(cls, directory=".", match=None):
         """
         executes ls with the given arguments
         :param args:
         :return: list
         """
-        d = glob.glob(match)
-        return d
+        if match == None:
+            files = os.listdir('.')
+        else:
+            files = [f for f in os.listdir('.') if re.match(match, f)]
+        return files
 
     @classmethod
     # @NotImplementedInWindows
@@ -717,7 +720,7 @@ class Shell(object):
         return cls.execute('ls', args)
 
     @staticmethod
-    def ps():
+    def ps(short=False, attributes=None):
         """
         using psutil to return the process information pid, name and comdline,
         cmdline may be a list
@@ -727,7 +730,14 @@ class Shell(object):
         found = []
         for proc in psutil.process_iter():
             try:
-                pinfo = proc.as_dict(attrs=['pid', 'name', 'cmdline'])
+                if attributes is not None:
+                    pinfo = proc.as_dict(attrs=attributes)
+                elif short:
+                    pinfo = proc.as_dict(attrs=['pid', 'name', 'cmdline', 'ppid', 'username',
+                                                'status', 'create_time', 'terminal', 'cwd',
+                                                'open_files'])
+                else:
+                    pinfo = proc.as_dict()
             except psutil.NoSuchProcess:
                 pass
             else:

@@ -1,7 +1,7 @@
 ###############################################################
-# npytest -v --capture=no  tests/test_flatdict..py::Test_flatdict.test_001
 # pytest -v --capture=no  tests/test_flatdict.py
 # pytest -v tests/test_flatdict.py
+# npytest -v --capture=no  tests/test_flatdict..py::Test_flatdict.test_001
 ###############################################################
 
 from pprint import pprint
@@ -95,3 +95,22 @@ class Test_Flatdict:
         f.user = 'GREGOR'
         assert f.user == 'GREGOR'
         assert f['extra__minDisk'] == 40
+
+    def test_unflatten(self):
+        HEADING("FlatDict")
+
+        f = FlatDict(self.d, sep=".")
+        pprint(f.dict)
+        pprint(f.__dict__)
+
+        pprint(f.unflatten())
+
+        # print(f['user'])
+        # print(f['extra__created'])
+        # print(f.user)
+        # print(f.extra__created)
+        #
+        # f.user = 'GREGOR'
+        # assert f.user == 'GREGOR'
+        # assert f['extra__minDisk'] == 40
+
