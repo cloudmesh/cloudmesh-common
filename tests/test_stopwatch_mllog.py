@@ -8,9 +8,12 @@ from typing import Dict, Any
 import contextlib
 import json
 import logging
+import os
 import time
 from io import StringIO  # Python 3
+import pathlib
 import sys
+import tempfile
 
 import pytest
 from cloudmesh.common.StopWatch import StopWatch
@@ -29,6 +32,31 @@ mllog_constants=dict(
     CLOSED = "closed",
     OPEN = "open",
 )
+
+@contextlib.contextmanager
+def yaml_generator(filename):
+    mllog_sampleyaml="""
+name: ignored
+benchmark:
+  name: Earthquake
+  user: Gregor von Laszewski
+  e-mail: laszewski@gmail.com
+  organisation:  University of Virginia
+  division: BII
+  status: submission
+  platform: rivanna
+  badkey: ignored
+followon: ignored
+"""
+    my_tempdir = tempfile.gettempdir()
+    temppath = pathlib.Path(my_tempdir) / filename
+    with open(temppath, 'wb') as f:
+        f.write(mllog_sampleyaml.encode('utf-8'))
+    try:
+        yield temppath
+    finally:
+        os.remove(temppath)
+
 
 
 def convert_mllog_to_object(log_stream: StringIO):
@@ -52,14 +80,14 @@ def convert_mllog_to_object(log_stream: StringIO):
 
 
 @contextlib.contextmanager
-def intercept_mllogger():
+def intercept_mllogger(filename=None):
     """A context function used to capture logging events in mlperf.
     This method does so by directly registering a stream object to the logging
     module.
 
     :yields: a StringIO object that captures the StopWatch mllog events.
     """
-    StopWatch.activate_mllog()
+    StopWatch.activate_mllog(filename=filename)
     temp_out = StringIO('')
     stream_handler = logging.StreamHandler(temp_out)
     StopWatch.mllogger.logger.addHandler(stream_handler)
@@ -226,3 +254,30 @@ class Test_Printer:
             log_object[0]["value"] is None,
             "Events must not require values."
         )
+
+    def test_stopwatch_log_evalblock(self):
+        HEADING()
+        with intercept_mllogger() as log_stream:
+            StopWatch.start("Test Notebook", mllog_key="BLOCK_START")
+            StopWatch.stop("Test Notebook", mllog_key="BLOCK_STOP")
+        log_text = log_stream.getvalue()
+
+    def test_stopwatch_organization_mllog(self):
+        with yaml_generator('test.yml') as f:
+            with intercept_mllogger() as log_stream:
+                StopWatch.start("Test Notebook", mllog_key="BLOCK_START")
+                StopWatch.organization_mllog(f)
+                StopWatch.stop("Test Notebook", mllog_key="BLOCK_STOP")
+            log_text = log_stream.getvalue()
+            assert ':::MLLOG' in log_text, 'logger must have mllog entries when activated'
+            log_object = convert_mllog_to_object(log_stream)
+            assert log_object[1]['key'] == "submission_benchmark" and log_object[1]['value'] == "Earthquake" and \
+                   log_object[2]['key'] == "submission_poc_name" and log_object[2]['value'] == "Gregor von Laszewski" and \
+                   log_object[3]['key'] == "submission_poc_email" and log_object[3]['value'] == "laszewski@gmail.com" and \
+                   log_object[4]['key'] == "submission_org" and log_object[4]['value'] == "University of Virginia" and \
+                   log_object[5]['key'] == "submission_division" and log_object[5]['value'] == "BII" and \
+                   log_object[6]['key'] == "submission_status" and log_object[6]['value'] == "submission" and \
+                   log_object[7]['key'] == "submission_platform" and log_object[7]['value'] == "rivanna"
+            assert not any([obj['value'] == "ignored" for obj in log_object])
+
+

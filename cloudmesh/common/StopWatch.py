@@ -100,6 +100,7 @@ import os
 import time
 import datetime
 import pprint
+import pathlib
 import yaml
 import sys
 
@@ -240,31 +241,38 @@ class StopWatch(object):
         config["benchmark"].update(argv)
 
 
-    # @classmethod
-    # def organization_mllog(cls, configfile, **argv):
-    #     mllog = import_mllog()
-    #
-    #     try:
-    #        config = yaml.safe_load(readfile(configfile).strip())
-    #     except:
-    #         config = {
-    #             "benchmark": {}
-    #         }
-    #     config["benchmark"].update(argv)
-    #
-    #     for key, attribute in [
-    #         (mllog.constants.SUBMISSION_BENCHMARK, 'name'),
-    #         (mllog.constants.SUBMISSION_POC_NAME, 'user'),
-    #         (mllog.constants.SUBMISSION_POC_EMAIL, 'email'),
-    #         (mllog.constants.SUBMISSION_ORG, 'organisation'),
-    #         (mllog.constants.SUBMISSION_DIVISION, 'division'),
-    #         (mllog.constants.SUBMISSION_STATUS, 'status'),
-    #         (mllog.constants.SUBMISSION_PLATFORM, 'platform')
-    #         ]:
-    #         try:
-    #             cls.mllogger.event(key=key, value=config["benchmark"][attribute])
-    #         except:
-    #             pass
+    @classmethod
+    def organization_mllog(cls, configfile, **argv):
+        try:
+            from mlperf_logging import mllog
+        except Exception:  # noqa: E722
+            Console.error("You need to install mllogging to use it")
+            sys.exit()
+
+        try:
+            with open(pathlib.Path(configfile), 'r') as stream:
+                config = yaml.safe_load(stream)
+        except Exception as e:  # noqa: E722
+            raise e
+            config = {
+                "benchmark": {}
+            }
+        config["benchmark"].update(argv)
+
+        for key, attribute in [
+            (mllog.constants.SUBMISSION_BENCHMARK, 'name'),
+            (mllog.constants.SUBMISSION_POC_NAME, 'user'),
+            (mllog.constants.SUBMISSION_POC_EMAIL, 'e-mail'),
+            (mllog.constants.SUBMISSION_ORG, 'organisation'),
+            (mllog.constants.SUBMISSION_DIVISION, 'division'),
+            (mllog.constants.SUBMISSION_STATUS, 'status'),
+            (mllog.constants.SUBMISSION_PLATFORM, 'platform')
+            ]:
+            try:
+                cls.mllogger.event(key, value=config["benchmark"][attribute])
+            except AttributeError as e:
+                print(f"Missing/invalid standard property {key}")
+
 
     @classmethod
     def keys(cls):
