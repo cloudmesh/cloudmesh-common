@@ -49,9 +49,9 @@ name: ignored
 followon: ignored
 """
     else:
-        mllog_sampleyaml="""
+        mllog_sampleyaml=f"""
 name: ignored
-benchmark:
+{prefix}:
   name: Earthquake
   user: Gregor von Laszewski
   e-mail: laszewski@gmail.com

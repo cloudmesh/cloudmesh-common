@@ -242,7 +242,7 @@ class StopWatch(object):
 
 
     @classmethod
-    def organization_mllog(cls, configfile, prefix_ = 'benchmark', flatdict_ = False, **argv):
+    def organization_mllog(cls, configfile: str, prefix_: str = 'benchmark', flatdict_: bool = False, **argv):
         try:
             from mlperf_logging import mllog
         except Exception:  # noqa: E722
@@ -256,12 +256,12 @@ class StopWatch(object):
             config = {
                 "benchmark": {}
             }
+        prefix = prefix_
         if flatdict_:
-            prefix=f"{prefix_}"
             for k,v in argv.items():
                 config[f"{prefix}.{k}"] = v
         else:
-            config["benchmark"].update(argv)
+            config[prefix].update(argv)
 
         for key, attribute in [
             (mllog.constants.SUBMISSION_BENCHMARK, 'name'),
@@ -276,7 +276,7 @@ class StopWatch(object):
                 if flatdict_:
                     cls.mllogger.event(key, value=config[f"{prefix}.{attribute}"])
                 else:
-                    cls.mllogger.event(key, value=config["benchmark"][attribute])
+                    cls.mllogger.event(key, value=config[prefix][attribute])
             except AttributeError as e:
                 print(f"Missing/invalid standard property {key}")
 
