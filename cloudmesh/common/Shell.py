@@ -717,7 +717,7 @@ class Shell(object):
         return cls.execute('ls', args)
 
     @staticmethod
-    def ps(short=False):
+    def ps(short=False, attributes=None):
         """
         using psutil to return the process information pid, name and comdline,
         cmdline may be a list
@@ -727,7 +727,9 @@ class Shell(object):
         found = []
         for proc in psutil.process_iter():
             try:
-                if short:
+                if attributes is not None:
+                    pinfo = proc.as_dict(attrs=attributes)
+                elif short:
                     pinfo = proc.as_dict(attrs=['pid', 'name', 'cmdline', 'ppid', 'username',
                                                 'status', 'create_time', 'terminal', 'cwd',
                                                 'open_files'])
