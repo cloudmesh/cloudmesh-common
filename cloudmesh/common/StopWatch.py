@@ -95,6 +95,8 @@ Now you can just use the STopwatch as before.
 
 We will add here aditional information, such as setting up the configuration for mlperf logging
 
+# TODO - Need to exercise this for mlperf_logging
+
 """
 import os
 import time
@@ -357,10 +359,11 @@ class StopWatch(object):
             if msg is not None:
                 StopWatch.message(name, str(msg))
         if cls.mllogging and not suppress_mllog:
+            key_name = cls.mllog_lookup(name)
             if values is not None:
-                cls.mllogger.event(key=name, value=str(values))
+                cls.mllogger.event(key=key_name, value=str(values))
             else:
-                cls.mllogger.event(key=name)
+                cls.mllogger.event(key=key_name)
 
     @classmethod
     def log_event(cls, **kwargs):
@@ -377,12 +380,6 @@ class StopWatch(object):
         for key, value in kwargs.items():
             mlkey = cls.mllog_lookup(key)
             cls.event(mlkey, msg=mlkey, values=value)
-
-
-    @classmethod
-    def log_constant(cls, **kwargs):
-        """Deprecated.  Use `log_event`."""
-        cls.log_event(**kwargs)
 
     @classmethod
     def mllog_lookup(cls, key: str) -> str:
