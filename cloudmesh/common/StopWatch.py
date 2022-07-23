@@ -382,13 +382,6 @@ class StopWatch(object):
             mlkey = cls.mllog_lookup(key)
             cls.event(mlkey, msg=mlkey, values=value)
 
-
-    @classmethod
-    def log_constant(cls, name, msg=None, **kwargs):
-        """Deprecated.  Use `log_event`."""
-        values = str(**kwargs)
-        cls.event(cls, name, msg=msg, values=values, suppress_stopwatch=True, stack_offset=2)
-
     @classmethod
     def mllog_lookup(cls, key: str) -> str:
         """Performs a dynamic lookup for the string representation of a
