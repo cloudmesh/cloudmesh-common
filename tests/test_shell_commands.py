@@ -1,13 +1,18 @@
 ###############################################################
-# npytest -v --capture=no  tests/test_shell..py::Test_shell.test_001
-# pytest -v --capture=no  tests/test_shell.py
-# pytest -v tests/test_shell.py
+# pytest -v --capture=no  tests/test_shell_commands.py::Test_shell.test_001
+# pytest -v --capture=no  tests/test_shell_commands.py
+# pytest -v tests/test_shell_commands.py
 ###############################################################
 import getpass
 
 from cloudmesh.common.Shell import Shell
 from cloudmesh.common.util import HEADING
+from cloudmesh.common.Benchmark import Benchmark
+from cloudmesh.common.systeminfo import os_is_windows, os_is_linux
+from cloudmesh.common.util import path_expand
 import pytest
+import os
+from pathlib import Path
 
 
 def run(command):
@@ -18,7 +23,6 @@ def run(command):
     return str(result)
 
 
-
 @pytest.mark.incremental
 class Test_shell(object):
     """
@@ -27,6 +31,105 @@ class Test_shell(object):
 
     def setup(self):
         pass
+
+    def test_shell_mkdir(self):
+        HEADING()
+
+        os.system('rm -rf shell-directory')
+        os.system('rm -rf shell-new-dir/another-dir')
+        os.system('rm -rf ~/shell-dir')
+        Benchmark.Start()
+        Shell.mkdir('shell-directory')
+        assert os.path.exists('shell-directory')
+        Shell.mkdir('shell-new-dir/another-dir')
+        assert os.path.exists('shell-new-dir/another-dir')
+        Shell.mkdir('~/shell-dir')
+        dir = os.path.join(Path.home(), 'shell-dir')
+        assert os.path.exists(dir)
+        Benchmark.Stop()
+        os.system('rm -rf shell-directory')
+        os.system('rm -rf shell-new-dir/another-dir')
+        os.system('rm -rf ~/shell-dir')
+
+    def test_map_filename(self):
+        HEADING()
+        Benchmark.Start()
+        user = os.path.basename(os.environ["HOME"])
+        if os_is_windows():
+            pwd = os.getcwd().replace("C:","/mnt/c").replace("\\","/")
+        else:
+            pwd = os.getcwd()
+
+        print("pwd",pwd)
+
+        ## wsl:~/dir         /mnt/c/Users/USER/dir
+        # wsl:dir           /mnt/c/Users/USER/{PWD}/dir
+        # wsl:./dir         /mnt/c/Users/USER/{PWD}/dir
+        ## wsl:/mnt/c/Users  /mnt/c/Users
+        # wsl:/dir          /dir
+
+        result = Shell.map_filename(name='wsl:~/cm')
+        assert result.user == user
+        assert result.host == 'wsl'
+        if os_is_linux():
+            assert result.path == f'/mnt/c/home/{user}/cm'
+        else:
+            assert result.path == f'/mnt/c/Users/{user}/cm'
+
+        result = Shell.map_filename(name='wsl:dir')
+        assert result.user == user
+        assert result.host == 'wsl'
+        assert result.path == f'{pwd}/dir'
+
+        result = Shell.map_filename(name='wsl:./dir')
+        assert result.user == user
+        assert result.host == 'wsl'
+        assert result.path == f'{pwd}/dir'
+
+        result = Shell.map_filename(name='wsl:/mnt/c/home')
+        assert result.user == user
+        assert result.host == 'wsl'
+        assert result.path == f'/mnt/c/home'
+
+        result = Shell.map_filename(name='C:~/cm')
+        assert result.user == user
+        assert result.host == 'localhost'
+        if os_is_linux():
+            if user == 'root':
+                assert result.path == f'C:\\root\\cm'
+            else:
+                assert result.path == f'C:\\home\\{user}\\cm'
+        else:
+            assert result.path == f'C:\\Users\\{user}\\cm'
+
+        result = Shell.map_filename(name='scp:user@host:~/cm')
+        assert result.user == "user"
+        assert result.host == 'host'
+        assert result.path == f'~/cm'
+
+        result = Shell.map_filename(name='scp:user@host:/tmp')
+        assert result.user == "user"
+        assert result.host == 'host'
+        assert result.path == f'/tmp'
+
+        result = Shell.map_filename(name='~/cm')
+        assert result.user == user
+        assert result.host == 'localhost'
+        assert result.path == path_expand('~/cm')
+
+        result = Shell.map_filename(name='/tmp')
+        assert result.user == user
+        assert result.host == 'localhost'
+        if os_is_windows():
+            assert result.path == '\\tmp'
+        else:
+            assert result.path == '/tmp'
+
+        result = Shell.map_filename(name='./cm')
+        assert result.user == user
+        assert result.host == 'localhost'
+        assert result.path == path_expand('./cm')
+        Benchmark.Stop()
 
     """
     def test_(self):
