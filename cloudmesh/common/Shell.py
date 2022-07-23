@@ -1360,6 +1360,12 @@ class Shell(object):
         shutil.copy2(s, d)
 
     @classmethod
+    def copy2(cls, source, destination):
+        s = Shell.map_filename(source).path
+        d = Shell.map_filename(destination).path
+        shutil.copy2(s, d)
+
+    @classmethod
     def mkdir(cls, directory):
         """
         creates a directory with all its parents in ots name
@@ -1485,6 +1491,18 @@ class Shell(object):
             r = Shell.run(f"start {filename}")
 
         return r
+
+    @staticmethod
+    def sys_user():
+        if os_is_windows():
+            localuser = os.environ["USERNAME"]
+        else:
+            try:
+                localuser = os.environ['USER']
+            except:
+                # docker image does not have user variable. so just do whoami
+                localuser = Shell.run('whoami')
+        return localuser
 
 
 def main():
