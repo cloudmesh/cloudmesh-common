@@ -98,6 +98,7 @@ We will add here aditional information, such as setting up the configuration for
 
 """
 import os
+import platform
 import time
 import datetime
 import pprint
@@ -741,6 +742,7 @@ class StopWatch(object):
                   sum=True,
                   node=None,
                   user=None,
+                  version=None,
                   attributes=None,
                   total=False,
                   filename=None):
@@ -819,6 +821,10 @@ class StopWatch(object):
                             data_timers[timer][attribute] = node
                         else:
                             data_timers[timer][attribute] = data_platform[attribute]
+
+                    if version is not None:
+                        data_timers[timer]["platform.version"] = version
+
 
                 # print(Printer.attribute(data_timers, header=["Command", "Time/s"]))
 
