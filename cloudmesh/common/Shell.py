@@ -1486,6 +1486,18 @@ class Shell(object):
 
         return r
 
+    @staticmethod
+    def sys_user():
+        if os_is_windows():
+            localuser = os.environ["USERNAME"]
+        else:
+            try:
+                localuser = os.environ['USER']
+            except:
+                # docker image does not have user variable. so just do whoami
+                localuser = Shell.run('whoami')
+        return localuser
+
 
 def main():
     """
