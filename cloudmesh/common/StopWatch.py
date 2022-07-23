@@ -89,7 +89,8 @@ We recommend tho install the newest version as follows
 
 ::
     git clone https://github.com/mlperf/logging.git mlperf-logging
-    pip install -e mlperf-logging
+    cd mlperf-logging
+    pip install -e .
 
 Now you can just use the STopwatch as before.
 
@@ -99,6 +100,7 @@ We will add here aditional information, such as setting up the configuration for
 
 """
 import os
+import platform
 import time
 import datetime
 import pprint
@@ -183,14 +185,14 @@ class StopWatch(object):
     mllogger = None
 
     @classmethod
-    def activate_mllog(cls, filename="cloudmesh_mllog.log", config=None):
+    def activate_mllog(cls, filename="cloudmesh_mllog.log", config=None, stack_offset=1):
         # global mllog
         cls._mllog_import = import_mllog()
 
         if config is None:
             cms_mllog = dict(
                 default_namespace="cloudmesh",
-                default_stack_offset=1,
+                default_stack_offset=stack_offset,
                 default_clear_line=False
             )
         else:
@@ -205,13 +207,13 @@ class StopWatch(object):
             #    os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", ".."))
         )
 
-    @classmethod
-    def progress(cls, percent, status="running", pid=None):
-        if pid is None:
-            pid = os.getpid()
-        if "SLURM_JOB_ID" in os.environ:
-            pid = os.environ["SLURM_JOB_ID"] #TODO - may need to be updated (monitor of long running jobs)
-        print(f"# cloudmesh status={status} progress={percent} pid={pid}")
+    # @classmethod
+    # def progress(cls, percent, status="running", pid=None):
+    #     if pid is None:
+    #         pid = os.getpid()
+    #     if "SLURM_JOB_ID" in os.environ:
+    #         pid = os.environ["SLURM_JOB_ID"] #TODO - may need to be updated (monitor of long running jobs)
+    #     print(f"# cloudmesh status={status} progress={percent} pid={pid}")
 
     @classmethod
     def progress(cls, percent, status="running", pid=None, variable=None):
@@ -253,17 +255,17 @@ class StopWatch(object):
 
         try:
             with open(pathlib.Path(configfile), 'r') as stream:
-                config = yaml.safe_load(stream)
+                _config = yaml.safe_load(stream)
         except Exception as e:  # noqa: E722
-            config = {
+            _config = {
                 "benchmark": {}
             }
         prefix = prefix_
         if flatdict_:
             for k,v in argv.items():
-                config[f"{prefix}.{k}"] = v
+                _config[f"{prefix}.{k}"] = v
         else:
-            config[prefix].update(argv)
+            _config[prefix].update(argv)
 
         for key, attribute in [
             (mllog.constants.SUBMISSION_BENCHMARK, 'name'),
@@ -276,9 +278,9 @@ class StopWatch(object):
             ]:
             try:
                 if flatdict_:
-                    cls.mllogger.event(key, value=config[f"{prefix}.{attribute}"])
+                    cls.mllogger.event(key, value=_config[f"{prefix}.{attribute}"])
                 else:
-                    cls.mllogger.event(key, value=config[prefix][attribute])
+                    cls.mllogger.event(key, value=_config["benchmark"][attribute])
             except AttributeError as e:
                 print(f"Missing/invalid standard property {key}")
 
@@ -756,6 +758,7 @@ class StopWatch(object):
                   sum=True,
                   node=None,
                   user=None,
+                  version=None,
                   attributes=None,
                   total=False,
                   filename=None):
@@ -834,6 +837,10 @@ class StopWatch(object):
                             data_timers[timer][attribute] = node
                         else:
                             data_timers[timer][attribute] = data_platform[attribute]
+
+                    if version is not None:
+                        data_timers[timer]["platform.version"] = version
+
 
                 # print(Printer.attribute(data_timers, header=["Command", "Time/s"]))
 
