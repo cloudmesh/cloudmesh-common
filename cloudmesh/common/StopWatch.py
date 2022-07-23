@@ -183,7 +183,7 @@ class StopWatch(object):
     mllogger = None
 
     @classmethod
-    def activate_mllog(cls, filename="cloudmesh_mllog.log", config=None, stack_offset=1):
+    def activate_mllog(cls, filename="cloudmesh_mllog.log", config=None, stack_offset=2):
         # global mllog
         cls._mllog_import = import_mllog()
 
@@ -330,7 +330,7 @@ class StopWatch(object):
         cls.timer_msg[name] = value
 
     @classmethod
-    def event(cls, name, msg=None, values=None, suppress_stopwatch=False, suppress_mllog=False):
+    def event(cls, name, msg=None, values=None, suppress_stopwatch=False, suppress_mllog=False, stack_offset=2):
         """
         Adds an event with a given name, where start and stop is the same time.
 
@@ -362,9 +362,9 @@ class StopWatch(object):
                 StopWatch.message(name, str(msg))
         if cls.mllogging and not suppress_mllog:
             if values is not None:
-                cls.mllogger.event(key=name, value=str(values), stack_offset=2)
+                cls.mllogger.event(key=name, value=str(values), stack_offset=stack_offset)
             else:
-                cls.mllogger.event(key=name, stack_offset=2)
+                cls.mllogger.event(key=name, stack_offset=stack_offset)
 
     @classmethod
     def log_event(cls, **kwargs):
@@ -384,9 +384,10 @@ class StopWatch(object):
 
 
     @classmethod
-    def log_constant(cls, **kwargs):
+    def log_constant(cls, name, msg=None, **kwargs):
         """Deprecated.  Use `log_event`."""
-        cls.log_event(**kwargs)
+        values = str(**kwargs)
+        cls.event(cls, name, msg=msg, values=values, suppress_stopwatch=True, stack_offset=2)
 
     @classmethod
     def mllog_lookup(cls, key: str) -> str:
