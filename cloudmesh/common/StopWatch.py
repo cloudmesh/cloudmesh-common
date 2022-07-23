@@ -328,7 +328,7 @@ class StopWatch(object):
         cls.timer_msg[name] = value
 
     @classmethod
-    def event(cls, name, msg=None, values=None, suppress_stopwatch=False, suppress_mllog=False):
+    def event(cls, name, msg=None, values=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False):
         """
         Adds an event with a given name, where start and stop is the same time.
 
@@ -339,6 +339,9 @@ class StopWatch(object):
         :param values: data that is associated with the event that is converted
                        to a string
         :type values: object
+        :param mllog_key: Specifies the key to be used in mlperf_logging.
+                          If none, it will use the `name` value.
+        :type mllog_key: string
         :param suppress_stopwatch: suppresses executing any stopwatch code.
                                 Useful when only logging an mllog event.
         :type suppress_stopwatch: bool
@@ -359,7 +362,11 @@ class StopWatch(object):
             if msg is not None:
                 StopWatch.message(name, str(msg))
         if cls.mllogging and not suppress_mllog:
-            key_name = cls.mllog_lookup(name)
+            if mllog_key is None:
+                key_name = cls.mllog_lookup("POINT_IN_TIME")
+            else:
+                key_name = cls.mllog_lookup(mllog_key)
+
             if values is not None:
                 cls.mllogger.event(key=key_name, value=str(values))
             else:
