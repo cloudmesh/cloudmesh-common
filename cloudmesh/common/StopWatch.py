@@ -89,7 +89,8 @@ We recommend tho install the newest version as follows
 
 ::
     git clone https://github.com/mlperf/logging.git mlperf-logging
-    pip install -e mlperf-logging
+    cd mlperf-logging
+    pip install -e .
 
 Now you can just use the STopwatch as before.
 
@@ -181,14 +182,14 @@ class StopWatch(object):
     mllogger = None
 
     @classmethod
-    def activate_mllog(cls, filename="cloudmesh_mllog.log", config=None):
+    def activate_mllog(cls, filename="cloudmesh_mllog.log", config=None, stack_offset=1):
         # global mllog
         cls._mllog_import = import_mllog()
 
         if config is None:
             cms_mllog = dict(
                 default_namespace="cloudmesh",
-                default_stack_offset=1,
+                default_stack_offset=stack_offset,
                 default_clear_line=False
             )
         else:
@@ -203,13 +204,13 @@ class StopWatch(object):
             #    os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", ".."))
         )
 
-    @classmethod
-    def progress(cls, percent, status="running", pid=None):
-        if pid is None:
-            pid = os.getpid()
-        if "SLURM_JOB_ID" in os.environ:
-            pid = os.environ["SLURM_JOB_ID"] #TODO - may need to be updated (monitor of long running jobs)
-        print(f"# cloudmesh status={status} progress={percent} pid={pid}")
+    # @classmethod
+    # def progress(cls, percent, status="running", pid=None):
+    #     if pid is None:
+    #         pid = os.getpid()
+    #     if "SLURM_JOB_ID" in os.environ:
+    #         pid = os.environ["SLURM_JOB_ID"] #TODO - may need to be updated (monitor of long running jobs)
+    #     print(f"# cloudmesh status={status} progress={percent} pid={pid}")
 
     @classmethod
     def progress(cls, percent, status="running", pid=None, variable=None):
@@ -242,7 +243,7 @@ class StopWatch(object):
 
 
     @classmethod
-    def organization_mllog(cls, configfile, prefix_ = 'benchmark', flatdict_ = False, **argv):
+    def organization_mllog(cls, configfile=None, prefix_ = 'benchmark', flatdict_ = False, **argv):
         try:
             from mlperf_logging import mllog
         except Exception:  # noqa: E722
@@ -251,17 +252,19 @@ class StopWatch(object):
 
         try:
             with open(pathlib.Path(configfile), 'r') as stream:
-                config = yaml.safe_load(stream)
+                _config = yaml.safe_load(stream)
         except Exception as e:  # noqa: E722
-            config = {
+            _config = {
                 "benchmark": {}
             }
         if flatdict_:
             prefix=f"{prefix_}"
             for k,v in argv.items():
-                config[f"{prefix}.{k}"] = v
+                _config[f"{prefix}.{k}"] = v
         else:
-            config["benchmark"].update(argv)
+            _config.update(argv)
+
+        print (_config)
 
         for key, attribute in [
             (mllog.constants.SUBMISSION_BENCHMARK, 'name'),
@@ -274,9 +277,9 @@ class StopWatch(object):
             ]:
             try:
                 if flatdict_:
-                    cls.mllogger.event(key, value=config[f"{prefix}.{attribute}"])
+                    cls.mllogger.event(key, value=_config[f"{prefix}.{attribute}"])
                 else:
-                    cls.mllogger.event(key, value=config["benchmark"][attribute])
+                    cls.mllogger.event(key, value=_config["benchmark"][attribute])
             except AttributeError as e:
                 print(f"Missing/invalid standard property {key}")
 
@@ -358,9 +361,9 @@ class StopWatch(object):
                 StopWatch.message(name, str(msg))
         if cls.mllogging and not suppress_mllog:
             if values is not None:
-                cls.mllogger.event(key=name, value=str(values))
+                cls.mllogger.event(key=name, value=str(values), stack_offset=2)
             else:
-                cls.mllogger.event(key=name)
+                cls.mllogger.event(key=name, stack_offset=2)
 
     @classmethod
     def log_event(cls, **kwargs):
@@ -452,9 +455,9 @@ class StopWatch(object):
             else:
                 key = cls.mllog_lookup(mllog_key)
             if values is not None:
-                cls.mllogger.start(key=key, value=str(values))
+                cls.mllogger.start(key=key, value=str(values), stack_offset=2)
             else:
-                cls.mllogger.start(key=key)
+                cls.mllogger.start(key=key, stack_offset=2)
 
     @classmethod
     def stop(cls, name, state=True, values=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False):
@@ -496,9 +499,9 @@ class StopWatch(object):
             else:
                 key = cls.mllog_lookup(mllog_key)
             if values is not None:
-                cls.mllogger.end(key=key, value=str(values))
+                cls.mllogger.end(key=key, value=str(values), stack_offset=2)
             else:
-                cls.mllogger.end(key=key)
+                cls.mllogger.end(key=key, stack_offset=2)
 
         if cls.debug and not suppress_stopwatch:
             print("Timer", name, "stopped ...")
