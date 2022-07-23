@@ -96,6 +96,8 @@ Now you can just use the STopwatch as before.
 
 We will add here aditional information, such as setting up the configuration for mlperf logging
 
+# TODO - Need to exercise this for mlperf_logging
+
 """
 import os
 import platform
@@ -244,7 +246,7 @@ class StopWatch(object):
 
 
     @classmethod
-    def organization_mllog(cls, configfile=None, prefix_ = 'benchmark', flatdict_ = False, **argv):
+    def organization_mllog(cls, configfile: str, prefix_: str = 'benchmark', flatdict_: bool = False, **argv):
         try:
             from mlperf_logging import mllog
         except Exception:  # noqa: E722
@@ -258,14 +260,12 @@ class StopWatch(object):
             _config = {
                 "benchmark": {}
             }
+        prefix = prefix_
         if flatdict_:
-            prefix=f"{prefix_}"
             for k,v in argv.items():
                 _config[f"{prefix}.{k}"] = v
         else:
-            _config.update(argv)
-
-        print (_config)
+            _config[prefix].update(argv)
 
         for key, attribute in [
             (mllog.constants.SUBMISSION_BENCHMARK, 'name'),
@@ -330,7 +330,7 @@ class StopWatch(object):
         cls.timer_msg[name] = value
 
     @classmethod
-    def event(cls, name, msg=None, values=None, suppress_stopwatch=False, suppress_mllog=False, stack_offset=2):
+    def event(cls, name, msg=None, values=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False, stack_offset=2):
         """
         Adds an event with a given name, where start and stop is the same time.
 
@@ -341,6 +341,9 @@ class StopWatch(object):
         :param values: data that is associated with the event that is converted
                        to a string
         :type values: object
+        :param mllog_key: Specifies the key to be used in mlperf_logging.
+                          If none, it will use the `name` value.
+        :type mllog_key: string
         :param suppress_stopwatch: suppresses executing any stopwatch code.
                                 Useful when only logging an mllog event.
         :type suppress_stopwatch: bool
@@ -361,6 +364,11 @@ class StopWatch(object):
             if msg is not None:
                 StopWatch.message(name, str(msg))
         if cls.mllogging and not suppress_mllog:
+            if mllog_key is None:
+                key_name = cls._mllog_lookup("POINT_IN_TIME")
+            else:
+                key_name = cls._mllog_lookup(mllog_key)
+
             if values is not None:
                 cls.mllogger.event(key=name, value=str(values), stack_offset=stack_offset)
             else:
@@ -379,11 +387,11 @@ class StopWatch(object):
         :type kwargs: dict
         """
         for key, value in kwargs.items():
-            mlkey = cls.mllog_lookup(key)
+            mlkey = cls._mllog_lookup(key)
             cls.event(mlkey, msg=mlkey, values=value)
 
     @classmethod
-    def mllog_lookup(cls, key: str) -> str:
+    def _mllog_lookup(cls, key: str) -> str:
         """Performs a dynamic lookup for the string representation of a
            mlperf constant.  If the value isn't found, it will return a string
            of the pattern mllog-event-{key}
@@ -448,11 +456,18 @@ class StopWatch(object):
             if mllog_key is None:
                 key = name
             else:
-                key = cls.mllog_lookup(mllog_key)
+                key = cls._mllog_lookup(mllog_key)
             if values is not None:
-                cls.mllogger.start(key=key, value=str(values), stack_offset=2)
+                if isinstance(values, dict):
+                    values['name'] = name
+                elif isinstance(values, list):
+                    values += list(name)
+                else:
+                    values = f"Name: {name}, {values}"
+
+                cls.mllogger.start(key=key, value=str(values))
             else:
-                cls.mllogger.start(key=key, stack_offset=2)
+                cls.mllogger.start(key=key, values=name)
 
     @classmethod
     def stop(cls, name, state=True, values=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False):
@@ -492,11 +507,18 @@ class StopWatch(object):
             if mllog_key is None:
                 key = name
             else:
-                key = cls.mllog_lookup(mllog_key)
+                key = cls._mllog_lookup(mllog_key)
             if values is not None:
-                cls.mllogger.end(key=key, value=str(values), stack_offset=2)
+                if isinstance(values, dict):
+                    values['name'] = name
+                elif isinstance(values, list):
+                    values += list(name)
+                else:
+                    values = f"Name: {name}, {values}"
+
+                cls.mllogger.end(key=key, value=str(values))
             else:
-                cls.mllogger.end(key=key, stack_offset=2)
+                cls.mllogger.end(key=key, values=name)
 
         if cls.debug and not suppress_stopwatch:
             print("Timer", name, "stopped ...")
