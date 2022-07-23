@@ -363,9 +363,9 @@ class StopWatch(object):
                 StopWatch.message(name, str(msg))
         if cls.mllogging and not suppress_mllog:
             if mllog_key is None:
-                key_name = cls.mllog_lookup("POINT_IN_TIME")
+                key_name = cls._mllog_lookup("POINT_IN_TIME")
             else:
-                key_name = cls.mllog_lookup(mllog_key)
+                key_name = cls._mllog_lookup(mllog_key)
 
             if values is not None:
                 cls.mllogger.event(key=key_name, value=str(values))
@@ -385,11 +385,11 @@ class StopWatch(object):
         :type kwargs: dict
         """
         for key, value in kwargs.items():
-            mlkey = cls.mllog_lookup(key)
+            mlkey = cls._mllog_lookup(key)
             cls.event(mlkey, msg=mlkey, values=value)
 
     @classmethod
-    def mllog_lookup(cls, key: str) -> str:
+    def _mllog_lookup(cls, key: str) -> str:
         """Performs a dynamic lookup for the string representation of a
            mlperf constant.  If the value isn't found, it will return a string
            of the pattern mllog-event-{key}
@@ -454,11 +454,18 @@ class StopWatch(object):
             if mllog_key is None:
                 key = name
             else:
-                key = cls.mllog_lookup(mllog_key)
+                key = cls._mllog_lookup(mllog_key)
             if values is not None:
+                if isinstance(values, dict):
+                    values['name'] = name
+                elif isinstance(values, list):
+                    values += list(name)
+                else:
+                    values = f"Name: {name}, {values}"
+
                 cls.mllogger.start(key=key, value=str(values))
             else:
-                cls.mllogger.start(key=key)
+                cls.mllogger.start(key=key, values=name)
 
     @classmethod
     def stop(cls, name, state=True, values=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False):
@@ -498,11 +505,18 @@ class StopWatch(object):
             if mllog_key is None:
                 key = name
             else:
-                key = cls.mllog_lookup(mllog_key)
+                key = cls._mllog_lookup(mllog_key)
             if values is not None:
+                if isinstance(values, dict):
+                    values['name'] = name
+                elif isinstance(values, list):
+                    values += list(name)
+                else:
+                    values = f"Name: {name}, {values}"
+
                 cls.mllogger.end(key=key, value=str(values))
             else:
-                cls.mllogger.end(key=key)
+                cls.mllogger.end(key=key, values=name)
 
         if cls.debug and not suppress_stopwatch:
             print("Timer", name, "stopped ...")
