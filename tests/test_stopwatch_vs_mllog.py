@@ -69,6 +69,132 @@ def read_mllog(filename):
 @pytest.mark.incremental
 class Test_Printer:
 
+    def test_mllog_example_py(self):
+        HEADING()
+        clean()
+        StopWatch.clear()
+
+        os.system("python tests/mllog-example.py")
+
+        content = readfile("cloudmesh_mllog.log")
+        print ("---")
+        print (content)
+        print ("---")
+        assert "cloudmesh-common/cloudmesh/common/StopWatch.py" not in content
+        assert False
+        assert '"INTERVAL_END", "key": "stopwatch sleep", "value": "stopwatch sleep"' in content
+        assert '"event_type": "POINT_IN_TIME", "key": "submission_benchmark", "value": "Earthquake"' in content
+
+class a:
+
+    def test_mllog_native(self):
+        HEADING()
+        clean()
+        StopWatch.clear()
+
+        Shell.rm("cloudmesh_mlperf_native.log")
+
+        os.system("python tests/mllog-native.py")
+
+        content = readfile("cloudmesh_mlperf_native.log")
+        print("---")
+        print(content)
+        print("---")
+        assert "cloudmesh-common/cloudmesh/common/StopWatch.py" not in content
+        # assert '"INTERVAL_END", "key": "stopwatch sleep", "value": "stopwatch sleep"' in content
+        # assert '"event_type": "POINT_IN_TIME", "key": "submission_benchmark", "value": "Earthquake"' in content
+
+        correct = textwrap.dedent("""
+        "event_type": "POINT_IN_TIME", "key": "submission_benchmark", "value": "Earthquake",
+        "event_type": "POINT_IN_TIME", "key": "submission_org", "value": "University of Virginia",
+        "event_type": "POINT_IN_TIME", "key": "submission_division", "value": "BII",
+        "event_type": "POINT_IN_TIME", "key": "submission_status", "value": "success",
+        "event_type": "POINT_IN_TIME", "key": "submission_platform", "value": "rivanna",
+        "event_type": "INTERVAL_START", "key": "init_start", "value": null,
+        "event_type": "POINT_IN_TIME", "key": "number_of_ranks", "value": 1,
+        "event_type": "POINT_IN_TIME", "key": "number_of_nodes", "value": 1,
+        "event_type": "POINT_IN_TIME", "key": "accelerators_per_node", "value": 1,
+        "event_type": "INTERVAL_END", "key": "init_stop", "value": null,
+        "event_type": "POINT_IN_TIME", "key": "eval_start", "value": "Start Taining",
+        "event_type": "POINT_IN_TIME", "key": "eval_stop", "value": "Stop Training",
+        "event_type": "POINT_IN_TIME", "key": "eval_start", "value": "Start Inference",
+        "event_type": "POINT_IN_TIME", "key": "eval_stop", "value": "Stop Inference",
+        "event_type": "INTERVAL_END", "key": "run_stop", "value": "Benchmark run finished",
+        """).strip().splitlines()
+
+        print("---")
+        print(content)
+        print("---")
+
+        for line in correct:
+            assert line in content
+        
+        
+    def test_mllog_stopwatch_native_compare(self):
+        HEADING()
+        clean()
+        StopWatch.clear()
+        StopWatch.activate_mllog()
+
+        # StopWatch.start("RUN_START", value="Benchmark start")
+
+        data = yaml.safe_load(benchmark_config)
+
+        StopWatch.organization_mllog(**data)
+
+        StopWatch.start("total", mllog_key="RUN_START")
+
+        StopWatch.start("initialization", mllog_key="INIT_SATRT")
+
+        StopWatch.event('number_of_ranks', value=1)
+        StopWatch.event('number_of_nodes', value=1)
+        StopWatch.event('accelerators_per_node', value=1)
+
+        StopWatch.stop("initialization", mllog_key="INIT_STOP")
+
+        # Training
+        start = time.time()
+        StopWatch.start("training", mllog_key="EVAL_START", value="Start Taining")
+        StopWatch.stop("training", mllog_key="EVAL_STOP", value="Stop Training")
+
+        # Inference
+        start = time.time()
+        StopWatch.start("inference", mllog_key="EVAL_START", value="Start: Inference")
+        StopWatch.stop("inference", mllog_key="EVAL_STOP", value="Stop: Inference")
+
+        StopWatch.stop("total", mllog_key="RUN_STOP", value="Benchmark run finished", metadata={'status': 'success'})
+
+        banner("NATIVE")
+        native_log = read_mllog("cloudmesh_mlperf_native.log")
+        pprint(native_log)
+
+        banner("CLOUDMESH")
+        cloudmesh_log = read_mllog("cloudmesh_mllog.log")
+        pprint(cloudmesh_log)
+
+
+        # assert native_log == cloudmesh_log
+
+class b:
+
+    def test_mllog_example_py(self):
+        HEADING()
+        clean()
+        StopWatch.clear()
+
+        os.system("python tests/mllog-example.py")
+
+        content = readfile("cloudmesh_mllog.log")
+        print ("---")
+        print (content)
+        print ("---")
+        assert "cloudmesh-common/cloudmesh/common/StopWatch.py" not in content
+        assert False
+        assert '"INTERVAL_END", "key": "stopwatch sleep", "value": "stopwatch sleep"' in content
+        assert '"event_type": "POINT_IN_TIME", "key": "submission_benchmark", "value": "Earthquake"' in content
+
+
+class a:
 
     def test_check_loading(self):
         HEADING()

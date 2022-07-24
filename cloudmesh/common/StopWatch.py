@@ -284,7 +284,7 @@ class StopWatch(object):
     #             print(f"Missing/invalid standard property {key}")
 
     @classmethod
-    def organization_mllog(cls, configfile=None, prefix_='benchmark', flatdict_=False, **argv):
+    def organization_mllog(cls, configfile=None, **argv):
         try:
             from mlperf_logging import mllog
         except Exception:  # noqa: E722
@@ -293,19 +293,14 @@ class StopWatch(object):
 
         try:
             with open(pathlib.Path(configfile), 'r') as stream:
-                _config = yaml.safe_load(stream)
+                data = yaml.safe_load(stream)
         except Exception as e:  # noqa: E722
-            _config = {
+            data = {
                 "benchmark": {}
             }
-        if flatdict_:
-            prefix = f"{prefix_}"
-            for k, v in argv.items():
-                _config[f"{prefix_}.{k}"] = v
-        else:
-            _config.update(argv)
-
-        print("CCC", _config)
+            data.update(argv)
+        except Exception as e:
+            Console.error(e, traceflag=True)
 
         for key, attribute in [
             (mllog.constants.SUBMISSION_BENCHMARK, 'name'),
@@ -317,16 +312,10 @@ class StopWatch(object):
             (mllog.constants.SUBMISSION_PLATFORM, 'platform')
         ]:
             try:
-                if flatdict_:
-                    value=_config[f"{prefix}.{attribute}"]
-                else:
-                    value = _config["benchmark"][attribute]
-                print("KKK", key, attribute, value)
-                cls.mllogger.event(key=key, value=value)
-            except AttributeError as e:
-                print(e)
-                print(f"Missing/invalid standard property {key}")
-
+                value = data["benchmark"][attribute]
+                cls.event(attribute, mllog_key=key, value=value, stack_offset=3)
+            except Exception as e:
+                Console.error(e, traceflag=True)
 
 
     @classmethod
@@ -434,7 +423,7 @@ class StopWatch(object):
         """
         for key, value in kwargs.items():
             mlkey = cls._mllog_lookup(key)
-            cls.event(mlkey, msg=mlkey, values=value)
+            cls.event(mlkey, msg=mlkey, values=value, stack_offset=3)
 
     @classmethod
     def _mllog_lookup(cls, key: str) -> str:
