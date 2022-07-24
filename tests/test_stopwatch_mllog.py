@@ -276,39 +276,8 @@ class Test_Printer:
         print (content)
         print ("---")
         assert "cloudmesh-common/cloudmesh/common/StopWatch.py" not in content
-        assert '"event_type": "INTERVAL_END", "key": "stopwatch sleep", "value": null, "' in content
+        assert '"INTERVAL_END", "key": "stopwatch sleep", "value": "stopwatch sleep"' in content
         assert '"event_type": "POINT_IN_TIME", "key": "submission_benchmark", "value": "Earthquake"' in content
-
-    def test_stopwatch_log_constant(self):
-        HEADING()
-        clean()
-        StopWatch.activate_mllog()
-        log = {"DEFAULT_LOGGER_NAME": "testing default logger name"}
-        StopWatch.log_constant(**log)
-        content = readfile("cloudmesh_mllog.log")
-        print("---")
-        print(content)
-        print("---")
-        assert "cloudmesh-common/cloudmesh/common/StopWatch.py" not in content
-
-class a:
-
-    def test_stopwatch_log_data(self):
-        HEADING()
-        clean()
-        StopWatch.activate_mllog()
-        data = { "a": 1, "b": 5 }
-
-        StopWatch.start("Test Notebook", mllog_key="BLOCK_START")
-        StopWatch.log_event(MY_TEST_KEY=data)
-        time.sleep(2)
-        StopWatch.stop("Test Notebook", values=data, mllog_key="BLOCK_STOP")
-
-        content = readfile("cloudmesh_mllog.log")
-        print("---")
-        print(content)
-        print("---")
-        assert "cloudmesh-common/cloudmesh/common/StopWatch.py" not in content
 
     def test_stopwatch_log_evalblock(self):
         HEADING()
@@ -322,6 +291,27 @@ class a:
         print(content)
         print("---")
         assert "cloudmesh-common/cloudmesh/common/StopWatch.py" not in content
+        assert '"event_type": "INTERVAL_START", "key": "block_start"' in content
+
+
+    def test_stopwatch_block_log_data(self):
+        HEADING()
+        clean()
+        StopWatch.activate_mllog()
+        data = { "a": 1, "b": 5 }
+
+        StopWatch.start("Test Notebook", mllog_key="BLOCK_START")
+        StopWatch.log_event(MY_TEST_KEY=data)
+        time.sleep(0.1)
+        StopWatch.stop("Test Notebook", values=data, mllog_key="BLOCK_STOP")
+
+        content = readfile("cloudmesh_mllog.log")
+        print("---")
+        print(content)
+        print("---")
+        assert "cloudmesh-common/cloudmesh/common/StopWatch.py" not in content
+        assert '"event_type": "INTERVAL_END"' in content
+        assert "{'a': 1, 'b': 5, 'name': 'Test Notebook'}" in content
 
     def test_benchmark(self):
         HEADING()

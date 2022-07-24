@@ -245,8 +245,50 @@ class StopWatch(object):
         config["benchmark"].update(argv)
 
 
+    # @classmethod
+    # def organization_mllog(cls, configfile = None, prefix_: str = 'benchmark', flatdict_: bool = False, **argv):
+    #     try:
+    #         from mlperf_logging import mllog
+    #     except Exception:  # noqa: E722
+    #         Console.error("You need to install mllogging to use it")
+    #         sys.exit()
+    #
+    #     try:
+    #         with open(pathlib.Path(configfile), 'r') as stream:
+    #             _config = yaml.safe_load(stream)
+    #     except Exception as e:  # noqa: E722
+    #         _config = {
+    #             "benchmark": {}
+    #         }
+    #     prefix = prefix_
+    #     if flatdict_:
+    #         for k,v in argv.items():
+    #             _config[f"{prefix}.{k}"] = v
+    #     else:
+    #         _config[prefix].update(argv)
+    #
+    #     for key, attribute in [
+    #         (mllog.constants.SUBMISSION_BENCHMARK, 'name'),
+    #         (mllog.constants.SUBMISSION_POC_NAME, 'user'),
+    #         (mllog.constants.SUBMISSION_POC_EMAIL, 'e-mail'),
+    #         (mllog.constants.SUBMISSION_ORG, 'organisation'),
+    #         (mllog.constants.SUBMISSION_DIVISION, 'division'),
+    #         (mllog.constants.SUBMISSION_STATUS, 'status'),
+    #         (mllog.constants.SUBMISSION_PLATFORM, 'platform')
+    #         ]:
+    #         try:
+    #             if flatdict_:
+    #                 cls.mllogger.event(key, value=_config[f"{prefix}.{attribute}"])
+    #             else:
+    #                 cls.mllogger.event(key, value=_config["benchmark"][attribute])
+    #         except AttributeError as e:
+    #             print(f"Missing/invalid standard property {key}")
+
+
+
+
     @classmethod
-    def organization_mllog(cls, configfile: str, prefix_: str = 'benchmark', flatdict_: bool = False, **argv):
+    def organization_mllog(cls, configfile=None, prefix_ = 'benchmark', flatdict_ = False, **argv):
         try:
             from mlperf_logging import mllog
         except Exception:  # noqa: E722
@@ -260,12 +302,14 @@ class StopWatch(object):
             _config = {
                 "benchmark": {}
             }
-        prefix = prefix_
         if flatdict_:
+            prefix=f"{prefix_}"
             for k,v in argv.items():
                 _config[f"{prefix}.{k}"] = v
         else:
-            _config[prefix].update(argv)
+            _config.update(argv)
+
+        print (_config)
 
         for key, attribute in [
             (mllog.constants.SUBMISSION_BENCHMARK, 'name'),
@@ -375,7 +419,7 @@ class StopWatch(object):
                 cls.mllogger.event(key=name, stack_offset=stack_offset)
 
     @classmethod
-    def log_event(cls, **kwargs):
+    def log_event(cls, stack_offset=3, **kwargs):
         """Logs an event using the passed keywords as parameters to be logged,
            prefiltered by mlperf_logging's standard api.
 
@@ -388,7 +432,7 @@ class StopWatch(object):
         """
         for key, value in kwargs.items():
             mlkey = cls._mllog_lookup(key)
-            cls.event(mlkey, msg=mlkey, values=value)
+            cls.event(mlkey, msg=mlkey, values=value, stack_offset=stack_offset)
 
     @classmethod
     def _mllog_lookup(cls, key: str) -> str:
@@ -467,7 +511,7 @@ class StopWatch(object):
 
                 cls.mllogger.start(key=key, value=str(values))
             else:
-                cls.mllogger.start(key=key, values=name)
+                cls.mllogger.start(key=key, value=name)
 
     @classmethod
     def stop(cls, name, state=True, values=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False):
@@ -518,7 +562,7 @@ class StopWatch(object):
 
                 cls.mllogger.end(key=key, value=str(values))
             else:
-                cls.mllogger.end(key=key, values=name)
+                cls.mllogger.end(key=key, value=name)
 
         if cls.debug and not suppress_stopwatch:
             print("Timer", name, "stopped ...")
