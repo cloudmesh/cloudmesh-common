@@ -1,5 +1,5 @@
 ###############################################################
-# pytest -v --capture=no tests/test_stopwatch_mllog.py
+# pytest -v --capture=no tests/test_stopwatch_vs_mllog.py
 # pytest -v --capture=no tests/test_stopwatch_mllog.py::Test_stopwatch.test_001
 # pytest -v  tests/test_stopwatch_mllog.py
 ###############################################################
@@ -69,37 +69,24 @@ def read_mllog(filename):
 @pytest.mark.incremental
 class Test_Printer:
 
-    def test_mllog_example_py(self):
+    def test_mllog_native_example_py(self):
         HEADING()
         clean()
+        Shell.rm ("cloudmesh_mlperf_native.log")
         StopWatch.clear()
-
-        os.system("python tests/mllog-example.py")
-
-        content = readfile("cloudmesh_mllog.log")
-        print ("---")
-        print (content)
-        print ("---")
-        assert "cloudmesh-common/cloudmesh/common/StopWatch.py" not in content
-        assert False
-        assert '"INTERVAL_END", "key": "stopwatch sleep", "value": "stopwatch sleep"' in content
-        assert '"event_type": "POINT_IN_TIME", "key": "submission_benchmark", "value": "Earthquake"' in content
-
-class a:
-
-    def test_mllog_native(self):
-        HEADING()
-        clean()
-        StopWatch.clear()
-
-        Shell.rm("cloudmesh_mlperf_native.log")
 
         os.system("python tests/mllog-native.py")
 
         content = readfile("cloudmesh_mlperf_native.log")
-        print("---")
-        print(content)
-        print("---")
+        banner("NATIVE: cloudmesh_mlperf_native.log")
+        print (content)
+        print ("---")
+        assert "cloudmesh-common/cloudmesh/common/StopWatch.py" not in content
+        assert '"event_type": "POINT_IN_TIME", "key": "submission_benchmark", "value": "Earthquake"' in content
+        assert '"event_type": "POINT_IN_TIME", "key": "eval_start", "value": "Start Taining"' in content
+        assert '"event_type": "POINT_IN_TIME", "key": "eval_stop", "value": "Stop Training",' in content
+
+
         assert "cloudmesh-common/cloudmesh/common/StopWatch.py" not in content
         # assert '"INTERVAL_END", "key": "stopwatch sleep", "value": "stopwatch sleep"' in content
         # assert '"event_type": "POINT_IN_TIME", "key": "submission_benchmark", "value": "Earthquake"' in content
@@ -122,13 +109,52 @@ class a:
         "event_type": "INTERVAL_END", "key": "run_stop", "value": "Benchmark run finished",
         """).strip().splitlines()
 
+        for line in correct:
+            assert line in content
+
+
+    def test_mllog_example_py(self):
+        HEADING()
+        clean()
+        StopWatch.clear()
+
+        os.system("python tests/mllog-example.py")
+
+        content = readfile("cloudmesh_mllog.log")
+        banner("CLOUDMESH: cloudmesh_mlperf.log")
+        print (content)
+        print ("---")
+        assert "cloudmesh-common/cloudmesh/common/StopWatch.py" not in content
+        # assert '"INTERVAL_END", "key": "stopwatch sleep", "value": "stopwatch sleep"' in content
+        # assert '"event_type": "POINT_IN_TIME", "key": "submission_benchmark", "value": "Earthquake"' in content
+
+    def test_compare(self):
+
+        banner("NATIVE")
+        native_log = read_mllog("cloudmesh_mlperf_native.log")
+        pprint(native_log)
+
+        banner("CLOUDMESH")
+        cloudmesh_log = read_mllog("cloudmesh_mllog.log")
+        pprint(cloudmesh_log)
+
+
+class a:
+
+    def test_mllog_native(self):
+        HEADING()
+        clean()
+        StopWatch.clear()
+
+        Shell.rm("cloudmesh_mlperf_native.log")
+
+        os.system("python tests/mllog-native.py")
+
+        content = readfile("cloudmesh_mlperf_native.log")
         print("---")
         print(content)
         print("---")
 
-        for line in correct:
-            assert line in content
-        
         
     def test_mllog_stopwatch_native_compare(self):
         HEADING()
@@ -164,13 +190,6 @@ class a:
 
         StopWatch.stop("total", mllog_key="RUN_STOP", value="Benchmark run finished", metadata={'status': 'success'})
 
-        banner("NATIVE")
-        native_log = read_mllog("cloudmesh_mlperf_native.log")
-        pprint(native_log)
-
-        banner("CLOUDMESH")
-        cloudmesh_log = read_mllog("cloudmesh_mllog.log")
-        pprint(cloudmesh_log)
 
 
         # assert native_log == cloudmesh_log

@@ -47,4 +47,4 @@ time.sleep(0.1)
 StopWatch.stop("stopwatch sleep")
 
 # print the table
-StopWatch.benchmark(tag="Earthquake", node="summit", user="Gregor", version="0.1")
+StopWatch.benchmark(tag="Earthquake", node="summit", user="Gregor", version="0.1", sysinfo=False)

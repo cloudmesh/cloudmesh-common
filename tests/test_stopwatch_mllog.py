@@ -43,7 +43,6 @@ benchmark:
   division: BII
   status: success
   platform: rivanna
-  badkey: ignored
 """.strip()
 
 def clean():
@@ -249,7 +248,6 @@ class Test_Printer:
           division: BII
           status: success
           platform: rivanna
-          badkey: ignored
         """.strip()
 
         submitter = yaml.safe_load(config)
@@ -285,6 +283,8 @@ class Test_Printer:
         assert "cloudmesh-common/cloudmesh/common/StopWatch.py" not in content
         assert '"INTERVAL_END", "key": "stopwatch sleep", "value": "stopwatch sleep"' in content
         assert '"event_type": "POINT_IN_TIME", "key": "submission_benchmark", "value": "Earthquake"' in content
+
+class a:
 
     def test_stopwatch_log_evalblock(self):
         HEADING()

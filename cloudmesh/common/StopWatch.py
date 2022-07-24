@@ -313,7 +313,7 @@ class StopWatch(object):
         ]:
             try:
                 value = data["benchmark"][attribute]
-                cls.event(attribute, mllog_key=key, value=value, stack_offset=3)
+                cls.event(key, mllog_key=key, value=value, stack_offset=3, suppress_stopwatch=True)
             except Exception as e:
                 Console.error(e, traceflag=True)
 
