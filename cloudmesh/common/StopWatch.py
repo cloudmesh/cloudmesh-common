@@ -202,10 +202,10 @@ class StopWatch(object):
         cls.mllogger = cls._mllog_import.get_mllogger()
         cls._mllog_import.config(filename=filename)
         cls._mllog_import.config(**cms_mllog
-            # useful when refering to linenumbers in separate code
-            # root_dir=os.path.normpath(
-            #    os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", ".."))
-        )
+                                 # useful when refering to linenumbers in separate code
+                                 # root_dir=os.path.normpath(
+                                 #    os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", ".."))
+                                 )
 
     # @classmethod
     # def progress(cls, percent, status="running", pid=None):
@@ -243,7 +243,6 @@ class StopWatch(object):
                 "benchmark": {}
             }
         config["benchmark"].update(argv)
-
 
     # @classmethod
     # def organization_mllog(cls, configfile = None, prefix_: str = 'benchmark', flatdict_: bool = False, **argv):
@@ -284,11 +283,8 @@ class StopWatch(object):
     #         except AttributeError as e:
     #             print(f"Missing/invalid standard property {key}")
 
-
-
-
     @classmethod
-    def organization_mllog(cls, configfile=None, prefix_ = 'benchmark', flatdict_ = False, **argv):
+    def organization_mllog(cls, configfile=None, prefix_='benchmark', flatdict_=False, **argv):
         try:
             from mlperf_logging import mllog
         except Exception:  # noqa: E722
@@ -303,13 +299,13 @@ class StopWatch(object):
                 "benchmark": {}
             }
         if flatdict_:
-            prefix=f"{prefix_}"
-            for k,v in argv.items():
-                _config[f"{prefix}.{k}"] = v
+            prefix = f"{prefix_}"
+            for k, v in argv.items():
+                _config[f"{prefix_}.{k}"] = v
         else:
             _config.update(argv)
 
-        print (_config)
+        print("CCC", _config)
 
         for key, attribute in [
             (mllog.constants.SUBMISSION_BENCHMARK, 'name'),
@@ -319,14 +315,18 @@ class StopWatch(object):
             (mllog.constants.SUBMISSION_DIVISION, 'division'),
             (mllog.constants.SUBMISSION_STATUS, 'status'),
             (mllog.constants.SUBMISSION_PLATFORM, 'platform')
-            ]:
+        ]:
             try:
                 if flatdict_:
-                    cls.mllogger.event(key, value=_config[f"{prefix}.{attribute}"])
+                    value=_config[f"{prefix}.{attribute}"]
                 else:
-                    cls.mllogger.event(key, value=_config["benchmark"][attribute])
+                    value = _config["benchmark"][attribute]
+                print("KKK", key, attribute, value)
+                cls.mllogger.event(key=key, value=value)
             except AttributeError as e:
+                print(e)
                 print(f"Missing/invalid standard property {key}")
+
 
 
     @classmethod
@@ -374,7 +374,8 @@ class StopWatch(object):
         cls.timer_msg[name] = value
 
     @classmethod
-    def event(cls, name, msg=None, values=None, value=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False, stack_offset=2):
+    def event(cls, name, msg=None, values=None, value=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False,
+              stack_offset=2):
         """
         Adds an event with a given name, where start and stop is the same time.
 
@@ -458,9 +459,9 @@ class StopWatch(object):
             key_str = f"mllog-event-{key}"
         return key_str
 
-
     @classmethod
-    def start(cls, name, values=None, value=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False, metadata=None):
+    def start(cls, name, values=None, value=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False,
+              metadata=None):
         """
         starts a timer with the given name.
 
@@ -517,7 +518,8 @@ class StopWatch(object):
                 cls.mllogger.start(key=key, value=name, metadata=metadata)
 
     @classmethod
-    def stop(cls, name, state=True, values=None, value=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False, metadata=None):
+    def stop(cls, name, state=True, values=None, value=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False,
+             metadata=None):
         """
         stops the timer with a given name.
 
@@ -889,7 +891,6 @@ class StopWatch(object):
 
                     if version is not None:
                         data_timers[timer]["platform.version"] = version
-
 
                 # print(Printer.attribute(data_timers, header=["Command", "Time/s"]))
 
