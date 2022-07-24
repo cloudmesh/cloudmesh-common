@@ -374,7 +374,7 @@ class StopWatch(object):
         cls.timer_msg[name] = value
 
     @classmethod
-    def event(cls, name, msg=None, values=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False, stack_offset=2):
+    def event(cls, name, msg=None, values=None, value=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False, stack_offset=2):
         """
         Adds an event with a given name, where start and stop is the same time.
 
@@ -398,6 +398,7 @@ class StopWatch(object):
         :returns: None
         :rtype: None
         """
+        values = values or value
         if not suppress_stopwatch:
             StopWatch.start(name, suppress_mllog=True)
             StopWatch.stop(name, suppress_mllog=True)
@@ -419,7 +420,7 @@ class StopWatch(object):
                 cls.mllogger.event(key=name, stack_offset=stack_offset)
 
     @classmethod
-    def log_event(cls, stack_offset=3, **kwargs):
+    def log_event(cls, **kwargs):
         """Logs an event using the passed keywords as parameters to be logged,
            prefiltered by mlperf_logging's standard api.
 
@@ -432,7 +433,7 @@ class StopWatch(object):
         """
         for key, value in kwargs.items():
             mlkey = cls._mllog_lookup(key)
-            cls.event(mlkey, msg=mlkey, values=value, stack_offset=stack_offset)
+            cls.event(mlkey, msg=mlkey, values=value)
 
     @classmethod
     def _mllog_lookup(cls, key: str) -> str:
@@ -459,7 +460,7 @@ class StopWatch(object):
 
 
     @classmethod
-    def start(cls, name, values=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False):
+    def start(cls, name, values=None, value=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False, metadata=None):
         """
         starts a timer with the given name.
 
@@ -484,6 +485,8 @@ class StopWatch(object):
         :returns: None
         :rtype: None
         """
+        values = values or value
+
         if not suppress_stopwatch:
             if cls.debug:
                 print("Timer", name, "started ...")
@@ -509,12 +512,12 @@ class StopWatch(object):
                 else:
                     values = f"Name: {name}, {values}"
 
-                cls.mllogger.start(key=key, value=str(values))
+                cls.mllogger.start(key=key, value=str(values), metadata=metadata)
             else:
-                cls.mllogger.start(key=key, value=name)
+                cls.mllogger.start(key=key, value=name, metadata=metadata)
 
     @classmethod
-    def stop(cls, name, state=True, values=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False):
+    def stop(cls, name, state=True, values=None, value=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False, metadata=None):
         """
         stops the timer with a given name.
 
@@ -538,6 +541,8 @@ class StopWatch(object):
         :returns: None
         :rtype: None
         """
+        values = values or value
+
         if not suppress_stopwatch:
             cls.timer_end[name] = time.time()
             # if cumulate:
@@ -560,9 +565,9 @@ class StopWatch(object):
                 else:
                     values = f"Name: {name}, {values}"
 
-                cls.mllogger.end(key=key, value=str(values))
+                cls.mllogger.end(key=key, value=str(values), metadata=metadata)
             else:
-                cls.mllogger.end(key=key, value=name)
+                cls.mllogger.end(key=key, value=name, metadata=metadata)
 
         if cls.debug and not suppress_stopwatch:
             print("Timer", name, "stopped ...")

@@ -15,6 +15,7 @@ import pathlib
 import sys
 import tempfile
 from pprint import pprint
+import textwrap
 
 import yaml
 
@@ -25,6 +26,11 @@ import pytest
 from cloudmesh.common.StopWatch import StopWatch
 
 from cloudmesh.common.util import HEADING
+
+# MLCommons logging
+from mlperf_logging import mllog
+import logging
+
 
 # Sample taken from https://github.com/mlcommons/logging/blob/master/mlperf_logging/mllog/constants.py
 mllog_constants=dict(
@@ -62,6 +68,131 @@ def clean():
 
 @pytest.mark.incremental
 class Test_Printer:
+
+    def test_mllog_native(self):
+        HEADING()
+        global benchmark_config
+        clean()
+        StopWatch.clear()
+
+        mlperf_logfile = "cloudmesh_mlperf_native.log"
+        Shell.rm(mlperf_logfile)
+        mllog.config(filename=mlperf_logfile)
+        mllogger = mllog.get_mllogger()
+        logger = logging.getLogger(__name__)
+
+        data = yaml.safe_load(benchmark_config)
+        mllogger.end(key=mllog.constants.RUN_START, value="Benchmark run started")
+
+        # Values extracted from cloudMaskConfig.yaml
+        mllogger.event(key=mllog.constants.SUBMISSION_BENCHMARK, value=data["benchmark"]['name'])
+        mllogger.event(key=mllog.constants.SUBMISSION_ORG, value=data["benchmark"]['organisation'])
+        mllogger.event(key=mllog.constants.SUBMISSION_DIVISION, value=data["benchmark"]['division'])
+        mllogger.event(key=mllog.constants.SUBMISSION_STATUS, value=data["benchmark"]['status'])
+        mllogger.event(key=mllog.constants.SUBMISSION_PLATFORM, value=data["benchmark"]['platform'])
+        mllogger.start(key=mllog.constants.INIT_START)
+
+        mllogger.event(key='number_of_ranks', value=1)
+        mllogger.event(key='number_of_nodes', value=1)
+        mllogger.event(key='accelerators_per_node', value=1)
+        mllogger.end(key=mllog.constants.INIT_STOP)
+
+        # Training
+        start = time.time()
+        mllogger.event(key=mllog.constants.EVAL_START, value="Start Taining")
+        mllogger.event(key=mllog.constants.EVAL_STOP, value="Stop Training")
+        diff = time.time() - start
+
+        # Inference
+        start = time.time()
+        mllogger.event(key=mllog.constants.EVAL_START, value="Start Inference")
+        mllogger.event(key=mllog.constants.EVAL_STOP, value="Stop Inference")
+
+        mllogger.end(key=mllog.constants.RUN_STOP, value="Benchmark run finished", metadata={'status': 'success'})
+
+        correct = textwrap.dedent("""
+        "event_type": "INTERVAL_END", "key": "run_start", "value": "Benchmark run started",
+        "event_type": "POINT_IN_TIME", "key": "submission_benchmark", "value": "Earthquake",
+        "event_type": "POINT_IN_TIME", "key": "submission_org", "value": "University of Virginia",
+        "event_type": "POINT_IN_TIME", "key": "submission_division", "value": "BII",
+        "event_type": "POINT_IN_TIME", "key": "submission_status", "value": "success",
+        "event_type": "POINT_IN_TIME", "key": "submission_platform", "value": "rivanna",
+        "event_type": "INTERVAL_START", "key": "init_start", "value": null,
+        "event_type": "POINT_IN_TIME", "key": "number_of_ranks", "value": 1,
+        "event_type": "POINT_IN_TIME", "key": "number_of_nodes", "value": 1,
+        "event_type": "POINT_IN_TIME", "key": "accelerators_per_node", "value": 1,
+        "event_type": "INTERVAL_END", "key": "init_stop", "value": null,
+        "event_type": "POINT_IN_TIME", "key": "eval_start", "value": "Start Taining",
+        "event_type": "POINT_IN_TIME", "key": "eval_stop", "value": "Stop Training",
+        "event_type": "POINT_IN_TIME", "key": "eval_start", "value": "Start Inference",
+        "event_type": "POINT_IN_TIME", "key": "eval_stop", "value": "Stop Inference",
+        "event_type": "INTERVAL_END", "key": "run_stop", "value": "Benchmark run finished",
+        """).strip().splitlines()
+
+        content = readfile(mlperf_logfile)
+        print("---")
+        print(content)
+        print("---")
+
+        for line in correct:
+            assert line in content
+        
+        
+    def test_mllog_stopwatch_native_compare(self):
+        HEADING()
+        global benchmark_config
+        clean()
+        StopWatch.clear()
+
+        # StopWatch.start("RUN_START", value="Benchmark start")
+
+        data = yaml.safe_load(benchmark_config)
+
+        StopWatch.organization_mllog(**data)
+
+        StopWatch.start("total", mllog_key="RUN_START")
+
+        StopWatch.start("initialization", mllog_key="INIT_SATRT")
+
+        StopWatch.event('number_of_ranks', value=1)
+        StopWatch.event('number_of_nodes', value=1)
+        StopWatch.event('accelerators_per_node', value=1)
+
+        StopWatch.stop("initialization", mllog_key="INIT_STOP")
+
+        # Training
+        start = time.time()
+        StopWatch.start("training", mllog_key="EVAL_START", value="Start Taining")
+        StopWatch.stop("training", mllog_key="EVAL_STOP", value="Stop Training")
+
+        # Inference
+        start = time.time()
+        StopWatch.start("training", mllog_key="EVAL_START", value="Start: Inference")
+        StopWatch.stop("training", mllog_key="EVAL_STOP", value="Stop: Inference")
+
+        StopWatch.stop("total", mllog_key="RUN_STOP", value="Benchmark run finished", metadata={'status': 'success'})
+
+
+class b:
+
+    def test_mllog_example_py(self):
+        HEADING()
+        clean()
+        StopWatch.clear()
+
+        os.system("python tests/mllog-example.py")
+
+        content = readfile("cloudmesh_mllog.log")
+        print ("---")
+        print (content)
+        print ("---")
+        assert "cloudmesh-common/cloudmesh/common/StopWatch.py" not in content
+        assert False
+        assert '"INTERVAL_END", "key": "stopwatch sleep", "value": "stopwatch sleep"' in content
+        assert '"event_type": "POINT_IN_TIME", "key": "submission_benchmark", "value": "Earthquake"' in content
+
+
+class a:
 
     def test_check_loading(self):
         HEADING()

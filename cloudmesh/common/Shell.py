@@ -997,9 +997,11 @@ class Shell(object):
         :param args:
         :return:
         """
-        location = cls.map_filename(location).path
-        os.remove(location)
-
+        try:
+            location = cls.map_filename(location).path
+            os.remove(location)
+        except:
+            pass
     @classmethod
     def rsync(cls, *args):
         """

@@ -1,7 +1,9 @@
-from cloudmesh.common.Shell import Shell
-from cloudmesh.common.StopWatch import StopWatch
+import time
+
 import yaml
 
+from cloudmesh.common.Shell import Shell
+from cloudmesh.common.StopWatch import StopWatch
 
 Shell.rm("cloudmesh_mllog.log")
 StopWatch.clear()
