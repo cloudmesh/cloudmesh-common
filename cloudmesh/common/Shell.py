@@ -542,14 +542,23 @@ class Shell(object):
                 result.user, result.host = userhost.split("@")
                 result.protocol = "scp"
             except:  # noqa: E722
-                Console.error("The format of the name is not supported: {name}")
+                Console.error(f"The format of the name is not supported: {name}")
         elif _name.startswith("rsync:"):
             try:
-                result.scp, userhost, result.path = _name.split(":")
+                result.rsync, userhost, result.path = _name.split(":")
                 result.user, result.host = userhost.split("@")
                 result.protocol = "rsync"
             except:  # noqa: E722
-                Console.error("The format of the name is not supported: {name}")
+                Console.error(f"The format of the name is not supported: {name}")
+        elif _name.startswith("ftp:"):
+            # expecting the following format: ftp://user:password@myftpsite/myfolder/myfile.txt
+            try:
+                result.ftp_location, result.ftp_path = _name.split("@")
+                result.ftp_prefix, result.ftp_login = result.ftp_location.split("//")
+                result.username, result.password = result.ftp_login.split(":")
+                result.protocol = "ftp"
+            except:  # noqa: E722
+                Console.error(f"The format of the name is not supported: {name}")
         elif _name.startswith(".") or _name.startswith("~"):
             result.path = path_expand(_name)
         elif _name[1] == ":":
@@ -1363,9 +1372,22 @@ class Shell(object):
 
     @classmethod
     def copy2(cls, source, destination):
-        s = Shell.map_filename(source).path
-        d = Shell.map_filename(destination).path
-        shutil.copy2(s, d)
+        s = Shell.map_filename(source)
+        d = Shell.map_filename(destination)
+        if s.protocol in ['http', 'https']:
+            Shell.run(f'curl {s.path} -o {d.path}')
+        elif s.protocol == 'scp':
+            Shell.run(f'scp {s.user}@{s.host}:{s.path} {d.path}')
+        elif s.protocol == 'ftp':
+            command = fr"curl -u {s.username}:{s.password} ftp://{s.ftp_path} -o {d.path}"
+            print(command)
+            Shell.run(command)
+        elif d.protocol == 'ftp':
+            command = fr"curl -T {s.path} ftp://{d.ftp_path} --user {d.username}:{d.password}"
+            print(command)
+            Shell.run(command)
+        else:
+            shutil.copy2(s.path, d.path)
 
     @classmethod
     def mkdir(cls, directory):
