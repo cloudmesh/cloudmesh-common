@@ -537,6 +537,7 @@ class Shell(object):
             result.host = "wsl"
         elif _name.startswith("scp:"):
             # scp source destination
+            # command = f"scp:username@host:hi.txt"
             try:
                 result.scp, userhost, result.path = _name.split(":")
                 result.user, result.host = userhost.split("@")
