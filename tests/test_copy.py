@@ -41,10 +41,6 @@ class Test_copy_class:
         HEADING()
         Benchmark.Start()
         Shell.run('touch file_for_ftp_server.txt')
-        try:
-            Shell.run('curl -T a_cool_file.txt ftp://ftp.dlptest.com --user dlpuser:rNrKYTX9g7z3RgJRmxWuGHbeu')
-        except Exception as e:
-            print(e.output)
         Shell.copy2('file_for_ftp_server.txt', 'ftp://dlpuser:rNrKYTX9g7z3RgJRmxWuGHbeu@ftp.dlptest.com/copied.txt')
         Shell.copy2('ftp://dlpuser:rNrKYTX9g7z3RgJRmxWuGHbeu@ftp.dlptest.com/copied.txt', 'my_ftp_copied.txt')
         assert os.path.exists('my_ftp_copied.txt')
