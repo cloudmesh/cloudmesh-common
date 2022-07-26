@@ -1373,22 +1373,34 @@ class Shell(object):
 
     @classmethod
     def copy2(cls, source, destination):
-        s = Shell.map_filename(source)
-        d = Shell.map_filename(destination)
-        if s.protocol in ['http', 'https']:
-            Shell.run(f'curl {s.path} -o {d.path}')
-        elif s.protocol == 'scp':
-            Shell.run(f'scp {s.user}@{s.host}:{s.path} {d.path}')
-        elif s.protocol == 'ftp':
-            command = fr"curl -u {s.username}:{s.password} ftp://{s.ftp_path} -o {d.path}"
-            print(command)
-            Shell.run(command)
-        elif d.protocol == 'ftp':
-            command = fr"curl -T {s.path} ftp://{d.ftp_path} --user {d.username}:{d.password}"
-            print(command)
-            Shell.run(command)
-        else:
-            shutil.copy2(s.path, d.path)
+
+        try:
+            s = Shell.map_filename(source)
+            d = Shell.map_filename(destination)
+
+            if os.path.isfile(d.path):
+                Shell.mkdir(os.path.dirname(d.path))
+            elif os.path.isdir(d.path):
+                 Shell.mkdir(d.path)
+
+            if s.protocol in ['http', 'https']:
+                command = f'curl {s.path} -o {d.path}'
+                print ("CCCC", command)
+                Shell.run(command)
+            elif s.protocol == 'scp':
+                Shell.run(f'scp {s.user}@{s.host}:{s.path} {d.path}')
+            elif s.protocol == 'ftp':
+                command = fr"curl -u {s.username}:{s.password} ftp://{s.ftp_path} -o {d.path}"
+                print(command)
+                Shell.run(command)
+            elif d.protocol == 'ftp':
+                command = fr"curl -T {s.path} ftp://{d.ftp_path} --user {d.username}:{d.password}"
+                print(command)
+                Shell.run(command)
+            else:
+                shutil.copy2(s.path, d.path)
+        except Exception as e:
+            Console.error(e, traceflag=True)
 
     @classmethod
     def mkdir(cls, directory):
@@ -1399,10 +1411,11 @@ class Shell(object):
         """
         directory = cls.map_filename(directory).path
         try:
-            os.makedirs(directory)
+            Path.mkdir(directory, parents=True, exist_ok=True)
             return True
         except OSError as e:
             return False
+
 
     def unzip(cls, source_filename, dest_dir):
         """
