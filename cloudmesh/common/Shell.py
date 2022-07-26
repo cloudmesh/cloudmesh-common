@@ -1372,16 +1372,14 @@ class Shell(object):
         shutil.copy2(s, d)
 
     @classmethod
-    def copy2(cls, source, destination):
+    def copy_file(cls, source, destination):
 
         try:
             s = Shell.map_filename(source)
             d = Shell.map_filename(destination)
 
-            if os.path.isfile(d.path):
-                Shell.mkdir(os.path.dirname(d.path))
-            elif os.path.isdir(d.path):
-                 Shell.mkdir(d.path)
+            dest_dir = os.path.dirname(d.path)
+            Shell.mkdir(dest_dir)
 
             if s.protocol in ['http', 'https']:
                 command = f'curl {s.path} -o {d.path}'
