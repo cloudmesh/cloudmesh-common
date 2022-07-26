@@ -1378,7 +1378,11 @@ class Shell(object):
             s = Shell.map_filename(source)
             d = Shell.map_filename(destination)
 
+            print ("RRRRRR", d)
+
             dest_dir = os.path.dirname(d.path)
+            print ("EEEEEE", dest_dir)
+
             Shell.mkdir(dest_dir)
 
             if s.protocol in ['http', 'https']:
@@ -1407,12 +1411,17 @@ class Shell(object):
         :param directory: the path of the directory
         :return:
         """
-        directory = cls.map_filename(directory).path
+        d = cls.map_filename(directory).path
         try:
-            Path.mkdir(directory, parents=True, exist_ok=True)
+            Path.mkdir(d, parents=True, exist_ok=True)
             return True
-        except OSError as e:
-            return False
+        except Exception as e:
+            try:
+                os.system(f"mkdir -p {d}")
+                return True
+            except:
+                Console.error(e, traceflag=True)
+        return False
 
 
     def unzip(cls, source_filename, dest_dir):
