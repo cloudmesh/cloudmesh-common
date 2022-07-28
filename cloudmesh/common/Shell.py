@@ -1555,9 +1555,12 @@ class Shell(object):
         return localuser
 
     @staticmethod
-    @property
     def user():
         return Shell.sys_user()
+
+    @staticmethod
+    def host():
+        return os_platform.node()
 
 
 def main():
