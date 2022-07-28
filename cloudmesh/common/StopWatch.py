@@ -246,20 +246,21 @@ class StopWatch(object):
 
 
     @classmethod
-    def organization_mllog(cls, configfile: str, prefix_: str = 'benchmark', flatdict_: bool = False, **argv):
+    def organization_mllog(cls, config, prefix_: str = 'benchmark', flatdict_: bool = False, **argv):
         try:
             from mlperf_logging import mllog
         except Exception:  # noqa: E722
             Console.error("You need to install mllogging to use it")
             sys.exit()
 
-        try:
-            with open(pathlib.Path(configfile), 'r') as stream:
-                _config = yaml.safe_load(stream)
-        except Exception as e:  # noqa: E722
-            _config = {
-                "benchmark": {}
-            }
+        # try:
+        #     with open(pathlib.Path(config), 'r') as stream:
+        #         _config = yaml.safe_load(stream)
+        # except Exception as e:  # noqa: E722
+        #     _config = {
+        #         "benchmark": {}
+        #     }
+        _config = config
         prefix = prefix_
         if flatdict_:
             for k,v in argv.items():
@@ -370,9 +371,15 @@ class StopWatch(object):
                 key_name = cls._mllog_lookup(mllog_key)
 
             if values is not None:
-                cls.mllogger.event(key=key_name, value=str(values))
+                if isinstance(values, dict):
+                    values['name'] = name
+                elif isinstance(values, list):
+                    values += list(name)
+                else:
+                    values = f"Name: {name}, {values}"
+                cls.mllogger.event(key=key_name, value=values)
             else:
-                cls.mllogger.event(key=key_name)
+                cls.mllogger.event(key=key_name, value={"name": name})
 
     @classmethod
     def log_event(cls, **kwargs):
@@ -467,7 +474,7 @@ class StopWatch(object):
 
                 cls.mllogger.start(key=key, value=str(values))
             else:
-                cls.mllogger.start(key=key, values=name)
+                cls.mllogger.start(key=key, value=name)
 
     @classmethod
     def stop(cls, name, state=True, values=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False):
@@ -518,7 +525,7 @@ class StopWatch(object):
 
                 cls.mllogger.end(key=key, value=str(values))
             else:
-                cls.mllogger.end(key=key, values=name)
+                cls.mllogger.end(key=key, value=name)
 
         if cls.debug and not suppress_stopwatch:
             print("Timer", name, "stopped ...")
