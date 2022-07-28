@@ -1554,6 +1554,11 @@ class Shell(object):
                 localuser = Shell.run('whoami')
         return localuser
 
+    @staticmethod
+    @property
+    def user():
+        return Shell.sys_user()
+
 
 def main():
     """
