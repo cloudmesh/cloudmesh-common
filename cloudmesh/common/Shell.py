@@ -1383,16 +1383,12 @@ class Shell(object):
             s = Shell.map_filename(source)
             d = Shell.map_filename(destination)
 
-            print ("RRRRRR", d)
-
             dest_dir = os.path.dirname(d.path)
-            print ("EEEEEE", dest_dir)
 
             Shell.mkdir(dest_dir)
 
             if s.protocol in ['http', 'https']:
                 command = f'curl {s.path} -o {d.path}'
-                print ("CCCC", command)
                 Shell.run(command)
             elif s.protocol == 'scp':
                 Shell.run(f'scp {s.user}@{s.host}:{s.path} {d.path}')
