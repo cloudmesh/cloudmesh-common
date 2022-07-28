@@ -83,8 +83,9 @@ In order not to overwrite the value of an event, you must give it a unique name.
 
 Integration with MLPerf Logging
 
-To also produce output that conforms to MLPerf, cloudmesh. STopWatch will detect if you have mperf logging installed.
-We recommend tho install the newest version as follows
+To also produce output that conforms to MLPerf, cloudmesh.StopWatch provides utilities to enable
+and annotate mlperf_logging messages.  To enable, you must first install mlperf-logging, which
+can be installed via pypi, or you can install the latest by using one of the below commands:
 
 
 ::
@@ -92,11 +93,65 @@ We recommend tho install the newest version as follows
     cd mlperf-logging
     pip install -e .
 
-Now you can just use the STopwatch as before.
+::
+    pip install git+https://github.com/mlperf/logging.git
 
-We will add here aditional information, such as setting up the configuration for mlperf logging
+Now you can just use the StopWatch as before.
 
-# TODO - Need to exercise this for mlperf_logging
+Once installed, you must elect to activate the logger, calling StopWatch.activate_mllog.  This
+will reconfigure the logic of StopWatch so start, stop, and event method are also logged in the
+mlperf log output.  Note that when this is enabled, you are now able to use the keywords in the
+signature prefixed with mllog_.
+
+For example, to trigger an event in StopWatch and mlperf_logging, you can do the following
+
+::
+    StopWatch.activate_mllog()
+    StopWatch.event("Name Of Event")
+    
+The above will run the stopwatch timer as per normal, but also create a POINT\_IN\_TIME log
+entry in the mlperf log written to `./cloudmesh_mllog.log`.  You can also pass values in to
+this event as you would with StopWatch events, so that additional details can be captured.
+
+While this allows for transparent timers to function, you may need to use a mllog key that is
+different from what you are tracking in StopWatch.  In this case, use the mllog\_key keyword,
+which overrides the default `name` attribute as the key used in mllog.
+
+Note that if the key's string matches a property in the mlperf_logging.mllog.constants
+module, it will dereference the property.
+
+For example,
+
+::
+    StopWatch.activate_mllog() # this only needs to be run once
+    StopWatch.event("CloudmeshTimer", mllog_key="EVAL_INIT", values="Example")
+    
+This will create a stopwatch timer with the name CloudmeshTimer, and record an mllog event,
+which will look up if there is a property named EVAL_START in mlperf_logging.mllog.constants,
+which it will find and dereferences to the string  `eval_start`, and then records the
+string "Example" in the event.
+
+In the case where you are logging blocks of time using start and end, these methods also
+have the mllog_key attribute, allowing the key for fenced code to be overridden.
+
+Finally, there are times when the code will need a StopWatch timer but not an mllog entry,
+or vice versa.  The `suppress_*` methods in the event, start, and stop provide mechanisms to
+prevent either framework from executing when set to true.  By default, only the StopWatch
+API is enabled, and if you call activate_mllog, both frameworks will be on by default.
+
+So if you wish to create a log entry that does not create a stopwatch event, you can call
+
+::
+    StopWatch.event("MyLoggingEvent", values={'custom': 123}, suppress_stopwatch=True)
+    
+    
+And this will only create an mllog entry, bypassing all StopWatch logic.
+
+Finally, there is a utility method that generates a series of mllog events that are required
+for generating beenchmark submissions: organization_mllog.  This method takes in a YAML
+configuration file and extracts fields that match up to the stanard logging events.
+
+This method is useful when creating experiments with tools such as cloudmesh-sbatch.
 
 """
 import os
