@@ -518,6 +518,11 @@ class Shell(object):
         result.host = "localhost"
         result.protocol = "localhost"
 
+        if _name == "":
+            result.path = ""
+            if result.host == "localhost":
+                _name = "."
+
         if _name.startswith("http"):
             result.path = _name
             result.protocol = _name.split(':', 1)[0]
