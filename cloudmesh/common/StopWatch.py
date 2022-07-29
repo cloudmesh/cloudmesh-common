@@ -83,8 +83,9 @@ In order not to overwrite the value of an event, you must give it a unique name.
 
 Integration with MLPerf Logging
 
-To also produce output that conforms to MLPerf, cloudmesh. STopWatch will detect if you have mperf logging installed.
-We recommend tho install the newest version as follows
+To also produce output that conforms to MLPerf, cloudmesh.StopWatch provides utilities to enable
+and annotate mlperf_logging messages.  To enable, you must first install mlperf-logging, which
+can be installed via pypi, or you can install the latest by using one of the below commands:
 
 
 ::
@@ -92,11 +93,65 @@ We recommend tho install the newest version as follows
     cd mlperf-logging
     pip install -e .
 
-Now you can just use the STopwatch as before.
+::
+    pip install git+https://github.com/mlperf/logging.git
 
-We will add here aditional information, such as setting up the configuration for mlperf logging
+Now you can just use the StopWatch as before.
 
-# TODO - Need to exercise this for mlperf_logging
+Once installed, you must elect to activate the logger, calling StopWatch.activate_mllog.  This
+will reconfigure the logic of StopWatch so start, stop, and event method are also logged in the
+mlperf log output.  Note that when this is enabled, you are now able to use the keywords in the
+signature prefixed with mllog_.
+
+For example, to trigger an event in StopWatch and mlperf_logging, you can do the following
+
+::
+    StopWatch.activate_mllog()
+    StopWatch.event("Name Of Event")
+
+The above will run the stopwatch timer as per normal, but also create a POINT\_IN\_TIME log
+entry in the mlperf log written to `./cloudmesh_mllog.log`.  You can also pass values in to
+this event as you would with StopWatch events, so that additional details can be captured.
+
+While this allows for transparent timers to function, you may need to use a mllog key that is
+different from what you are tracking in StopWatch.  In this case, use the mllog\_key keyword,
+which overrides the default `name` attribute as the key used in mllog.
+
+Note that if the key's string matches a property in the mlperf_logging.mllog.constants
+module, it will dereference the property.
+
+For example,
+
+::
+    StopWatch.activate_mllog() # this only needs to be run once
+    StopWatch.event("CloudmeshTimer", mllog_key="EVAL_INIT", values="Example")
+
+This will create a stopwatch timer with the name CloudmeshTimer, and record an mllog event,
+which will look up if there is a property named EVAL_START in mlperf_logging.mllog.constants,
+which it will find and dereferences to the string  `eval_start`, and then records the
+string "Example" in the event.
+
+In the case where you are logging blocks of time using start and end, these methods also
+have the mllog_key attribute, allowing the key for fenced code to be overridden.
+
+Finally, there are times when the code will need a StopWatch timer but not an mllog entry,
+or vice versa.  The `suppress_*` methods in the event, start, and stop provide mechanisms to
+prevent either framework from executing when set to true.  By default, only the StopWatch
+API is enabled, and if you call activate_mllog, both frameworks will be on by default.
+
+So if you wish to create a log entry that does not create a stopwatch event, you can call
+
+::
+    StopWatch.event("MyLoggingEvent", values={'custom': 123}, suppress_stopwatch=True)
+
+
+And this will only create an mllog entry, bypassing all StopWatch logic.
+
+Finally, there is a utility method that generates a series of mllog events that are required
+for generating beenchmark submissions: organization_mllog.  This method takes in a YAML
+configuration file and extracts fields that match up to the stanard logging events.
+
+This method is useful when creating experiments with tools such as cloudmesh-sbatch.
 
 """
 import os
@@ -185,7 +240,7 @@ class StopWatch(object):
     mllogger = None
 
     @classmethod
-    def activate_mllog(cls, filename="cloudmesh_mllog.log", config=None, stack_offset=1):
+    def activate_mllog(cls, filename="cloudmesh_mllog.log", config=None, stack_offset=2):
         # global mllog
         cls._mllog_import = import_mllog()
 
@@ -202,10 +257,10 @@ class StopWatch(object):
         cls.mllogger = cls._mllog_import.get_mllogger()
         cls._mllog_import.config(filename=filename)
         cls._mllog_import.config(**cms_mllog
-            # useful when refering to linenumbers in separate code
-            # root_dir=os.path.normpath(
-            #    os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", ".."))
-        )
+                                 # useful when refering to linenumbers in separate code
+                                 # root_dir=os.path.normpath(
+                                 #    os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", ".."))
+                                 )
 
     # @classmethod
     # def progress(cls, percent, status="running", pid=None):
@@ -244,29 +299,63 @@ class StopWatch(object):
             }
         config["benchmark"].update(argv)
 
+    # @classmethod
+    # def organization_mllog(cls, configfile = None, prefix_: str = 'benchmark', flatdict_: bool = False, **argv):
+    #     try:
+    #         from mlperf_logging import mllog
+    #     except Exception:  # noqa: E722
+    #         Console.error("You need to install mllogging to use it")
+    #         sys.exit()
+    #
+    #     try:
+    #         with open(pathlib.Path(configfile), 'r') as stream:
+    #             _config = yaml.safe_load(stream)
+    #     except Exception as e:  # noqa: E722
+    #         _config = {
+    #             "benchmark": {}
+    #         }
+    #     prefix = prefix_
+    #     if flatdict_:
+    #         for k,v in argv.items():
+    #             _config[f"{prefix}.{k}"] = v
+    #     else:
+    #         _config[prefix].update(argv)
+    #
+    #     for key, attribute in [
+    #         (mllog.constants.SUBMISSION_BENCHMARK, 'name'),
+    #         (mllog.constants.SUBMISSION_POC_NAME, 'user'),
+    #         (mllog.constants.SUBMISSION_POC_EMAIL, 'e-mail'),
+    #         (mllog.constants.SUBMISSION_ORG, 'organisation'),
+    #         (mllog.constants.SUBMISSION_DIVISION, 'division'),
+    #         (mllog.constants.SUBMISSION_STATUS, 'status'),
+    #         (mllog.constants.SUBMISSION_PLATFORM, 'platform')
+    #         ]:
+    #         try:
+    #             if flatdict_:
+    #                 cls.mllogger.event(key, value=_config[f"{prefix}.{attribute}"])
+    #             else:
+    #                 cls.mllogger.event(key, value=_config["benchmark"][attribute])
+    #         except AttributeError as e:
+    #             print(f"Missing/invalid standard property {key}")
 
     @classmethod
-    def organization_mllog(cls, config, prefix_: str = 'benchmark', flatdict_: bool = False, **argv):
+    def organization_mllog(cls, configfile=None, **argv):
         try:
             from mlperf_logging import mllog
         except Exception:  # noqa: E722
             Console.error("You need to install mllogging to use it")
             sys.exit()
 
-        # try:
-        #     with open(pathlib.Path(config), 'r') as stream:
-        #         _config = yaml.safe_load(stream)
-        # except Exception as e:  # noqa: E722
-        #     _config = {
-        #         "benchmark": {}
-        #     }
-        _config = config
-        prefix = prefix_
-        if flatdict_:
-            for k,v in argv.items():
-                _config[f"{prefix}.{k}"] = v
-        else:
-            _config[prefix].update(argv)
+        try:
+            with open(pathlib.Path(configfile), 'r') as stream:
+                data = yaml.safe_load(stream)
+        except Exception as e:  # noqa: E722
+            data = {
+                "benchmark": {}
+            }
+            data.update(argv)
+        except Exception as e:
+            Console.error(e, traceflag=True)
 
         for key, attribute in [
             (mllog.constants.SUBMISSION_BENCHMARK, 'name'),
@@ -276,14 +365,12 @@ class StopWatch(object):
             (mllog.constants.SUBMISSION_DIVISION, 'division'),
             (mllog.constants.SUBMISSION_STATUS, 'status'),
             (mllog.constants.SUBMISSION_PLATFORM, 'platform')
-            ]:
+        ]:
             try:
-                if flatdict_:
-                    cls.mllogger.event(key, value=_config[f"{prefix}.{attribute}"])
-                else:
-                    cls.mllogger.event(key, value=_config["benchmark"][attribute])
-            except AttributeError as e:
-                print(f"Missing/invalid standard property {key}")
+                value = data["benchmark"][attribute]
+                cls.event(key, mllog_key=key, value=value, stack_offset=3, suppress_stopwatch=True)
+            except Exception as e:
+                Console.error(e, traceflag=True)
 
 
     @classmethod
@@ -331,7 +418,8 @@ class StopWatch(object):
         cls.timer_msg[name] = value
 
     @classmethod
-    def event(cls, name, msg=None, values=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False):
+    def event(cls, name, msg=None, values=None, value=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False,
+              stack_offset=2):
         """
         Adds an event with a given name, where start and stop is the same time.
 
@@ -355,6 +443,7 @@ class StopWatch(object):
         :returns: None
         :rtype: None
         """
+        values = values or value
         if not suppress_stopwatch:
             StopWatch.start(name, suppress_mllog=True)
             StopWatch.stop(name, suppress_mllog=True)
@@ -371,15 +460,9 @@ class StopWatch(object):
                 key_name = cls._mllog_lookup(mllog_key)
 
             if values is not None:
-                if isinstance(values, dict):
-                    values['name'] = name
-                elif isinstance(values, list):
-                    values += list(name)
-                else:
-                    values = f"Name: {name}, {values}"
-                cls.mllogger.event(key=key_name, value=values)
+                cls.mllogger.event(key=name, value=str(values), stack_offset=stack_offset)
             else:
-                cls.mllogger.event(key=key_name, value={"name": name})
+                cls.mllogger.event(key=name, stack_offset=stack_offset)
 
     @classmethod
     def log_event(cls, **kwargs):
@@ -395,7 +478,7 @@ class StopWatch(object):
         """
         for key, value in kwargs.items():
             mlkey = cls._mllog_lookup(key)
-            cls.event(mlkey, msg=mlkey, values=value)
+            cls.event(mlkey, msg=mlkey, values=value, stack_offset=3)
 
     @classmethod
     def _mllog_lookup(cls, key: str) -> str:
@@ -420,9 +503,9 @@ class StopWatch(object):
             key_str = f"mllog-event-{key}"
         return key_str
 
-
     @classmethod
-    def start(cls, name, values=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False):
+    def start(cls, name, values=None, value=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False,
+              metadata=None):
         """
         starts a timer with the given name.
 
@@ -447,6 +530,8 @@ class StopWatch(object):
         :returns: None
         :rtype: None
         """
+        values = values or value
+
         if not suppress_stopwatch:
             if cls.debug:
                 print("Timer", name, "started ...")
@@ -472,12 +557,13 @@ class StopWatch(object):
                 else:
                     values = f"Name: {name}, {values}"
 
-                cls.mllogger.start(key=key, value=str(values))
+                cls.mllogger.start(key=key, value=str(values), metadata=metadata)
             else:
-                cls.mllogger.start(key=key, value=name)
+                cls.mllogger.start(key=key, value=name, metadata=metadata)
 
     @classmethod
-    def stop(cls, name, state=True, values=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False):
+    def stop(cls, name, state=True, values=None, value=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False,
+             metadata=None):
         """
         stops the timer with a given name.
 
@@ -501,6 +587,8 @@ class StopWatch(object):
         :returns: None
         :rtype: None
         """
+        values = values or value
+
         if not suppress_stopwatch:
             cls.timer_end[name] = time.time()
             # if cumulate:
@@ -523,9 +611,9 @@ class StopWatch(object):
                 else:
                     values = f"Name: {name}, {values}"
 
-                cls.mllogger.end(key=key, value=str(values))
+                cls.mllogger.end(key=key, value=str(values), metadata=metadata)
             else:
-                cls.mllogger.end(key=key, value=name)
+                cls.mllogger.end(key=key, value=name, metadata=metadata)
 
         if cls.debug and not suppress_stopwatch:
             print("Timer", name, "stopped ...")
@@ -847,7 +935,6 @@ class StopWatch(object):
 
                     if version is not None:
                         data_timers[timer]["platform.version"] = version
-
 
                 # print(Printer.attribute(data_timers, header=["Command", "Time/s"]))
 
