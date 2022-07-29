@@ -518,6 +518,11 @@ class Shell(object):
         result.host = "localhost"
         result.protocol = "localhost"
 
+        if _name == "":
+            result.path = ""
+            if result.host == "localhost":
+                _name = "."
+
         if _name.startswith("http"):
             result.path = _name
             result.protocol = _name.split(':', 1)[0]
@@ -537,19 +542,29 @@ class Shell(object):
             result.host = "wsl"
         elif _name.startswith("scp:"):
             # scp source destination
+            # command = f"scp:username@host:hi.txt"
             try:
                 result.scp, userhost, result.path = _name.split(":")
                 result.user, result.host = userhost.split("@")
                 result.protocol = "scp"
             except:  # noqa: E722
-                Console.error("The format of the name is not supported: {name}")
+                Console.error(f"The format of the name is not supported: {name}")
         elif _name.startswith("rsync:"):
             try:
-                result.scp, userhost, result.path = _name.split(":")
+                result.rsync, userhost, result.path = _name.split(":")
                 result.user, result.host = userhost.split("@")
                 result.protocol = "rsync"
             except:  # noqa: E722
-                Console.error("The format of the name is not supported: {name}")
+                Console.error(f"The format of the name is not supported: {name}")
+        elif _name.startswith("ftp:"):
+            # expecting the following format: ftp://user:password@myftpsite/myfolder/myfile.txt
+            try:
+                result.ftp_location, result.ftp_path = _name.split("@")
+                result.ftp_prefix, result.ftp_login = result.ftp_location.split("//")
+                result.username, result.password = result.ftp_login.split(":")
+                result.protocol = "ftp"
+            except:  # noqa: E722
+                Console.error(f"The format of the name is not supported: {name}")
         elif _name.startswith(".") or _name.startswith("~"):
             result.path = path_expand(_name)
         elif _name[1] == ":":
@@ -997,9 +1012,11 @@ class Shell(object):
         :param args:
         :return:
         """
-        location = cls.map_filename(location).path
-        os.remove(location)
-
+        try:
+            location = cls.map_filename(location).path
+            os.remove(location)
+        except:
+            pass
     @classmethod
     def rsync(cls, *args):
         """
@@ -1360,10 +1377,33 @@ class Shell(object):
         shutil.copy2(s, d)
 
     @classmethod
-    def copy2(cls, source, destination):
-        s = Shell.map_filename(source).path
-        d = Shell.map_filename(destination).path
-        shutil.copy2(s, d)
+    def copy_file(cls, source, destination):
+
+        try:
+            s = Shell.map_filename(source)
+            d = Shell.map_filename(destination)
+
+            dest_dir = os.path.dirname(d.path)
+
+            Shell.mkdir(dest_dir)
+
+            if s.protocol in ['http', 'https']:
+                command = f'curl {s.path} -o {d.path}'
+                Shell.run(command)
+            elif s.protocol == 'scp':
+                Shell.run(f'scp {s.user}@{s.host}:{s.path} {d.path}')
+            elif s.protocol == 'ftp':
+                command = fr"curl -u {s.username}:{s.password} ftp://{s.ftp_path} -o {d.path}"
+                print(command)
+                Shell.run(command)
+            elif d.protocol == 'ftp':
+                command = fr"curl -T {s.path} ftp://{d.ftp_path} --user {d.username}:{d.password}"
+                print(command)
+                Shell.run(command)
+            else:
+                shutil.copy2(s.path, d.path)
+        except Exception as e:
+            Console.error(e, traceflag=True)
 
     @classmethod
     def mkdir(cls, directory):
@@ -1372,12 +1412,22 @@ class Shell(object):
         :param directory: the path of the directory
         :return:
         """
-        directory = cls.map_filename(directory).path
+        d = cls.map_filename(directory).path
         try:
-            os.makedirs(directory)
+            Path.mkdir(d, parents=True, exist_ok=True)
             return True
-        except OSError as e:
-            return False
+        except Exception as e:
+            if not os_is_windows():
+                command = f'mkdir -p {d}'
+            else:
+                command = f'mkdir {d}'
+            try:
+                os.system(command)
+                return True
+            except:
+                Console.error(e, traceflag=True)
+        return False
+
 
     def unzip(cls, source_filename, dest_dir):
         """
@@ -1503,6 +1553,14 @@ class Shell(object):
                 # docker image does not have user variable. so just do whoami
                 localuser = Shell.run('whoami')
         return localuser
+
+    @staticmethod
+    def user():
+        return Shell.sys_user()
+
+    @staticmethod
+    def host():
+        return os_platform.node()
 
 
 def main():
