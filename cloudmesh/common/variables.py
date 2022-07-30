@@ -9,6 +9,9 @@ class Variables(object):
         self.filename = path_expand(filename or "~/.cloudmesh/variables.dat")
         self.data = YamlDB(self.filename)
 
+    def save(self):
+        self.data.flush()
+
     def get(self, key, default=None):
         return self.data.get(key, default)
 
