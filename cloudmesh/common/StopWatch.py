@@ -108,7 +108,7 @@ For example, to trigger an event in StopWatch and mlperf_logging, you can do the
 ::
     StopWatch.activate_mllog()
     StopWatch.event("Name Of Event")
-    
+
 The above will run the stopwatch timer as per normal, but also create a POINT\_IN\_TIME log
 entry in the mlperf log written to `./cloudmesh_mllog.log`.  You can also pass values in to
 this event as you would with StopWatch events, so that additional details can be captured.
@@ -125,7 +125,7 @@ For example,
 ::
     StopWatch.activate_mllog() # this only needs to be run once
     StopWatch.event("CloudmeshTimer", mllog_key="EVAL_INIT", values="Example")
-    
+
 This will create a stopwatch timer with the name CloudmeshTimer, and record an mllog event,
 which will look up if there is a property named EVAL_START in mlperf_logging.mllog.constants,
 which it will find and dereferences to the string  `eval_start`, and then records the
@@ -143,8 +143,8 @@ So if you wish to create a log entry that does not create a stopwatch event, you
 
 ::
     StopWatch.event("MyLoggingEvent", values={'custom': 123}, suppress_stopwatch=True)
-    
-    
+
+
 And this will only create an mllog entry, bypassing all StopWatch logic.
 
 Finally, there is a utility method that generates a series of mllog events that are required
@@ -1086,6 +1086,23 @@ class StopWatch(object):
 
         return {"headers": headers,
                 "data": data}
+
+    @classmethod
+    def deactivate_mllog(cls):
+        """Disables the mllog capabilities and closes all registered handlers.
+        """
+        handlers = cls.mllogger.logger.handlers.copy()
+        for handler in handlers:
+            try:
+                handler.acquire()
+                handler.flush()
+                handler.close()
+            except (OSError, ValueError):
+                pass
+            finally:
+                handler.release()
+            cls.mllogger.logger.removeHandler(handler)
+        cls.mllogging = False
 
 
 class StopWatchBlock:
