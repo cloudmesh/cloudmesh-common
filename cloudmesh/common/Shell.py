@@ -1562,6 +1562,10 @@ class Shell(object):
     def host():
         return str(Shell.run("hostname").strip())
 
+    @staticmethod
+    def host():
+        return os_platform.node()
+
 
 def main():
     """
