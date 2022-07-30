@@ -33,20 +33,6 @@ from cloudmesh.common.util import banner
 from mlperf_logging import mllog
 import logging
 
-
-def close_logger(log):
-    handlers = log.handlers.copy()
-    for handler in handlers:
-        try:
-            handler.acquire()
-            handler.flush()
-            handler.close()
-        except (OSError, ValueError):
-            pass
-        finally:
-            handler.release()
-        log.removeHandler(handler)
-
     #benchmark_constant = [
 #
 #]
@@ -102,7 +88,19 @@ class Test_Printer:
             assert "cloudmesh-common/cloudmesh/common/StopWatch.py" not in line
         assert '"value": "1"' in line
         assert '"value": "1"' in line
-        close_logger(StopWatch.mllogger.logger)
+        StopWatch.deactivate_mllog()
+
+    def test_check_unloading(self):
+        HEADING()
+        clean()
+        StopWatch.activate_mllog()
+        StopWatch.deactivate_mllog()
+        assert StopWatch.mllogging is False
+        assert len(StopWatch.mllogger.logger.handlers) == 0
+        StopWatch.activate_mllog()
+        assert StopWatch.mllogging
+        assert len(StopWatch.mllogger.logger.handlers) > 0
+        StopWatch.deactivate_mllog()
 
 
     def test_stopwatch_activate_mllog(self):
@@ -115,7 +113,7 @@ class Test_Printer:
         print(StopWatch.mllogging)
         assert StopWatch.mllogging, "activating mllog should enable the class variable"
         assert os.path.isfile("cloudmesh_mllog.log"), "activating should create a new log file"
-        close_logger(StopWatch.mllogger.logger)
+        StopWatch.deactivate_mllog()
 
 
     def test_stopwatch_1_mllog(self):
@@ -147,7 +145,7 @@ class Test_Printer:
         assert "INTERVAL_END" in _stop
         assert "stopwatch sleep 1" in _start
         assert "stopwatch sleep 1" in _stop
-        close_logger(StopWatch.mllogger.logger)
+        StopWatch.deactivate_mllog()
 
 
     def test_stopwatch_2(self):
@@ -176,7 +174,7 @@ class Test_Printer:
         assert "INTERVAL_END" in _stop
         assert "stopwatch sleep 2" in _start
         assert "stopwatch sleep 2" in _stop
-        close_logger(StopWatch.mllogger.logger)
+        StopWatch.deactivate_mllog()
 
     def test_stopwatch_loop_sum(self):
         HEADING()
@@ -204,7 +202,7 @@ class Test_Printer:
         else:
             assert "cloudmesh-common/cloudmesh/common/StopWatch.py" not in content
 
-        close_logger(StopWatch.mllogger.logger)
+        StopWatch.deactivate_mllog()
 
 
     def test_stopwatch_loop_individual(self):
@@ -233,7 +231,7 @@ class Test_Printer:
             assert "cloudmesh-common\\\\cloudmesh\\\\common\\\\StopWatch.py" not in content
         else:
             assert "cloudmesh-common/cloudmesh/common/StopWatch.py" not in content
-        close_logger(StopWatch.mllogger.logger)
+        StopWatch.deactivate_mllog()
 
     def test_stopwatch_dict_event(self):
         HEADING()
@@ -252,7 +250,7 @@ class Test_Printer:
             assert "cloudmesh-common\\\\cloudmesh\\\\common\\\\StopWatch.py" not in str(content)
         else:
             assert "cloudmesh-common/cloudmesh/common/StopWatch.py" not in str(content)
-        close_logger(StopWatch.mllogger.logger)
+        StopWatch.deactivate_mllog()
 
     def test_stopwatch_organization(self):
         HEADING()
@@ -278,7 +276,7 @@ class Test_Printer:
         assert '"value": "success"' in content
         assert '"event_type": "POINT_IN_TIME", "key": "submission_platform"' in content
         assert '"value": "rivanna"' in content
-        close_logger(StopWatch.mllogger.logger)
+        StopWatch.deactivate_mllog()
 
     # def test_stopwatch_organization_2(self):
     #     HEADING()

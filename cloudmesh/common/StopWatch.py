@@ -1087,6 +1087,23 @@ class StopWatch(object):
         return {"headers": headers,
                 "data": data}
 
+    @classmethod
+    def deactivate_mllog(cls):
+        """Disables the mllog capabilities and closes all registered handlers.
+        """
+        handlers = cls.mllogger.logger.handlers.copy()
+        for handler in handlers:
+            try:
+                handler.acquire()
+                handler.flush()
+                handler.close()
+            except (OSError, ValueError):
+                pass
+            finally:
+                handler.release()
+            cls.mllogger.logger.removeHandler(handler)
+        cls.mllogging = False
+
 
 class StopWatchBlock:
 
