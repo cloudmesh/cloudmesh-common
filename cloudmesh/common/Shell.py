@@ -587,7 +587,7 @@ class Shell(object):
         """
         if not os.path.isabs(filename) and 'http' not in filename:
             filename = Shell.map_filename(filename).path
-        webbrowser.open(filename, new=2)
+        webbrowser.open(filename, new=2, autoraise=False)
 
     @staticmethod
     def fetch(filename=None, destination=None):
