@@ -1383,11 +1383,15 @@ class Shell(object):
         shutil.copy2(s, d)
 
     @classmethod
-    def copy_file(cls, source, destination):
+    def copy_file(cls, source, destination, verbose=False):
 
         try:
             s = Shell.map_filename(source)
             d = Shell.map_filename(destination)
+            if verbose:
+                print("copy")
+                print("    source     :", s.path)
+                print("    destination:", d.path)
 
             dest_dir = os.path.dirname(d.path)
 
