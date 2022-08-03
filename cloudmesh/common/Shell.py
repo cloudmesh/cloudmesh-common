@@ -518,10 +518,13 @@ class Shell(object):
         result.host = "localhost"
         result.protocol = "localhost"
 
+        if _name.startswith("file:"):
+            _name = _name.replace("file:", "")
         if _name == "":
             result.path = ""
             if result.host == "localhost":
                 _name = "."
+
 
         if _name.startswith("http"):
             result.path = _name
@@ -565,7 +568,10 @@ class Shell(object):
                 result.protocol = "ftp"
             except:  # noqa: E722
                 Console.error(f"The format of the name is not supported: {name}")
-        elif _name.startswith(".") or _name.startswith("~"):
+        elif _name.startswith("."):
+            _name = "./" + _name
+            result.path = Path(path_expand(_name)).resolve()
+        elif _name.startswith("~"):
             result.path = path_expand(_name)
         elif _name[1] == ":":
             drive, path = _name.split(":", 1)
@@ -587,7 +593,7 @@ class Shell(object):
         """
         if not os.path.isabs(filename) and 'http' not in filename:
             filename = Shell.map_filename(filename).path
-        webbrowser.open(filename, new=2)
+        webbrowser.open(filename, new=2, autoraise=False)
 
     @staticmethod
     def fetch(filename=None, destination=None):
@@ -1377,11 +1383,15 @@ class Shell(object):
         shutil.copy2(s, d)
 
     @classmethod
-    def copy_file(cls, source, destination):
+    def copy_file(cls, source, destination, verbose=False):
 
         try:
             s = Shell.map_filename(source)
             d = Shell.map_filename(destination)
+            if verbose:
+                print("copy")
+                print("    source     :", s.path)
+                print("    destination:", d.path)
 
             dest_dir = os.path.dirname(d.path)
 
