@@ -518,10 +518,13 @@ class Shell(object):
         result.host = "localhost"
         result.protocol = "localhost"
 
+        if _name.startswith("file:"):
+            _name = _name.replace("file:", "")
         if _name == "":
             result.path = ""
             if result.host == "localhost":
                 _name = "."
+
 
         if _name.startswith("http"):
             result.path = _name
@@ -565,7 +568,10 @@ class Shell(object):
                 result.protocol = "ftp"
             except:  # noqa: E722
                 Console.error(f"The format of the name is not supported: {name}")
-        elif _name.startswith(".") or _name.startswith("~"):
+        elif _name.startswith("."):
+            _name = "./" + _name
+            result.path = Path(path_expand(_name)).resolve()
+        elif _name.startswith("~"):
             result.path = path_expand(_name)
         elif _name[1] == ":":
             drive, path = _name.split(":", 1)
