@@ -23,7 +23,7 @@ from cloudmesh.common.Shell import Shell
 from cloudmesh.common.util import readfile
 
 import pytest
-from cloudmesh.common.StopWatch import StopWatch
+from cloudmesh.common.StopWatchMllog import StopWatch
 from cloudmesh.common.console import Console
 
 from cloudmesh.common.util import HEADING
