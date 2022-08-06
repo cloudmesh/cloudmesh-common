@@ -101,11 +101,12 @@ from cloudmesh.common.Tabulate import Printer
 from cloudmesh.common.systeminfo import systeminfo as cm_systeminfo
 from cloudmesh.common.util import writefile
 from cloudmesh.common.util import readfile
+from cloudmesh.common.util import banner
 from cloudmesh.common.DateTime import DateTime
 
 from time import perf_counter
 
-def progress(status="ready", progress=0, pid=None, time=False):
+def progress(status="ready", progress=0, pid=None, time=False, stdout=True, append=None, with_banner=False, **kwargs):
     """
     Creates a printed line of the form
 
@@ -115,19 +116,46 @@ def progress(status="ready", progress=0, pid=None, time=False):
     If PID contains the string SLURM it will give the SLURM_TASK_ID
     Otherwise it will take the value passed along in pid
 
+    :param status: String representation of tehe status
+    :type status: str
+    :param progress: Progress in value from 0 to 100
+    :type progress: int
+    :param pid: Process ID. If not specified, it used the underlaying PID from the OS, or the task id from SLURM or
+                LSF if submitted through a ueueing system.
+    :type pid: int
+    :param time: current time
+    :type time: str
+    :param stdout: if TRue Prints the progress, if False does not pring, defaut is print
+    :type stdout: bool
+    :param kwargs: additional arguments as key=value
+    :type kwargs: dict
+    :return: progress string
+    :rtype: str
     """
     if pid is None:
-        pid = os.getpid()
-    if ["SLURM"] in pid:
-        pid = os.environ["SLURM_JOB_ID"]
-
+        if "SLURM_JOB_ID" in os.environ:
+            pid = os.environ["SLURM_JOB_ID"]
+        elif "LSB_JOBID" in os.environ:
+            pid = os.environ["LSB_JOBID"]
+        else:
+            pid = os.getpid()
+    variables = ""
+    msg = f"# cloudmesh status={status} progress={progress} pid={pid}"
     if time:
         t = str(DateTime.now())
-        print(f"# cloudmesh status={status} progress={progress} pid={pid} time='{t}'")
-    else:
-        t = str(DateTime.now())
-        print(f"# cloudmesh status={status} progress={progress} pid={pid}")
-
+        msg = msg +  f" time='{t}'"
+    if kwargs:
+        for name, value in kwargs.items():
+            varaiables = variables + f" {name}={value}"
+        msg = msg + variables
+    if append is not None:
+        msg = msg + " " + append
+    if stdout:
+        if with_banner:
+            banner(msg)
+        print(msg)
+    return msg
+    
 def rename(newname):
     """
     decorator to rename a function
