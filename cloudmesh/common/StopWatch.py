@@ -106,7 +106,15 @@ from cloudmesh.common.DateTime import DateTime
 
 from time import perf_counter
 
-def progress(status="ready", progress=0, pid=None, time=False, stdout=True, append=None, with_banner=False, **kwargs):
+def progress(status="ready",
+             progress=0,
+             pid=None,
+             time=False,
+             stdout=True,
+             stderr=True,
+             append=None,
+             with_banner=False,
+             **kwargs):
     """
     Creates a printed line of the form
 
@@ -153,7 +161,9 @@ def progress(status="ready", progress=0, pid=None, time=False, stdout=True, appe
     if stdout:
         if with_banner:
             banner(msg)
-        print(msg)
+        print(msg, file=sys.stdout)
+    if  stderr:
+        print(msg, file=sys.stderr)
     return msg
     
 def rename(newname):
