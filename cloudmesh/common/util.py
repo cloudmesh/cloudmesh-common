@@ -472,6 +472,16 @@ def writefile(filename, content):
         outfile.write(content)
         outfile.truncate()
 
+def appendfile(filename, content):
+    """
+    writes the content into the file
+    :param filename: the filename
+    :param content: teh content
+    :return:
+    """
+    with open(path_expand(filename), 'a') as outfile:
+        outfile.write(content)
+
 
 def writefd(filename, content, mode='w', flags=os.O_RDWR | os.O_CREAT, mask=0o600):
     """

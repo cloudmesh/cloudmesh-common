@@ -100,13 +100,15 @@ from cloudmesh.common.console import Console
 from cloudmesh.common.Tabulate import Printer
 from cloudmesh.common.systeminfo import systeminfo as cm_systeminfo
 from cloudmesh.common.util import writefile
+from cloudmesh.common.util import appendfile
 from cloudmesh.common.util import readfile
 from cloudmesh.common.util import banner
 from cloudmesh.common.DateTime import DateTime
 
 from time import perf_counter
 
-def progress(status="ready",
+def progress(filename=None,
+             status="ready",
              progress=0,
              pid=None,
              time=False,
@@ -164,6 +166,8 @@ def progress(status="ready",
         print(msg, file=sys.stdout)
     if  stderr:
         print(msg, file=sys.stderr)
+    if filename is not None:
+        appendfile(filename, msg)
     return msg
     
 def rename(newname):
