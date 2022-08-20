@@ -107,6 +107,7 @@ from cloudmesh.common.DateTime import DateTime
 
 from time import perf_counter
 
+
 def progress(filename=None,
              status="ready",
              progress=0,
@@ -164,7 +165,7 @@ def progress(filename=None,
         if with_banner:
             banner(msg)
         print(msg, file=sys.stdout)
-    if  stderr:
+    if stderr:
         print(msg, file=sys.stderr)
     if filename is not None:
         appendfile(filename, msg)
@@ -234,7 +235,7 @@ class StopWatch(object):
     #     print(f"# cloudmesh status={status} progress={percent} pid={pid}")
 
     @classmethod
-    def progress(cls, percent, status="running", pid=None, variable=None):
+    def progress(cls, percent, status="running", pid=None, variable=None, filename=None):
         """Prints progress of an event, recording against a pid and providing additional variable.
 
         :percent: 0-100 value
@@ -253,6 +254,8 @@ class StopWatch(object):
         if variable is not None:
             msg = msg + f" variable={variable}"
         print(msg)
+        if filename is not None:
+            appendfile(filename, msg)
         return msg
         try:
             config = yaml.safe_load(readfile(configfile).strip())
