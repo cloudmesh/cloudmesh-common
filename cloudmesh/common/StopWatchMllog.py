@@ -260,7 +260,11 @@ class StopWatch(object):
     @classmethod
     def activate_mllog(cls, filename="cloudmesh_mllog.log", config=None, stack_offset=2):
         # global mllog
+
+        if not os.path.exists(filename):
+            writefile(filename, "")
         cls._mllog_import = import_mllog()
+
 
         if config is None:
             cms_mllog = dict(
@@ -273,7 +277,8 @@ class StopWatch(object):
 
         cls.mllogging = True
         cls.mllogger = cls._mllog_import.get_mllogger()
-        cls._mllog_import.config(filename=filename)
+        if os.path.exists(filename):
+            cls._mllog_import.config(filename=filename)
         cls._mllog_import.config(**cms_mllog
                                  # useful when refering to linenumbers in separate code
                                  # root_dir=os.path.normpath(
@@ -436,8 +441,15 @@ class StopWatch(object):
         cls.timer_msg[name] = value
 
     @classmethod
-    def event(cls, name, msg=None, values=None, value=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False,
-              stack_offset=2):
+    def event(cls,
+              name,
+              msg=None,
+              values=None, value=None,
+              mllog_key=None,
+              suppress_stopwatch=False,
+              suppress_mllog=False,
+              stack_offset=2,
+              executioncounter=True):
         """
         Adds an event with a given name, where start and stop is the same time.
 
@@ -478,6 +490,7 @@ class StopWatch(object):
                 key_name = cls._mllog_lookup(mllog_key)
 
             if values is not None:
+
                 cls.mllogger.event(key=name, value=str(values), stack_offset=stack_offset)
             else:
                 cls.mllogger.event(key=name, stack_offset=stack_offset)
@@ -522,7 +535,12 @@ class StopWatch(object):
         return key_str
 
     @classmethod
-    def start(cls, name, values=None, value=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False,
+    def start(cls,
+              name,
+              values=None, value=None,
+              mllog_key=None,
+              suppress_stopwatch=False,
+              suppress_mllog=False,
               metadata=None):
         """
         starts a timer with the given name.
@@ -580,7 +598,14 @@ class StopWatch(object):
                 cls.mllogger.start(key=key, value=name, metadata=metadata)
 
     @classmethod
-    def stop(cls, name, state=True, values=None, value=None, mllog_key=None, suppress_stopwatch=False, suppress_mllog=False,
+    def stop(cls,
+             name,
+             state=True,
+             values=None,
+             value=None,
+             mllog_key=None,
+             suppress_stopwatch=False,
+             suppress_mllog=False,
              metadata=None):
         """
         stops the timer with a given name.
