@@ -138,6 +138,8 @@ def progress(filename=None,
     :type time: str
     :param stdout: if TRue Prints the progress, if False does not pring, defaut is print
     :type stdout: bool
+    :param filename: where to write the progress as a file
+    :type filename: str
     :param kwargs: additional arguments as key=value
     :type kwargs: dict
     :return: progress string
@@ -151,7 +153,7 @@ def progress(filename=None,
         else:
             pid = os.getpid()
     variables = ""
-    msg = f"# cloudmesh status={status} progress={progress} pid={pid}"
+    msg = f"# cloudmesh status={status} progress={progress} pid={pid}\n"
     if time:
         t = str(DateTime.now())
         msg = msg +  f" time='{t}'"
