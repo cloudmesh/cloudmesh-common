@@ -214,7 +214,7 @@ Especially useful are
 
 * added support for terminals with dark background
 
-## Acknowledgements
+## Acknowledgments
 
 Continued work was in part funded by the NSF
 CyberTraining: CIC: CyberTraining for Students and Technologies
