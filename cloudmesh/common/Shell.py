@@ -1540,6 +1540,8 @@ class Shell(object):
         if not os.path.isabs(filename):
             filename = path_expand(filename)
 
+        if os_is_linux() and ".svg" in filename:
+            r = os.system(f"eog {filename} &")
         if os_is_linux():
             r = os.system(f"gopen {filename}")
         if os_is_mac():

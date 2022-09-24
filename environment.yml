@@ -1,0 +1,15 @@
+name: cloudmesh-common
+dependencies:
+  - colorama
+  - humanize
+  - oyaml
+  - psutil
+  - pyfiglet
+  - python-dateutil
+  - python-hostlist
+  - pytz
+  - requests
+  - simplejson
+  - six
+  - tabulate
+  - tqdm
