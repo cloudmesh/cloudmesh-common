@@ -1474,10 +1474,7 @@ class Shell(object):
             def try_program(program):
                 r = Shell.run(f'''mdfind "kMDItemKind == 'Application'"''')
                 if program not in r.lower():
-                    print(f'i couldnt find{program}')
-
                     return False
-                print(f'i found {program}')
                 return True
 
             def run_edit_program(program, file):
@@ -1501,7 +1498,10 @@ class Shell(object):
                 except:  # noqa: E722
                     pass
             elif try_program('emacs'):
-                Shell.run(f'emacs {filename}')
+                try:
+                    subprocess.check_output(f"emacs {filename}", shell=True)
+                except:  # noqa: E722
+                    pass
             else:
                 run_edit_program('nano', filename)
         elif os_is_linux():
