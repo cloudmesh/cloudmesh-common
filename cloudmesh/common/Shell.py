@@ -1498,10 +1498,7 @@ class Shell(object):
                 except:  # noqa: E722
                     pass
             elif try_program('emacs'):
-                try:
-                    subprocess.check_output(f"emacs {filename}", shell=True)
-                except:  # noqa: E722
-                    pass
+                run_edit_program('emacs', filename)
             else:
                 run_edit_program('nano', filename)
         elif os_is_linux():
