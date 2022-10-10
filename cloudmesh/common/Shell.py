@@ -1473,7 +1473,7 @@ class Shell(object):
             # try to see what programs are available
             def try_program(program):
                 r = Shell.run(f'''mdfind "kMDItemKind == 'Application'"''')
-                if program not in r:
+                if program not in r.lower():
                     print(f'i couldnt find{program}')
 
                     return False
