@@ -1490,7 +1490,10 @@ class Shell(object):
                 end tell
                 EOF
                 '''
-                subprocess.check_output(cmd, shell=True)
+                try:
+                    subprocess.check_output(cmd, shell=True)
+                except:  # noqa: E722
+                    pass
         elif os_is_linux():
             os.system(f'x-terminal-emulator -e "nano {filename}"')
         elif os_is_windows():
