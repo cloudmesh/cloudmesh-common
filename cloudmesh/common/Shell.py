@@ -1482,8 +1482,7 @@ class Shell(object):
                 os.system("emacs " + filename)
             else:
                 os.system(f"""
-                osascript -e 'tell application "Terminal" to do script "nano
-                 {filename}"'""")
+                osascript -e 'tell application "Terminal" to do script "nano {filename}"'""")
         elif os_is_linux():
             os.system(f'x-terminal-emulator -e "nano {filename}"')
         elif os_is_windows():
