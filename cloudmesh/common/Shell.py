@@ -1476,15 +1476,11 @@ class Shell(object):
                 if 'not found' in r:
                     return False
                 return True
-            if try_program('aquamacs'):
-                os.system("aquamacs " + filename)
-            elif try_program('emacs'):
-                os.system("emacs " + filename)
-            else:
+            def run_edit_program(program, file):
                 cmd = f'''
                 osascript <<EOF
                 tell application "Terminal"
-                    do script "nano {filename}"
+                    do script "{program} {file}"
                     activate
                     set frontmost to true
                 end tell
@@ -1494,6 +1490,13 @@ class Shell(object):
                     subprocess.check_output(cmd, shell=True)
                 except:  # noqa: E722
                     pass
+
+            if try_program('aquamacs'):
+                run_edit_program('aquamacs', filename)
+            elif try_program('emacs'):
+                run_edit_program('emacs', filename)
+            else:
+                run_edit_program('nano', filename)
         elif os_is_linux():
             os.system(f'x-terminal-emulator -e "nano {filename}"')
         elif os_is_windows():
