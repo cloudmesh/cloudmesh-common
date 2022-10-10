@@ -1486,6 +1486,7 @@ class Shell(object):
                 tell application "Terminal"
                     do script "nano {filename}"
                     activate
+                    set frontmost to true
                 end tell
                 EOF
                 '''
