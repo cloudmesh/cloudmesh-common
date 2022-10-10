@@ -1493,7 +1493,10 @@ class Shell(object):
                     pass
 
             if try_program('aquamacs'):
-                Shell.run(f'aquamacs {filename}')
+                try:
+                    subprocess.check_output(f"aquamacs {filename}", shell=True)
+                except:  # noqa: E722
+                    pass
             elif try_program('emacs'):
                 Shell.run(f'emacs {filename}')
             else:
