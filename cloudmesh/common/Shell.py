@@ -1474,7 +1474,10 @@ class Shell(object):
             def try_program(program):
                 r = Shell.run(f'''mdfind "kMDItemKind == 'Application'"''')
                 if program not in r:
+                    print(f'i couldnt find{program}')
+
                     return False
+                print(f'i found {program}')
                 return True
 
             def run_edit_program(program, file):
