@@ -1472,10 +1472,11 @@ class Shell(object):
         if os_is_mac():
             # try to see what programs are available
             def try_program(program):
-                r = Shell.run(f'{program} --help')
-                if 'not found' in r:
+                r = Shell.run(f'''mdfind "kMDItemKind == 'Application'"''')
+                if program not in r:
                     return False
                 return True
+
             def run_edit_program(program, file):
                 cmd = f'''
                 osascript <<EOF
@@ -1492,9 +1493,9 @@ class Shell(object):
                     pass
 
             if try_program('aquamacs'):
-                run_edit_program('aquamacs', filename)
+                Shell.run(f'aquamacs {filename}')
             elif try_program('emacs'):
-                run_edit_program('emacs', filename)
+                Shell.run(f'emacs {filename}')
             else:
                 run_edit_program('nano', filename)
         elif os_is_linux():
