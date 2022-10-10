@@ -1486,8 +1486,6 @@ class Shell(object):
                 tell application "Terminal"
                     do script "nano {filename}"
                     activate
-                    set position of front window to {1, 1}
-                    set size of front window to {111, 111}
                 end tell
                 EOF
                 '''
