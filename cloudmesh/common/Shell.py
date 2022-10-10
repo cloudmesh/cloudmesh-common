@@ -1481,8 +1481,17 @@ class Shell(object):
             elif try_program('emacs'):
                 os.system("emacs " + filename)
             else:
-                os.system(f"""
-                osascript -e 'tell application "Terminal" to do script "nano {filename}"'""")
+                cmd = f'''
+                osascript <<EOF
+                tell application "Terminal"
+                    do script "nano {filename}"
+                    activate
+                    set position of front window to {1, 1}
+                    set size of front window to {111, 111}
+                end tell
+                EOF
+                '''
+                subprocess.check_output(cmd, shell=True)
         elif os_is_linux():
             os.system(f'x-terminal-emulator -e "nano {filename}"')
         elif os_is_windows():
