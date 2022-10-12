@@ -1463,12 +1463,48 @@ class Shell(object):
 
     @staticmethod
     def edit(filename):
-        if platform == 'darwin':
-            os.system("emacs " + filename)
-        elif platform == "windows":
-            os.system("notepad " + filename)
-        else:
-            raise NotImplementedError("Editor not configured for OS")
+        """
+        opens an editing program to edit specified filename
+
+        :param filename: file to edit
+        :return: nothing
+        """
+        if os_is_mac():
+            # try to see what programs are available
+            def try_program(program):
+                r = Shell.run(f'''mdfind "kMDItemKind == 'Application'"''')
+                if program not in r.lower():
+                    return False
+                return True
+
+            def run_edit_program(program, file):
+                cmd = f'''
+                osascript <<EOF
+                tell application "Terminal"
+                    do script "{program} {file}"
+                    activate
+                    set frontmost to true
+                end tell
+                EOF
+                '''
+                try:
+                    subprocess.check_output(cmd, shell=True)
+                except:  # noqa: E722
+                    pass
+
+            if try_program('aquamacs'):
+                try:
+                    subprocess.check_output(f"aquamacs {filename}", shell=True)
+                except:  # noqa: E722
+                    pass
+            elif try_program('emacs'):
+                run_edit_program('emacs', filename)
+            else:
+                run_edit_program('nano', filename)
+        elif os_is_linux():
+            os.system(f'x-terminal-emulator -e "nano {filename}"')
+        elif os_is_windows():
+            os.system("start nano " + filename)
 
     @classmethod
     # @NotImplementedInWindows

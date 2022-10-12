@@ -354,7 +354,7 @@ def HEADING(txt=None, c="#", color="HEADER"):
 # noinspection PyPep8Naming
 def FUNCTIONNAME():
     """
-    Returns the anme of a function.
+    Returns the name of a function.
     """
     frame = inspect.getouterframes(inspect.currentframe())
 
