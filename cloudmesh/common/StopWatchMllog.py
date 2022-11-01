@@ -395,6 +395,93 @@ class StopWatch(object):
             except Exception as e:
                 Console.error(e, traceflag=True)
 
+    @classmethod
+    def organization_submission(cls, configfile=None, **argv):
+        """
+
+        :param configfile:
+        :type configfile:
+        :param argv:
+        :type argv:
+        :return:
+        :rtype:
+
+        submission:
+          benchmark: earthquake
+          submitter: Gregor von Laszewski
+          email: laszewski@gmail.com
+          org: University of Virginia
+          division: closed or open
+          platform: rivanna
+          status: success or aborted (is not going to be written
+            until the very end)
+          (must not be written when we write the organization submission)
+          if poc exists, use it;
+          else if submitter exists, use it;
+          else error
+          ? point_of_contact_name:
+          ? point_of_contact_email:
+          ? version: mlcommons-earthquake-v1.0
+          ? github_commit_version: TBD
+          # value = d['submission']['version']
+          # event('submission_version',value=value)
+          # value = d['submission']['github_commit_version']
+          # event('github_commit_version',value=value)
+
+        """
+        try:
+            from mlperf_logging import mllog
+        except Exception:  # noqa: E722
+            Console.error("You need to install mllogging to use it")
+            sys.exit()
+
+        try:
+            with open(pathlib.Path(configfile), 'r') as stream:
+                data = yaml.safe_load(stream)
+        except Exception as e:  # noqa: E722
+            data = {
+                "benchmark": {}
+            }
+            data.update(argv)
+        except Exception as e:
+            Console.error(e, traceflag=True)
+        # value = data['submission']['version']
+        # event('submission_version',value=value)
+        # value = data['submission']['github_commit_version']
+        # event('github_commit_version',value=value)
+        for key, attribute in [
+            (mllog.constants.SUBMISSION_BENCHMARK, 'name'),
+            (mllog.constants.SUBMISSION_POC_NAME, 'submitter'),
+            (mllog.constants.SUBMISSION_POC_EMAIL, 'e-mail'),
+            (mllog.constants.SUBMISSION_ORG, 'organisation'),
+            (mllog.constants.SUBMISSION_DIVISION, 'division'),
+            (mllog.constants.SUBMISSION_PLATFORM, 'platform'),
+            ("submission_version", 'version'),
+            ("github_commit_version", 'github_commit_version')
+        ]:
+            try:
+                value = data["submission"][attribute]
+                cls.event(key, mllog_key=key, value=value, stack_offset=3, suppress_stopwatch=True)
+            except Exception as e:
+                Console.error(e, traceflag=True)
+
+    def status_submission(cls, success=True):
+        try:
+            from mlperf_logging import mllog
+        except Exception:  # noqa: E722
+            Console.error("You need to install mllogging to use it")
+            sys.exit()
+
+        key = mllog.constants.SUBMISSION_STATUS
+        if success:
+            value = 'success'
+        else:
+            value = 'aborted'
+        cls.event(key,
+                  mllog_key=key,
+                  value=value,
+                  stack_offset=3,
+                  suppress_stopwatch=True)
 
     @classmethod
     def keys(cls):

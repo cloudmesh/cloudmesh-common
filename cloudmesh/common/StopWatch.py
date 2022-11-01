@@ -125,16 +125,16 @@ def progress(filename=None,
 
         "# cloudmesh status=ready progress=0 pid=$$ time='2022-08-05 16:29:40.228901'"
 
-    If the pid is ommitted it will give the current process pid
+    If the pid is omitted it will give the current process pid
     If PID contains the string SLURM it will give the SLURM_TASK_ID
     Otherwise it will take the value passed along in pid
 
-    :param status: String representation of tehe status
+    :param status: String representation of the status
     :type status: str
     :param progress: Progress in value from 0 to 100
     :type progress: int
     :param pid: Process ID. If not specified, it used the underlaying PID from the OS, or the task id from SLURM or
-                LSF if submitted through a ueueing system.
+                LSF if submitted through a queueing system.
     :type pid: int
     :param time: current time
     :type time: str
