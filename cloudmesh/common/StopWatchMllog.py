@@ -180,6 +180,7 @@ import pprint
 import pathlib
 import yaml
 import sys
+from typing import Union
 
 from cloudmesh.common.console import Console
 from cloudmesh.common.Tabulate import Printer
@@ -188,6 +189,7 @@ from cloudmesh.common.util import writefile
 from cloudmesh.common.util import readfile
 from cloudmesh.common.DateTime import DateTime
 from cloudmesh.common.StopWatch import progress
+from cloudmesh.common.StopWatch import progress as common_progress
 
 from time import perf_counter
 
@@ -287,6 +289,27 @@ class StopWatch(object):
                                  )
 
     # @classmethod
+    def progress(filename=None,  # +
+                 status="ready",  # +
+                 progress: Union[int, str, float] = 0,
+                 pid=None,  # +
+                 time=False,
+                 stdout=True,
+                 stderr=True,
+                 append=None,
+                 with_banner=False,
+                 **kwargs):
+        common_progress(filename=filename,
+                     status=status,
+                     progress=progress,
+                     pid=pid,
+                     time=time,
+                     stdout=stdout,
+                     stderr=stderr,
+                     append=append,
+                     with_banner=with_banner,
+                     kwargs=kwargs)
+
     # def progress(cls, percent, status="running", pid=None):
     #     if pid is None:
     #         pid = os.getpid()
@@ -387,7 +410,7 @@ class StopWatch(object):
             (mllog.constants.SUBMISSION_POC_EMAIL, 'e-mail'),
             (mllog.constants.SUBMISSION_ORG, 'organisation'),
             (mllog.constants.SUBMISSION_DIVISION, 'division'),
-            (mllog.constants.SUBMISSION_STATUS, 'status'),
+            # (mllog.constants.SUBMISSION_STATUS, 'status'),
             (mllog.constants.SUBMISSION_PLATFORM, 'platform')
         ]:
             try:
