@@ -164,7 +164,7 @@ def progress(filename=None,
         msg = msg +  f" time='{t}'"
     if kwargs:
         for name, value in kwargs.items():
-            varaiables = variables + f" {name}={value}"
+            variables = variables + f" {name}={value}"
         msg = msg + variables
     if append is not None:
         msg = msg + " " + append
