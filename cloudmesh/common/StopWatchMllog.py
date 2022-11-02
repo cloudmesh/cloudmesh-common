@@ -476,8 +476,8 @@ class StopWatch(object):
         for key, attribute in [
             (mllog.constants.SUBMISSION_BENCHMARK, 'name'),
             (mllog.constants.SUBMISSION_POC_NAME, 'submitter'),
-            (mllog.constants.SUBMISSION_POC_EMAIL, 'e-mail'),
-            (mllog.constants.SUBMISSION_ORG, 'organisation'),
+            (mllog.constants.SUBMISSION_POC_EMAIL, 'email'),
+            (mllog.constants.SUBMISSION_ORG, 'org'),
             (mllog.constants.SUBMISSION_DIVISION, 'division'),
             (mllog.constants.SUBMISSION_PLATFORM, 'platform'),
             ("submission_version", 'version'),

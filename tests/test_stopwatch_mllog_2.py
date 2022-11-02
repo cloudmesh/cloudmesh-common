@@ -43,8 +43,8 @@ submission_config = """
 submission:
   name: Earthquake
   submitter: Gregor von Laszewski
-  e-mail: laszewski@gmail.com
-  organisation:  University of Virginia
+  email: laszewski@gmail.com
+  org:  University of Virginia
   division: BII
   platform: rivanna
   version: mlcommons-earthquake-v1.0
