@@ -187,6 +187,7 @@ from cloudmesh.common.systeminfo import systeminfo as cm_systeminfo
 from cloudmesh.common.util import writefile
 from cloudmesh.common.util import readfile
 from cloudmesh.common.DateTime import DateTime
+from cloudmesh.common.StopWatch import progress
 
 from time import perf_counter
 
@@ -292,35 +293,35 @@ class StopWatch(object):
     #     if "SLURM_JOB_ID" in os.environ:
     #         pid = os.environ["SLURM_JOB_ID"] #TODO - may need to be updated (monitor of long running jobs)
     #     print(f"# cloudmesh status={status} progress={percent} pid={pid}")
-
-    @classmethod
-    def progress(cls, percent, status="running", pid=None, variable=None):
-        """Prints progress of an event, recording against a pid and providing additional variable.
-
-        :percent: 0-100 value
-        :status: Message to associate to the recording, default - running
-        :pid: The associated Process ID for this event.
-        :variable: Any valid python type with a __str__ method.
-
-        :returns: The progress message as a string
-        """
-        if pid is None:
-            pid = os.getpid()
-        if "SLURM_JOB_ID" in os.environ:
-            # TODO - may need to be updated (monitor of long running jobs)
-            pid = os.environ["SLURM_JOB_ID"]
-        msg = f"# cloudmesh status={status} progress={percent} pid={pid}"
-        if variable is not None:
-            msg = msg + f" variable={variable}"
-        print(msg)
-        return msg
-        try:
-            config = yaml.safe_load(readfile(configfile).strip())
-        except:  # noqa: E722
-            config = {
-                "benchmark": {}
-            }
-        config["benchmark"].update(argv)
+    #
+    # @classmethod
+    # def progress(cls, percent, status="running", pid=None, variable=None):
+    #     """Prints progress of an event, recording against a pid and providing additional variable.
+    #
+    #     :percent: 0-100 value
+    #     :status: Message to associate to the recording, default - running
+    #     :pid: The associated Process ID for this event.
+    #     :variable: Any valid python type with a __str__ method.
+    #
+    #     :returns: The progress message as a string
+    #     """
+    #     if pid is None:
+    #         pid = os.getpid()
+    #     if "SLURM_JOB_ID" in os.environ:
+    #         # TODO - may need to be updated (monitor of long running jobs)
+    #         pid = os.environ["SLURM_JOB_ID"]
+    #     msg = f"# cloudmesh status={status} progress={percent} pid={pid}"
+    #     if variable is not None:
+    #         msg = msg + f" variable={variable}"
+    #     print(msg)
+    #     return msg
+    #     try:
+    #         config = yaml.safe_load(readfile(configfile).strip())
+    #     except:  # noqa: E722
+    #         config = {
+    #             "benchmark": {}
+    #         }
+    #     config["benchmark"].update(argv)
 
     # @classmethod
     # def organization_mllog(cls, configfile = None, prefix_: str = 'benchmark', flatdict_: bool = False, **argv):

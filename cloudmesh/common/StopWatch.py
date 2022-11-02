@@ -111,15 +111,16 @@ from time import perf_counter
 from typing import Union
 
 
-def progress(filename=None,
-             status="ready",
-             progress: Union[int,str] = 0,
-             pid=None,
+def progress(filename=None, # +
+             status="ready", # +
+             progress: Union[int, str, float] = 0, # +
+             pid=None, # +
              time=False,
              stdout=True,
              stderr=True,
              append=None,
              with_banner=False,
+             # variable we do not have, but should be in kwrags
              **kwargs):
     """
     Creates a printed line of the form
@@ -148,7 +149,7 @@ def progress(filename=None,
     :return: progress string
     :rtype: str
     """
-    if type(progress) == 'int':
+    if type(progress) in ['int', 'float']:
         progress = str(progress)
     if pid is None:
         if "SLURM_JOB_ID" in os.environ:
@@ -177,7 +178,7 @@ def progress(filename=None,
     if filename is not None:
         appendfile(filename, msg)
     return msg
-    
+
 def rename(newname):
     """
     decorator to rename a function
@@ -241,44 +242,45 @@ class StopWatch(object):
     #         pid = os.environ["SLURM_JOB_ID"] #TODO - may need to be updated (monitor of long running jobs)
     #     print(f"# cloudmesh status={status} progress={percent} pid={pid}")
 
-    @classmethod
-    def progress(cls,
-                 percent: Union[int, str],
-                 status="running",
-                 pid=None,
-                 variable=None,
-                 filename=None):
-        """Prints progress of an event, recording against a pid and providing additional variable.
-
-        :param percent: 0-100 value
-        :type percent: int | str
-        :param status: Message to associate to the recording, default - running
-        :param pid: The associated Process ID for this event.
-        :param variable: Any valid python type with a __str__ method.
-
-        :return: The progress message as a string
-        """
-        if type(percent) == 'int':
-            percent = str(percent)
-        if pid is None:
-            pid = os.getpid()
-        if "SLURM_JOB_ID" in os.environ:
-            # TODO - may need to be updated (monitor of long running jobs)
-            pid = os.environ["SLURM_JOB_ID"]
-        msg = f"# cloudmesh status={status} progress={percent} pid={pid}"
-        if variable is not None:
-            msg = msg + f" variable={variable}"
-        print(msg)
-        if filename is not None:
-            appendfile(filename, msg)
-        return msg
-        try:
-            config = yaml.safe_load(readfile(configfile).strip())
-        except:  # noqa: E722
-            config = {
-                "benchmark": {}
-            }
-        config["benchmark"].update(argv)
+    # @classmethod
+    # def progress(cls,
+    #              percent: Union[int, str],
+    #              status="running",
+    #              pid=None,
+    #              variable=None,
+    #              filename=None):
+    #     """Prints progress of an event, recording against a pid and providing additional variable.
+    #
+    #     :param percent: 0-100 value
+    #     :type percent: int | str
+    #     :param status: Message to associate to the recording, default - running
+    #     :param pid: The associated Process ID for this event.
+    #     :param variable: Any valid python type with a __str__ method.
+    #
+    #     :return: The progress message as a string
+    #     """
+    #     if type(percent) == 'int':
+    #         percent = str(percent)
+    #     if pid is None:
+    #         pid = os.getpid()
+    #     if "SLURM_JOB_ID" in os.environ:
+    #         # TODO - may need to be updated (monitor of long running jobs)
+    #         pid = os.environ["SLURM_JOB_ID"]
+    #     msg = f"# cloudmesh status={status} progress={percent} pid={pid}"
+    #     if variable is not None:
+    #         msg = msg + f" variable={variable}"
+    #     print(msg)
+    #     if filename is not None:
+    #         appendfile(filename, msg)
+    #     return msg
+    #
+    #     try:
+    #         config = yaml.safe_load(readfile(configfile).strip())
+    #     except:  # noqa: E722
+    #         config = {
+    #             "benchmark": {}
+    #         }
+    #     config["benchmark"].update(argv)
 
 
     @classmethod
