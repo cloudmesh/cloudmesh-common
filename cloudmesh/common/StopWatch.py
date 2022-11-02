@@ -108,11 +108,12 @@ from cloudmesh.common.util import banner
 from cloudmesh.common.DateTime import DateTime
 
 from time import perf_counter
+from typing import Union
 
 
 def progress(filename=None,
              status="ready",
-             progress=0,
+             progress: Union[int,str] = 0,
              pid=None,
              time=False,
              stdout=True,
@@ -132,7 +133,7 @@ def progress(filename=None,
     :param status: String representation of the status
     :type status: str
     :param progress: Progress in value from 0 to 100
-    :type progress: int
+    :type progress: int | str
     :param pid: Process ID. If not specified, it used the underlaying PID from the OS, or the task id from SLURM or
                 LSF if submitted through a queueing system.
     :type pid: int
@@ -147,6 +148,8 @@ def progress(filename=None,
     :return: progress string
     :rtype: str
     """
+    if type(progress) == 'int':
+        progress = str(progress)
     if pid is None:
         if "SLURM_JOB_ID" in os.environ:
             pid = os.environ["SLURM_JOB_ID"]
@@ -239,16 +242,24 @@ class StopWatch(object):
     #     print(f"# cloudmesh status={status} progress={percent} pid={pid}")
 
     @classmethod
-    def progress(cls, percent, status="running", pid=None, variable=None, filename=None):
+    def progress(cls,
+                 percent: Union[int, str],
+                 status="running",
+                 pid=None,
+                 variable=None,
+                 filename=None):
         """Prints progress of an event, recording against a pid and providing additional variable.
 
-        :percent: 0-100 value
-        :status: Message to associate to the recording, default - running
-        :pid: The associated Process ID for this event.
-        :variable: Any valid python type with a __str__ method.
+        :param percent: 0-100 value
+        :type percent: int | str
+        :param status: Message to associate to the recording, default - running
+        :param pid: The associated Process ID for this event.
+        :param variable: Any valid python type with a __str__ method.
 
-        :returns: The progress message as a string
+        :return: The progress message as a string
         """
+        if type(percent) == 'int':
+            percent = str(percent)
         if pid is None:
             pid = os.getpid()
         if "SLURM_JOB_ID" in os.environ:
