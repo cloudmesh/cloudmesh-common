@@ -466,6 +466,7 @@ class StopWatch(object):
             except Exception as e:
                 Console.error(e, traceflag=True)
 
+    @classmethod
     def status_submission(cls, success=True):
         try:
             from mlperf_logging import mllog
