@@ -82,9 +82,11 @@ unique name.
     #
     # there we demonstrate how to timers in a loop as individual timers and as sum.
     # We also showcase how to add a message to timers
-)
+    )
+
 
 """
+
 import os
 import platform
 import time
@@ -106,33 +108,35 @@ from cloudmesh.common.util import banner
 from cloudmesh.common.DateTime import DateTime
 
 from time import perf_counter
+from typing import Union
 
 
-def progress(filename=None,
-             status="ready",
-             progress=0,
-             pid=None,
+def progress(filename=None, # +
+             status="ready", # +
+             progress: Union[int, str, float] = 0, # +
+             pid=None, # +
              time=False,
              stdout=True,
              stderr=True,
              append=None,
              with_banner=False,
+             # variable we do not have, but should be in kwrags
              **kwargs):
     """
     Creates a printed line of the form
 
         "# cloudmesh status=ready progress=0 pid=$$ time='2022-08-05 16:29:40.228901'"
 
-    If the pid is ommitted it will give the current process pid
+    If the pid is omitted it will give the current process pid
     If PID contains the string SLURM it will give the SLURM_TASK_ID
     Otherwise it will take the value passed along in pid
 
-    :param status: String representation of tehe status
+    :param status: String representation of the status
     :type status: str
     :param progress: Progress in value from 0 to 100
-    :type progress: int
+    :type progress: int | str
     :param pid: Process ID. If not specified, it used the underlaying PID from the OS, or the task id from SLURM or
-                LSF if submitted through a ueueing system.
+                LSF if submitted through a queueing system.
     :type pid: int
     :param time: current time
     :type time: str
@@ -145,6 +149,8 @@ def progress(filename=None,
     :return: progress string
     :rtype: str
     """
+    if type(progress) in ['int', 'float']:
+        progress = str(progress)
     if pid is None:
         if "SLURM_JOB_ID" in os.environ:
             pid = os.environ["SLURM_JOB_ID"]
@@ -159,7 +165,7 @@ def progress(filename=None,
         msg = msg +  f" time='{t}'"
     if kwargs:
         for name, value in kwargs.items():
-            varaiables = variables + f" {name}={value}"
+            variables = variables + f" {name}={value}"
         msg = msg + variables
     if append is not None:
         msg = msg + " " + append
@@ -172,7 +178,7 @@ def progress(filename=None,
     if filename is not None:
         appendfile(filename, msg)
     return msg
-    
+
 def rename(newname):
     """
     decorator to rename a function
@@ -236,36 +242,45 @@ class StopWatch(object):
     #         pid = os.environ["SLURM_JOB_ID"] #TODO - may need to be updated (monitor of long running jobs)
     #     print(f"# cloudmesh status={status} progress={percent} pid={pid}")
 
-    @classmethod
-    def progress(cls, percent, status="running", pid=None, variable=None, filename=None):
-        """Prints progress of an event, recording against a pid and providing additional variable.
-
-        :percent: 0-100 value
-        :status: Message to associate to the recording, default - running
-        :pid: The associated Process ID for this event.
-        :variable: Any valid python type with a __str__ method.
-
-        :returns: The progress message as a string
-        """
-        if pid is None:
-            pid = os.getpid()
-        if "SLURM_JOB_ID" in os.environ:
-            # TODO - may need to be updated (monitor of long running jobs)
-            pid = os.environ["SLURM_JOB_ID"]
-        msg = f"# cloudmesh status={status} progress={percent} pid={pid}"
-        if variable is not None:
-            msg = msg + f" variable={variable}"
-        print(msg)
-        if filename is not None:
-            appendfile(filename, msg)
-        return msg
-        try:
-            config = yaml.safe_load(readfile(configfile).strip())
-        except:  # noqa: E722
-            config = {
-                "benchmark": {}
-            }
-        config["benchmark"].update(argv)
+    # @classmethod
+    # def progress(cls,
+    #              percent: Union[int, str],
+    #              status="running",
+    #              pid=None,
+    #              variable=None,
+    #              filename=None):
+    #     """Prints progress of an event, recording against a pid and providing additional variable.
+    #
+    #     :param percent: 0-100 value
+    #     :type percent: int | str
+    #     :param status: Message to associate to the recording, default - running
+    #     :param pid: The associated Process ID for this event.
+    #     :param variable: Any valid python type with a __str__ method.
+    #
+    #     :return: The progress message as a string
+    #     """
+    #     if type(percent) == 'int':
+    #         percent = str(percent)
+    #     if pid is None:
+    #         pid = os.getpid()
+    #     if "SLURM_JOB_ID" in os.environ:
+    #         # TODO - may need to be updated (monitor of long running jobs)
+    #         pid = os.environ["SLURM_JOB_ID"]
+    #     msg = f"# cloudmesh status={status} progress={percent} pid={pid}"
+    #     if variable is not None:
+    #         msg = msg + f" variable={variable}"
+    #     print(msg)
+    #     if filename is not None:
+    #         appendfile(filename, msg)
+    #     return msg
+    #
+    #     try:
+    #         config = yaml.safe_load(readfile(configfile).strip())
+    #     except:  # noqa: E722
+    #         config = {
+    #             "benchmark": {}
+    #         }
+    #     config["benchmark"].update(argv)
 
 
     @classmethod

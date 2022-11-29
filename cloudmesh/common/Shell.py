@@ -1427,14 +1427,11 @@ class Shell(object):
             Path.mkdir(d, parents=True, exist_ok=True)
             return True
         except Exception as e:
-            if not os_is_windows():
-                command = f'mkdir -p {d}'
-            else:
-                command = f'mkdir {d}'
             try:
-                os.system(command)
-                return True
-            except:
+                if not os.path.exists(d):
+                    os.makedirs(d)
+                    return True
+            except Exception as e:
                 Console.error(e, traceflag=True)
         return False
 

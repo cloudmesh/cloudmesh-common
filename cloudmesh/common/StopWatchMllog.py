@@ -180,6 +180,7 @@ import pprint
 import pathlib
 import yaml
 import sys
+from typing import Union
 
 from cloudmesh.common.console import Console
 from cloudmesh.common.Tabulate import Printer
@@ -187,6 +188,8 @@ from cloudmesh.common.systeminfo import systeminfo as cm_systeminfo
 from cloudmesh.common.util import writefile
 from cloudmesh.common.util import readfile
 from cloudmesh.common.DateTime import DateTime
+from cloudmesh.common.StopWatch import progress
+from cloudmesh.common.StopWatch import progress as common_progress
 
 from time import perf_counter
 
@@ -286,41 +289,62 @@ class StopWatch(object):
                                  )
 
     # @classmethod
+    def progress(filename=None,  # +
+                 status="ready",  # +
+                 progress: Union[int, str, float] = 0,
+                 pid=None,  # +
+                 time=False,
+                 stdout=True,
+                 stderr=True,
+                 append=None,
+                 with_banner=False,
+                 **kwargs):
+        common_progress(filename=filename,
+                     status=status,
+                     progress=progress,
+                     pid=pid,
+                     time=time,
+                     stdout=stdout,
+                     stderr=stderr,
+                     append=append,
+                     with_banner=with_banner,
+                     kwargs=kwargs)
+
     # def progress(cls, percent, status="running", pid=None):
     #     if pid is None:
     #         pid = os.getpid()
     #     if "SLURM_JOB_ID" in os.environ:
     #         pid = os.environ["SLURM_JOB_ID"] #TODO - may need to be updated (monitor of long running jobs)
     #     print(f"# cloudmesh status={status} progress={percent} pid={pid}")
-
-    @classmethod
-    def progress(cls, percent, status="running", pid=None, variable=None):
-        """Prints progress of an event, recording against a pid and providing additional variable.
-
-        :percent: 0-100 value
-        :status: Message to associate to the recording, default - running
-        :pid: The associated Process ID for this event.
-        :variable: Any valid python type with a __str__ method.
-
-        :returns: The progress message as a string
-        """
-        if pid is None:
-            pid = os.getpid()
-        if "SLURM_JOB_ID" in os.environ:
-            # TODO - may need to be updated (monitor of long running jobs)
-            pid = os.environ["SLURM_JOB_ID"]
-        msg = f"# cloudmesh status={status} progress={percent} pid={pid}"
-        if variable is not None:
-            msg = msg + f" variable={variable}"
-        print(msg)
-        return msg
-        try:
-            config = yaml.safe_load(readfile(configfile).strip())
-        except:  # noqa: E722
-            config = {
-                "benchmark": {}
-            }
-        config["benchmark"].update(argv)
+    #
+    # @classmethod
+    # def progress(cls, percent, status="running", pid=None, variable=None):
+    #     """Prints progress of an event, recording against a pid and providing additional variable.
+    #
+    #     :percent: 0-100 value
+    #     :status: Message to associate to the recording, default - running
+    #     :pid: The associated Process ID for this event.
+    #     :variable: Any valid python type with a __str__ method.
+    #
+    #     :returns: The progress message as a string
+    #     """
+    #     if pid is None:
+    #         pid = os.getpid()
+    #     if "SLURM_JOB_ID" in os.environ:
+    #         # TODO - may need to be updated (monitor of long running jobs)
+    #         pid = os.environ["SLURM_JOB_ID"]
+    #     msg = f"# cloudmesh status={status} progress={percent} pid={pid}"
+    #     if variable is not None:
+    #         msg = msg + f" variable={variable}"
+    #     print(msg)
+    #     return msg
+    #     try:
+    #         config = yaml.safe_load(readfile(configfile).strip())
+    #     except:  # noqa: E722
+    #         config = {
+    #             "benchmark": {}
+    #         }
+    #     config["benchmark"].update(argv)
 
     # @classmethod
     # def organization_mllog(cls, configfile = None, prefix_: str = 'benchmark', flatdict_: bool = False, **argv):
@@ -386,7 +410,7 @@ class StopWatch(object):
             (mllog.constants.SUBMISSION_POC_EMAIL, 'e-mail'),
             (mllog.constants.SUBMISSION_ORG, 'organisation'),
             (mllog.constants.SUBMISSION_DIVISION, 'division'),
-            (mllog.constants.SUBMISSION_STATUS, 'status'),
+            # (mllog.constants.SUBMISSION_STATUS, 'status'),
             (mllog.constants.SUBMISSION_PLATFORM, 'platform')
         ]:
             try:
@@ -395,6 +419,94 @@ class StopWatch(object):
             except Exception as e:
                 Console.error(e, traceflag=True)
 
+    @classmethod
+    def organization_submission(cls, configfile=None, **argv):
+        """
+
+        :param configfile:
+        :type configfile:
+        :param argv:
+        :type argv:
+        :return:
+        :rtype:
+
+        submission:
+          benchmark: earthquake
+          submitter: Gregor von Laszewski
+          email: laszewski@gmail.com
+          org: University of Virginia
+          division: closed or open
+          platform: rivanna
+          status: success or aborted (is not going to be written
+            until the very end)
+          (must not be written when we write the organization submission)
+          if poc exists, use it;
+          else if submitter exists, use it;
+          else error
+          ? point_of_contact_name:
+          ? point_of_contact_email:
+          ? version: mlcommons-earthquake-v1.0
+          ? github_commit_version: TBD
+          # value = d['submission']['version']
+          # event('submission_version',value=value)
+          # value = d['submission']['github_commit_version']
+          # event('github_commit_version',value=value)
+
+        """
+        try:
+            from mlperf_logging import mllog
+        except Exception:  # noqa: E722
+            Console.error("You need to install mllogging to use it")
+            sys.exit()
+
+        try:
+            with open(pathlib.Path(configfile), 'r') as stream:
+                data = yaml.safe_load(stream)
+        except Exception as e:  # noqa: E722
+            data = {
+                "benchmark": {}
+            }
+            data.update(argv)
+        except Exception as e:
+            Console.error(e, traceflag=True)
+        # value = data['submission']['version']
+        # event('submission_version',value=value)
+        # value = data['submission']['github_commit_version']
+        # event('github_commit_version',value=value)
+        for key, attribute in [
+            (mllog.constants.SUBMISSION_BENCHMARK, 'name'),
+            (mllog.constants.SUBMISSION_POC_NAME, 'submitter'),
+            (mllog.constants.SUBMISSION_POC_EMAIL, 'email'),
+            (mllog.constants.SUBMISSION_ORG, 'org'),
+            (mllog.constants.SUBMISSION_DIVISION, 'division'),
+            (mllog.constants.SUBMISSION_PLATFORM, 'platform'),
+            ("submission_version", 'version'),
+            ("github_commit_version", 'github_commit_version')
+        ]:
+            try:
+                value = data["submission"][attribute]
+                cls.event(key, mllog_key=key, value=value, stack_offset=3, suppress_stopwatch=True)
+            except Exception as e:
+                Console.error(e, traceflag=True)
+
+    @classmethod
+    def status_submission(cls, success=True):
+        try:
+            from mlperf_logging import mllog
+        except Exception:  # noqa: E722
+            Console.error("You need to install mllogging to use it")
+            sys.exit()
+
+        key = mllog.constants.SUBMISSION_STATUS
+        if success:
+            value = 'success'
+        else:
+            value = 'aborted'
+        cls.event(key,
+                  mllog_key=key,
+                  value=value,
+                  stack_offset=3,
+                  suppress_stopwatch=True)
 
     @classmethod
     def keys(cls):
