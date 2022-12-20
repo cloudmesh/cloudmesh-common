@@ -446,7 +446,7 @@ def copy_files(files_glob, source_dir, dest_dir):
             shutil.copy2(filename, dest_dir)
 
 
-def readfile(filename, mode='r'):
+def readfile(filename, mode='r', encoding='utf-8'):
     """
     returns the content of a file
     :param filename: the filename
@@ -455,7 +455,7 @@ def readfile(filename, mode='r'):
     if mode != 'r' and mode != 'rb':
         Console.error(f"incorrect mode : expected 'r' or 'rb' given {mode}")
     else:
-        with open(path_expand(filename), mode) as f:
+        with open(path_expand(filename), mode, encoding=encoding) as f:
             content = f.read()
             f.close()
         return content
