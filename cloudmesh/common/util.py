@@ -446,18 +446,27 @@ def copy_files(files_glob, source_dir, dest_dir):
             shutil.copy2(filename, dest_dir)
 
 
-def readfile(filename, mode='r', encoding='utf-8'):
+def readfile(filename, mode='r', encoding=None):
     """
     returns the content of a file
     :param filename: the filename
+    :param encoding: type of encoding to read the file.
+    if None then no encoding is used.
+    other values are utf-8, cp850
     :return:
     """
     if mode != 'r' and mode != 'rb':
         Console.error(f"incorrect mode : expected 'r' or 'rb' given {mode}")
     else:
-        with open(path_expand(filename), mode, encoding=encoding) as f:
-            content = f.read()
-            f.close()
+        content = None
+        if encoding is None:
+            with open(path_expand(filename), mode) as f:
+                content = f.read()
+                f.close()
+        else:
+            with open(path_expand(filename), mode, encoding=encoding) as f:
+                content = f.read()
+                f.close()
         return content
 
 
