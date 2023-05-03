@@ -19,6 +19,9 @@ import pyfiglet
 import socket
 import platform
 
+import csv
+
+
 try:
     collectionsAbc = collections.abc
 except AttributeError:
@@ -106,6 +109,22 @@ def download(source, destination, force=False):
         r = requests.get(source, allow_redirects=True)
         open(destination, 'wb').write(r.content)
 
+def csv_to_list(csv_string, sep=","):
+    """
+    Converts a CSV table from a string to a list of lists
+
+    :param csv_string: The CSV table
+    :type csv_string: string
+    :return: list of lists
+    :rtype: list
+    """
+    reader = csv.reader(csv_string.splitlines(), delimiter=sep)
+
+    # Read the CSV table into a list of lists.
+    list_of_lists = []
+    for row in reader:
+        list_of_lists.append(row)
+    return list_of_lists
 
 def search(lines, pattern):
     """
