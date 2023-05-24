@@ -731,6 +731,24 @@ class Shell(object):
         return files
 
     @classmethod
+    def gpu_name(cls):
+        name = None
+        try:
+            name = Shell.run("nvidia-smi --query-gpu=gpu_name --format=csv,noheader")
+        except:
+            pass
+        return name
+
+    @classmethod
+    def gpu_name(cls):
+        content = None
+        try:
+            name = Shell.run("nvidia-smi")
+        except:
+            pass
+        return content
+
+    @classmethod
     # @NotImplementedInWindows
     def unix_ls(cls, *args):
         """
