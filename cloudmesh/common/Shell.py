@@ -1411,10 +1411,6 @@ class Shell(object):
                 print("    source     :", s.path)
                 print("    destination:", d.path)
 
-            dest_dir = os.path.dirname(d.path)
-
-            Shell.mkdir(dest_dir)
-
             if s.protocol in ['http', 'https']:
                 command = f'curl {s.path} -o {d.path}'
                 Shell.run(command)
@@ -1429,6 +1425,8 @@ class Shell(object):
                 print(command)
                 Shell.run(command)
             else:
+                dest_dir = os.path.dirname(d.path)
+                Shell.mkdir(dest_dir)
                 shutil.copy2(s.path, d.path)
         except Exception as e:
             Console.error(e, traceflag=True)

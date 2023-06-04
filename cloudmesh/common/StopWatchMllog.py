@@ -1015,9 +1015,9 @@ class StopWatch(object):
         """
         prints out all timers in a convenient benchmark table
 
-        :param sysinfo: controls if system info shoul be printed.
+        :param sysinfo: controls if system info should be printed.
         :type sysinfo: bool
-        :param csv: contols if the data should be printed also as csv strings
+        :param csv: controls if the data should be printed also as csv strings
         :type csv: bool
         :param prefix: The prefix used for the csv string
         :type prefix: str

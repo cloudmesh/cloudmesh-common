@@ -204,7 +204,7 @@ class Printer(object):
         elif output == "dict":
             return d
         else:
-            return "UNKOWN FORMAT. Please use table, csv, json, yaml, dict."
+            return "UNKNOWN FORMAT. Please use table, csv, json, yaml, dict."
 
     @classmethod
     def csv(cls, d, order=None, header=None, humanize=None,
