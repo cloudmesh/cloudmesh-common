@@ -731,6 +731,24 @@ class Shell(object):
         return files
 
     @classmethod
+    def gpu_name(cls):
+        name = None
+        try:
+            name = Shell.run("nvidia-smi --query-gpu=gpu_name --format=csv,noheader")
+        except:
+            pass
+        return name
+
+    @classmethod
+    def gpu_name(cls):
+        content = None
+        try:
+            name = Shell.run("nvidia-smi")
+        except:
+            pass
+        return content
+
+    @classmethod
     # @NotImplementedInWindows
     def unix_ls(cls, *args):
         """
@@ -1393,10 +1411,6 @@ class Shell(object):
                 print("    source     :", s.path)
                 print("    destination:", d.path)
 
-            dest_dir = os.path.dirname(d.path)
-
-            Shell.mkdir(dest_dir)
-
             if s.protocol in ['http', 'https']:
                 command = f'curl {s.path} -o {d.path}'
                 Shell.run(command)
@@ -1411,6 +1425,8 @@ class Shell(object):
                 print(command)
                 Shell.run(command)
             else:
+                dest_dir = os.path.dirname(d.path)
+                Shell.mkdir(dest_dir)
                 shutil.copy2(s.path, d.path)
         except Exception as e:
             Console.error(e, traceflag=True)
