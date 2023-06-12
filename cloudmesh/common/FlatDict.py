@@ -1,6 +1,7 @@
 import collections
 import re
 import yaml
+import json
 
 from cloudmesh.common.util import readfile
 
@@ -263,6 +264,7 @@ class FlatDict2(object):
         return dict_obj
 
 
+
 def read_config_parameters(filename=None, d=None):
     """
     This file reads in configuration parameters defined in a yaml file and
@@ -305,7 +307,58 @@ def read_config_parameters(filename=None, d=None):
     return config
 
 
+def expand_config_parameters(flat=None, os=True, cloudmesh=True):
+    """
+    expands all variables in the flat dict
+
+    :param flat:
+    :type flat:
+    :return:
+    :rtype:
+    """
+    if flat is None :
+        config = {}
+    else:
+        txt = json.dumps(flat)
+
+        print("SSSSS")
+        print (txt)
+        print()
+
+        values = ""
+        for variable in flat.keys():
+            name = "{" + variable + "}"
+            value = flat[variable]
+            values += " " + str(value)
+
+        for variable in flat.keys():
+            name = "{" + variable + "}"
+            value = flat[variable]
+            if variable in values:
+                print ("found", variable, "->", value)
+                txt = txt.replace(name, str(value))
+
+        if "{os." in txt:
+            import os
+
+            print (os.environ)
+            for variable in os.environ:
+                if variable is not "_":
+                    name = "{" + variable + "}"
+                    value = os.environ[variable]
+                    if variable in values:
+                        print ("found", variable, "->", value)
+                        txt = txt.replace(name, str(value))
+
+        config = json.loads(txt)
+
+    return config
+
+
+
+
 '''
+
 
 def main():
     d = {
