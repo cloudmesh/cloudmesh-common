@@ -14,7 +14,7 @@ import pytest
 @pytest.mark.incremental
 class Test_Flatdict:
 
-    def setup(self):
+    def setup_method(self):
         self.d = {
             'cloud': 'india',
             'update': '2015-06-18 22:11:48 UTC',

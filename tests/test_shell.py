@@ -28,7 +28,7 @@ class Test_shell(object):
 
     """
 
-    def setup(self):
+    def setup_method(self):
         pass
 
     def test_whoami(self):

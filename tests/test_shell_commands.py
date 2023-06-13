@@ -29,7 +29,7 @@ class Test_shell(object):
 
     """
 
-    def setup(self):
+    def setup_method(self):
         pass
 
     def test_shell_mkdir(self):
