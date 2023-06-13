@@ -2,6 +2,7 @@ import collections
 import re
 import yaml
 import json
+import os
 
 from cloudmesh.common.util import readfile
 
@@ -307,7 +308,7 @@ def read_config_parameters(filename=None, d=None):
     return config
 
 
-def expand_config_parameters(flat=None, os=True, cloudmesh=True):
+def expand_config_parameters(flat=None, os=True, cloudmesh=True, debug=False):
     """
     expands all variables in the flat dict
 
@@ -321,10 +322,6 @@ def expand_config_parameters(flat=None, os=True, cloudmesh=True):
     else:
         txt = json.dumps(flat)
 
-        print("SSSSS")
-        print (txt)
-        print()
-
         values = ""
         for variable in flat.keys():
             name = "{" + variable + "}"
@@ -335,27 +332,38 @@ def expand_config_parameters(flat=None, os=True, cloudmesh=True):
             name = "{" + variable + "}"
             value = flat[variable]
             if variable in values:
-                print ("found", variable, "->", value)
+                if debug:
+                    print ("found", variable, "->", value)
                 txt = txt.replace(name, str(value))
 
-        if "{os." in txt:
-            import os
+        if "{os." in values:
 
             print (os.environ)
             for variable in os.environ:
-                if variable is not "_":
+                if variable != "_":
                     name = "{" + variable + "}"
                     value = os.environ[variable]
                     if variable in values:
-                        print ("found", variable, "->", value)
+                        if debug:
+                            print ("found", variable, "->", value)
                         txt = txt.replace(name, str(value))
+
 
         config = json.loads(txt)
 
+        if "eval(" in values:
+            for variable in config.keys():
+                name = "{" + variable + "}"
+                value = config[variable]
+                if type(value) ==str and "eval(" in value:
+                    value = value.replace("eval(", "").strip()[:-1]
+                    if debug:
+                        print ("found", variable, "->", value)
+                    value = eval(value)
+                    config[variable] = value
+                    # txt = txt.replace(name, str(value))
+
     return config
-
-
-
 
 '''
 

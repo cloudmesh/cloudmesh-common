@@ -6,10 +6,14 @@
 
 from pprint import pprint
 
-from cloudmesh.common.FlatDict import FlatDict, flatten
+from cloudmesh.common.FlatDict import FlatDict
+from cloudmesh.common.FlatDict import flatten
+from cloudmesh.common.FlatDict import read_config_parameters
+from cloudmesh.common.FlatDict import expand_config_parameters
+
 from cloudmesh.common.util import HEADING
 import pytest
-
+from pprint import pprint
 
 @pytest.mark.incremental
 class Test_Flatdict:
@@ -75,14 +79,14 @@ class Test_Flatdict:
         }
         pass
 
-    def test_001(self):
-        HEADING("flatten")
+    def test_flatten(self):
+        HEADING()
         f = flatten(self.d)
         pprint(f)
         assert f['extra__minDisk'] == 40
 
-    def test_002(self):
-        HEADING("FlatDict")
+    def test_FlatDict(self):
+        HEADING()
 
         f = FlatDict(self.d)
         pprint(f.dict)
@@ -97,7 +101,7 @@ class Test_Flatdict:
         assert f['extra__minDisk'] == 40
 
     def test_unflatten(self):
-        HEADING("FlatDict")
+        HEADING()
 
         f = FlatDict(self.d, sep=".")
         pprint(f.dict)
@@ -113,4 +117,23 @@ class Test_Flatdict:
         # f.user = 'GREGOR'
         # assert f.user == 'GREGOR'
         # assert f['extra__minDisk'] == 40
+
+
+    def test_expand_yaml_file(self):
+        HEADING()
+
+        filename = "config.yaml"
+
+        config = {
+            "a": 2,
+            "b": "test-{a}",
+            "c": "eval(3*{a})"
+        }
+        # config = read_config_parameters(filename=filename)
+        config = expand_config_parameters(config)
+
+        pprint(config)
+
+        assert config["b"] == "test-" + str(config["a"])
+        assert config["c"] == 6
 
