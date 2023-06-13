@@ -1,7 +1,7 @@
 ###############################################################
-# pytest -v --capture=no  tests/test_shell_commands.py::Test_shell.test_001
 # pytest -v --capture=no  tests/test_shell_commands.py
 # pytest -v tests/test_shell_commands.py
+# pytest -v --capture=no  tests/test_shell_commands.py::Test_shell.test_001
 ###############################################################
 import getpass
 
@@ -125,10 +125,15 @@ class Test_shell(object):
         else:
             assert result.path == '/tmp'
 
-        result = Shell.map_filename(name='./cm')
+        Shell.mkdir("./tmp")
+        result = Shell.map_filename(name='./tmp')
+
         assert result.user == user
         assert result.host == 'localhost'
-        assert result.path == path_expand('./cm')
+        assert str(result.path) == path_expand('./tmp')
+
+        Shell.rmdir("./tmp")
+        assert os.path.exists(path_expand('./tmp')) == False
         Benchmark.Stop()
 
     """
