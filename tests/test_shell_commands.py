@@ -54,7 +54,10 @@ class Test_shell(object):
     def test_map_filename(self):
         HEADING()
         Benchmark.Start()
-        user = os.path.basename(os.environ["HOME"])
+        # user = os.path.basename(os.environ["HOME"])
+        # the above is not necessarily the user in windows.
+        user = os.getlogin()
+
         if os_is_windows():
             pwd = os.getcwd().replace("C:","/mnt/c").replace("\\","/")
         else:
@@ -100,7 +103,7 @@ class Test_shell(object):
             else:
                 assert result.path == f'C:\\home\\{user}\\cm'
         else:
-            assert result.path == f'C:\\Users\\{user}\\cm'
+            assert result.path == os.path.join(str(Path.home()), 'cm')
 
         result = Shell.map_filename(name='scp:user@host:~/cm')
         assert result.user == "user"

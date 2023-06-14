@@ -1,7 +1,7 @@
 ###############################################################
 # pytest -v --capture=no  tests/test_shell.py
 # pytest -v tests/test_shell.py
-# npytest -v --capture=no  tests/test_shell.py::Test_shell.test_001
+# pytest -v --capture=no  tests/test_shell.py::Test_shell.test_001
 ###############################################################
 import getpass
 import subprocess
@@ -110,7 +110,7 @@ class Test_shell(object):
         Benchmark.Start()
         r = Shell.pwd()
         Benchmark.Stop()
-        assert 'cm/cloudmesh-common' in r
+        assert 'cm/cloudmesh-common' in r or 'cm\\cloudmesh-common' in r
 
     def test_open(self):
         HEADING()
