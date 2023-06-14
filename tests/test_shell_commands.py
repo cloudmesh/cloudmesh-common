@@ -56,7 +56,7 @@ class Test_shell(object):
         Benchmark.Start()
         # user = os.path.basename(os.environ["HOME"])
         # the above is not necessarily the user in windows.
-        user = os.getlogin()
+        user = getpass.getuser()
 
         if os_is_windows():
             pwd = os.getcwd().replace("C:","/mnt/c").replace("\\","/")
