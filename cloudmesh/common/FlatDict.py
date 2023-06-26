@@ -2,9 +2,41 @@ import collections
 import re
 import yaml
 import json
+import os
 
 from cloudmesh.common.util import readfile
+from cloudmesh.common.variables import Variables
 
+"""
+FlatDict can also expand variables defined in yaml files
+
+from FlatDict
+
+f = FlatDict(sep=".")
+
+# filename = "config-new.yaml"
+# f.loadf(filename=filename)
+# print ("Load from file", f)
+
+d = {
+    "person":
+        {"name": "Gregor"},
+    "author": "{person.name}"
+}
+
+with open('data.yaml', 'w') as file:
+    documents = yaml.dump(d, file)
+
+f.load(content=filename)
+print ("Type Load from file", f)
+
+f.load(content=str(d))
+print ("Type Load from string", f)
+
+f.load(content=d)
+print ("Type Load from dict", f)
+
+"""
 
 def key_prefix_replace(d, prefix, new_prefix=""):
     """
@@ -75,13 +107,15 @@ class FlatDict(dict):
         """
         return self.__dict__
 
-    def __init__(self, d, sep="__"):
+    def __init__(self, d=None, sep="__"):
         """
         initializes the flat dics
 
         :param d: the dict data
         :param sep: The character used to indicate an hirachie a__b
         """
+        if d is None:
+            d = {}
         self.__dict__ = flatten(d, sep=sep)
         self.sep = sep
 
@@ -212,6 +246,50 @@ class FlatDict(dict):
         else:
             out[k] = v
 
+    def loadf(self, filename=None, sep="."):
+        config = read_config_parameters(filename=filename)
+        self.__init__(config, sep=sep)
+
+    def loads(self, content=None, sep="."):
+        config = read_config_parameters_from_string(content=content)
+        self.__init__(config, sep=sep)
+
+    def loadd(self, content=None, sep="."):
+        config = read_config_parameters_from_dict(content=content)
+        self.__init__(config, sep=sep)
+
+    def load(self, content=None, expand=True, sep="."):
+        """
+        This function reads in the dict based on the values and types provided
+        If the filename is provided its read from the filename
+        If content is a string the string will be converted from yaml to a dict
+        If a dict is provided the dict is read
+        :param filename:
+        :type filename:
+        :param content:
+        :type content:
+        :param sep:
+        :type sep:
+        :return:
+        :rtype:
+        """
+        print ("type load")
+        if content is None:
+            config = None
+            self.loads(config)
+        elif type(content) == dict:
+            self.loadd(content=content, sep=".")
+        elif os.path.isfile(str(content)):
+            self.loadf(filename=content, sep=".")
+        elif type(content) == str:
+            self.loads(content=content, sep=".")
+        else:
+            config = None
+            self.__init__(config, sep=sep)
+        if expand:
+            e = expand_config_parameters(flat=self.__dict__, expand_yaml=True, expand_os=True, expand_cloudmesh=True)
+            self.__dict__ = e
+
 
 class FlatDict2(object):
     primitive = (int, str, bool, str, bytes, dict, list)
@@ -265,7 +343,8 @@ class FlatDict2(object):
 
 
 
-def read_config_parameters(filename=None, d=None):
+def read_config_parameters(filename=None,
+                           d=None):
     """
     This file reads in configuration parameters defined in a yaml file and
     produces a flattend dict. It reads in the yaml date from a filename and/or
@@ -306,24 +385,137 @@ def read_config_parameters(filename=None, d=None):
     config = flatten(config, sep=".")
     return config
 
-
-def expand_config_parameters(flat=None, os=True, cloudmesh=True):
+def read_config_parameters_from_string(content=None, d=None):
     """
-    expands all variables in the flat dict
+    This file reads in configuration parameters defined in a yaml file and
+    produces a flattend dict. It reads in the yaml date from a filename and/or
+    a string.  If both are specified the data in the filename will be read first
+    and updated with the string.
 
-    :param flat:
-    :type flat:
-    :return:
-    :rtype:
+    s = '''
+    experiment:
+       epoch: 1
+       learning_rate: 0.01
+       gpu: a100
+    '''
+
+    once read in it returns the flattened dict. To just load from a string use
+
+    config = read_config_parameters(d=s)
+    print (config)
+
+    {'experiment.epoch': 1,
+     'experiment.learning_rate': 0.01,
+     'experiment.gpu': 'a100'}
+
+    :param filename: The filename to read the yaml data from if the filename is not None
+    :type filename: string
+    :param d: The yaml data includes in a string. That will be added to the dict
+    :type d: string
+    :return: the flattned dict
+    :rtype: dict
+    """
+    if content is None:
+        config = {}
+    else:
+        print ()
+        print(content)
+        print()
+        config = yaml.safe_load(content)
+
+        print (config)
+    if d is not None:
+        data = yaml.safe_load(d)
+        config.update(data)
+    config = flatten(config, sep=".")
+    return config
+
+def read_config_parameters_from_dict(content=None, d=None):
+    """
+    This file reads in configuration parameters defined in a yaml file and
+    produces a flattend dict. It reads in the yaml date from a filename and/or
+    a string.  If both are specified the data in the filename will be read first
+    and updated with the string.
+
+    s = '''
+    experiment:
+       epoch: 1
+       learning_rate: 0.01
+       gpu: a100
+    '''
+
+    once read in it returns the flattened dict. To just load from a string use
+
+    config = read_config_parameters(d=s)
+    print (config)
+
+    {'experiment.epoch': 1,
+     'experiment.learning_rate': 0.01,
+     'experiment.gpu': 'a100'}
+
+    :param filename: The filename to read the yaml data from if the filename is not None
+    :type filename: string
+    :param d: The yaml data includes in a string. That will be added to the dict
+    :type d: string
+    :return: the flattned dict
+    :rtype: dict
+    """
+    if content is None:
+        config = {}
+    else:
+        print ()
+        print(content)
+        print()
+        config = dict(content)
+        print (config)
+    if d is not None:
+        data = yaml.safe_load(d)
+        config.update(data)
+    config = flatten(config, sep=".")
+    return config
+
+
+def expand_config_parameters(flat=None, expand_yaml=True, expand_os=True, expand_cloudmesh=True, debug=False):
+    """
+    """
+    """
+    expands all variables in the flat dict if they are specified in the values of the flatdict.
+
+    :param flat: The flat dict
+    :type flat: FlatDict
+    :param expand_yaml: 
+    :type expand_yaml: 
+    :param expand_os: 
+    :type expand_os: 
+    :param expand_cloudmesh: 
+    :type expand_cloudmesh: 
+    :return: the dict with th ereplaced values
+    :rtype: dict    
+
+
+    from cloudmesh.common.util import readfile
+    from cloudmesh.common.FlatDict import read_config_parameters, flatten, expand_config_parameters
+    from cloudmesh.common.util import banner
+    from pprint import pprint
+
+    filename = "config.yaml"
+
+    config = read_config_parameters(filename=filename)
+
+    pprint (config)
+
+    banner("CONFIGURATION")
+    print (type(config))
+    print (config)
+
+    config = expand_config_parameters(config)
+
+    pprint (type(config))
     """
     if flat is None :
         config = {}
     else:
         txt = json.dumps(flat)
-
-        print("SSSSS")
-        print (txt)
-        print()
 
         values = ""
         for variable in flat.keys():
@@ -331,23 +523,35 @@ def expand_config_parameters(flat=None, os=True, cloudmesh=True):
             value = flat[variable]
             values += " " + str(value)
 
-        for variable in flat.keys():
-            name = "{" + variable + "}"
-            value = flat[variable]
-            if variable in values:
-                print ("found", variable, "->", value)
-                txt = txt.replace(name, str(value))
+        if expand_yaml:
+            for variable in flat.keys():
+                name = "{" + variable + "}"
+                value = flat[variable]
+                if variable in values:
+                    if debug:
+                        print ("found", variable, "->", value)
+                    txt = txt.replace(name, str(value))
 
-        if "{os." in txt:
-            import os
-
-            print (os.environ)
+        if "{os." in values and expand_os:
+            print()
             for variable in os.environ:
-                if variable is not "_":
+                if variable != "_":
                     name = "{" + variable + "}"
                     value = os.environ[variable]
                     if variable in values:
-                        print ("found", variable, "->", value)
+                        if debug:
+                            print ("found", variable, "->", value)
+                        txt = txt.replace(name, str(value))
+
+        if "{cloudmesh." in values and expand_cloudmesh:
+            cm_variables = Variables()
+            for variable in cm_variables:
+                if variable != "_":
+                    name = "{" + variable + "}"
+                    value = cm_variables[variable]
+                    if variable in values:
+                        if debug:
+                            print ("found", variable, "->", value)
                         txt = txt.replace(name, str(value))
 
         config = json.loads(txt)
