@@ -128,11 +128,17 @@ class TestShell:
         else:
             assert result.path == '/tmp'
 
-        result = Shell.map_filename(name='./cm')
+        Shell.mkdir("./tmp")
+        result = Shell.map_filename(name='./tmp')
+
         assert result.user == user
         assert result.host == 'localhost'
-        assert result.path == path_expand('./cm')
+        assert str(result.path) == path_expand('./tmp')
+
+        Shell.rmdir("./tmp")
+        assert os.path.exists(path_expand('./tmp')) == False
         Benchmark.Stop()
+
 
     def test_open(self):
         HEADING()

@@ -19,7 +19,7 @@ old = variables["verbose"]
 @pytest.mark.incremental
 class Test_Verbose:
 
-    def setup_class(self):
+    def setup_method(self):
         global old
         old = variables["verbose"]
         print()

@@ -21,7 +21,7 @@ class Test_tables:
     printing
     """
 
-    def setup(self):
+    def setup_method(self):
         self.d = [
             {
                 "id": "a",

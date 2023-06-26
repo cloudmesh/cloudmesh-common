@@ -17,7 +17,7 @@ import textwrap
 import webbrowser
 import zipfile
 from pathlib import Path
-from pipes import quote
+from shlex import quote
 from sys import platform
 from tqdm import tqdm
 

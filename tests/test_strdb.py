@@ -14,7 +14,7 @@ from cloudmesh.common.strdb import YamlDB
 @pytest.mark.incremental
 class TestYamlDB:
 
-    def setup(self):
+    def setup_method(self):
         self.key = "key"
         self.value = "value"
         self.dbfd, self.dbpath = mkstemp(

@@ -1,7 +1,7 @@
 ###############################################################
-# pytest -v --capture=no  tests/test_shell_commands.py::Test_shell.test_001
 # pytest -v --capture=no  tests/test_shell_commands.py
 # pytest -v tests/test_shell_commands.py
+# pytest -v --capture=no  tests/test_shell_commands.py::Test_shell.test_001
 ###############################################################
 import getpass
 
@@ -29,7 +29,7 @@ class Test_shell(object):
 
     """
 
-    def setup(self):
+    def setup_method(self):
         pass
 
     def test_shell_mkdir(self):
@@ -54,7 +54,10 @@ class Test_shell(object):
     def test_map_filename(self):
         HEADING()
         Benchmark.Start()
-        user = os.path.basename(os.environ["HOME"])
+        # user = os.path.basename(os.environ["HOME"])
+        # the above is not necessarily the user in windows.
+        user = getpass.getuser()
+
         if os_is_windows():
             pwd = os.getcwd().replace("C:","/mnt/c").replace("\\","/")
         else:
@@ -100,7 +103,7 @@ class Test_shell(object):
             else:
                 assert result.path == f'C:\\home\\{user}\\cm'
         else:
-            assert result.path == f'C:\\Users\\{user}\\cm'
+            assert result.path == os.path.join(str(Path.home()), 'cm')
 
         result = Shell.map_filename(name='scp:user@host:~/cm')
         assert result.user == "user"
@@ -125,10 +128,15 @@ class Test_shell(object):
         else:
             assert result.path == '/tmp'
 
-        result = Shell.map_filename(name='./cm')
+        Shell.mkdir("./tmp")
+        result = Shell.map_filename(name='./tmp')
+
         assert result.user == user
         assert result.host == 'localhost'
-        assert result.path == path_expand('./cm')
+        assert str(result.path) == path_expand('./tmp')
+
+        Shell.rmdir("./tmp")
+        assert os.path.exists(path_expand('./tmp')) == False
         Benchmark.Stop()
 
     """

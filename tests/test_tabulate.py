@@ -12,7 +12,7 @@ import pytest
 @pytest.mark.incremental
 class Test_Tabulate:
 
-    def setup(self):
+    def setup_method(self):
         self.data = [
             {
                 "name": "Gregor",
