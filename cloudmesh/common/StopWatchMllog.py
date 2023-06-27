@@ -554,7 +554,7 @@ class StopWatch(object):
 
     @classmethod
     def event(cls,
-              name,
+              key=None,
               msg=None,
               values=None, value=None,
               mllog_key=None,
@@ -585,6 +585,7 @@ class StopWatch(object):
         :returns: None
         :rtype: None
         """
+        name = key
         values = values or value
         if not suppress_stopwatch:
             StopWatch.start(name, suppress_mllog=True)
@@ -648,7 +649,7 @@ class StopWatch(object):
 
     @classmethod
     def start(cls,
-              name,
+              key=None,
               values=None, value=None,
               mllog_key=None,
               suppress_stopwatch=False,
@@ -678,6 +679,7 @@ class StopWatch(object):
         :returns: None
         :rtype: None
         """
+        name = key
         values = values or value
 
         if not suppress_stopwatch:
@@ -711,7 +713,7 @@ class StopWatch(object):
 
     @classmethod
     def stop(cls,
-             name,
+             key=None,
              state=True,
              values=None,
              value=None,
@@ -742,6 +744,8 @@ class StopWatch(object):
         :returns: None
         :rtype: None
         """
+
+        name=key
         values = values or value
 
         if not suppress_stopwatch:
@@ -774,13 +778,14 @@ class StopWatch(object):
             print("Timer", name, "stopped ...")
 
     @classmethod
-    def get_status(cls, name):
+    def get_status(cls, key=None):
         """
         sets the status of the timer with a given name.
 
         :param name: the name of the timer
         :type name: string
         """
+        name = key
         return cls.timer_status[name]
 
     # noinspection PyPep8
@@ -853,12 +858,13 @@ class StopWatch(object):
                 raise Exception("StopWatch: wrong number of arguments")
 
     @classmethod
-    def output(cls, name):
+    def output(cls, key=None):
         """
         prints a timer. The first argument is the label if it exists, the last is the timer
         :param args: label, name
         :return:
         """
+        name=key
         print(name, str("{0:.2f}".format(cls.get(name))), "s")
 
     @classmethod
