@@ -561,7 +561,8 @@ class StopWatch(object):
               suppress_stopwatch=False,
               suppress_mllog=False,
               stack_offset=2,
-              executioncounter=True):
+              executioncounter=True,
+              metadata=None):
         """
         Adds an event with a given name, where start and stop is the same time.
 
@@ -601,12 +602,16 @@ class StopWatch(object):
                 key_name = cls._mllog_lookup("POINT_IN_TIME")
             else:
                 key_name = cls._mllog_lookup(mllog_key)
-
-            if values is not None:
-
-                cls.mllogger.event(key=name, value=str(values), stack_offset=stack_offset)
+            if metadata is None:
+                if values is not None:
+                    cls.mllogger.event(key=name, value=str(values), stack_offset=stack_offset)
+                else:
+                    cls.mllogger.event(key=name, stack_offset=stack_offset)
             else:
-                cls.mllogger.event(key=name, stack_offset=stack_offset)
+                if values is not None:
+                    cls.mllogger.event(key=name, value=str(values), stack_offset=stack_offset, metadata=metadata)
+                else:
+                    cls.mllogger.event(key=name, stack_offset=stack_offset, metadata=metadata)
 
     @classmethod
     def log_event(cls, **kwargs):
