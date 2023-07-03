@@ -1619,9 +1619,9 @@ class Shell(object):
     def user():
         return str(Shell.sys_user())
 
-    @staticmethod
-    def host():
-        return str(Shell.run("hostname").strip())
+    # @staticmethod
+    # def host():
+    #    return str(Shell.run("hostname").strip())
 
     @staticmethod
     def host():
