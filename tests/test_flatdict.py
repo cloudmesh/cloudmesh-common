@@ -209,3 +209,13 @@ class Test_Flatdict:
 
         assert result == "a=2 {unkown}"
         assert content == result
+
+    def test_config_in_yaml(self):
+        HEADING()
+
+        config = FlatDict(expand=["os.", "cm.", "cloudmesh."])
+        config .load("tests/config.in.yaml")
+
+        print("config:")
+        pprint(dict(config))
+

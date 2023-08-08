@@ -108,7 +108,7 @@ class FlatDict(dict):
         """
         return self.__dict__
 
-    def __init__(self, d=None, sep="__"):
+    def __init__(self, d=None, expand=["os.", "cm.", "cloudmesh."], sep="__"):
         """
         initializes the flat dics
 
@@ -119,6 +119,14 @@ class FlatDict(dict):
             d = {}
         self.__dict__ = flatten(d, sep=sep)
         self.sep = sep
+        if "all" in expand:
+            self.expand_os = True
+            self.expand_cloudmesh = True
+            self.expand_cm = True
+        else:
+            self.expand_os = "os." in expand
+            self.expand_cloudmesh = "cloudmesh." in expand
+            self.expand_cm = "cm." in expand
 
     def __setitem__(self, key, item):
         """
@@ -287,9 +295,12 @@ class FlatDict(dict):
         else:
             config = None
             self.__init__(config, sep=sep)
-        if expand:
-            e = expand_config_parameters(flat=self.__dict__, expand_yaml=True, expand_os=True, expand_cloudmesh=True)
-            self.__dict__ = e
+
+        e = expand_config_parameters(flat=self.__dict__,
+                                     expand_yaml=True,
+                                     expand_os=self.expand_os,
+                                     expand_cloudmesh=self.expand_cloudmesh or self.expand_cm)
+        self.__dict__ = e
 
     def apply_in_string(self, content):
         r = content
@@ -507,9 +518,11 @@ def read_config_parameters_from_dict(content=None, d=None):
     return config
 
 
-def expand_config_parameters(flat=None, expand_yaml=True, expand_os=True, expand_cloudmesh=True, debug=False):
-    """
-    """
+def expand_config_parameters(flat=None,
+                             expand_yaml=True,
+                             expand_os=True,
+                             expand_cloudmesh=True,
+                             debug=False):
     """
     expands all variables in the flat dict if they are specified in the values of the flatdict.
 
@@ -544,6 +557,11 @@ def expand_config_parameters(flat=None, expand_yaml=True, expand_os=True, expand
 
     pprint (type(config))
     """
+    print("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
+    from pprint import pprint
+    pprint (dict(flat))
+
+    print ("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
     if flat is None :
         config = {}
     else:
@@ -554,6 +572,7 @@ def expand_config_parameters(flat=None, expand_yaml=True, expand_os=True, expand
             name = "{" + variable + "}"
             value = flat[variable]
             values += " " + str(value)
+            print ("X", name, value)
 
         if expand_yaml:
             for variable in flat.keys():
@@ -564,22 +583,38 @@ def expand_config_parameters(flat=None, expand_yaml=True, expand_os=True, expand
                         print ("found", variable, "->", value)
                     txt = txt.replace(name, str(value))
 
+        print ("VVVVVVVVVVVV", values)
+
         if "{os." in values and expand_os:
-            print()
+            print("expand os")
             for variable in os.environ:
                 if variable != "_":
-                    name = "{" + variable + "}"
+                    name = "{os." + variable + "}"
                     value = os.environ[variable]
+
+                    if name in values:
+                        print("FFFFFFF", variable, value)
+
+                        if debug:
+                            print ("found", variable, "->", value)
+                        txt = txt.replace(name, str(value))
+
+        cm_variables = Variables()
+
+        if "{cloudmesh." in values and expand_cloudmesh:
+            for variable in cm_variables:
+                if variable != "_":
+                    name = "{cloudmesh." + variable + "}"
+                    value = cm_variables[variable]
                     if variable in values:
                         if debug:
                             print ("found", variable, "->", value)
                         txt = txt.replace(name, str(value))
 
-        if "{cloudmesh." in values and expand_cloudmesh:
-            cm_variables = Variables()
+        if "{cm." in values and expand_cloudmesh:
             for variable in cm_variables:
                 if variable != "_":
-                    name = "{" + variable + "}"
+                    name = "{cm." + variable + "}"
                     value = cm_variables[variable]
                     if variable in values:
                         if debug:
