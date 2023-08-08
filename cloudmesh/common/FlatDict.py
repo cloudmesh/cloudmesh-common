@@ -580,7 +580,6 @@ def expand_config_parameters(flat=None,
             name = "{" + variable + "}"
             value = flat[variable]
             values += " " + str(value)
-            print("X", name, value)
 
         if expand_yaml:
             for variable in flat.keys():
