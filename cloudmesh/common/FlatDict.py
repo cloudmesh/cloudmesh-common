@@ -246,26 +246,19 @@ class FlatDict(dict):
         else:
             out[k] = v
 
-    def loadf(self, filename=None, data=None, sep="."):
+    def loadf(self, filename=None, sep="."):
         config = read_config_parameters(filename=filename)
-        if data is not None:
-            config.update(data)
         self.__init__(config, sep=sep)
 
-    def loads(self, content=None, data=None, sep="."):
+    def loads(self, content=None, sep="."):
         config = read_config_parameters_from_string(content=content)
-        if data is not None:
-            config.update(data)
         self.__init__(config, sep=sep)
 
-    def loadd(self, content=None, data=None, sep="."):
+    def loadd(self, content=None, sep="."):
         config = read_config_parameters_from_dict(content=content)
-        if data is not None:
-            config.update(data)
         self.__init__(config, sep=sep)
 
-
-    def load(self, content=None, data=None, expand=True, sep="."):
+    def load(self, content=None, expand=True, sep="."):
         """
         This function reads in the dict based on the values and types provided
         If the filename is provided its read from the filename
@@ -283,13 +276,13 @@ class FlatDict(dict):
         print ("type load")
         if content is None:
             config = None
-            self.loads(config, data=data)
+            self.loads(config)
         elif type(content) == dict:
-            self.loadd(content=content, data=data, sep=".")
+            self.loadd(content=content, sep=".")
         elif os.path.isfile(str(content)):
-            self.loadf(filename=content, data=data, sep=".")
+            self.loadf(filename=content, sep=".")
         elif type(content) == str:
-            self.loads(content=content, data=data, sep=".")
+            self.loads(content=content, sep=".")
         else:
             config = None
             self.__init__(config, sep=sep)
@@ -562,6 +555,18 @@ def expand_config_parameters(flat=None, expand_yaml=True, expand_os=True, expand
                         txt = txt.replace(name, str(value))
 
         config = json.loads(txt)
+
+        if "eval(" in values:
+            for variable in config.keys():
+                name = "{" + variable + "}"
+                value = config[variable]
+                if type(value) ==str and "eval(" in value:
+                    value = value.replace("eval(", "").strip()[:-1]
+                    if debug:
+                        print ("found", variable, "->", value)
+                    value = eval(value)
+                    config[variable] = value
+                    # txt = txt.replace(name, str(value))
 
     return config
 
