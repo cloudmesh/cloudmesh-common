@@ -1391,6 +1391,26 @@ class Shell(object):
             print("             pip install -U pip\n")
 
     @classmethod
+    def copy_source(source, destination):
+        """
+        copys a file or a directory to the destination
+
+        :param destination: destination directory
+        :type destination: str
+        :return: None
+        :rtype: None
+        """
+        try:
+            if os.path.isfile(source):  # If the source is a file
+                shutil.copy2(source, destination)
+            elif os.path.isdir(source):  # If the source is a directory
+                shutil.copytree(source, os.path.join(destination, os.path.basename(source)))
+            else:
+                Console.error(f"'{source}' is neither a file nor a directory.")
+        except Exception as e:
+            Console.error(f"An error occurred: {e}")
+
+    @classmethod
     def copy(cls, source, destination, expand=False):
         if expand:
             s = path_expand(source)
