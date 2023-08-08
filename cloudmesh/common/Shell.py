@@ -1391,7 +1391,7 @@ class Shell(object):
             print("             pip install -U pip\n")
 
     @classmethod
-    def copy_source(source, destination):
+    def copy_source(cls, source, destination):
         """
         copys a file or a directory to the destination
 
