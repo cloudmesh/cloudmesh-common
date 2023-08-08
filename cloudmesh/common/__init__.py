@@ -20,8 +20,4 @@ from cloudmesh.common.dotdict import dotdict
 from cloudmesh.common.FlatDict import FlatDict
 from cloudmesh.common.variables import Variables
 
-<<<<<<< HEAD
-version = '4.3.173'
-=======
 version = '4.3.178'
->>>>>>> c90c0a1885f61cbc6e9e818f894d4da4a406b818
