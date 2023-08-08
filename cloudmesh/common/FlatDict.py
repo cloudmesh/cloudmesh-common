@@ -5,6 +5,7 @@ import json
 import os
 
 from cloudmesh.common.util import readfile
+from cloudmesh.common.util import writefile
 from cloudmesh.common.variables import Variables
 
 """
@@ -290,6 +291,37 @@ class FlatDict(dict):
             e = expand_config_parameters(flat=self.__dict__, expand_yaml=True, expand_os=True, expand_cloudmesh=True)
             self.__dict__ = e
 
+    def apply_in_string(self, content):
+        r = content
+        for v in self.__dict__:
+            try:
+                r = r.replace("{" + str(v) + "}", str(self.__dict__[v]))
+            except Exception as e:
+                print (e)
+        return r
+
+    def apply(self, content, write=True):
+        """
+        converts a string or the contents of a file with the
+        values of the flatdict
+        :param content:
+        :type content:
+        :return:
+        :rtype:
+        """
+
+        if content is None:
+            return None
+        elif os.path.isfile(str(content)):
+            data = readfile(content)
+            result =  self.apply_in_string(data)
+            if write:
+                writefile(content, result)
+            return result
+        elif type(content) == str:
+            return self.apply_in_string(content)
+        else:
+            return None
 
 class FlatDict2(object):
     primitive = (int, str, bool, str, bytes, dict, list)
