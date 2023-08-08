@@ -246,19 +246,26 @@ class FlatDict(dict):
         else:
             out[k] = v
 
-    def loadf(self, filename=None, sep="."):
+    def loadf(self, filename=None, data=None, sep="."):
         config = read_config_parameters(filename=filename)
+        if data is not None:
+            config.update(data)
         self.__init__(config, sep=sep)
 
-    def loads(self, content=None, sep="."):
+    def loads(self, content=None, data=None, sep="."):
         config = read_config_parameters_from_string(content=content)
+        if data is not None:
+            config.update(data)
         self.__init__(config, sep=sep)
 
-    def loadd(self, content=None, sep="."):
+    def loadd(self, content=None, data=None, sep="."):
         config = read_config_parameters_from_dict(content=content)
+        if data is not None:
+            config.update(data)
         self.__init__(config, sep=sep)
 
-    def load(self, content=None, expand=True, sep="."):
+
+    def load(self, content=None, data=None, expand=True, sep="."):
         """
         This function reads in the dict based on the values and types provided
         If the filename is provided its read from the filename
@@ -276,13 +283,13 @@ class FlatDict(dict):
         print ("type load")
         if content is None:
             config = None
-            self.loads(config)
+            self.loads(config, data=data)
         elif type(content) == dict:
-            self.loadd(content=content, sep=".")
+            self.loadd(content=content, data=data, sep=".")
         elif os.path.isfile(str(content)):
-            self.loadf(filename=content, sep=".")
+            self.loadf(filename=content, data=data, sep=".")
         elif type(content) == str:
-            self.loads(content=content, sep=".")
+            self.loads(content=content, data=data, sep=".")
         else:
             config = None
             self.__init__(config, sep=sep)
