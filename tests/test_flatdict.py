@@ -170,7 +170,10 @@ class Test_Flatdict:
         config = {
             "a": 2,
             "b": "test-{a}",
-            "c": "eval(3*{a})"
+            "c": "eval(3*{a})",
+            "test": {
+                "a": "a",
+                "b": '{a}'}
         }
 
         filename = "/tmp/test.yaml"
