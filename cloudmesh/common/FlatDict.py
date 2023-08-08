@@ -39,6 +39,7 @@ print ("Type Load from dict", f)
 
 """
 
+
 def key_prefix_replace(d, prefix, new_prefix=""):
     """
     replaces the list of prefix in keys of a flattened dict
@@ -273,16 +274,16 @@ class FlatDict(dict):
         If the filename is provided its read from the filename
         If content is a string the string will be converted from yaml to a dict
         If a dict is provided the dict is read
-        :param filename:
-        :type filename:
         :param content:
         :type content:
+        :param expand:
+        :type expand:
         :param sep:
         :type sep:
         :return:
         :rtype:
         """
-        print ("type load")
+        print("type load")
         if content is None:
             config = None
             self.loads(config)
@@ -308,13 +309,15 @@ class FlatDict(dict):
             try:
                 r = r.replace("{" + str(v) + "}", str(self.__dict__[v]))
             except Exception as e:
-                print (e)
+                print(e)
         return r
 
     def apply(self, content, write=True):
         """
         converts a string or the contents of a file with the
         values of the flatdict
+        :param write: if a file is specified write determins if the old file is overwritten in place
+        :type write: boolean
         :param content:
         :type content:
         :return:
@@ -325,7 +328,7 @@ class FlatDict(dict):
             return None
         elif os.path.isfile(str(content)):
             data = readfile(content)
-            result =  self.apply_in_string(data)
+            result = self.apply_in_string(data)
             if write:
                 writefile(content, result)
             return result
@@ -333,6 +336,7 @@ class FlatDict(dict):
             return self.apply_in_string(content)
         else:
             return None
+
 
 class FlatDict2(object):
     primitive = (int, str, bool, str, bytes, dict, list)
@@ -385,7 +389,6 @@ class FlatDict2(object):
         return dict_obj
 
 
-
 def read_config_parameters(filename=None,
                            d=None):
     """
@@ -428,6 +431,7 @@ def read_config_parameters(filename=None,
     config = flatten(config, sep=".")
     return config
 
+
 def read_config_parameters_from_string(content=None, d=None):
     """
     This file reads in configuration parameters defined in a yaml file and
@@ -451,8 +455,8 @@ def read_config_parameters_from_string(content=None, d=None):
      'experiment.learning_rate': 0.01,
      'experiment.gpu': 'a100'}
 
-    :param filename: The filename to read the yaml data from if the filename is not None
-    :type filename: string
+    :param content: The filename to read the yaml data from if the filename is not None
+    :type content: string
     :param d: The yaml data includes in a string. That will be added to the dict
     :type d: string
     :return: the flattned dict
@@ -461,20 +465,29 @@ def read_config_parameters_from_string(content=None, d=None):
     if content is None:
         config = {}
     else:
-        print ()
+        print()
         print(content)
         print()
         config = yaml.safe_load(content)
 
-        print (config)
+        print(config)
     if d is not None:
         data = yaml.safe_load(d)
         config.update(data)
     config = flatten(config, sep=".")
     return config
 
+
 def read_config_parameters_from_dict(content=None, d=None):
     """
+
+    :param content:
+    :type content:
+    :param d:
+    :type d:
+    :return:
+    :rtype:
+
     This file reads in configuration parameters defined in a yaml file and
     produces a flattend dict. It reads in the yaml date from a filename and/or
     a string.  If both are specified the data in the filename will be read first
@@ -506,11 +519,11 @@ def read_config_parameters_from_dict(content=None, d=None):
     if content is None:
         config = {}
     else:
-        print ()
+        print()
         print(content)
         print()
         config = dict(content)
-        print (config)
+        print(config)
     if d is not None:
         data = yaml.safe_load(d)
         config.update(data)
@@ -557,12 +570,7 @@ def expand_config_parameters(flat=None,
 
     pprint (type(config))
     """
-    print("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
-    from pprint import pprint
-    pprint (dict(flat))
-
-    print ("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
-    if flat is None :
+    if flat is None:
         config = {}
     else:
         txt = json.dumps(flat)
@@ -572,7 +580,7 @@ def expand_config_parameters(flat=None,
             name = "{" + variable + "}"
             value = flat[variable]
             values += " " + str(value)
-            print ("X", name, value)
+            print("X", name, value)
 
         if expand_yaml:
             for variable in flat.keys():
@@ -580,10 +588,8 @@ def expand_config_parameters(flat=None,
                 value = flat[variable]
                 if variable in values:
                     if debug:
-                        print ("found", variable, "->", value)
+                        print("found", variable, "->", value)
                     txt = txt.replace(name, str(value))
-
-        print ("VVVVVVVVVVVV", values)
 
         if "{os." in values and expand_os:
             print("expand os")
@@ -596,7 +602,7 @@ def expand_config_parameters(flat=None,
                         print("FFFFFFF", variable, value)
 
                         if debug:
-                            print ("found", variable, "->", value)
+                            print("found", variable, "->", value)
                         txt = txt.replace(name, str(value))
 
         cm_variables = Variables()
@@ -608,7 +614,7 @@ def expand_config_parameters(flat=None,
                     value = cm_variables[variable]
                     if variable in values:
                         if debug:
-                            print ("found", variable, "->", value)
+                            print("found", variable, "->", value)
                         txt = txt.replace(name, str(value))
 
         if "{cm." in values and expand_cloudmesh:
@@ -618,7 +624,7 @@ def expand_config_parameters(flat=None,
                     value = cm_variables[variable]
                     if variable in values:
                         if debug:
-                            print ("found", variable, "->", value)
+                            print("found", variable, "->", value)
                         txt = txt.replace(name, str(value))
 
         config = json.loads(txt)
@@ -627,17 +633,15 @@ def expand_config_parameters(flat=None,
             for variable in config.keys():
                 name = "{" + variable + "}"
                 value = config[variable]
-                if type(value) ==str and "eval(" in value:
+                if type(value) == str and "eval(" in value:
                     value = value.replace("eval(", "").strip()[:-1]
                     if debug:
-                        print ("found", variable, "->", value)
+                        print("found", variable, "->", value)
                     value = eval(value)
                     config[variable] = value
                     # txt = txt.replace(name, str(value))
 
     return config
-
-
 
 
 '''
