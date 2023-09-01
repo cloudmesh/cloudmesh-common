@@ -458,6 +458,36 @@ class Shell(object):
         return seperator.join(textwrap.dedent(script).strip().splitlines())
 
     @staticmethod
+    def install_chocolatey():
+
+        import subprocess
+        import pyuac
+        from cloudmesh.common.systeminfo import os_is_windows
+
+        if os_is_windows():
+
+            try:
+                r = Shell.run('choco --version')
+                Console.ok("Chocolatey already installed")
+            except subprocess.CalledProcessError:
+                Console.info("Installing chocolatey...")
+                if not pyuac.isUserAdmin():
+                    pyuac.runAsAdmin()
+
+                # Command to install Chocolatey using the Command Prompt
+                chocolatey_install_command = 'powershell -Command "Set-ExecutionPolicy Bypass -Scope Process -Force; '\
+                                             'iex ((New-Object System.Net.WebClient).DownloadString(\'https://chocolatey.org/install.ps1\'))"'
+
+                # Run the Chocolatey installation command using subprocess and capture output
+                completed_process = subprocess.run(chocolatey_install_command,
+                                                   shell=True, text=True,
+                                                   stdout=subprocess.PIPE,
+                                                   stderr=subprocess.PIPE)
+                Console.ok("Chocolatey installed")
+        else:
+            Console.error("chocolatey can only be installed in Windows")
+
+    @staticmethod
     def is_root():
         """
         checks if the user is root
