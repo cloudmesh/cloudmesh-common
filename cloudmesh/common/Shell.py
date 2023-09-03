@@ -510,16 +510,13 @@ class Shell(object):
                 print(completed_process)
                 
                 try:
-                    process = subprocess.Popen(
-                        'choco --version',
-                        shell=True,
-                        stdout=subprocess.PIPE,
-                        stderr=subprocess.PIPE,
-                        universal_newlines=True  # Allows working with text output
-                    )
+                    process = subprocess.run('choco --version')
                     Console.ok("Chocolatey installed")
                     return True
                 except subprocess.CalledProcessError:
+                    Console.warning("Chocolatey was not added to path. Close and reopen terminal and execute previous command again.")
+                    return False
+                except FileNotFoundError:
                     Console.warning("Chocolatey was not added to path. Close and reopen terminal and execute previous command again.")
                     return False
         else:
