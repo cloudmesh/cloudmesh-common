@@ -489,7 +489,7 @@ class Shell(object):
                 Console.ok("Chocolatey already installed")
                 return True
             except subprocess.CalledProcessError:
-                Console.info("Installing chocolatey...")
+                Console.msg("Installing chocolatey...")
                 if not pyuac.isUserAdmin():
                     pyuac.runAsAdmin()
 
