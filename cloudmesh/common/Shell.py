@@ -487,6 +487,7 @@ class Shell(object):
             try:
                 r = Shell.run('choco --version')
                 Console.ok("Chocolatey already installed")
+                return True
             except subprocess.CalledProcessError:
                 Console.info("Installing chocolatey...")
                 if not pyuac.isUserAdmin():
@@ -517,11 +518,13 @@ class Shell(object):
                         universal_newlines=True  # Allows working with text output
                     )
                     Console.ok("Chocolatey installed")
+                    return True
                 except subprocess.CalledProcessError:
                     Console.warning("Chocolatey was not added to path. Close and reopen terminal and execute previous command again.")
                     return False
         else:
             Console.error("chocolatey can only be installed in Windows")
+            return False
 
     @staticmethod
     def install_choco_package(package: str):
