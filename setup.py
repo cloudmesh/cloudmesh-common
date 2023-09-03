@@ -55,6 +55,8 @@ tabulate
 requests
 pyfiglet
 tqdm
+pywin32; platform_system == "Windows"
+pyuac; platform_system == "Windows"
 """.splitlines()
 
 version = readfile("VERSION").strip()
