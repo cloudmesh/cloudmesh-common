@@ -491,11 +491,21 @@ class Shell(object):
             except subprocess.CalledProcessError:
                 Console.msg("Installing chocolatey...")
                 if not pyuac.isUserAdmin():
-                    pyuac.runAsAdmin()
+                    Console.error("Please run the terminal as administrator.")
+                    return False
+                
+                # Get the full path of the current Python script
+                current_script_path = os.path.abspath(__file__)
 
+                # Go up three directories from the current script's location
+                parent_directory = os.path.dirname(os.path.dirname(os.path.dirname(current_script_path)))
+
+                # Join the parent directory path with "bin"
+                bin_directory = os.path.join(parent_directory, 'bin')
+                print(bin_directory)
                 # Command to install Chocolatey using the Command Prompt
-                chocolatey_install_command = 'powershell -Command "Set-ExecutionPolicy Bypass -Scope Process -Force; '\
-                                             'iex ((New-Object System.Net.WebClient).DownloadString(\'https://chocolatey.org/install.ps1\'))"'
+                chocolatey_install_command = fr'powershell Start-Process -Wait -FilePath {bin_directory}\win-setup.bat'
+                print(chocolatey_install_command)
                 # Run the Chocolatey installation command using subprocess and capture output
                 completed_process = subprocess.run(chocolatey_install_command,
                                                    shell=True, text=True,
@@ -504,21 +514,21 @@ class Shell(object):
                 if 'current directory is invalid' in str(completed_process):
                     Console.error("You are currently standing in a non-existent directory.")
                     return False
-                if 'please run from elevated prompt' in str(completed_process).lower():
-                    Console.error("Please run the terminal as administrator.")
-                    return False
                 print(completed_process)
-                
-                try:
-                    process = subprocess.run('choco --version')
-                    Console.ok("Chocolatey installed")
-                    return True
-                except subprocess.CalledProcessError:
-                    Console.error("Chocolatey was not added to path. Close and reopen terminal and execute previous command again.")
-                    return False
-                except FileNotFoundError:
-                    Console.error("Chocolatey was not added to path. Close and reopen terminal and execute previous command again.")
-                    return False
+                Console.ok("Chocolatey installed")
+                return True
+                # try:
+                    # process = subprocess.run('choco --version')
+                    # Console.ok("Chocolatey installed")
+                    # return True
+                # except subprocess.CalledProcessError:
+                    # Console.error("Chocolatey was not added to path. Close and reopen terminal and execute previous command again.")
+                    # return True
+                    # pass
+                # except FileNotFoundError:
+                    # Console.error("Chocolatey was not added to path. Close and reopen terminal and execute previous command again.")
+                    # return True
+                    # pass
         else:
             Console.error("chocolatey can only be installed in Windows")
             return False
@@ -526,10 +536,10 @@ class Shell(object):
     @staticmethod
     def install_choco_package(package: str):
         if not Shell.is_choco_installed():
-            Console.error("Chocolatey not installed.")
+            Console.error("Chocolatey not installed, or terminal needs to be reloaded.")
             return False
 
-        command = f'choco install {package} -y'
+        command = f'cmd.exe /K choco install {package} -y'
 
         process = subprocess.Popen(
             command,
