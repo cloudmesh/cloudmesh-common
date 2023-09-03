@@ -6,6 +6,8 @@ import traceback
 import colorama
 from colorama import Fore, Back, Style
 import os
+from cloudmesh.common.util import is_powershell
+from cloudmesh.common.systeminfo import os_is_windows
 
 # from cloudmesh.common.variables import Variables
 
@@ -302,7 +304,10 @@ class Console(object):
         """
         message = message or ""
         if Console.color:
-            Console.cprint('WARNING', "WARNING: ", message)
+            if os_is_windows and is_powershell:
+                Console.cprint('RED', "WARNING: ", message)
+            else:
+                Console.cprint('WARNING', "WARNING: ", message)
         else:
             print(Console.msg("WARNING: " + message))
 
