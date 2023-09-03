@@ -503,13 +503,17 @@ class Shell(object):
                 if 'current directory is invalid' in str(completed_process):
                     Console.error("You are currently standing in a non-existent directory.")
                     return
+                if 'please run from elevated prompt' in str(completed_process).lower():
+                    Console.error("Please run the terminal as administrator.")
+                    return
                 print(completed_process)
                 Console.ok("Chocolatey installed")
         else:
             Console.error("chocolatey can only be installed in Windows")
 
-    def install_choco_package(self, package: str):
-        if not self.is_choco_installed():
+    @staticmethod
+    def install_choco_package(package: str):
+        if not Shell.is_choco_installed():
             Console.error("Chocolatey not installed.")
             return False
 
