@@ -502,12 +502,24 @@ class Shell(object):
                                                    stderr=subprocess.PIPE)
                 if 'current directory is invalid' in str(completed_process):
                     Console.error("You are currently standing in a non-existent directory.")
-                    return
+                    return False
                 if 'please run from elevated prompt' in str(completed_process).lower():
                     Console.error("Please run the terminal as administrator.")
-                    return
+                    return False
                 print(completed_process)
-                Console.ok("Chocolatey installed")
+                
+                try:
+                    process = subprocess.Popen(
+                        'choco --version',
+                        shell=True,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE,
+                        universal_newlines=True  # Allows working with text output
+                    )
+                    Console.ok("Chocolatey installed")
+                except subprocess.CalledProcessError:
+                    Console.warning("Chocolatey was not added to path. Close and reopen terminal and execute previous command again.")
+                    return False
         else:
             Console.error("chocolatey can only be installed in Windows")
 
