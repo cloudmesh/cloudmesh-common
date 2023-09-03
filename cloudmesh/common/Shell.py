@@ -458,11 +458,29 @@ class Shell(object):
         return seperator.join(textwrap.dedent(script).strip().splitlines())
 
     @staticmethod
+    def is_choco_installed():
+        """
+        return true if chocolatey windows package manager is installed
+        return false if not installed or if not windows
+        """
+        if not os_is_windows:
+            return False
+        try:
+            r = Shell.run('choco --version')
+            # no problem
+            return True
+        except subprocess.CalledProcessError:
+            return False
+
+    @staticmethod
     def install_chocolatey():
+        """
+        install chocolatey windows package manager
+        windows only
+        """
 
         import subprocess
         import pyuac
-        from cloudmesh.common.systeminfo import os_is_windows
 
         if os_is_windows():
 
@@ -477,15 +495,41 @@ class Shell(object):
                 # Command to install Chocolatey using the Command Prompt
                 chocolatey_install_command = 'powershell -Command "Set-ExecutionPolicy Bypass -Scope Process -Force; '\
                                              'iex ((New-Object System.Net.WebClient).DownloadString(\'https://chocolatey.org/install.ps1\'))"'
-
                 # Run the Chocolatey installation command using subprocess and capture output
                 completed_process = subprocess.run(chocolatey_install_command,
                                                    shell=True, text=True,
                                                    stdout=subprocess.PIPE,
                                                    stderr=subprocess.PIPE)
+                if 'current directory is invalid' in str(completed_process):
+                    Console.error("You are currently standing in a non-existent directory.")
+                    return
+                print(completed_process)
                 Console.ok("Chocolatey installed")
         else:
             Console.error("chocolatey can only be installed in Windows")
+
+    def install_choco_package(self, package: str):
+        if not self.is_choco_installed():
+            Console.error("Chocolatey not installed.")
+            return False
+
+        command = f'choco install {package} -y'
+
+        process = subprocess.Popen(
+            command,
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True  # Allows working with text output
+        )
+
+        # Read and display the live output
+        for line in process.stdout:
+            print(line, end="")
+
+        # Wait for the subprocess to complete
+        process.wait()
+        return True
 
     @staticmethod
     def is_root():
