@@ -304,7 +304,7 @@ class Console(object):
         """
         message = message or ""
         if Console.color:
-            if os_is_windows and is_powershell:
+            if os_is_windows:
                 Console.cprint('RED', "WARNING: ", message)
             else:
                 Console.cprint('WARNING', "WARNING: ", message)
