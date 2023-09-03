@@ -514,10 +514,10 @@ class Shell(object):
                     Console.ok("Chocolatey installed")
                     return True
                 except subprocess.CalledProcessError:
-                    Console.warning("Chocolatey was not added to path. Close and reopen terminal and execute previous command again.")
+                    Console.error("Chocolatey was not added to path. Close and reopen terminal and execute previous command again.")
                     return False
                 except FileNotFoundError:
-                    Console.warning("Chocolatey was not added to path. Close and reopen terminal and execute previous command again.")
+                    Console.error("Chocolatey was not added to path. Close and reopen terminal and execute previous command again.")
                     return False
         else:
             Console.error("chocolatey can only be installed in Windows")
