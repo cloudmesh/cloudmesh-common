@@ -824,6 +824,7 @@ class Shell(object):
         :param args:
         :return: list
         """
+        import re
         if match == None:
             files = os.listdir('.')
         else:

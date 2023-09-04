@@ -6,10 +6,18 @@ import traceback
 import colorama
 from colorama import Fore, Back, Style
 import os
+import psutil
 
 # from cloudmesh.common.variables import Variables
 
 colorama.init()
+
+def is_powershell():
+    
+    # this function is better than the one in util
+    # but not changing that one since it is a circular import
+    return len(os.getenv('PSModulePath', '').split(os.pathsep)) >= 3 
+
 
 
 def indent(text, indent=2, width=128):
@@ -225,7 +233,10 @@ class Console(object):
         else:
             text = ""
         if cls.color:
-            cls.cprint('FAIL', text, str(message))
+            if is_powershell():
+                print(Fore.RED + Back.WHITE + text + message + Console.theme_color['ENDC'])
+            else:
+                cls.cprint('FAIL', text, str(message))
         else:
             print(cls.txt_msg(text + str(message)))
 
@@ -240,7 +251,7 @@ class Console(object):
     @staticmethod
     def TODO(message, prefix=True, traceflag=True):
         """
-        prints an TODO message
+        prints a TODO message
 
         :param message: the message
         :param prefix: if set to true it prints TODO: as prefix
@@ -302,7 +313,11 @@ class Console(object):
         """
         message = message or ""
         if Console.color:
-            Console.cprint('WARNING', "WARNING: ", message)
+            if is_powershell():
+                # fixes powershell problem https://github.com/nodejs/node/issues/14243
+                print(Fore.MAGENTA + Style.BRIGHT + "WARNING: " + message + Console.theme_color['ENDC'])
+            else:
+                Console.cprint("WARNING", "WARNING: ", message)
         else:
             print(Console.msg("WARNING: " + message))
 

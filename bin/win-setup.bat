@@ -23,7 +23,7 @@ REM Check if Git is installed
 git --version 2>nul
 if %errorlevel% neq 0 (
     echo Git is not installed. Installing Git...
-    choco install git -y
+    choco install git.install --params "/GitAndUnixToolsOnPath /Editor:Nano /PseudoConsoleSupport /NoAutoCrlf" -y
 ) else (
     echo Git is already installed.
 )
