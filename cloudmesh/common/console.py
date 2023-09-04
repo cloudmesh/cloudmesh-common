@@ -6,7 +6,6 @@ import traceback
 import colorama
 from colorama import Fore, Back, Style
 import os
-import psutil
 
 # from cloudmesh.common.variables import Variables
 
