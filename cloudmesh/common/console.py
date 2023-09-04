@@ -14,7 +14,7 @@ colorama.init()
 def is_powershell():
     
     # this function is better than the one in util
-    # but not changing that one since it is a circular import
+    # but not using that one since it is a circular import
     return len(os.getenv('PSModulePath', '').split(os.pathsep)) >= 3 
 
 
