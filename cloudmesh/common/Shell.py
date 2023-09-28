@@ -55,6 +55,14 @@ from cloudmesh.common.util import is_gitbash
 #        f(args)
 #    return new_f
 
+def directory_exists(directory_name):
+    # Get the current directory
+    current_dir = os.getcwd()
+
+    location = os.path.join(current_dir, directory_name)
+    # Check if the directory exists
+    return os.path.exists(location) and os.path.isdir(location)
+
 def windows_not_supported(f):
     def wrapper(*args, **kwargs):
         host = get_platform()
