@@ -243,7 +243,7 @@ class ConfigDict(object):
             sys.exit(1)
 
         if load_order is None:
-            self.load_order = [".", os.path.join("~", ".cloudmesh")]
+            self.load_order = [".", ".cloudmesh", os.path.join("~", ".cloudmesh")]
         else:
             self.load_order = load_order
 
@@ -282,7 +282,7 @@ class ConfigDict(object):
                 sys.exit(1)
         except Exception as e:
             Console.error(
-                "Your yaml file ~/.cloudmesh/cloudmesh.yaml is not up to date.",
+                f"Your yaml file {filename} is not up to date.",
                 traceflag=False)
             Console.error(e.message, traceflag=False)
             sys.exit(1)

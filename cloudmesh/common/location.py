@@ -9,17 +9,19 @@ from cloudmesh.common.util import writefile
 from cloudmesh.common.util import readfile
 from pathlib import Path
 from cloudmesh.common.console import Console
-
+from   cloudmesh.common.base import Base
 
 class Location:
     _shared_state = None
 
-    def __init__(self, directory="~/.cloudmesh"):
+    def __init__(self, directory=None):
         if not Location._shared_state:
             self.key = "CLOUDMESH_CONFIG_DIR"
-
             Location._shared_state = self.__dict__
-            directory = path_expand(directory)
+
+            base = Base(path=directory)
+
+            directory = path_expand(base.path)
             self.directory = os.environ.get(self.key) or directory
             if not os.path.isdir(directory):
                 Shell.mkdir(directory)
@@ -34,10 +36,10 @@ class Location:
         :param content:  The content
         :return:
         """
-        path = Path(self.directory) / filename
+        path = self.file(filename)
         directory = os.path.dirname(path)
         Shell.mkdir(directory)
-        writefile(filename, content)
+        writefile(path, content)
 
     def read(self, filename):
         """
@@ -46,7 +48,7 @@ class Location:
         :param filename: The filename
         :return: The content
         """
-        return readfile(filename)
+        return readfile(self.file(filename))
 
     def file(self, filename):
         """

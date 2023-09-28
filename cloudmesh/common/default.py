@@ -1,7 +1,7 @@
 from cloudmesh.common.strdb import YamlDB
 from cloudmesh.common.util import path_expand
 from pathlib import Path
-
+from cloudmesh.common.base import Base
 
 # noinspection PyPep8
 class Default(object):
@@ -10,13 +10,21 @@ class Default(object):
 
     def __init__(self, filename=None):
         """
-        initializes the default variables. The default file is in
-        "~/.cloudmesh/default-data"
+        initializes the default variables. The default file is defined by the following order
+        1. filename
+        2. $CLOUDMESH_CONFIG_DIR/default-data
+        2. ./.cloudmesh/default-data if .cloudmesh exists
+        3, ~/.cloudmesh/default-data
 
         :param filename:
         """
+
         if filename is None:
-            self.filename = Path(path_expand("~/.cloudmesh/default-data"))
+            base = Base()
+
+            self.filename = Path(path_expand(f"{base.path}/default-data"))
+        else:
+            self.filename = Path(path_expand(filename))
 
         self.data = YamlDB(str(self.filename))
 

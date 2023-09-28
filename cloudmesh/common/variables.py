@@ -2,11 +2,16 @@ from cloudmesh.common.parameter import Parameter
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.strdb import YamlDB
 from cloudmesh.common.console import Console
-
+from cloudmesh.common.base import Base
 
 class Variables(object):
     def __init__(self, filename=None):
-        self.filename = path_expand(filename or "~/.cloudmesh/variables.dat")
+
+        if filename is None:
+            base = Base()
+            self.filename = f"{base.path}/variables.dat"
+        else:
+            self.filename = path_expand(filename or "~/.cloudmesh/variables.dat")
         self.data = YamlDB(self.filename)
 
     def save(self):

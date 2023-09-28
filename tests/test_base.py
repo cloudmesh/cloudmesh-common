@@ -12,7 +12,7 @@ from pprint import pprint
 import pytest
 import os
 import pytest
-from cloudmesh.common.base import Cloudmesh
+from cloudmesh.common.base import Base
 import shutil
 
 cwd = os.getcwd()
@@ -22,7 +22,7 @@ class Test_Base:
 
     def test_default_path_in_home(self):
         HEADING()
-        cloudmesh = Cloudmesh()
+        cloudmesh = Base()
         expected_path = os.path.expanduser("~/.cloudmesh")
         assert cloudmesh.path == expected_path
         assert cloudmesh.config == f"{expected_path}/cloudmesh.yaml"
@@ -30,7 +30,7 @@ class Test_Base:
     def test_custom_path(self):
         HEADING()
         custom_path = "./tmp/.cloudmesh"
-        cloudmesh = Cloudmesh(path=custom_path)
+        cloudmesh = Base(path=custom_path)
         assert cloudmesh.path == custom_path
         assert cloudmesh.config == f"{custom_path}/cloudmesh.yaml"
         shutil.rmtree("./tmp")
@@ -39,7 +39,7 @@ class Test_Base:
     def test_environment_variable_path(self):
         HEADING()
         os.environ["CLOUDMESH"] = "./tmp/.cloudmesh"
-        cloudmesh = Cloudmesh()
+        cloudmesh = Base()
         assert cloudmesh.path == "./tmp/.cloudmesh"
         assert cloudmesh.config == f"{cloudmesh.path}/cloudmesh.yaml"
         shutil.rmtree("./tmp")
@@ -53,7 +53,7 @@ class Test_Base:
         print ("CWD", os.getcwd())
         print(os.listdir())
 
-        cloudmesh = Cloudmesh()
+        cloudmesh = Base()
         print (cloudmesh.path)
         assert cloudmesh.path == ".cloudmesh"
         assert cloudmesh.config == ".cloudmesh/cloudmesh.yaml"
