@@ -283,7 +283,6 @@ class FlatDict(dict):
         :return:
         :rtype:
         """
-        print("type load")
         if content is None:
             config = None
             self.loads(config)
@@ -591,15 +590,12 @@ def expand_config_parameters(flat=None,
                     txt = txt.replace(name, str(value))
 
         if "{os." in values and expand_os:
-            print("expand os")
             for variable in os.environ:
                 if variable != "_":
                     name = "{os." + variable + "}"
                     value = os.environ[variable]
 
                     if name in values:
-                        print("FFFFFFF", variable, value)
-
                         if debug:
                             print("found", variable, "->", value)
                         txt = txt.replace(name, str(value))
