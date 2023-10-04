@@ -573,7 +573,6 @@ def expand_config_parameters(flat=None,
 
     pprint (type(config))
     """
-    debug=True
     if flat is None:
         config = {}
     else:
