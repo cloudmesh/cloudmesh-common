@@ -556,6 +556,18 @@ class Shell(object):
         # Wait for the subprocess to complete
         process.wait()
         return True
+    
+    @staticmethod
+    def install_brew():
+        if os_is_mac():
+            brew_install_command = fr'/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+            completed_process = subprocess.run(brew_install_command,
+                                               shell=True, text=True,
+                                               stdout=subprocess.PIPE,
+                                               stderr=subprocess.PIPE)
+        else:
+            Console.error("homebrew can only be installed on mac")
+            return False
 
     @staticmethod
     def is_root():

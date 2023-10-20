@@ -9,3 +9,4 @@ include VERSION
 include *.md
 include LICENSE
 include requirements-dev.txt
+graft bin

@@ -118,4 +118,5 @@ setup(
     ],
     zip_safe=False,
     namespace_packages=['cloudmesh'],
+    include_package_data=True
 )
