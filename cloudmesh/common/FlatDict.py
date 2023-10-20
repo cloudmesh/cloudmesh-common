@@ -283,20 +283,20 @@ class FlatDict(dict):
         :return:
         :rtype:
         """
-        print("type load")
         if content is None:
             config = None
             self.loads(config)
         elif type(content) == dict:
             self.loadd(content=content, sep=".")
         elif os.path.isfile(str(content)):
+            print ("file")
             self.loadf(filename=content, sep=".")
         elif type(content) == str:
             self.loads(content=content, sep=".")
         else:
             config = None
             self.__init__(config, sep=sep)
-
+        from cloudmesh.common.util import banner
         e = expand_config_parameters(flat=self.__dict__,
                                      expand_yaml=True,
                                      expand_os=self.expand_os,
@@ -535,7 +535,8 @@ def expand_config_parameters(flat=None,
                              expand_yaml=True,
                              expand_os=True,
                              expand_cloudmesh=True,
-                             debug=False):
+                             debug=False,
+                             depth=100):
     """
     expands all variables in the flat dict if they are specified in the values of the flatdict.
 
@@ -546,7 +547,9 @@ def expand_config_parameters(flat=None,
     :param expand_os: 
     :type expand_os: 
     :param expand_cloudmesh: 
-    :type expand_cloudmesh: 
+    :type expand_cloudmesh:
+    :param depth: the levels of recursive {variables} to replace
+    :type depth: int
     :return: the dict with th ereplaced values
     :rtype: dict    
 
@@ -582,24 +585,24 @@ def expand_config_parameters(flat=None,
             values += " " + str(value)
 
         if expand_yaml:
-            for variable in flat.keys():
-                name = "{" + variable + "}"
-                value = flat[variable]
-                if variable in values:
-                    if debug:
-                        print("found", variable, "->", value)
-                    txt = txt.replace(name, str(value))
+            found = True
+            for i in range (0,depth):
+                for variable in flat.keys():
+                    name = "{" + variable + "}"
+                    value = flat[variable]
+                    if variable in values:
+                        if debug:
+                            print("found", variable, "->", value)
+                        txt = txt.replace(name, str(value))
+
 
         if "{os." in values and expand_os:
-            print("expand os")
             for variable in os.environ:
                 if variable != "_":
                     name = "{os." + variable + "}"
                     value = os.environ[variable]
 
                     if name in values:
-                        print("FFFFFFF", variable, value)
-
                         if debug:
                             print("found", variable, "->", value)
                         txt = txt.replace(name, str(value))

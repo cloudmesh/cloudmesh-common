@@ -1,15 +1,18 @@
+import os
+
 from cloudmesh.common.dotdict import dotdict
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.util import readfile
 from ruamel import yaml
 from pathlib import Path
-
+from cloudmesh.common.base import Base
 
 class Config(object):
     def __init__(self, filename=None):
         self.filename = filename
+        base = Base()
         if self.filename is None:
-            self.filename = Path(path_expand("~/.cloudmesh/cloudmesh.yaml"))
+            self.filename = Path(base.config)
         content = readfile(self.filename)
         self.data = yaml.load(content, Loader=yaml.RoundTripLoader)
 
