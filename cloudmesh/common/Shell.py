@@ -497,12 +497,13 @@ class Shell(object):
                 # Get the full path of the current Python script
                 current_script_path = os.path.abspath(__file__)
 
-                # Go up three directories from the current script's location
-                parent_directory = os.path.dirname(os.path.dirname(os.path.dirname(current_script_path)))
+                # Get the directory containing the current script
+                script_directory = os.path.dirname(current_script_path)
 
-                # Join the parent directory path with "bin"
-                bin_directory = os.path.join(parent_directory, 'bin')
-                print(bin_directory)
+                # Join the script directory with "bin"
+                bin_directory = os.path.join(script_directory, 'bin')
+                print(f'Looking in {bin_directory} for install script...')
+
                 # Command to install Chocolatey using the Command Prompt
                 chocolatey_install_command = fr'powershell Start-Process -Wait -FilePath {bin_directory}\win-setup.bat'
                 print(chocolatey_install_command)
