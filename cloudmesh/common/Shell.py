@@ -584,15 +584,16 @@ class Shell(object):
         pw="$(osascript -e 'Tell application "System Events" to display dialog "Password:" default answer "" with hidden answer' -e 'text returned of result' 2>/dev/null)" && echo "$pw"
         """
 
-        askpass = os.path.expanduser('~/bin/pw.sh')
+        askpass = os.path.expanduser('~/pw.sh')
+
         if not os.path.isfile(askpass):
             writefile(askpass, content)
-        os.system('chmod +x ~/bin/pw.sh')
+        os.system('chmod +x ~/pw.sh')
         
         print('test')
         print(command)
         # command = 'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
-        command = 'osascript -e \'tell application "Terminal" to do script "/bin/bash -c \\"SUDO_ASKPASS=${HOME}/bin/pw.sh $(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\\""\''
+        command = 'osascript -e \'tell application "Terminal" to do script "/bin/bash -c \\"SUDO_ASKPASS=${HOME}/pw.sh $(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\\""\''
 
         try:
             subprocess.run(command, shell=True, check=True)
