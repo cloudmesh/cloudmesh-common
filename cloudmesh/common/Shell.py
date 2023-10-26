@@ -581,7 +581,7 @@ class Shell(object):
 
         
         content = """#!/bin/bash    
-        pw="$(osascript -e 'Tell application "System Events" to display dialog "Password:" default answer "" with hidden answer' -e 'text returned of result' 2>/dev/null)" && echo "$pw"
+        pw="$(osascript -e 'Tell application "System Events" to display dialog "Please enter your macOS password to install Homebrew:" default answer "" with hidden answer' -e 'text returned of result' 2>/dev/null)" && echo "$pw"
         """
 
         askpass = os.path.expanduser('~/pw.sh')
@@ -595,21 +595,29 @@ class Shell(object):
         # command = 'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
         command = f'osascript -e \'tell application "Terminal" to do script "/bin/bash -c \\"export SUDO_ASKPASS={askpass} ; export NONINTERACTIVE=1 ; $(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\\""\''
         print(command)
-        try:
-            subprocess.run(command, shell=True, check=True)
-            print("Homebrew installed successfully.")
-        except subprocess.CalledProcessError as e:
-            print(f"Error while installing Homebrew: {e}")
+        # try:
+        subprocess.run(command, shell=True, check=True)
+            # print("Homebrew installed successfully.")
+        # except subprocess.CalledProcessError as e:
+            # print(f"Error while installing Homebrew: {e}")
+
+        while True:
         
-        try:
-            r = subprocess.check_output("brew --version",
-                                        stderr=subprocess.STDOUT,
-                                        shell=True)
-            Console.ok("Homebrew installed")
-            return True
-        except subprocess.CalledProcessError:
-            Console.error("Homebrew could not be installed.")
-            return False
+            try:
+                r = subprocess.check_output("brew --version",
+                                            stderr=subprocess.STDOUT,
+                                            shell=True)
+                Console.ok("Homebrew installed")
+                return True
+            except subprocess.CalledProcessError:
+                print('Waiting', end=' ')
+                from time import sleep
+                sleep(2)
+                continue
+                # Console.error("Homebrew could not be installed.")
+                # return False
+        
+        Shell.rm(askpass)
             
 
     @staticmethod
