@@ -561,6 +561,10 @@ class Shell(object):
 
     @staticmethod
     def install_brew():
+        from elevate import elevate
+
+        elevate()
+        
         if not os_is_mac():
             Console.error("Homebrew can only be installed on mac")
             return False
@@ -575,7 +579,7 @@ class Shell(object):
             Console.info("Installing Homebrew...")
         
         
-        command = '''osascript -e \'do shell script "NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" with administrator privileges\''''
+        command = 'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
 
         try:
             subprocess.run(command, shell=True, check=True)
