@@ -54,7 +54,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python 3.10
-    - uses: conda-incubator/setup-miniconda@v2
+      uses: conda-incubator/setup-miniconda@v2
       with:
         miniconda-version: "latest"
     # - name: Add conda to system path
