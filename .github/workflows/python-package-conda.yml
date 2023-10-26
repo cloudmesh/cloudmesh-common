@@ -39,7 +39,7 @@ jobs:
       run: |
         source activate base  # Activate the conda environment
         pip install -e .     # Install the current Python library in editable mode
-
+        pip install cloudmesh-vpn
     - name: Test with pytest
       run: |
         conda install pytest
