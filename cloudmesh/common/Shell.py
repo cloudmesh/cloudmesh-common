@@ -575,11 +575,13 @@ class Shell(object):
             Console.info("Installing Homebrew...")
         
         
-        brew_install_command = fr'/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
-        completed_process = subprocess.run(brew_install_command,
-                                           shell=True, text=True,
-                                           stdout=subprocess.PIPE,
-                                           stderr=subprocess.PIPE)
+        command = 'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+
+        try:
+            subprocess.run(command, shell=True, check=True)
+            print("Homebrew installed successfully.")
+        except subprocess.CalledProcessError as e:
+            print(f"Error while installing Homebrew: {e}")
         
         try:
             r = subprocess.check_output("brew --version",
