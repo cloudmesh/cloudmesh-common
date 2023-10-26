@@ -289,31 +289,28 @@ class Shell(object):
         :return:
         """
 
-        try:
-            if sys.platform == "win32":
-                if replace:
-                    c = "&"
-                else:
-                    c = ";"
-                command = f"{command}".replace(";", c)
+        if sys.platform == "win32":
+            if replace:
+                c = "&"
             else:
-                command = f"{command} {exit}"
+                c = ";"
+            command = f"{command}".replace(";", c)
+        else:
+            command = f"{command} {exit}"
 
-            if timeout is not None:
-                r = subprocess.check_output(command,
-                                            stderr=subprocess.STDOUT,
-                                            shell=True,
-                                            timeout=timeout)
-            else:
-                r = subprocess.check_output(command,
-                                            stderr=subprocess.STDOUT,
-                                            shell=True)
-            if encoding is None or encoding == 'utf-8':
-                return str(r, 'utf-8')
-            else:
-                return r
-        except subprocess.CalledProcessError as e:
-            raise e
+        if timeout is not None:
+            r = subprocess.check_output(command,
+                                        stderr=subprocess.STDOUT,
+                                        shell=True,
+                                        timeout=timeout)
+        else:
+            r = subprocess.check_output(command,
+                                        stderr=subprocess.STDOUT,
+                                        shell=True)
+        if encoding is None or encoding == 'utf-8':
+            return str(r, 'utf-8')
+        else:
+            return r
 
     @staticmethod
     def run2(command, encoding='utf-8'):
