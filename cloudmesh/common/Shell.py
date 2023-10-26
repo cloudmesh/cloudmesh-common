@@ -602,16 +602,17 @@ class Shell(object):
             # print(f"Error while installing Homebrew: {e}")
 
         while True:
-        
+            from time import sleep
             try:
                 r = subprocess.check_output("brew --version",
                                             stderr=subprocess.STDOUT,
                                             shell=True)
                 Console.ok("Homebrew installed")
+                sleep(5)    
                 return True
             except subprocess.CalledProcessError:
                 print('Waiting', end=' ')
-                from time import sleep
+                
                 sleep(2)
                 continue
                 # Console.error("Homebrew could not be installed.")
