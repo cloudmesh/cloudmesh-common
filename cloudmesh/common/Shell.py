@@ -581,7 +581,7 @@ class Shell(object):
         
         
         # command = 'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
-        command = 'SUDO_ASKPASS=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+        command = 'osascript -e \'tell application "Terminal" to do script "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"\''
 
         try:
             subprocess.run(command, shell=True, check=True)
