@@ -463,7 +463,7 @@ class Shell(object):
         return true if chocolatey windows package manager is installed
         return false if not installed or if not windows
         """
-        if not os_is_windows:
+        if not os_is_windows():
             return False
         try:
             r = Shell.run('choco --version')

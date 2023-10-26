@@ -40,7 +40,7 @@ class Test_shell(object):
             print(e)
         Benchmark.Stop()
         print("whoami:",r)
-        if os_is_windows:
+        if os_is_windows():
             assert r is not ''
         else:
             assert getpass.getuser() in r

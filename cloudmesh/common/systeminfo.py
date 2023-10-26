@@ -17,20 +17,6 @@ import multiprocessing
 from cloudmesh.common.DateTime import DateTime
 
 
-def auto_call(func):
-    """
-    this function allows the programmer
-    to use either os_is_windows or
-    os_is_windows()
-
-    without this wrapper we would be getting
-    true for non-windows OS when using os_is_windows
-    """
-    def wrapper(*args, **kwargs):
-        return func(*args, **kwargs)()
-    return wrapper
-
-@auto_call
 def os_is_windows():
     """
     Checks if the os is windows
