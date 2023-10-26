@@ -106,7 +106,6 @@ from cloudmesh.common.util import appendfile
 from cloudmesh.common.util import readfile
 from cloudmesh.common.util import banner
 from cloudmesh.common.DateTime import DateTime
-from cloudmesh.common.Shell import Shell
 
 from time import perf_counter
 from typing import Union
@@ -864,6 +863,7 @@ class StopWatch(object):
         :return:
         :rtype:
         """
+        from cloudmesh.common.Shell import Shell
         data = []
         headers = []
         content = readfile(filename)

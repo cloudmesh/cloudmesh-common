@@ -190,7 +190,6 @@ from cloudmesh.common.util import readfile
 from cloudmesh.common.DateTime import DateTime
 from cloudmesh.common.StopWatch import progress
 from cloudmesh.common.StopWatch import progress as common_progress
-from cloudmesh.common.Shell import Shell
 
 from time import perf_counter
 
@@ -1233,6 +1232,7 @@ class StopWatch(object):
         :return:
         :rtype:
         """
+        from cloudmesh.common.Shell import Shell
         data = []
         headers = []
         content = readfile(filename)
