@@ -593,7 +593,7 @@ class Shell(object):
         print('test')
         
         # command = 'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
-        command = f'osascript -e \'tell application "Terminal" to do script "/bin/bash -c \\"SUDO_ASKPASS={askpass} $(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\\""\''
+        command = f'osascript -e \'tell application "Terminal" to do script "/bin/bash -c \\"export SUDO_ASKPASS={askpass} ; $(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\\""\''
         print(command)
         try:
             subprocess.run(command, shell=True, check=True)
