@@ -191,8 +191,11 @@ class FlatDict(dict):
         """
         return list(self.__dict__.values())
 
-    def __cmp__(self, dictionary):
-        return cmp(self.__dict__, dictionary)
+    # def __cmp__(self, dictionary):
+    #     """
+    #     deprecated
+    #     """
+    #     return cmp(self.__dict__, dictionary)
 
     def __contains__(self, item):
         return item in self.__dict__

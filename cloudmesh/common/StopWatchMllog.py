@@ -190,6 +190,7 @@ from cloudmesh.common.util import readfile
 from cloudmesh.common.DateTime import DateTime
 from cloudmesh.common.StopWatch import progress
 from cloudmesh.common.StopWatch import progress as common_progress
+from cloudmesh.common.Shell import Shell
 
 from time import perf_counter
 
@@ -1234,7 +1235,7 @@ class StopWatch(object):
         """
         data = []
         headers = []
-        content = readfile(logfile)
+        content = readfile(filename)
         lines = Shell.find_lines_with(content, what="# csv")
         data_attributes = lines[0].split(",")
         index_attributes = []

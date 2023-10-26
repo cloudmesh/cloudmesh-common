@@ -106,6 +106,7 @@ from cloudmesh.common.util import appendfile
 from cloudmesh.common.util import readfile
 from cloudmesh.common.util import banner
 from cloudmesh.common.DateTime import DateTime
+from cloudmesh.common.Shell import Shell
 
 from time import perf_counter
 from typing import Union
@@ -865,7 +866,7 @@ class StopWatch(object):
         """
         data = []
         headers = []
-        content = readfile(logfile)
+        content = readfile(filename)
         lines = Shell.find_lines_with(content, what="# csv")
         data_attributes = lines[0].split(",")
         index_attributes = []
