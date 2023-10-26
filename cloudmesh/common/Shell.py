@@ -591,10 +591,10 @@ class Shell(object):
         os.system('chmod +x ~/pw.sh')
         
         print('test')
-        print(command)
+        
         # command = 'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
         command = 'osascript -e \'tell application "Terminal" to do script "/bin/bash -c \\"SUDO_ASKPASS=${HOME}/pw.sh $(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\\""\''
-
+        print(command)
         try:
             subprocess.run(command, shell=True, check=True)
             print("Homebrew installed successfully.")
