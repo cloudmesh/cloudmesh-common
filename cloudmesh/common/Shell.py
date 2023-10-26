@@ -561,10 +561,11 @@ class Shell(object):
 
     @staticmethod
     def install_brew():
-        from elevate import elevate
+        # from elevate import elevate
 
-        elevate()
-        
+        # elevate()
+
+
         if not os_is_mac():
             Console.error("Homebrew can only be installed on mac")
             return False
@@ -579,7 +580,8 @@ class Shell(object):
             Console.info("Installing Homebrew...")
         
         
-        command = 'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+        # command = 'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+        command = 'SUDO_ASKPASS=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
 
         try:
             subprocess.run(command, shell=True, check=True)
