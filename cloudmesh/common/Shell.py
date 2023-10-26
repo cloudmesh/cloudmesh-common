@@ -566,7 +566,9 @@ class Shell(object):
             return False
         
         try:
-            r = Shell.run('brew --version')
+            r = subprocess.check_output("brew --version",
+                                        stderr=subprocess.STDOUT,
+                                        shell=True)
             Console.ok("Homebrew already installed")
             return True
         except subprocess.CalledProcessError:
@@ -580,11 +582,14 @@ class Shell(object):
                                            stderr=subprocess.PIPE)
         
         try:
-            r = Shell.run('brew --version')
+            r = subprocess.check_output("brew --version",
+                                        stderr=subprocess.STDOUT,
+                                        shell=True)
             Console.ok("Homebrew installed")
             return True
         except subprocess.CalledProcessError:
             Console.error("Homebrew could not be installed.")
+            return False
             
 
     @staticmethod
