@@ -593,7 +593,7 @@ class Shell(object):
         print('test')
         
         # command = 'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
-        command = f'osascript -e \'tell application "Terminal" to do script "/bin/bash -c \\"export SUDO_ASKPASS={askpass} ; export NONINTERACTIVE=1 ; $(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\\""\''
+        command = f'osascript -e \'tell application "Terminal" to do script "/bin/bash -c \\"export SUDO_ASKPASS={askpass} ; export NONINTERACTIVE=1 ; $(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh) ; exit \\""\''
         print(command)
         # try:
         subprocess.run(command, shell=True, check=True)
@@ -608,10 +608,10 @@ class Shell(object):
                                             stderr=subprocess.STDOUT,
                                             shell=True)
                 Console.ok("Homebrew installed")
-                sleep(5)    
+                sleep(8)
                 return True
             except subprocess.CalledProcessError:
-                print('Waiting', end=' ')
+                # print('Waiting', end=' ')
                 
                 sleep(2)
                 continue
