@@ -57,7 +57,6 @@ pyfiglet
 tqdm
 pywin32; platform_system == "Windows"
 pyuac; platform_system == "Windows"
-elevate; sys_platform == "darwin"
 """.splitlines()
 
 version = readfile("VERSION").strip()

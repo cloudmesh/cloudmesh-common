@@ -20,4 +20,3 @@ tqdm
 pyyaml
 pywin32; platform_system == "Windows"
 pyuac; platform_system == "Windows"
-elevate; sys_platform == "darwin"
