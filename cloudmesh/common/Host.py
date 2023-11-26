@@ -234,6 +234,7 @@ class Host(object):
         ssh_command = ['ssh',
                        '-o', 'StrictHostKeyChecking=no',
                        '-o', 'UserKnownHostsFile=/dev/null',
+                       '-o', 'PreferredAuthentications=publickey',
                        '-i', key,
                        '{host}',
                        f'{command}']

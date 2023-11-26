@@ -249,7 +249,16 @@ class Shell(object):
     @staticmethod
     def ssh_enabled():
         if os_is_linux():
-            r = Shell.run("service sshd status | fgrep running").strip()
+            try:
+                r = Shell.run("which sshd")
+            except RuntimeError as e:
+                raise RuntimeError("You do not have OpenSSH installed. " 
+                                    "sudo apt-get install openssh-client openssh-server "
+                                    "Automatic installation will be implemented in future cloudmesh version.")
+            # the reason why we do it like this is because WSL
+            # does not have sshd as a status. this works fine
+            r = Shell.run("service ssh status | fgrep running").strip()
+            
             return len(r) > 0
         elif os_is_windows():
             # r = Shell.run("ps | grep -F ssh")

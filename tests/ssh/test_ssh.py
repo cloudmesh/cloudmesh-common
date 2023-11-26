@@ -75,6 +75,9 @@ class TestSsh:
             results = self.ssh(processors=processors)
             print(Printer.write(results))
             for result in results:
+                if "denied (publickey)" in result["stderr"].decode():
+                    pytest.skip("ssh test cannot proceed because ssh-copy-id not yet "
+                                "done.")
                 assert result["success"]
 
     #
