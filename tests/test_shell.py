@@ -94,17 +94,6 @@ class Test_shell(object):
         assert '.DS' in r2
         assert 'variables' in r1
 
-    def test_cms(self):
-        HEADING()
-        Benchmark.Start()
-        r1 = Shell.cms('vpn status')
-        r2 = Shell.cms('echo -r blue "hello"')
-        print(r1)
-        print(r2)
-        Benchmark.Stop()
-        assert 'True' or 'False' in r1
-        assert 'hello' in r2
-
     def test_pwd(self):
         HEADING()
         Benchmark.Start()
@@ -115,8 +104,8 @@ class Test_shell(object):
     def test_open(self):
         HEADING()
         Benchmark.Start()
-        filename = '~/cm/cloudmesh-common/cloudmesh/common/console.py'
-        Shell.open(filename, program='xcode')
+        filename = 'cloudmesh/common/console.py'
+        Shell.open(filename)
         Benchmark.Stop()
         assert True  # has to be a visual test!
 

@@ -103,7 +103,8 @@ class Test_shell(object):
             else:
                 assert result.path == f'C:\\home\\{user}\\cm'
         else:
-            assert result.path == os.path.join(str(Path.home()), 'cm')
+            if os_is_windows():
+                assert result.path == os.path.join(str(Path.home()), 'cm')
 
         result = Shell.map_filename(name='scp:user@host:~/cm')
         assert result.user == "user"

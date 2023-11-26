@@ -146,22 +146,16 @@ class TestShell:
     def test_open(self):
         HEADING()
         Benchmark.Start()
-        r = Shell.open('~/cm/cloudmesh-common/tests/test.svg')
-        r2 = Shell.open('tests/test.svg')
+        r = Shell.open('tests/test.svg')
         if os_is_windows():
             assert 'command not found' and 'cannot find the file' not in r
-            assert 'command not found' and 'cannot find the file' not in r2
             print('a')
         if os_is_linux():
             assert 'command not found' and 'cannot find the file' not in r
-            assert 'command not found' and 'cannot find the file' not in r2
             print('b')
         if os_is_mac():
             assert 'command not found' and 'cannot find the file' and 'Unable to find application' not in r
-            assert 'command not found' and 'cannot find the file' and 'Unable to find application' not in r2
-            r3 = Shell.open('test.svg', program='Google Chrome')
-            assert 'command not found' and 'cannot find the file' and 'Unable to find application' not in r2
-
+            r3 = Shell.open('tests/test.svg', program='Google Chrome')
             print('c')
 
         Benchmark.Stop()
