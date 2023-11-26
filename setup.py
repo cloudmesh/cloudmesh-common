@@ -79,7 +79,7 @@ setup(
     license="Apache 2.0",
     url=URL,
     packages=find_namespace_packages(
-        where="cloudmesh/",
+        where="cloudmesh",
         exclude=("tests",
                  "deprecated",
                  "propose",
