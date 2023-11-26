@@ -1,10 +1,6 @@
 """
 common namespace.
 """
-import pkg_resources
-
-pkg_resources.declare_namespace(__name__)
-
 from pprint import pprint
 import os
 import shutil
@@ -19,5 +15,3 @@ from cloudmesh.common.debug import VERBOSE
 from cloudmesh.common.dotdict import dotdict
 from cloudmesh.common.FlatDict import FlatDict
 from cloudmesh.common.variables import Variables
-
-version = '5.0.2'
