@@ -11,6 +11,7 @@ from cloudmesh.common.DateTime import DateTime
 from cloudmesh.common.parameter import Parameter
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.util import readfile
+from cloudmesh.common.systeminfo import os_is_windows
 from pprint import pprint
 from cloudmesh.common.Printer import Printer
 
@@ -325,8 +326,15 @@ class Host(object):
             """
         ip = args['ip']
         count = str(args['count'])
-        count_flag = '-n' if platform == 'windows' else '-c'
-        command = ['ping', count_flag, count, ip]
+        
+        count_flag = '-n' if os_is_windows() else '-c'
+        if os_is_windows():
+            # adding ipv4 enforce for windows
+            # for some reason -4 is required or hosts
+            # fail. we need ipv4
+            command = ['ping', '-4', ip, count_flag, count]
+        else:
+            command = ['ping', count_flag, count, ip]
         result = subprocess.run(command, capture_output=True)
         print(result)
         print('THAT WAS RESULT!!!')
