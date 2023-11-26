@@ -27,7 +27,6 @@ github_action = str_bool(os.getenv('GITHUB_ACTIONS', 'false'))
 
 hosts = ['127.0.0.1',
          'localhost',
-         'www.indiana.edu',
          'www.pbs.org',
          'www.github.com',
          'www.redhat.com',
