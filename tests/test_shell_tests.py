@@ -21,7 +21,10 @@ from cloudmesh.common.StopWatch import StopWatch
 from cloudmesh.common.systeminfo import os_is_windows, os_is_linux, os_is_mac
 from pathlib import Path
 
-import time
+# https://github.com/actions/runner-images/issues/1519 ping does not work in github runner so we skip it.
+import os
+from distutils.util import strtobool
+github_action = strtobool(os.getenv('GITHUB_ACTIONS', 'false'))
 
 
 class TestShell:
@@ -139,7 +142,7 @@ class TestShell:
         assert os.path.exists(path_expand('./tmp')) == False
         Benchmark.Stop()
 
-
+    @pytest.mark.skipif(github_action, reason='GitHub Runner is headless, and GUI is not possible, so this is skipped.')
     def test_open(self):
         HEADING()
         Benchmark.Start()
@@ -188,6 +191,7 @@ class TestShell:
         assert '#' in r
         assert 'tabulate' in r
 
+    @pytest.mark.skipif(github_action, reason='GitHub Runner uses Azure and Azure disables ping. :( Too bad!')
     def test_shell_ping(self):
         HEADING()
         Benchmark.Start()

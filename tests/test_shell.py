@@ -110,7 +110,7 @@ class Test_shell(object):
         Benchmark.Start()
         r = Shell.pwd()
         Benchmark.Stop()
-        assert 'cm/cloudmesh-common' in r or 'cm\\cloudmesh-common' in r
+        assert 'cloudmesh-common' in r
 
     def test_open(self):
         HEADING()

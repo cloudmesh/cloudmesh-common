@@ -43,7 +43,7 @@ jobs:
     - name: Test with pytest
       run: |
         conda install pytest
-        source activate base & pytest tests
+        source activate base & pytest tests -rsx
 
 
   build-windows:
@@ -52,26 +52,36 @@ jobs:
       max-parallel: 5
 
     steps:
+    # - uses: actions/checkout@v3
+    # - name: Set up Python 3.10
+    #   uses: conda-incubator/setup-miniconda@v2
+    #   with:
+    #     miniconda-version: "latest"
     - uses: actions/checkout@v3
     - name: Set up Python 3.10
-      uses: conda-incubator/setup-miniconda@v2
+      uses: actions/setup-python@v3
       with:
-        miniconda-version: "latest"
+        python-version: '3.10'
     # - name: Add conda to system path
     #   run: |
     #     # $CONDA is an environment variable pointing to the root of the miniconda directory
     #     echo $CONDA/bin >> $GITHUB_PATH
-    - name: Add extra channels
-      run: |
-        conda config --add channels conda-forge
-        conda config --add channels defaults
+    # - name: Add extra channels
+    #   run: |
+    #     conda config --add channels conda-forge
+    #     conda config --add channels defaults
         
-    - name: Install dependencies
+    # - name: Install dependencies
+    #   run: |
+    #     conda env update --file environment.yml --name base
+    - name: set up env3
       run: |
-        conda env update --file environment.yml --name base
+        python -m venv ENV3
+
     - name: Lint with flake8
       run: |
-        conda install flake8
+        .\ENV3\Scripts\activate.ps1
+        pip install flake8
         # stop the build if there are Python syntax errors or undefined names
         flake8 --exclude deprecated . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
@@ -79,10 +89,11 @@ jobs:
 
     - name: Install current Python library
       run: |
-        conda activate base  # Activate the conda environment
+        .\ENV3\Scripts\activate.ps1
         pip install -e .     # Install the current Python library in editable mode
         pip install cloudmesh-vpn
     - name: Test with pytest
       run: |
-        conda install pytest
-        source activate base & pytest tests
+        .\ENV3\Scripts\activate.ps1
+        pip install pytest
+        pytest tests -rsx

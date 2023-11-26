@@ -37,12 +37,12 @@ class Test_Base:
 
     def test_environment_variable_path(self):
         HEADING()
-        os.environ["CLOUDMESH"] = "./tmp/.cloudmesh"
+        os.environ["CLOUDMESH_CONFIG_DIR"] = "./tmp/.cloudmesh"
         cloudmesh = Base()
         assert cloudmesh.path == "./tmp/.cloudmesh"
         assert cloudmesh.config == f"{cloudmesh.path}/cloudmesh.yaml"
         shutil.rmtree("./tmp")
-        del os.environ["CLOUDMESH"]
+        del os.environ["CLOUDMESH_CONFIG_DIR"]
 
     def test_cloudmesh_in_cwd(self):
         HEADING()

@@ -249,11 +249,25 @@ class Shell(object):
     @staticmethod
     def ssh_enabled():
         if os_is_linux():
-            r = Shell.run("service sshd status | fgrep running").strip()
+            try:
+                r = Shell.run("which sshd")
+            except RuntimeError as e:
+                raise RuntimeError("You do not have OpenSSH installed. " 
+                                    "sudo apt-get install openssh-client openssh-server "
+                                    "Automatic installation will be implemented in future cloudmesh version.")
+            # the reason why we do it like this is because WSL
+            # does not have sshd as a status. this works fine
+            r = Shell.run("service ssh status | fgrep running").strip()
+            
             return len(r) > 0
         elif os_is_windows():
-            r = Shell.run("ps | grep -F ssh")
-            return "ssh" in r
+            # r = Shell.run("ps | grep -F ssh")
+            # return "ssh" in r
+            processes = psutil.process_iter(attrs=['name'])
+            # Filter the processes for 'ssh'
+            ssh_processes = [p.info for p in processes if 'ssh' in p.info['name']]
+            return len(ssh_processes) > 0
+
         elif os_is_mac():
             r = Shell.run("ps -ef")
             if "sshd" in r:
@@ -281,7 +295,7 @@ class Shell(object):
         return str(result)
 
     @staticmethod
-    def run(command, exit="; exit 0", encoding='utf-8', replace=True, timeout=None):
+    def run(command, exitcode="", encoding='utf-8', replace=True, timeout=None):
         """
         executes the command and returns the output as string
         :param command:
@@ -295,18 +309,21 @@ class Shell(object):
             else:
                 c = ";"
             command = f"{command}".replace(";", c)
-        else:
-            command = f"{command} {exit}"
+        elif exitcode:
+            command = f"{command} {exitcode}"
 
-        if timeout is not None:
-            r = subprocess.check_output(command,
-                                        stderr=subprocess.STDOUT,
-                                        shell=True,
-                                        timeout=timeout)
-        else:
-            r = subprocess.check_output(command,
-                                        stderr=subprocess.STDOUT,
-                                        shell=True)
+        try:
+            if timeout is not None:
+                r = subprocess.check_output(command,
+                                            stderr=subprocess.STDOUT,
+                                            shell=True,
+                                            timeout=timeout)
+            else:
+                r = subprocess.check_output(command,
+                                            stderr=subprocess.STDOUT,
+                                            shell=True)
+        except subprocess.CalledProcessError as e:
+            raise RuntimeError(f"{e.returncode} {e.output.decode()}")
         if encoding is None or encoding == 'utf-8':
             return str(r, 'utf-8')
         else:
