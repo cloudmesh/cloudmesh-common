@@ -1,0 +1,23 @@
+#!/usr/bin/env python
+
+import argparse
+import subprocess
+
+# usage python set-version.py --version 4.4.0
+
+def set_version(new_version):
+    try:
+        # Call bump2version with --allow-dirty --new-version X.X.X patch
+        subprocess.run(['bump2version', '--allow-dirty', '--new-version', new_version, 'patch'], check=True)
+        print(f"Version set to {new_version} successfully.")
+    except subprocess.CalledProcessError as e:
+        print(f"Error: {e}")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Set version using bump2version.")
+    parser.add_argument('--version', help='New version in X.X.X format', required=True)
+
+    args = parser.parse_args()
+
+    new_version = args.version
+    set_version(new_version)
