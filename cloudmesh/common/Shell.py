@@ -281,7 +281,7 @@ class Shell(object):
         return str(result)
 
     @staticmethod
-    def run(command, exit="; exit 0", encoding='utf-8', replace=True, timeout=None):
+    def run(command, exitcode="", encoding='utf-8', replace=True, timeout=None):
         """
         executes the command and returns the output as string
         :param command:
@@ -295,18 +295,21 @@ class Shell(object):
             else:
                 c = ";"
             command = f"{command}".replace(";", c)
-        else:
-            command = f"{command} {exit}"
+        elif exitcode:
+            command = f"{command} {exitcode}"
 
-        if timeout is not None:
-            r = subprocess.check_output(command,
-                                        stderr=subprocess.STDOUT,
-                                        shell=True,
-                                        timeout=timeout)
-        else:
-            r = subprocess.check_output(command,
-                                        stderr=subprocess.STDOUT,
-                                        shell=True)
+        try:
+            if timeout is not None:
+                r = subprocess.check_output(command,
+                                            stderr=subprocess.STDOUT,
+                                            shell=True,
+                                            timeout=timeout)
+            else:
+                r = subprocess.check_output(command,
+                                            stderr=subprocess.STDOUT,
+                                            shell=True)
+        except subprocess.CalledProcessError as e:
+            raise RuntimeError(f"{e.returncode} {e.output.decode()}")
         if encoding is None or encoding == 'utf-8':
             return str(r, 'utf-8')
         else:
