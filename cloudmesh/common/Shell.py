@@ -252,8 +252,13 @@ class Shell(object):
             r = Shell.run("service sshd status | fgrep running").strip()
             return len(r) > 0
         elif os_is_windows():
-            r = Shell.run("ps | grep -F ssh")
-            return "ssh" in r
+            # r = Shell.run("ps | grep -F ssh")
+            # return "ssh" in r
+            processes = psutil.process_iter(attrs=['name'])
+            # Filter the processes for 'ssh'
+            ssh_processes = [p.info for p in processes if 'ssh' in p.info['name']]
+            return len(ssh_processes) > 0
+
         elif os_is_mac():
             r = Shell.run("ps -ef")
             if "sshd" in r:
