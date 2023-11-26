@@ -2,9 +2,9 @@
 cloudmesh name space.
 """
 # noa: E402
-import pkg_resources
+# import pkg_resources
 
-pkg_resources.declare_namespace(__name__)
+# pkg_resources.declare_namespace(__name__)
 
 import os
 import shutil

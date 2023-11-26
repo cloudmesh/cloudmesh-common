@@ -18,7 +18,7 @@
 import io
 import sys
 
-from setuptools import find_packages, setup
+from setuptools import find_packages, find_namespace_packages, setup
 
 def check_python():
     if not sys.version_info.major == 3 and \
@@ -80,7 +80,11 @@ setup(
     version=version,
     license="Apache 2.0",
     url=URL,
-    packages=find_packages(exclude=("tests")),
+    packages=find_packages(exclude=("tests",
+                                    "deprecated",
+                                    "propose",
+                                    "examples",
+                                    "conda")) + find_namespace_packages(include=['cloudmesh.*']),
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
