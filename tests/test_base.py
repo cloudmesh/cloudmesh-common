@@ -9,7 +9,6 @@ from cloudmesh.common.util import HEADING
 
 from cloudmesh.common.Shell import Shell
 from pprint import pprint
-import pytest
 import os
 import pytest
 from cloudmesh.common.base import Base

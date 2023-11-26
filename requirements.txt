@@ -4,6 +4,7 @@
 #
 #    pip-compile setup.py
 #
+python-dateutil
 colorama
 humanize
 oyaml
