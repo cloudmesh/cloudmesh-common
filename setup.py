@@ -44,13 +44,11 @@ def readfile(filename):
 
 requiers = """
 psutil
-pytz
 python-hostlist
 simplejson
 oyaml
 colorama
 humanize
-python-dateutil
 tabulate
 requests
 pyfiglet
@@ -80,11 +78,14 @@ setup(
     version=version,
     license="Apache 2.0",
     url=URL,
-    packages=find_packages(exclude=("tests",
-                                    "deprecated",
-                                    "propose",
-                                    "examples",
-                                    "conda")) + find_namespace_packages(include=['cloudmesh.*']),
+    packages=find_namespace_packages(
+        where="cloudmesh/",
+        exclude=("tests",
+                 "deprecated",
+                 "propose",
+                 "examples",
+                 "conda"),
+        include=['cloudmesh']),
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
@@ -123,3 +124,4 @@ setup(
     zip_safe=False,
     include_package_data=True
 )
+
