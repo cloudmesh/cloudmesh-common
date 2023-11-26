@@ -12,6 +12,7 @@ from cloudmesh.common.Host import Host
 from cloudmesh.common.Printer import Printer
 from cloudmesh.common.StopWatch import StopWatch
 from cloudmesh.common.util import HEADING
+from distutils.util import strtobool
 
 Benchmark.debug()
 
@@ -19,7 +20,7 @@ cloud = "local"
 
 # https://github.com/actions/runner-images/issues/1519 ping does not work in github runner so we skip it.
 import os
-github_action = os.getenv('GITHUB_ACTIONS')
+github_action = strtobool(os.getenv('GITHUB_ACTIONS', 'false'))
 
 # multiping only works if you have root, so we can not use it
 # from multiping import MultiPing
