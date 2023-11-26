@@ -6,8 +6,8 @@
 
 # https://github.com/actions/runner-images/issues/1519 ping does not work in github runner so we skip it.
 import os
-from distutils.util import strtobool
-github_action = strtobool(os.getenv('GITHUB_ACTIONS', 'false'))
+from cloudmesh.common.util import str_bool
+github_action = str_bool(os.getenv('GITHUB_ACTIONS', 'false'))
 
 import pytest
 from cloudmesh.common.Benchmark import Benchmark
