@@ -85,4 +85,4 @@ jobs:
     - name: Test with pytest
       run: |
         conda install pytest
-        source activate base & pytest tests 
+        conda activate base & pytest tests 
