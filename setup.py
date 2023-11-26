@@ -80,14 +80,13 @@ setup(
     license="Apache 2.0",
     url=URL,
     packages=find_namespace_packages(
-        where="",
         exclude=("tests",
                  "deprecated",
                  "propose",
                  "examples",
                  "conda"),
         include=['cloudmesh']),
-    package_dir={"cloudmesh": ""},
+    package_dir={"cloudmesh": "cloudmesh"},
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
