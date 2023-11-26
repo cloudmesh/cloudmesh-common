@@ -79,10 +79,11 @@ jobs:
 
     - name: Install current Python library
       run: |
-        conda activate base  # Activate the conda environment
+        source activate base  # Activate the conda environment
         pip install -e .     # Install the current Python library in editable mode
         pip install cloudmesh-vpn
     - name: Test with pytest
       run: |
         conda install pytest
-        conda activate base & pytest tests 
+        source activate base 
+        pytest tests 
