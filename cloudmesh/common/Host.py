@@ -328,7 +328,8 @@ class Host(object):
         count_flag = '-n' if platform == 'windows' else '-c'
         command = ['ping', count_flag, count, ip]
         result = subprocess.run(command, capture_output=True)
-
+        print(result)
+        print('THAT WAS RESULT!!!')
         try:
             timers = result.stdout \
                 .decode("utf-8", "ignore") \
