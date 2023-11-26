@@ -49,7 +49,7 @@ def craete_location(host):
 
 
 
-@pytest.mark.skipif(not Shell.ssh_enabled(), reason="SSH is not aenabled")
+@pytest.mark.skipif(not Shell.ssh_enabled(), reason="SSH is not enabled")
 @pytest.mark.incremental
 class TestSsh:
 

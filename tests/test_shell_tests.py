@@ -142,7 +142,7 @@ class TestShell:
         assert os.path.exists(path_expand('./tmp')) == False
         Benchmark.Stop()
 
-
+    @pytest.mark.skipif(github_action, reason='GitHub Runner is headless, and GUI is not possible, so this is skipped.')
     def test_open(self):
         HEADING()
         Benchmark.Start()
