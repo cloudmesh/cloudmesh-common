@@ -20,4 +20,4 @@ from cloudmesh.common.dotdict import dotdict
 from cloudmesh.common.FlatDict import FlatDict
 from cloudmesh.common.variables import Variables
 
-version = '5.0.0'
+version = '4.4.0'
