@@ -328,13 +328,14 @@ class Host(object):
         count = str(args['count'])
         
         count_flag = '-n' if os_is_windows() else '-c'
-        if os_is_windows():
+        # if os_is_windows():
             # adding ipv4 enforce for windows
             # for some reason -4 is required or hosts
             # fail. we need ipv4
-            command = ['ping', '-4', ip, count_flag, count]
-        else:
-            command = ['ping', count_flag, count, ip]
+            # command = ['ping', '-4', ip, count_flag, count]
+        # else:
+            # command = ['ping', count_flag, count, ip]
+        command = ['ping', '-4', ip, count_flag, count]
         result = subprocess.run(command, capture_output=True)
         print(result)
         print('THAT WAS RESULT!!!')
