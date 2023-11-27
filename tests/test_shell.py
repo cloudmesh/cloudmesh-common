@@ -12,6 +12,10 @@ from cloudmesh.common.systeminfo import os_is_windows
 from cloudmesh.common.Benchmark import Benchmark
 import pytest
 
+import os
+from cloudmesh.common.util import str_bool
+github_action = str_bool(os.getenv('GITHUB_ACTIONS', 'false'))
+
 
 def run(command):
     parameter = command.split(" ")
@@ -103,6 +107,8 @@ class Test_shell(object):
 
     def test_open(self):
         HEADING()
+        if os_is_windows() and github_action:
+            pytest.skip('not supported')
         Benchmark.Start()
         filename = 'cloudmesh/common/console.py'
         Shell.open(filename)
