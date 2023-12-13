@@ -863,9 +863,10 @@ class StopWatch(object):
         :return:
         :rtype:
         """
+        from cloudmesh.common.Shell import Shell
         data = []
         headers = []
-        content = readfile(logfile)
+        content = readfile(filename)
         lines = Shell.find_lines_with(content, what="# csv")
         data_attributes = lines[0].split(",")
         index_attributes = []

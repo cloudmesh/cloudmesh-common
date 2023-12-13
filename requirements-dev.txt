@@ -1,5 +1,4 @@
 wheel
-bump2version
 pip-tools
 pipdeptree
 pytest

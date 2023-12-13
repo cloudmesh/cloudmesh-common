@@ -54,7 +54,7 @@ if py3k:
 else:
     itermap = itertools.imap
     iterzip = itertools.izip
-    uni_chr = unichr
+    uni_chr = chr # unichr was for old versions of python
     from HTMLParser import HTMLParser
 
 if py3k and sys.version_info[1] >= 2:

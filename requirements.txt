@@ -4,14 +4,13 @@
 #
 #    pip-compile setup.py
 #
+python-dateutil
 colorama
 humanize
 oyaml
 psutil
 pyfiglet
-python-dateutil
 python-hostlist
-pytz
 requests
 simplejson
 six

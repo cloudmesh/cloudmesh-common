@@ -57,7 +57,6 @@ clean:
 # PYPI
 ######################################################################
 
-
 twine:
 	pip install -U twine
 
@@ -67,19 +66,21 @@ dist:
 
 patch: clean twine
 	$(call banner, "patch")
-	bump2version --allow-dirty patch
+	cms bumpversion patch
 	python setup.py sdist bdist_wheel
 	git push origin main --tags
 	twine check dist/*
 	twine upload --repository testpypi  dist/*
-	# $(call banner, "install")
-	# pip search "cloudmesh" | fgrep cloudmesh-$(package)
-	# sleep 10
-	# pip install --index-url https://test.pypi.org/simple/ cloudmesh-$(package) -U
 
 minor: clean
 	$(call banner, "minor")
-	bump2version minor --allow-dirty
+	cms bumpversion minor
+	@cat VERSION
+	@echo
+
+major: clean
+	$(call banner, "major")
+	cms bumpversion major
 	@cat VERSION
 	@echo
 
@@ -93,18 +94,6 @@ release: clean
 	$(call banner, "install")
 	@cat VERSION
 	@echo
-	# sleep 10
-	# pip install -U cloudmesh-common
-
-
-dev:
-	bump2version --new-version "$(VERSION)-dev0" part --allow-dirty
-	bump2version patch --allow-dirty
-	@cat VERSION
-	@echo
-
-reset:
-	bump2version --new-version "4.0.0-dev0" part --allow-dirty
 
 upload:
 	twine check dist/*
@@ -113,19 +102,8 @@ upload:
 pip:
 	pip install --index-url https://test.pypi.org/simple/ cloudmesh-$(package) -U
 
-#	    --extra-index-url https://test.pypi.org/simple
-
 log:
 	$(call banner, log)
 	gitchangelog | fgrep -v ":dev:" | fgrep -v ":new:" > ChangeLog
 	git commit -m "chg: dev: Update ChangeLog" ChangeLog
 	git push
-
-# bump:
-#	git checkout main
-#	git pull
-#	tox
-#	python setup.py sdist bdist_wheel upload
-#	bumpversion --no-tag patch
-#	git push origin main --tags
-

@@ -31,8 +31,8 @@ host = "rivanna.hpc.virginia.edu"
 username = variables["username"]
 
 if username is None:
-    Console.error("No username provided. Use cms set username=ComputingID")
-    quit()
+    Console.warning("No username provided. Use cms set username=ComputingID")
+    # quit()
 
 job = None
 

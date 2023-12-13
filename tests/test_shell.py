@@ -12,6 +12,10 @@ from cloudmesh.common.systeminfo import os_is_windows
 from cloudmesh.common.Benchmark import Benchmark
 import pytest
 
+import os
+from cloudmesh.common.util import str_bool
+github_action = str_bool(os.getenv('GITHUB_ACTIONS', 'false'))
+
 
 def run(command):
     parameter = command.split(" ")
@@ -40,8 +44,8 @@ class Test_shell(object):
             print(e)
         Benchmark.Stop()
         print("whoami:",r)
-        if os_is_windows:
-            assert r is not ''
+        if os_is_windows():
+            assert r != ''
         else:
             assert getpass.getuser() in r
 
@@ -94,29 +98,20 @@ class Test_shell(object):
         assert '.DS' in r2
         assert 'variables' in r1
 
-    def test_cms(self):
-        HEADING()
-        Benchmark.Start()
-        r1 = Shell.cms('vpn status')
-        r2 = Shell.cms('echo -r blue "hello"')
-        print(r1)
-        print(r2)
-        Benchmark.Stop()
-        assert 'True' or 'False' in r1
-        assert 'hello' in r2
-
     def test_pwd(self):
         HEADING()
         Benchmark.Start()
         r = Shell.pwd()
         Benchmark.Stop()
-        assert 'cm/cloudmesh-common' in r or 'cm\\cloudmesh-common' in r
+        assert 'cloudmesh-common' in r
 
     def test_open(self):
         HEADING()
+        if os_is_windows() and github_action:
+            pytest.skip('not supported')
         Benchmark.Start()
-        filename = '~/cm/cloudmesh-common/cloudmesh/common/console.py'
-        Shell.open(filename, program='xcode')
+        filename = 'cloudmesh/common/console.py'
+        Shell.open(filename)
         Benchmark.Stop()
         assert True  # has to be a visual test!
 

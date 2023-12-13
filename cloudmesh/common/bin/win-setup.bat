@@ -28,7 +28,24 @@ if %errorlevel% neq 0 (
     echo Git is already installed.
 )
 
-echo cloudmesh has all required dependencies.
-pause
+REM Check if cygwin is installed
+cygcheck -V 2>nul
+if %errorlevel% neq 0 (
+    echo cygwin is not installed. Installing cygwin...
+    choco install cygwin -y
+) else (
+    echo cygwin is already installed.
+)
+
+refreshenv
+
+REM Countdown from 5
+echo cloudmesh has all required dependencies. Starting in 5 seconds...
+
+for /l %%i in (5,-1,1) do (
+    echo %%i
+    timeout /t 1 >nul
+)
+
 
 ENDLOCAL

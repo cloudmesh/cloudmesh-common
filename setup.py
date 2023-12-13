@@ -18,7 +18,7 @@
 import io
 import sys
 
-from setuptools import find_packages, setup
+from setuptools import find_packages, find_namespace_packages, setup
 
 def check_python():
     if not sys.version_info.major == 3 and \
@@ -43,14 +43,13 @@ def readfile(filename):
 # pytz==2016.10
 
 requiers = """
+python-dateutil
 psutil
-pytz
 python-hostlist
 simplejson
 oyaml
 colorama
 humanize
-python-dateutil
 tabulate
 requests
 pyfiglet
@@ -80,7 +79,14 @@ setup(
     version=version,
     license="Apache 2.0",
     url=URL,
-    packages=find_packages(exclude=("tests")),
+    packages=find_namespace_packages(
+        exclude=("tests",
+                 "deprecated",
+                 "propose",
+                 "examples",
+                 "conda"),
+        include=['cloudmesh']),
+    package_dir={"cloudmesh": "cloudmesh"},
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
@@ -117,5 +123,6 @@ setup(
         "coverage",
     ],
     zip_safe=False,
-    namespace_packages=['cloudmesh'],
+    include_package_data=True
 )
+

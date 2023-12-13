@@ -249,11 +249,25 @@ class Shell(object):
     @staticmethod
     def ssh_enabled():
         if os_is_linux():
-            r = Shell.run("service sshd status | fgrep running").strip()
+            try:
+                r = Shell.run("which sshd")
+            except RuntimeError as e:
+                raise RuntimeError("You do not have OpenSSH installed. " 
+                                    "sudo apt-get install openssh-client openssh-server "
+                                    "Automatic installation will be implemented in future cloudmesh version.")
+            # the reason why we do it like this is because WSL
+            # does not have sshd as a status. this works fine
+            r = Shell.run("service ssh status | fgrep running").strip()
+            
             return len(r) > 0
         elif os_is_windows():
-            r = Shell.run("ps | grep -F ssh")
-            return "ssh" in r
+            # r = Shell.run("ps | grep -F ssh")
+            # return "ssh" in r
+            processes = psutil.process_iter(attrs=['name'])
+            # Filter the processes for 'ssh'
+            ssh_processes = [p.info for p in processes if 'ssh' in p.info['name']]
+            return len(ssh_processes) > 0
+
         elif os_is_mac():
             r = Shell.run("ps -ef")
             if "sshd" in r:
@@ -281,7 +295,7 @@ class Shell(object):
         return str(result)
 
     @staticmethod
-    def run(command, exit="; exit 0", encoding='utf-8', replace=True, timeout=None):
+    def run(command, exitcode="", encoding='utf-8', replace=True, timeout=None):
         """
         executes the command and returns the output as string
         :param command:
@@ -295,18 +309,21 @@ class Shell(object):
             else:
                 c = ";"
             command = f"{command}".replace(";", c)
-        else:
-            command = f"{command} {exit}"
+        elif exitcode:
+            command = f"{command} {exitcode}"
 
-        if timeout is not None:
-            r = subprocess.check_output(command,
-                                        stderr=subprocess.STDOUT,
-                                        shell=True,
-                                        timeout=timeout)
-        else:
-            r = subprocess.check_output(command,
-                                        stderr=subprocess.STDOUT,
-                                        shell=True)
+        try:
+            if timeout is not None:
+                r = subprocess.check_output(command,
+                                            stderr=subprocess.STDOUT,
+                                            shell=True,
+                                            timeout=timeout)
+            else:
+                r = subprocess.check_output(command,
+                                            stderr=subprocess.STDOUT,
+                                            shell=True)
+        except subprocess.CalledProcessError as e:
+            raise RuntimeError(f"{e.returncode} {e.output.decode()}")
         if encoding is None or encoding == 'utf-8':
             return str(r, 'utf-8')
         else:
@@ -463,7 +480,7 @@ class Shell(object):
         return true if chocolatey windows package manager is installed
         return false if not installed or if not windows
         """
-        if not os_is_windows:
+        if not os_is_windows():
             return False
         try:
             r = Shell.run('choco --version')
@@ -497,12 +514,13 @@ class Shell(object):
                 # Get the full path of the current Python script
                 current_script_path = os.path.abspath(__file__)
 
-                # Go up three directories from the current script's location
-                parent_directory = os.path.dirname(os.path.dirname(os.path.dirname(current_script_path)))
+                # Get the directory containing the current script
+                script_directory = os.path.dirname(current_script_path)
 
-                # Join the parent directory path with "bin"
-                bin_directory = os.path.join(parent_directory, 'bin')
-                print(bin_directory)
+                # Join the script directory with "bin"
+                bin_directory = os.path.join(script_directory, 'bin')
+                print(f'Looking in {bin_directory} for install script...')
+
                 # Command to install Chocolatey using the Command Prompt
                 chocolatey_install_command = fr'powershell Start-Process -Wait -FilePath {bin_directory}\win-setup.bat'
                 print(chocolatey_install_command)
@@ -556,6 +574,67 @@ class Shell(object):
         # Wait for the subprocess to complete
         process.wait()
         return True
+    
+
+    @staticmethod
+    def install_brew():
+        # from elevate import elevate
+
+        # elevate()
+
+
+        if not os_is_mac():
+            Console.error("Homebrew can only be installed on mac")
+            return False
+        
+        try:
+            r = subprocess.check_output("brew --version",
+                                        stderr=subprocess.STDOUT,
+                                        shell=True)
+            Console.ok("Homebrew already installed")
+            return True
+        except subprocess.CalledProcessError:
+            Console.info("Installing Homebrew...")
+
+        
+        content = """#!/bin/bash    
+        pw="$(osascript -e 'Tell application "System Events" to display dialog "Please enter your macOS password to install Homebrew:" default answer "" with hidden answer' -e 'text returned of result' 2>/dev/null)" && echo "$pw"
+        """
+
+        askpass = os.path.expanduser('~/pw.sh')
+
+        if not os.path.isfile(askpass):
+            writefile(askpass, content)
+        os.system('chmod +x ~/pw.sh')
+        
+        # command = 'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+        command = f'osascript -e \'tell application "Terminal" to do script "/bin/bash -c \\"export SUDO_ASKPASS={askpass} ; export NONINTERACTIVE=1 ; $(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\\""\''
+        print(command)
+        # try:
+        subprocess.run(command, shell=True, check=True)
+            # print("Homebrew installed successfully.")
+        # except subprocess.CalledProcessError as e:
+            # print(f"Error while installing Homebrew: {e}")
+
+        while True:
+            from time import sleep
+            try:
+                r = subprocess.check_output("brew --version",
+                                            stderr=subprocess.STDOUT,
+                                            shell=True)
+                Console.ok("Homebrew installed")
+                sleep(8)
+                return True
+            except subprocess.CalledProcessError:
+                # print('Waiting', end=' ')
+                
+                sleep(2)
+                continue
+                # Console.error("Homebrew could not be installed.")
+                # return False
+        
+        Shell.rm(askpass)
+            
 
     @staticmethod
     def is_root():
