@@ -1130,6 +1130,20 @@ class Shell(object):
         """
         return cls.execute('rackdiag', args)
 
+    def count_files(directory, recursive=False):
+        count = 0
+        if recursive:
+            for root, dirs, files in os.walk(directory):
+                count += len(files)
+        else:
+            try:
+                files = os.listdir(directory)
+                count = len(files)
+            except FileNotFoundError:
+                Console.error(f"The directory '{directory}' does not exist.")
+
+        return count
+
     @classmethod
     def rm(cls, location):
         """
