@@ -43,17 +43,19 @@ def readfile(filename):
 # pytz==2016.10
 
 requiers = """
-python-dateutil
 psutil
-python-hostlist
-simplejson
-oyaml
+python-dateutil
 colorama
 humanize
-tabulate
-requests
+oyaml
 pyfiglet
+python-hostlist
+requests
+simplejson
+six
+tabulate
 tqdm
+pyyaml
 pywin32; platform_system == "Windows"
 pyuac; platform_system == "Windows"
 """.splitlines()

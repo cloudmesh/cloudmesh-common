@@ -4,11 +4,11 @@
 #
 #    pip-compile setup.py
 #
+psutil
 python-dateutil
 colorama
 humanize
 oyaml
-psutil
 pyfiglet
 python-hostlist
 requests
