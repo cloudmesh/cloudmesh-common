@@ -1,4 +1,4 @@
 bumpversion:
-- cloudmesh/bumpversion/__init__.py
-- cloudmesh/bumpversion/__version__.py
+- cloudmesh/common/__init__.py
+- cloudmesh/common/__version__.py
 - VERSION
