@@ -34,11 +34,15 @@ class DateTime(object):
 
     """
 
-    # timezone = time.tzname[0]
+    timezone = TIME.datetime.now().astimezone().tzinfo
 
     @staticmethod
     def now():
         return TIME.datetime.utcnow()
+    
+    @staticmethod
+    def local_now():
+        return TIME.datetime.now()
 
     @staticmethod
     def natural(time):
@@ -88,7 +92,7 @@ class DateTime(object):
         timestamp = calendar.timegm(
             (TIME.datetime.strptime(utc, TIME_FORMAT)).timetuple())
         local = TIME.datetime.fromtimestamp(timestamp).strftime(TIME_FORMAT)
-        return local + " " + DateTime.timezone
+        return local + " " + str(DateTime.timezone)
 
 
 if __name__ == "__main__":
