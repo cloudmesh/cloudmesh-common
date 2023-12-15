@@ -11,6 +11,7 @@ dist:
 
 patch: clean twine
 	$(call banner, "patch")
+	pip install -r requirements-dev.txt
 	cms bumpversion patch
 	@VERSION=$$(cat VERSION); \
 		git commit -m "bump version ${VERSION}" .; git push
