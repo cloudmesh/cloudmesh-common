@@ -1,26 +1,26 @@
-import subprocess
 import collections
+import csv
 import glob
 import inspect
 import os
+import platform
 import random
 import re
 import shutil
+import socket
+import subprocess
+import sys
 import tempfile
 import time
 from contextlib import contextmanager
 from getpass import getpass
-import sys
-import psutil
-import requests
 from pathlib import Path
-from cloudmesh.common.console import Console
+
+import psutil
 import pyfiglet
-import socket
-import platform
+import requests
 
-import csv
-
+from cloudmesh.common.console import Console
 
 try:
     collectionsAbc = collections.abc

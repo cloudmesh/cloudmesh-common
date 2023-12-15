@@ -12,6 +12,8 @@ dist:
 patch: clean twine
 	$(call banner, "patch")
 	cms bumpversion patch
+	@VERSION=$$(cat VERSION); \
+		git commit -m "bump version ${VERSION}" .; git push
 	python setup.py sdist bdist_wheel
 	git push origin main --tags
 	twine check dist/*
