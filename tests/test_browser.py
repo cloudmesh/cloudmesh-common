@@ -8,12 +8,12 @@
 This is the test for Shell.browser.
 """
 
+import os
+from pathlib import Path
+
+from cloudmesh.common.Benchmark import Benchmark
 from cloudmesh.common.Shell import Shell
 from cloudmesh.common.util import HEADING
-from cloudmesh.common.Benchmark import Benchmark
-
-from pathlib import Path
-import os
 
 
 class TestBrowser:

@@ -3,6 +3,7 @@ A simple framework to handle error messages
 """
 import sys
 import traceback
+
 from cloudmesh.common.console import Console
 
 

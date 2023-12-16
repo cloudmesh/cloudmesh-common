@@ -4,10 +4,12 @@
 # pytest -v  tests/test_tabulate.py
 ###############################################################
 
+from pprint import pprint
+
+import pytest
 from cloudmesh.common.Tabulate import Printer
 from cloudmesh.common.util import HEADING
-from pprint import pprint
-import pytest
+
 
 @pytest.mark.incremental
 class Test_Tabulate:

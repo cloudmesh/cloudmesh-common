@@ -2,14 +2,15 @@
 class that specifies where we read the cloudmesh.yaml file from
 """
 import os
+from pathlib import Path
 
 from cloudmesh.common.Shell import Shell
-from cloudmesh.common.util import path_expand
-from cloudmesh.common.util import writefile
-from cloudmesh.common.util import readfile
-from pathlib import Path
+from cloudmesh.common.base import Base
 from cloudmesh.common.console import Console
-from   cloudmesh.common.base import Base
+from cloudmesh.common.util import path_expand
+from cloudmesh.common.util import readfile
+from cloudmesh.common.util import writefile
+
 
 class Location:
     _shared_state = None

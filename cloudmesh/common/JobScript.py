@@ -1,10 +1,10 @@
-from cloudmesh.common.JobSet import JobSet
-import os
 import platform
 import textwrap
-from cloudmesh.common.dotdict import dotdict
+
+from cloudmesh.common.JobSet import JobSet
 from cloudmesh.common.Tabulate import Printer
 from cloudmesh.common.console import Console
+from cloudmesh.common.dotdict import dotdict
 
 
 class JobScript:

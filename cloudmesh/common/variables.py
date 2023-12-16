@@ -1,8 +1,9 @@
-from cloudmesh.common.parameter import Parameter
-from cloudmesh.common.util import path_expand
-from cloudmesh.common.strdb import YamlDB
-from cloudmesh.common.console import Console
 from cloudmesh.common.base import Base
+from cloudmesh.common.console import Console
+from cloudmesh.common.parameter import Parameter
+from cloudmesh.common.strdb import YamlDB
+from cloudmesh.common.util import path_expand
+
 
 class Variables(object):
     def __init__(self, filename=None):

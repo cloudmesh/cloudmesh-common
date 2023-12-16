@@ -3,6 +3,7 @@
 import functools
 import inspect
 import warnings
+
 from cloudmesh.common.console import Console
 
 string_types = (type(b''), type(u''))

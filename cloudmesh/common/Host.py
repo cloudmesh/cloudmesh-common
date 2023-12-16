@@ -3,17 +3,14 @@ import platform as platform_module
 import subprocess
 import textwrap
 from multiprocessing import Pool
-from sys import platform
-from time import sleep
-from random import randint
+from pprint import pprint
 
 from cloudmesh.common.DateTime import DateTime
+from cloudmesh.common.Printer import Printer
 from cloudmesh.common.parameter import Parameter
+from cloudmesh.common.systeminfo import os_is_windows
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.util import readfile
-from cloudmesh.common.systeminfo import os_is_windows
-from pprint import pprint
-from cloudmesh.common.Printer import Printer
 
 
 class Host(object):

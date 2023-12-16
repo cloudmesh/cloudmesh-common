@@ -4,12 +4,8 @@ that this method requires that the command be completely execute before the
 output is returned. FOr many activities in cloudmesh this is sufficient.
 
 """
-import errno
-import glob
 import os
 import platform as os_platform
-import requests
-import shlex
 import shutil
 import subprocess
 import sys
@@ -17,22 +13,25 @@ import textwrap
 import webbrowser
 import zipfile
 from pathlib import Path
-from shlex import quote
 from sys import platform
-from tqdm import tqdm
 
 import psutil
+import requests
 from cloudmesh.common.StopWatch import StopWatch
 from cloudmesh.common.console import Console
 from cloudmesh.common.dotdict import dotdict
 from cloudmesh.common.systeminfo import get_platform
+from cloudmesh.common.systeminfo import os_is_linux
+from cloudmesh.common.systeminfo import os_is_mac
+from cloudmesh.common.systeminfo import os_is_windows
+from cloudmesh.common.util import is_gitbash
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.util import readfile
 from cloudmesh.common.util import writefile
-from cloudmesh.common.systeminfo import os_is_windows
-from cloudmesh.common.systeminfo import os_is_mac
-from cloudmesh.common.systeminfo import os_is_linux
-from cloudmesh.common.util import is_gitbash
+from tqdm import tqdm
+
+import shlex
+from shlex import quote
 
 
 # from functools import wraps

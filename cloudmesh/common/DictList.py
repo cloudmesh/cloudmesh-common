@@ -34,7 +34,7 @@ class DictList(dict):
 
     """
 
-    def __init__(self, entries=None, key='name', position='x'):
+    def __init__(self, entries=None, key="name", position="x"):
         """
         initializes the DotDict List
 
@@ -80,7 +80,7 @@ if __name__ == "__main__":
     #  'vm3': {'name': 'vm3', 'status': 'on', 'x': 2},
     #  'vm4': {'name': 'vm4', 'status': 'on', 'x': 3}}
 
-    print(d['vm1'])
+    print(d["vm1"])
     # {'name': 'vm1', 'status': 'on', 'x': 0}
     #
     print(d.list())

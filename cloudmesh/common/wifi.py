@@ -5,8 +5,8 @@ This function is primarily developed for a Raspberry PI
 import textwrap
 
 from cloudmesh.common.console import Console
-from cloudmesh.common.util import writefile
 from cloudmesh.common.sudo import Sudo
+from cloudmesh.common.util import writefile
 
 
 class Wifi:

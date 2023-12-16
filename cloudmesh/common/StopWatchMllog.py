@@ -172,26 +172,22 @@ and extracts fields that match up to the standard logging events.
 This method is useful when creating experiments with tools such as
 cloudmesh-sbatch.
 """
-import os
-import platform
-import time
 import datetime
-import pprint
+import os
 import pathlib
-import yaml
+import pprint
 import sys
+import time
 from typing import Union
 
-from cloudmesh.common.console import Console
-from cloudmesh.common.Tabulate import Printer
-from cloudmesh.common.systeminfo import systeminfo as cm_systeminfo
-from cloudmesh.common.util import writefile
-from cloudmesh.common.util import readfile
-from cloudmesh.common.DateTime import DateTime
+import yaml
 from cloudmesh.common.StopWatch import progress
 from cloudmesh.common.StopWatch import progress as common_progress
-
-from time import perf_counter
+from cloudmesh.common.Tabulate import Printer
+from cloudmesh.common.console import Console
+from cloudmesh.common.systeminfo import systeminfo as cm_systeminfo
+from cloudmesh.common.util import readfile
+from cloudmesh.common.util import writefile
 
 
 def rename(newname):

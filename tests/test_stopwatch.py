@@ -8,7 +8,6 @@ import time
 
 import pytest
 from cloudmesh.common.StopWatch import StopWatch
-
 from cloudmesh.common.util import HEADING
 
 

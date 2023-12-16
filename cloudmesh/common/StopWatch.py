@@ -87,28 +87,20 @@ unique name.
 
 """
 
-import os
-import platform
-import time
 import datetime
-import pprint
-import pathlib
-import yaml
-import time
-import sys
 import os
+import pprint
+import sys
+import time
+from typing import Union
 
-from cloudmesh.common.console import Console
+from cloudmesh.common.DateTime import DateTime
 from cloudmesh.common.Tabulate import Printer
 from cloudmesh.common.systeminfo import systeminfo as cm_systeminfo
-from cloudmesh.common.util import writefile
 from cloudmesh.common.util import appendfile
-from cloudmesh.common.util import readfile
 from cloudmesh.common.util import banner
-from cloudmesh.common.DateTime import DateTime
-
-from time import perf_counter
-from typing import Union
+from cloudmesh.common.util import readfile
+from cloudmesh.common.util import writefile
 
 
 def progress(filename=None, # +

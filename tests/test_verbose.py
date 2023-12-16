@@ -4,13 +4,14 @@
 # pytest -v --capture=no  tests/test_verbose..py::Test_verbose.test_001
 ###############################################################
 
-from cloudmesh.common.util import HEADING
-from cloudmesh.common.debug import VERBOSE
 import io
-import pytest
-from contextlib import redirect_stdout
-from cloudmesh.common.variables import Variables
 import os
+from contextlib import redirect_stdout
+
+import pytest
+from cloudmesh.common.debug import VERBOSE
+from cloudmesh.common.util import HEADING
+from cloudmesh.common.variables import Variables
 
 variables = Variables()
 

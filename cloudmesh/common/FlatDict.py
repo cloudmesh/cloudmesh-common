@@ -1,9 +1,9 @@
 import collections
-import re
-import yaml
 import json
 import os
+import re
 
+import yaml
 from cloudmesh.common.util import readfile
 from cloudmesh.common.util import writefile
 from cloudmesh.common.variables import Variables
@@ -299,7 +299,6 @@ class FlatDict(dict):
         else:
             config = None
             self.__init__(config, sep=sep)
-        from cloudmesh.common.util import banner
         e = expand_config_parameters(flat=self.__dict__,
                                      expand_yaml=True,
                                      expand_os=self.expand_os,

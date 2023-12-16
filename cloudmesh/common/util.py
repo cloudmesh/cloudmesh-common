@@ -1,4 +1,4 @@
-import collections
+import csv
 import csv
 import glob
 import inspect
@@ -12,15 +12,15 @@ import subprocess
 import sys
 import tempfile
 import time
+from collections.abc import Mapping, Iterable
 from contextlib import contextmanager
 from getpass import getpass
 from pathlib import Path
+
 import pyfiglet
 import requests
-
 from cloudmesh.common.console import Console
 
-from collections.abc import Mapping, Iterable
 
 @contextmanager
 def tempdir(*args, **kwargs):

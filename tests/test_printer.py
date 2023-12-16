@@ -4,10 +4,12 @@
 # pytest -v  tests/test_printer.py
 ###############################################################
 
+from pprint import pprint
+
+import pytest
 from cloudmesh.common.Printer import Printer
 from cloudmesh.common.util import HEADING
-from pprint import pprint
-import pytest
+
 
 @pytest.mark.incremental
 class Test_Printer:

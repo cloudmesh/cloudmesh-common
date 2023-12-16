@@ -5,9 +5,10 @@
 ###############################################################
 
 import os
-import pytest
 from tempfile import mkstemp
+
 import oyaml as yaml
+import pytest
 from cloudmesh.common.strdb import YamlDB
 
 

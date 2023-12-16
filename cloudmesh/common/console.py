@@ -1,11 +1,12 @@
 """
 Printing messages in a console
 """
+import os
 import textwrap
 import traceback
+
 import colorama
 from colorama import Fore, Back, Style
-import os
 
 # from cloudmesh.common.variables import Variables
 

@@ -1,5 +1,6 @@
 import os
 
+
 def directory_exists(directory_name):
     # Get the current directory
     current_dir = os.getcwd()
@@ -24,8 +25,8 @@ class Base:
     otherwise ~/.cloudmesh is used
 
     """
-    def __init__(self, path=None, create=True):
 
+    def __init__(self, path=None, create=True):
         self.key = "CLOUDMESH_CONFIG_DIR"
 
         if path is not None:

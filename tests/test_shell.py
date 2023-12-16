@@ -4,16 +4,15 @@
 # pytest -v --capture=no  tests/test_shell.py::Test_shell.test_001
 ###############################################################
 import getpass
-import subprocess
-
-from cloudmesh.common.Shell import Shell
-from cloudmesh.common.util import HEADING
-from cloudmesh.common.systeminfo import os_is_windows
-from cloudmesh.common.Benchmark import Benchmark
-import pytest
-
 import os
+
+import pytest
+from cloudmesh.common.Benchmark import Benchmark
+from cloudmesh.common.Shell import Shell
+from cloudmesh.common.systeminfo import os_is_windows
+from cloudmesh.common.util import HEADING
 from cloudmesh.common.util import str_bool
+
 github_action = str_bool(os.getenv('GITHUB_ACTIONS', 'false'))
 
 

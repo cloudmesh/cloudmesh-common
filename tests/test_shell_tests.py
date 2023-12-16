@@ -10,20 +10,20 @@ This is the test for the new shell commands that we are implementing
 for the purpose of making the workflow more easily synonymous with each of the
 OS we have on the team.
 """
-import os.path
-import pytest
-
-from cloudmesh.common.Shell import Shell
-from cloudmesh.common.util import HEADING
-from cloudmesh.common.Benchmark import Benchmark
-from cloudmesh.common.util import path_expand
-from cloudmesh.common.StopWatch import StopWatch
-from cloudmesh.common.systeminfo import os_is_windows, os_is_linux, os_is_mac
-from pathlib import Path
-
 # https://github.com/actions/runner-images/issues/1519 ping does not work in github runner so we skip it.
 import os
+import os.path
+from pathlib import Path
+
+import pytest
+from cloudmesh.common.Benchmark import Benchmark
+from cloudmesh.common.Shell import Shell
+from cloudmesh.common.StopWatch import StopWatch
+from cloudmesh.common.systeminfo import os_is_windows, os_is_linux, os_is_mac
+from cloudmesh.common.util import HEADING
+from cloudmesh.common.util import path_expand
 from cloudmesh.common.util import str_bool
+
 github_action = str_bool(os.getenv('GITHUB_ACTIONS', 'false'))
 
 

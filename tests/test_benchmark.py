@@ -8,7 +8,6 @@ import time
 
 import pytest
 from cloudmesh.common.Benchmark import Benchmark
-
 from cloudmesh.common.util import HEADING
 
 

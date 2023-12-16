@@ -1,7 +1,9 @@
+from pathlib import Path
+
+from cloudmesh.common.base import Base
 from cloudmesh.common.strdb import YamlDB
 from cloudmesh.common.util import path_expand
-from pathlib import Path
-from cloudmesh.common.base import Base
+
 
 # noinspection PyPep8
 class Default(object):

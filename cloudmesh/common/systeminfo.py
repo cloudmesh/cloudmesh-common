@@ -1,20 +1,16 @@
-import platform
-import sys
+import multiprocessing
 import os
-import socket
-from pathlib import Path
-from cloudmesh.common.util import readfile
-from cloudmesh.common.util import is_gitbash
-from cloudmesh.common.util import is_powershell
-from cloudmesh.common.util import is_cmd_exe
-from cloudmesh.common.util import is_local
+import platform
+import re
+import sys
 from collections import OrderedDict
+from pathlib import Path
+
+import humanize
 import pip
 import psutil
-import humanize
-import re
-import multiprocessing
 from cloudmesh.common.DateTime import DateTime
+from cloudmesh.common.util import readfile
 
 
 def os_is_windows():

@@ -1,5 +1,5 @@
-from hostlist import expand_hostlist
 from cloudmesh.common.dotdict import dotdict
+from hostlist import expand_hostlist
 
 
 class Parameter(object):

@@ -15,7 +15,7 @@ print(c.__file__)
 print(c.__cached__)
 
 print()
-print('\n'.join(c.__path__))
+print("\n".join(c.__path__))
 
 
 def inheritors(klass):

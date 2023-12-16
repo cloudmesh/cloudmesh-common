@@ -8,7 +8,6 @@ from pprint import pprint
 
 import pytest
 import yaml
-
 from cloudmesh.common.FlatDict import FlatDict
 from cloudmesh.common.FlatDict import expand_config_parameters
 from cloudmesh.common.FlatDict import flatten

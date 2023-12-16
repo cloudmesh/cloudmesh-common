@@ -1,7 +1,8 @@
+import calendar
 import datetime as TIME
+
 import humanize as HUMANIZE
 from dateutil import parser
-import calendar
 
 
 class DateTime(object):

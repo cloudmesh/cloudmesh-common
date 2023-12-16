@@ -3,16 +3,19 @@ import json
 
 class TableParser(object):
     @classmethod
-    def convert(cls, table=None,
-                output='dict',
-                header=True,
-                index=None,
-                change=None,
-                strip=True,
-                lower=True,
-                strip_seperator=True,
-                seperator="|",
-                comment_chars="+#"):
+    def convert(
+        cls,
+        table=None,
+        output="dict",
+        header=True,
+        index=None,
+        change=None,
+        strip=True,
+        lower=True,
+        strip_seperator=True,
+        seperator="|",
+        comment_chars="+#",
+    ):
         if change is None:
             change = [(":", "_"), ("(", "_"), (")", ""), ("/", "_")]
         parser = TableParser(
@@ -24,25 +27,28 @@ class TableParser(object):
             lower=lower,
             strip_seperator=strip_seperator,
             seperator=seperator,
-            comment_chars=comment_chars)
+            comment_chars=comment_chars,
+        )
         if table is not None:
-            if 'dict' in output:
+            if "dict" in output:
                 return parser.to_dict(table)
-            elif 'list' in output:
+            elif "list" in output:
                 return parser.to_dict(table)
             else:
                 raise ValueError("output type not supported")
 
-    def __init__(self,
-                 output='dict',
-                 header=True,
-                 index=None,
-                 change=None,
-                 strip=True,
-                 lower=True,
-                 strip_seperator=True,
-                 seperator="|",
-                 comment_chars="+#"):
+    def __init__(
+        self,
+        output="dict",
+        header=True,
+        index=None,
+        change=None,
+        strip=True,
+        lower=True,
+        strip_seperator=True,
+        seperator="|",
+        comment_chars="+#",
+    ):
         """
 
         :param header: if true the first line is a header. Not implemented
@@ -78,8 +84,8 @@ class TableParser(object):
         :return:
         """
         # print ("-" + line + "-")
-        if line == '':
-            line = 'None'
+        if line == "":
+            line = "None"
         if self.is_lower:
             line = line.lower()
         if line == "user ":  # for slurm which has "user" and "user "
@@ -88,7 +94,7 @@ class TableParser(object):
             line = line.replace(convert[0], convert[1])
         if self.is_strip:
             line = line.strip()
-        return line.strip(' ')
+        return line.strip(" ")
 
     def extract_lines(self, table):
         lines = table.splitlines()
@@ -109,8 +115,7 @@ class TableParser(object):
         header = self.lines[0]
         self.lines = self.lines[1:]
 
-        self.headers = \
-            [self.clean(h) for h in header.split(self.seperator)]
+        self.headers = [self.clean(h) for h in header.split(self.seperator)]
         if self.is_strip:
             self.headers = self.headers[1:-1]
         return self.headers
@@ -175,7 +180,7 @@ class TableParser(object):
         return self.data
 
     def __str__(self):
-        return json.dumps(self.data, indent=4, separators=(',', ': '))
+        return json.dumps(self.data, indent=4, separators=(",", ": "))
 
 
 if __name__ == "__main__":

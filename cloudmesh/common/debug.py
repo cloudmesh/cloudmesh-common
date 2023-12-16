@@ -1,10 +1,11 @@
-from cloudmesh.common.variables import Variables
-from cloudmesh.common.util import banner
-from pprint import pformat
 import inspect
 import os
 import threading
 import traceback
+from pprint import pformat
+
+from cloudmesh.common.util import banner
+from cloudmesh.common.variables import Variables
 
 verbose_lock = threading.Lock()
 
