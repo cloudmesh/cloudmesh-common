@@ -10,6 +10,5 @@ dependencies:
   - pytz
   - requests
   - simplejson
-  - six
   - tabulate
   - tqdm

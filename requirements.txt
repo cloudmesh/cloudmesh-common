@@ -6,7 +6,6 @@ pyfiglet
 python-hostlist
 requests
 simplejson
-six
 tabulate
 tqdm
 pyyaml
