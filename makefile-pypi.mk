@@ -43,8 +43,8 @@ release: clean
 	$(call banner, "release")
 	git tag "v$(VERSION)"
 	git push origin main --tags
-	python setup.py sdist bdist_wheel
-	twine check dist/*
+	pip install -q build
+	python -m build
 	twine upload --repository pypi dist/*
 	$(call banner, "install")
 	@cat VERSION
