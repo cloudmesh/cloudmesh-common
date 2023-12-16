@@ -7,7 +7,7 @@ twine:
 
 .PHONY: dist
 
-dist:
+dist: clean
 	pip install -q build
 	python -m build
 	twine check dist/*
