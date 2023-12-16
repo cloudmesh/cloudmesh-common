@@ -9,13 +9,21 @@ dist:
 	python setup.py sdist bdist_wheel
 	twine check dist/*
 
+ndist:
+	pip install -q build
+	python -m build
+
+npatch:
+	python -m twine upload --repository testpypi dist/*
+
 patch: clean twine
 	$(call banner, "patch")
 	pip install -r requirements-dev.txt
 	cms bumpversion patch
 	@VERSION=$$(cat VERSION); \
 		git commit -m "bump version ${VERSION}" .; git push
-	python setup.py sdist bdist_wheel
+	pip install -q build
+	python -m build
 	git push origin main --tags
 	twine check dist/*
 	twine upload --repository testpypi  dist/*
