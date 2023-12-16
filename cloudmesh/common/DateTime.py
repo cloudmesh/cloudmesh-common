@@ -38,7 +38,7 @@ class DateTime(object):
 
     @staticmethod
     def now():
-        return TIME.datetime.utcnow()
+        return TIME.datetime.now(TIME.UTC)
     
     @staticmethod
     def local_now():

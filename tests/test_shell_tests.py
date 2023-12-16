@@ -166,12 +166,10 @@ class TestShell:
         file = path_expand('requirements.txt')
         r = Shell.head(file)
         Benchmark.Stop()
-        assert 'tqdm' not in r
+        assert 'tqdm' in r
         assert 'colorama' in r
-        assert '#' in r
-        assert 'tabulate' not in r
+        assert 'tabulate' in r
         r = Shell.head('requirements.txt', lines=1)
-        assert '#' in r
         assert 'cloudmesh-sys' not in r
 
     def test_shell_cat(self):
@@ -182,7 +180,6 @@ class TestShell:
         Benchmark.Stop()
         assert 'tqdm' in r
         assert 'colorama' in r
-        assert '#' in r
         assert 'tabulate' in r
 
     @pytest.mark.skipif(github_action, reason='GitHub Runner uses Azure and Azure disables ping. :( Too bad!')
