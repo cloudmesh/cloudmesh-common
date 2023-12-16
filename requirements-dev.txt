@@ -1,3 +1,4 @@
+tox
 wheel
 pip-tools
 pipdeptree

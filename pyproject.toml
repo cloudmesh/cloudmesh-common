@@ -11,7 +11,7 @@ name = "cloudmesh-common"
 version = "5.0.22"
 description = "A set of useful APIs for cloudmesh"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 license = {file = "LICENSE"}
 authors = [
   {name = "Gregor von Laszewski", email = "laszewski@gmail.com"}
