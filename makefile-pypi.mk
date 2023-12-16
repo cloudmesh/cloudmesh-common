@@ -12,9 +12,8 @@ dist:
 	python -m build
 	twine check dist/*
 
-ndist:
-	pip install -q build
-	python -m build
+local:
+	pip install dist/*.whl --force-reinstall
 
 patch: clean twine
 	$(call banner, "patch")
