@@ -20,19 +20,6 @@ import sys
 
 from setuptools import find_packages, find_namespace_packages, setup
 
-def check_python():
-    if not sys.version_info.major == 3 and \
-        sys.version_info.minor >= 7:
-        print("Python 3.7 or higher is required.")
-
-        print("You are using Python {}.{}."
-              .format(sys.version_info.major,
-                      sys.version_info.minor))
-
-        sys.exit(1)
-
-check_python()
-
 def readfile(filename):
     with io.open(filename, encoding="utf-8") as stream:
         return stream.read()
@@ -107,9 +94,7 @@ setup(
         "Operating System :: Microsoft :: Windows :: Windows 10",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.12",
         "Topic :: Internet",
         "Topic :: Scientific/Engineering",
         "Topic :: Software Development :: Libraries",

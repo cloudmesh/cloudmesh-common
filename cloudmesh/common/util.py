@@ -15,18 +15,12 @@ import time
 from contextlib import contextmanager
 from getpass import getpass
 from pathlib import Path
-
-import psutil
 import pyfiglet
 import requests
 
 from cloudmesh.common.console import Console
 
-try:
-    collectionsAbc = collections.abc
-except AttributeError:
-    collectionsAbc = collections
-
+from collections.abc import Mapping, Iterable
 
 @contextmanager
 def tempdir(*args, **kwargs):
@@ -197,8 +191,11 @@ def is_powershell():
     # cmd.exe for CMD
     # powershell.exe for powershell
     # bash.exe for git bash
-    return (psutil.Process(os.getppid()).name() == "powershell.exe")
-
+    if platform.system() == "Windows":
+        import psutil
+        return (psutil.Process(os.getppid()).name() == "powershell.exe")
+    else:
+        return False
 
 def is_cmd_exe():
     """
@@ -235,21 +232,19 @@ def path_expand(text, slashreplace=True):
 
 
 def convert_from_unicode(data):
-    """
-    converts unicode data to a string
-    :param data: the data to convert
-    :return:
-    """
-    # if isinstance(data, basestring):
-
-    if isinstance(data, str):
-        return str(data)
-    elif isinstance(data, collectionsAbc.Mapping):
-        return dict(map(convert_from_unicode, data.items()))
-    elif isinstance(data, collectionsAbc.Iterable):
-        return type(data)(map(convert_from_unicode, data))
-    else:
-        return data
+   """
+   Converts unicode data to a string
+   :param data: the data to convert
+   :return: converted data
+   """
+   if isinstance(data, str):
+       return str(data)
+   elif isinstance(data, Mapping):
+       return dict(map(convert_from_unicode, data.items()))
+   elif isinstance(data, Iterable):
+       return type(data)(map(convert_from_unicode, data))
+   else:
+       return data
 
 
 def yn_choice(message, default='y', tries=None):
