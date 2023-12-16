@@ -1,0 +1,74 @@
+# pyproject.toml
+
+[build-system]
+requires = ["setuptools >= 61.0", "wheel >= 0.36.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+dependencies = [
+    "python-dateutil",
+    "colorama",
+    "humanize",
+    "oyaml",
+    "pyfiglet",
+    "python-hostlist",
+    "requests",
+    "simplejson",
+    "six",
+    "tabulate",
+    "tqdm",
+    "pyyaml",
+    "psutil",
+    "pywin32; platform_system == 'Windows'",
+    "pyuac; platform_system == 'Windows'"
+]
+
+[tool.setuptools]
+name = "cloudmesh-common"
+version = "5.0.6"  # Replace with your actual version
+python_requires = ">=3.6"
+
+[tool.setuptools.sdist]
+formats = ["gztar", "zip"]
+
+[tool.setuptools.metadata]
+name = "cloudmesh-common"
+version = "your_version"  # Replace with your actual version
+description = "A set of useful APIs for cloudmesh"
+author = "Gregor von Laszewski"
+author_email = "laszewski@gmail.com"
+url = "https://github.com/cloudmesh/cloudmesh-common"
+license = "Apache 2.0"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Environment :: Other Environment",
+    "Environment :: Plugins",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: Apache Software License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Microsoft :: Windows :: Windows 10 :: Windows 11",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: User Interfaces",
+    "Topic :: System",
+    "Topic :: System :: Distributed Computing",
+    "Topic :: System :: Shells",
+    "Topic :: Utilities",
+]
+
+[tool.setuptools.dependency_links]
+# Specify your dependency links if needed
+
+[build-system]
+requires = ["setuptools", "wheel"]
