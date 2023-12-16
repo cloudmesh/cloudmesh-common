@@ -11,7 +11,7 @@ name = "cloudmesh-common"
 version = "5.0.20"
 description = "A set of useful APIs for cloudmesh"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 license = {file = "LICENSE"}
 authors = [
   {name = "Gregor von Laszewski", email = "laszewski@gmail.com"}
@@ -64,7 +64,9 @@ dependencies = [
     "pywin32; platform_system == 'Windows'",
     "pyuac; platform_system == 'Windows'"
 ]
+
 [project.urls]
 "Documentation" = "https://github.com/cloudmesh/cloudmesh-common"
+
 [tool.setuptools.packages.find]
 exclude = ["deprecated", "deprecated.**", "tests", "tests.*", "examples"]
