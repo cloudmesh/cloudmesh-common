@@ -13,7 +13,7 @@ repo = sys.argv[1]
 command = sys.argv[2]
 
 warning = f"""
-> **Note:** The README.md page is outomatically generated, do not edit it.
+> **Note:** The README.md page is automatically generated, do not edit it.
 > To modify  change the content in
 > <https://github.com/cloudmesh/{repo}/blob/main/README-source.md>
 > Curley brackets must use two in README-source.md

@@ -2,6 +2,8 @@ package=common
 
 include makefile-basic.mk
 
+include makefile-info.mk
+
 include makefile-test.mk
 
 include makefile-clean.mk
