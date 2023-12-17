@@ -48,9 +48,6 @@ class Test_Verbose:
         with io.StringIO() as buf, redirect_stdout(buf):
             VERBOSE(help)
             output = buf.getvalue()
-        import re
-        output = re.sub(r'\x1b\[[0-9;]*m', '', output)
-        print (output)
 
         assert "help" in output
         assert "hallo" in output
@@ -64,6 +61,10 @@ class Test_Verbose:
         with io.StringIO() as buf, redirect_stdout(buf):
             VERBOSE(help)
             output = buf.getvalue()
+
+        import re
+        output = re.sub(r'\x1b\[[0-9;]*m', '', output)
+
         print (output)
         variables["verbose"] = 10
 
