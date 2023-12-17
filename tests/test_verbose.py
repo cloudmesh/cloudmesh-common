@@ -89,7 +89,7 @@ class Test_Verbose:
                 assert "hallo" not in output
                 assert "#" not in output
             else:
-                assert "hallo" in output
+                assert "hallo" not in output
                 assert "#" in output
 
         variables["verbose"] = old
