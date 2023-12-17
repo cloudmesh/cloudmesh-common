@@ -193,7 +193,7 @@ class Test_Flatdict:
         assert config["c"] == 6
 
         s = "a={a} {unkown}"
-        name = "a.txt"
+        name = ".tmp/a.txt"
         writefile(name, s)
         content = readfile(name)
         print (content)
