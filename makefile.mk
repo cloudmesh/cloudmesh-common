@@ -41,6 +41,17 @@ clean:
 	rm -rf .tmp
 	find . -type d -name '__pycache__' -exec rm -rf {} +
 
+cleanall:
+	cd ../cloudmesh-common; make clean
+	cd ../cloudmesh-cmd5; make clean
+	cd ../cloudmesh-sys; make clean
+	cd ../cloudmesh-bar; make clean
+	cd ../cloudmesh-bumpversion; make clean
+	cd ../cloudmesh-vpn; make clean
+	cd ../cloudmesh-gpu; make clean
+	cd ../cloudmesh-rivanna; make clean
+	cd ../cloudmesh-catalog; make clean
+
 ##############################################################################
 # INFO
 ##############################################################################

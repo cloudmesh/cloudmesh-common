@@ -1,16 +1,16 @@
 #cd cloudmesh-common
 #pip install -e .
 #cd ..
-cd ../cloudmesh-common; make dist; make local
-cd ../cloudmesh-cmd5; make dist; make local
-cd ../cloudmesh-bumpversion; make dist; make local
-#cd ../cloudmesh-sys; make dist; make local
-#cd ../cloudmesh-bar; make dist; make local
-#cd ../cloudmesh-vpn; make dist; make local
-#cd ../cloudmesh-gpu; make dist; make local
-#cd ../cloudmesh-rivanna; make dist; make local
-#cd ../cloudmesh-catalog; make dist; make local
-#cd ../cloudmesh-configuration; make dist; make local
+cd ../cloudmesh-common; pip install -e .
+cd ../cloudmesh-cmd5; pip install -e .
+cd ../cloudmesh-sys; pip install -e .
+cd ../cloudmesh-bar; pip install -e .
+cd ../cloudmesh-bumpversion; pip install -e .
+cd ../cloudmesh-vpn; pip install -e .
+cd ../cloudmesh-gpu; pip install -e .
+cd ../cloudmesh-rivanna; pip install -e .
+#cd ../cloudmesh-catalog; pip install -e .
+#cd ../cloudmesh-configuration; pip install -e .
 cd ../cloudmesh-common
 #cms info
 #cms info path
