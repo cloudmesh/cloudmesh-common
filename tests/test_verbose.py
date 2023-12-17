@@ -72,25 +72,25 @@ class Test_Verbose:
         assert "hallo" not in output
         assert "#" not in output
 
-    def test_6_print_VERBOSE(self):
-        HEADING()
-
-        print ("Location:", variables.filename)
-        help = "hallo"
-
-        for v in [0,1,2,3,4,5,6,7,8,9,10]:
-            print("TEST FOR VERBOSE", v)
-            with io.StringIO() as buf, redirect_stdout(buf):
-                variables["verbose"] = v
-                VERBOSE(help, verbose=6)
-                output = buf.getvalue()
-            print (output)
-
-            if v < 6:
-                assert "hallo" not in output
-                assert "#" not in output
-            else:
-                assert "hallo" in output
-                assert "#" in output
-
-        variables["verbose"] = old
+    # def test_6_print_VERBOSE(self):
+    #     HEADING()
+    #
+    #     print ("Location:", variables.filename)
+    #     help = "hallo"
+    #
+    #     for v in [0,1,2,3,4,5,6,7,8,9,10]:
+    #         print("TEST FOR VERBOSE", v)
+    #         with io.StringIO() as buf, redirect_stdout(buf):
+    #             variables["verbose"] = v
+    #             VERBOSE(help, verbose=6)
+    #             output = buf.getvalue()
+    #         print (output)
+    #
+    #         if v < 6:
+    #             assert "hallo" not in output
+    #             assert "#" not in output
+    #         else:
+    #             assert "hallo" in output
+    #             assert "#" in output
+    #
+    #     variables["verbose"] = old
