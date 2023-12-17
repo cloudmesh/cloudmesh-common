@@ -77,4 +77,3 @@ dependencies = [
 [tool.setuptools.packages.find]
 where = ["src/"]
 include = ["cloudmesh.common"]
-namespaces = true
