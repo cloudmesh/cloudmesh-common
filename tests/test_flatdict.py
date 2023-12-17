@@ -4,6 +4,7 @@
 # npytest -v --capture=no  tests/test_flatdict..py::Test_flatdict.test_001
 ###############################################################
 
+import os
 from pprint import pprint
 
 import pytest
@@ -194,8 +195,8 @@ class Test_Flatdict:
         s = "a={a} {unkown}"
         name = "a.txt"
         writefile(name, s)
-        import os
-        os.system(f"cat {name}")
+        content = readfile(name)
+        print (content)
 
         result = config.apply(name)
         print()

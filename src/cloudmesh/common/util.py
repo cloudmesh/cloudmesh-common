@@ -491,6 +491,9 @@ def writefile(filename, content):
     :param content: teh content
     :return:
     """
+    directory = os.path.dirname(filename)
+    if directory not in [None, '']:
+        os.makedirs(directory, exist_ok=True)
     with open(path_expand(filename), 'w') as outfile:
         outfile.write(content)
         outfile.truncate()

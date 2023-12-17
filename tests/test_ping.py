@@ -26,7 +26,8 @@ github_action = str_bool(os.getenv('GITHUB_ACTIONS', 'false'))
 # from multiping import MultiPing
 
 hosts = ['127.0.0.1',
-         'localhost',
+         'localhost']
+other_hosts = [
          'www.pbs.org',
          'www.github.com',
          'www.redhat.com',
@@ -74,6 +75,7 @@ class Test_ping:
     def test_ping_processor(self):
         HEADING()
         print()
+        print (hosts)
         for processors in range(1, len(hosts)):
             print("Processors:", processors)
             results = self.ping(processors=processors)

@@ -102,7 +102,6 @@ from cloudmesh.common.util import banner
 from cloudmesh.common.util import readfile
 from cloudmesh.common.util import writefile
 
-
 def progress(filename=None, # +
              status="ready", # +
              progress: Union[int, str, float] = 0, # +
