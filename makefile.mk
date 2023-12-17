@@ -8,8 +8,10 @@ define banner
 	@echo "############################################################"
 endef
 
-source:
-	$(call banner, "Install cloudmesh-${package}")
+welcome:
+	$(call banner, "Install ${package}")
+
+source: welcome
 	pip install -e . -U
 
 ##############################################################################
@@ -17,12 +19,12 @@ source:
 ##############################################################################
 
 flake8:
-	cd ..; flake8 --max-line-length 124 --ignore=E722 cloudmesh-$(package)/cloudmesh
-	cd ..; flake8 --max-line-length 124 --ignore=E722 cloudmesh-$(package)/tests
+	cd ..; flake8 --max-line-length 124 --ignore=E722 $(package)/src/cloudmesh
+	cd ..; flake8 --max-line-length 124 --ignore=E722 $(package)/tests
 
 pylint:
-	cd ..; pylint --rcfile=cloudmesh-$(package)/.pylintrc  cloudmesh-$(package)/cloudmesh
-	cd ..; pylint --rcfile=cloudmesh-$(package)/.pylintrc  --disable=F0010 cloudmesh-$(package)/tests
+	cd ..; pylint --rcfile=$(package)/.pylintrc  $(package)/src/cloudmesh
+	cd ..; pylint --rcfile=$(package)/.pylintrc  --disable=F0010 $(package)/tests
 
 ##############################################################################
 # CLEAN
@@ -37,7 +39,7 @@ clean:
 	rm -rf dist
 	rm -rf .tox
 	rm -rf .tmp
-	find . | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf
+	find . -type d -name '__pycache__' -exec rm -rf {} +
 
 ##############################################################################
 # INFO
@@ -75,7 +77,7 @@ dist:
 	python -m build
 	twine check dist/*
 
-local: dist
+local: welcome dist
 	pip install dist/*.whl
 
 local-force:
@@ -120,7 +122,7 @@ upload:
 	twine upload dist/*
 
 pip:
-	pip install --index-url https://test.pypi.org/simple/ cloudmesh-$(package) -U
+	pip install --index-url https://test.pypi.org/simple/ $(package) -U
 
 log:
 	$(call banner, log)

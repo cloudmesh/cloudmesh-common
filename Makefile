@@ -1,3 +1,5 @@
-package=common
+CURRENT_DIR := $(shell pwd)
+BASENAME := $(shell basename $(CURRENT_DIR))
+package=$(BASENAME)
 
-include makefile.mk
+include ../cloudmesh-common/makefile.mk
