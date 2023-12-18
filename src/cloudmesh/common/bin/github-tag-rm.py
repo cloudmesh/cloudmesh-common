@@ -1,10 +1,25 @@
-# !/usr/bin/env python
+#!/usr/bin/env python
 """tag-rm
 
 Usage:
-  tag-rm VERSIONS [--dryrun]
+  github-tag-rm VERSIONS [--dryrun]
+
+Options:
+  -h --help       Show this help message and exit.
+  --dryrun        Perform a dry run without actually removing tags.
+
+Arguments:
+  VERSIONS        Space-separated list of Git tags to be removed.
+
+Description:
+  The 'github-tag-rm' script removes specified Git tags locally and pushes the deletion to the remote repository.
+
+Examples:
+  tag-rm v1.0 v2.0 --dryrun
+  tag-rm v1.1
 
 """
+
 import os
 
 from cloudmesh.common.parameter import Parameter
@@ -14,17 +29,19 @@ from cloudmesh.common.Shell import Shell
 
 
 def main():
+    """
+    Main entry point for the tag-rm script.
+
+    Parses command-line arguments, identifies and removes specified Git tags.
+
+    """
     arguments = docopt(__doc__)
     tags = Parameter.expand(arguments["VERSIONS"])
 
-
     found = Shell.run("git tag").strip().splitlines()
-
-    # print (found)
 
     for tag in tags:
         if tag in found:
-
             print(f"Removing tag {tag}")
 
             script = [
@@ -39,9 +56,10 @@ def main():
                         os.system(line)
                     Console.ok(f"{tag} deleted")
                 except:
-                    Console.error ("Deletion failed")
+                    Console.error("Deletion failed")
         else:
             Console.error(f"{tag} does not exist")
+
 
 if __name__ == '__main__':
     main()
