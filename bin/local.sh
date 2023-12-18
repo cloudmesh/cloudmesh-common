@@ -1,6 +1,7 @@
 #cd cloudmesh-common
 #pip install -e .
 #cd ..
+pip install -r requirements-dev.txt
 cd ../cloudmesh-common; make dist; make local
 cd ../cloudmesh-cmd5; make dist; make local
 cd ../cloudmesh-sys; make dist; make local
