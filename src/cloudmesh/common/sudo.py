@@ -5,10 +5,50 @@ from cloudmesh.common.util import banner
 
 
 class Sudo:
+    """
+     A utility class for executing commands with sudo privileges and performing file operations.
 
+    Methods:
+        password(msg="sudo password: "):
+            Prompt the user for the sudo password.
+
+        execute(command, decode=True, debug=False, msg=None):
+            Execute the specified command with sudo.
+            Args:
+                command (list or str): The command to run.
+                decode (bool, optional): If True, decode the output from bytes to ASCII.
+                debug (bool, optional): If True, print command execution details.
+                msg (str, optional): Message to print before executing the command.
+            Returns:
+                subprocess.CompletedProcess: The result of the command execution.
+
+        readfile(filename, split=False, trim=False, decode=True):
+            Read the content of the file with sudo privileges and return the result.
+            Args:
+                filename (str): The filename.
+                split (bool, optional): If True, return a list of lines.
+                trim (bool, optional): If True, trim trailing whitespace.
+                decode (bool, optional): If True, decode the output from bytes to ASCII.
+            Returns:
+                str or list: The content of the file.
+
+        writefile(filename, content, append=False):
+            Write the content to the specified file with sudo privileges.
+            Args:
+                filename (str): The filename.
+                content (str): The content to write.
+                append (bool, optional): If True, append the content at the end;
+                                         otherwise, overwrite the file.
+            Returns:
+                str: The output created by the write process.
+    """
     @staticmethod
     def password(msg="sudo password: "):
-        """Asks for the Sudo password"""
+        """Prompt the user for the sudo password.
+
+        Args:
+            msg (str, optional): The message to display when prompting for the password.
+        """
         os.system(f'sudo -p "{msg}"  echo "" > /dev/null')
 
     @staticmethod
@@ -18,15 +58,17 @@ class Sudo:
 
     @staticmethod
     def execute(command, decode="True", debug=False, msg=None):
-        """Executes the command
+        """Execute the specified command with sudo.
 
         Args:
-            command (list or str): The command to run
+            command (list or str): The command to run.
+            decode (bool, optional): If True, decode the output from bytes to ASCII.
+            debug (bool, optional): If True, print command execution details.
+            msg (str, optional): Message to print before executing the command.
 
         Returns:
-
+            subprocess.CompletedProcess: The result of the command execution.
         """
-
         Sudo.password()
         if type(command) == str:
             sudo_command = "sudo " + command
@@ -57,16 +99,16 @@ class Sudo:
 
     @staticmethod
     def readfile(filename, split=False, trim=False, decode=True):
-        """Reads the content of the file as sudo and returns the result
+        """Read the content of the file with sudo privileges and return the result.
 
         Args:
-            filename (str): the filename
-            split (bool): uf true returns a list of lines
-            trim (bool): trim trailing whitespace. This is useful to
-                prevent empty string entries when splitting by '\n'
+            filename (str): The filename.
+            split (bool, optional): If True, return a list of lines.
+            trim (bool, optional): If True, trim trailing whitespace.
+            decode (bool, optional): If True, decode the output from bytes to ASCII.
 
         Returns:
-            str or list: the content
+            str or list: The content of the file.
         """
         Sudo.password()
         os.system("sync")
@@ -84,17 +126,17 @@ class Sudo:
 
     @staticmethod
     def writefile(filename, content, append=False):
-        """Writes the content in the the given file.
+        """Write the content to the specified file with sudo privileges.
 
         Args:
-            filename (str): the filename
-            content (str): the content
-            append (bool): if true it append it at the end, otherwise
-                the file will be overwritten
+            filename (str): The filename.
+            content (str): The content to write.
+            append (bool, optional): If True, append the content at the end; otherwise, overwrite the file.
 
         Returns:
-            int: the output created by the write process
+            str: The output created by the write process.
         """
+
 
         os.system("sync")
         Sudo.password()
