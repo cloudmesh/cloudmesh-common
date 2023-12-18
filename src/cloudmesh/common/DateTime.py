@@ -6,8 +6,7 @@ from dateutil import parser
 
 
 class DateTime(object):
-    """
-    This class provides some simple date time functions so we can use all the
+    """This class provides some simple date time functions so we can use all the
     same format. Here is a simple example
 
         start = DateTime.now()

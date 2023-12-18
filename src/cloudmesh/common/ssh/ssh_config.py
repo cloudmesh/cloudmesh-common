@@ -1,6 +1,4 @@
-"""
-Managing ~/.ssh/config
-"""
+"""Managing ~/.ssh/config"""
 import json
 import os
 from textwrap import dedent
@@ -14,9 +12,7 @@ from cloudmesh.common.util import writefile
 
 # noinspection PyPep8Naming
 class ssh_config(object):
-    """
-    Managing the config in .ssh
-    """
+    """Managing the config in .ssh"""
 
     def __init__(self, filename=None):
         if filename is not None:
@@ -29,9 +25,10 @@ class ssh_config(object):
         self.load()
 
     def names(self):
-        """
-        The names defined in ~/.ssh/config
-        :return: the names
+        """The names defined in ~/.ssh/config
+
+        Returns:
+            the names
         """
         found_names = []
         with open(self.filename) as f:
@@ -78,41 +75,48 @@ class ssh_config(object):
         self.hosts = hosts
 
     def list(self):
-        """
-        list the hosts in the config file
-        :return:
+        """list the hosts in the config file
+
+        Returns:
+
         """
         return list(self.hosts.keys())
 
     def __str__(self):
-        """
-        The string representing the config file
-        :return: the string representation
+        """The string representing the config file
+
+        Returns:
+            the string representation
         """
         return json.dumps(self.hosts, indent=4)
 
     def status(self):
-        """
-        executes a test with the given ssh config if a login is possible.
+        """executes a test with the given ssh config if a login is possible.
 
         TODO: not yet implemented
         """
         pass
 
     def login(self, name):
-        """
-        login to the host defines in .ssh/config by name
-        :param name: the name of the host as defined in the config file
-        :return:
+        """login to the host defines in .ssh/config by name
+
+        Args:
+            name: the name of the host as defined in the config file
+
+        Returns:
+
         """
         os.system(f"ssh {name}")
 
     def execute(self, name, command):
-        """
-        execute the command on the named host
-        :param name: the name of the host in config
-        :param command: the command to be executed
-        :return:
+        """execute the command on the named host
+
+        Args:
+            name: the name of the host in config
+            command: the command to be executed
+
+        Returns:
+
         """
         if name in ["localhost"]:
             r = '\n'.join(Shell.sh("-c", command).split()[-1:])
@@ -121,18 +125,24 @@ class ssh_config(object):
         return r
 
     def local(self, command):
-        """
-        execute the command on the localhost
-        :param command: the command to execute
-        :return:
+        """execute the command on the localhost
+
+        Args:
+            command: the command to execute
+
+        Returns:
+
         """
         return self.execute("localhost", command)
 
     def username(self, host):
-        """
-        returns the username for a given host in the config file
-        :param host: the hostname
-        :return: the username
+        """returns the username for a given host in the config file
+
+        Args:
+            host: the hostname
+
+        Returns:
+            the username
         """
         if host in self.hosts:
             return self.hosts[host]["User"]
@@ -163,14 +173,17 @@ class ssh_config(object):
                  user=None,
                  force=False,
                  verbose=False):
-        """
-        adds a host to the config file with given parameters.  #TODO: make sure this is better documented
-        :param key: the key
-        :param host: the host
-        :param username: the username
-        :param force: not used
-        :param verbose: prints debug messages
-        :return:
+        """adds a host to the config file with given parameters.  #TODO: make sure this is better documented
+
+        Args:
+            key: the key
+            host: the host
+            username: the username
+            force: not used
+            verbose: prints debug messages
+
+        Returns:
+
         """
 
         if verbose and host in self.names():

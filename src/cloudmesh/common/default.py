@@ -11,14 +11,14 @@ class Default(object):
         return str(context) + "," + str(key)
 
     def __init__(self, filename=None):
-        """
-        initializes the default variables. The default file is defined by the following order
+        """initializes the default variables. The default file is defined by the following order
         1. filename
         2. $CLOUDMESH_CONFIG_DIR/default-data
         2. ./.cloudmesh/default-data if .cloudmesh exists
         3, ~/.cloudmesh/default-data
 
-        :param filename:
+        Args:
+            filename
         """
 
         if filename is None:

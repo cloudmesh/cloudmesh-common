@@ -26,14 +26,14 @@ class Host(object):
 
     @staticmethod
     def get_hostnames(names):
-        """
-        Given a list of host names it identifies if they have numbers in them. If so, they are assumed workers.
+        """Given a list of host names it identifies if they have numbers in them. If so, they are assumed workers.
         If not, it is a manager. There can only be one manager.
 
-        @param names: list of names
-        @type names: str
-        @return: manager, worker as list
-        @rtype: tuple
+        Args:
+            names (str): list of names
+
+        Returns:
+            tuple: manager, worker as list
         """
         manager = None
         workers = []
@@ -92,9 +92,7 @@ class Host(object):
 
     @staticmethod
     def _run(args):
-        """
-
-        An internal command that executes as part of a process map a given
+        """An internal command that executes as part of a process map a given
         command. args is a dict and must include
 
         * command
@@ -108,8 +106,11 @@ class Host(object):
         * returncode
         * success
 
-        :param args: command dict
-        :return:
+        Args:
+            args: command dict
+
+        Returns:
+
         """
         try:
             # experimental sleep as we get a block on ssh commands
@@ -164,22 +165,24 @@ class Host(object):
             processors=3,
             shell=False,
             **kwargs):
-        """
-        Executes the command on all hosts. The key values
+        """Executes the command on all hosts. The key values
         specified in **kwargs will be replaced prior to the
         execution. Furthermore, {host} will be replaced with the
         specific hostname.
 
-        :param hosts: The hosts given in parameter notation
-                      Example: red[01-10]
-        :param command: The command to be executed for each host
-                        Example: ssh {host} uname
-        :param username: Specify the username on the host
-        :param processors: The number of parallel processes used
-        :param shell: Set to Tue if the current context of the shell is
-                      to be used. It is by default True
-        :param kwargs: The key value pairs to be replaced in the command
-        :return:
+        Args:
+            hosts: The hosts given in parameter notation Example:
+                red[01-10]
+            command: The command to be executed for each host Example:
+                ssh {host} uname
+            username: Specify the username on the host
+            processors: The number of parallel processes used
+            shell: Set to Tue if the current context of the shell is to
+                be used. It is by default True
+            **kwargs: The key value pairs to be replaced in the command
+
+        Returns:
+
         """
 
         hosts = Parameter.expand(hosts)
@@ -215,13 +218,15 @@ class Host(object):
         #  usernames on the host to be checked.
         #
         """
+        Args:
+            command: the command to be executed
+            hosts: a list of hosts to be checked
+            username: the usernames for the hosts
+            key: the key for logging in
+            processors: the number of parallel checks
 
-        :param command: the command to be executed
-        :param hosts: a list of hosts to be checked
-        :param username: the usernames for the hosts
-        :param key: the key for logging in
-        :param processors: the number of parallel checks
-        :return: list of dicts representing the ping result
+        Returns:
+            list of dicts representing the ping result
         """
 
         hosts = Parameter.expand(hosts)
@@ -255,13 +260,15 @@ class Host(object):
             dryrun=False,
             verbose=False):
         """
+        Args:
+            command: the command to be executed
+            hosts: a list of hosts to be checked
+            username: the usernames for the hosts
+            key: the key for logging in
+            processors: the number of parallel checks
 
-        :param command: the command to be executed
-        :param hosts: a list of hosts to be checked
-        :param username: the usernames for the hosts
-        :param key: the key for logging in
-        :param processors: the number of parallel checks
-        :return: list of dicts representing the ping result
+        Returns:
+            list of dicts representing the ping result
         """
 
         hosts = Parameter.expand(hosts)
@@ -295,12 +302,14 @@ class Host(object):
         #  usernames on the host to be checked.
         #
         """
+        Args:
+            hosts: a list of hosts to be checked
+            username: the usernames for the hosts
+            key: the key for logging in
+            processors: the number of parallel checks
 
-        :param hosts: a list of hosts to be checked
-        :param username: the usernames for the hosts
-        :param key: the key for logging in
-        :param processors: the number of parallel checks
-        :return: list of dicts representing the ping result
+        Returns:
+            list of dicts representing the ping result
         """
         hosts = Parameter.expand(hosts)
 
@@ -315,13 +324,15 @@ class Host(object):
     # noinspection PyBroadException,PyPep8
     @staticmethod
     def _ping(args):
-        """
-            ping a vm
+        """ping a vm
 
-            :param args: dict of {ip address, count}
-            :return: a dict representing the result, if returncode=0 ping is
-                     successfully
-            """
+        Args:
+            args: dict of {ip address, count}
+
+        Returns:
+            a dict representing the result, if returncode=0 ping is
+            successfully
+        """
         ip = args['ip']
         count = str(args['count'])
         
@@ -360,13 +371,15 @@ class Host(object):
 
     @staticmethod
     def ping(hosts=None, count=1, processors=3):
-        """
-        ping a list of given ip addresses
+        """ping a list of given ip addresses
 
-        :param hosts: a list of ip addresses
-        :param count: number of pings to run per ip
-        :param processors: number of processors to Pool
-        :return: list of dicts representing the ping result
+        Args:
+            hosts: a list of ip addresses
+            count: number of pings to run per ip
+            processors: number of processors to Pool
+
+        Returns:
+            list of dicts representing the ping result
         """
 
         # first expand the ips to a list
@@ -389,17 +402,19 @@ class Host(object):
                    processors=3,
                    dryrun=False,
                    verbose=True):
-        """
-        generates the keys on the specified hosts.
+        """generates the keys on the specified hosts.
         this fonction does not work well as it still will aski if we overwrite.
 
-        :param hosts:
-        :param filename:
-        :param username:
-        :param output:
-        :param dryrun:
-        :param verbose:
-        :return:
+        Args:
+            hosts
+            filename
+            username
+            output
+            dryrun
+            verbose
+
+        Returns:
+
         """
         hosts = Parameter.expand(hosts)
         command = f'ssh-keygen -q -N "" -f {filename} <<< y'
@@ -423,15 +438,17 @@ class Host(object):
                     key="~/.ssh/id_rsa",
                     processors=3,
                     dryrun=False):
-        """
-        returns in a list the keys of the specified hosts
+        """returns in a list the keys of the specified hosts
 
-        :param username:
-        :param hosts:
-        :param filename:
-        :param key:
-        :param dryrun:
-        :return:
+        Args:
+            username
+            hosts
+            filename
+            key
+            dryrun
+
+        Returns:
+
         """
         names = Parameter.expand(hosts)
 

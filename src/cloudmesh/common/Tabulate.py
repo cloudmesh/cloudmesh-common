@@ -9,8 +9,7 @@ from tabulate import tabulate as tabulate_printer
 
 # noinspection PyPep8
 class Printer:
-    """
-    formats supported dict, yaml, json
+    """formats supported dict, yaml, json
 
     set table.format=table
     cms flavor list
@@ -48,14 +47,16 @@ class Printer:
 
     @staticmethod
     def select(results, order=None, width=None):
-        """
-        selects field in the order as defined in order
+        """selects field in the order as defined in order
         If order is non, all fileds will be taken
 
-        :param results: a flat dict
-        :param order: the order of the fields
-        :param width:
-        :return: a list of dicts
+        Args:
+            results: a flat dict
+            order: the order of the fields
+            width
+
+        Returns:
+            a list of dicts
         """
         if order is None:
             columns = len(results[0])
@@ -169,9 +170,11 @@ class Printer:
     @staticmethod
     def _to_tabulate(d):
         """
+        Args:
+            d: dict of dicts
 
-        :param d: dict of dicts
-        :return: list of dicts with the key as name
+        Returns:
+            list of dicts with the key as name
         """
         results = []
         for key in d:
@@ -191,20 +194,22 @@ class Printer:
                   max_width=48,  # deprecated use width
                   width=48,
                   ):
-        """
-        writes the information given in the table
-        :param table: the table of values
-        :param order: the order of the columns
-        :param header: the header for the columns
-        :param output: the format (default is table, values are raw, csv, json, yaml, dict
-        :param sort_keys: if true the table is sorted
-        :param show_none: passed along to the list or dict printer
-        :param sep: uses sep as the separator for csv printer
-        :param width: maximum width for a cell
-        :type width: int
-        :param max_width: deprecated use width
-        :type max_width: int
-        :return:
+        """writes the information given in the table
+
+        Args:
+            table: the table of values
+            order: the order of the columns
+            header: the header for the columns
+            output: the format (default is table, values are raw, csv,
+                json, yaml, dict
+            sort_keys: if true the table is sorted
+            show_none: passed along to the list or dict printer
+            sep: uses sep as the separator for csv printer
+            width (int): maximum width for a cell
+            max_width (int): deprecated use width
+
+        Returns:
+
         """
         width = width or max_width  # max_width is deprecated. thi is used for those still using it
 
@@ -235,19 +240,18 @@ class Printer:
                   humanize=None,
                   output="table",
                   width=70):
-        """
-        prints a attribute/key value table
+        """prints a attribute/key value table
 
-        :param d: A a dict with dicts of the same type.
-                  Each key will be a column
-        :param order: The order in which the columns are printed.
-                       The order is specified by the key names of the dict.
-        :param header:  The Header of each of the columns
-        :type header:   A list of string
-        :param sort_keys:   Key(s) of the dict to be used for sorting.
-                             This specify the column(s) in the table for sorting.
-        :type sort_keys:    string or a tuple of string (for sorting with multiple columns)
-        :param output: the output format table, csv, dict, json
+        Args:
+            d: A a dict with dicts of the same type. Each key will be a
+                column
+            order: The order in which the columns are printed. The order
+                is specified by the key names of the dict.
+            header (A list of string): The Header of each of the columns
+            sort_keys (string or a tuple of string (for sorting with multiple columns)):
+                Key(s) of the dict to be used for sorting. This specify
+                the column(s) in the table for sorting.
+            output: the output format table, csv, dict, json
         """
 
         if header is None:
@@ -285,19 +289,18 @@ class Printer:
             header=None,
             humanize=None,
             sort_keys=True):
-        """
-        prints a table in csv format
+        """prints a table in csv format
 
-        :param d: A a dict with dicts of the same type.
-        :type d: dict
-        :param order: The order in which the columns are printed.
-                      The order is specified by the key names of the dict.
-        :type order:
-        :param header: The Header of each of the columns
-        :type header: list or tuple of field names
-        :param sort_keys: TODO - not yet implemented
-        :type sort_keys: bool
-        :return: a string representing the table in csv format
+        Args:
+            d (dict): A a dict with dicts of the same type.
+            order: The order in which the columns are printed. The order
+                is specified by the key names of the dict.
+            header (list or tuple of field names): The Header of each of
+                the columns
+            sort_keys (bool): TODO - not yet implemented
+
+        Returns:
+            a string representing the table in csv format
         """
 
         if order is None:

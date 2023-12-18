@@ -8,27 +8,23 @@ class Sudo:
 
     @staticmethod
     def password(msg="sudo password: "):
-        """
-        Asks for the Sudo password
-        """
+        """Asks for the Sudo password"""
         os.system(f'sudo -p "{msg}"  echo "" > /dev/null')
 
     @staticmethod
     def expire():
-        """
-        Expires the password
-        """
+        """Expires the password"""
         os.system("sudo -k")
 
     @staticmethod
     def execute(command, decode="True", debug=False, msg=None):
-        """
-        Executes the command
+        """Executes the command
 
-        :param command: The command to run
-        :type command: list or str
-        :return:
-        :rtype:
+        Args:
+            command (list or str): The command to run
+
+        Returns:
+
         """
 
         Sudo.password()
@@ -61,18 +57,16 @@ class Sudo:
 
     @staticmethod
     def readfile(filename, split=False, trim=False, decode=True):
-        """
-        Reads the content of the file as sudo and returns the result
+        """Reads the content of the file as sudo and returns the result
 
-        :param filename: the filename
-        :type filename: str
-        :param split: uf true returns a list of lines
-        :type split: bool
-        :param trim: trim trailing whitespace. This is useful to
-                     prevent empty string entries when splitting by '\n'
-        :type trim: bool
-        :return: the content
-        :rtype: str or list
+        Args:
+            filename (str): the filename
+            split (bool): uf true returns a list of lines
+            trim (bool): trim trailing whitespace. This is useful to
+                prevent empty string entries when splitting by '\n'
+
+        Returns:
+            str or list: the content
         """
         Sudo.password()
         os.system("sync")
@@ -90,18 +84,16 @@ class Sudo:
 
     @staticmethod
     def writefile(filename, content, append=False):
-        """
-        Writes the content in the the given file.
+        """Writes the content in the the given file.
 
-        :param filename: the filename
-        :type filename: str
-        :param content: the content
-        :type content: str
-        :param append: if true it append it at the end, otherwise the file will
-                       be overwritten
-        :type append: bool
-        :return: the output created by the write process
-        :rtype: int
+        Args:
+            filename (str): the filename
+            content (str): the content
+            append (bool): if true it append it at the end, otherwise
+                the file will be overwritten
+
+        Returns:
+            int: the output created by the write process
         """
 
         os.system("sync")

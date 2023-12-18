@@ -14,22 +14,20 @@ from cloudmesh.common.util import readfile
 
 
 def os_is_windows():
-    """
-    Checks if the os is windows
+    """Checks if the os is windows
 
-    :return: True is windows
-    :rtype: bool
+    Returns:
+        bool: True is windows
     """
     return platform.system() == "Windows"
 
 
 # noinspection PyBroadException
 def os_is_linux():
-    """
-    Checks if the os is linux
+    """Checks if the os is linux
 
-    :return: True is linux
-    :rtype: bool
+    Returns:
+        bool: True is linux
     """
     try:
         content = readfile('/etc/os-release')
@@ -39,22 +37,20 @@ def os_is_linux():
 
 
 def os_is_mac():
-    """
-    Checks if the os is macOS
+    """Checks if the os is macOS
 
-    :return: True is macOS
-    :rtype: bool
+    Returns:
+        bool: True is macOS
     """
     return platform.system() == "Darwin"
 
 
 # noinspection PyBroadException
 def os_is_pi():
-    """
-    Checks if the os is Raspberry OS
+    """Checks if the os is Raspberry OS
 
-    :return: True is Raspberry OS
-    :rtype: bool
+    Returns:
+        bool: True is Raspberry OS
     """
     try:
         content = readfile('/etc/os-release')
@@ -71,8 +67,7 @@ def has_window_manager():
 
 
 def sys_user():
-    """
-    TODO
+    """TODO
 
     Returns:
 
@@ -98,8 +93,7 @@ def sys_user():
 
 
 def get_platform():
-    """
-    TODO
+    """TODO
 
     Returns:
 
@@ -119,8 +113,7 @@ def get_platform():
 
 
 def systeminfo(info=None, user=None, node=None):
-    """
-    TODO
+    """TODO
 
     Args:
         info (TODO):  TODO

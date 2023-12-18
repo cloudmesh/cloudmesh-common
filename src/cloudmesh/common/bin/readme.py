@@ -22,6 +22,7 @@ warning = f"""
 # Find icons
 #
 
+# Print the icons in the readme
 icons = f"""
 [![image](https://img.shields.io/pypi/v/{repo}.svg)](https://pypi.org/project/{repo}/)
 [![Python](https://img.shields.io/pypi/pyversions/{repo}.svg)](https://pypi.python.org/pypi/{repo})
@@ -31,9 +32,7 @@ icons = f"""
 [![Travis](https://travis-ci.com/cloudmesh/{repo}.svg?branch=main)](https://travis-ci.com/cloudmesh/{repo})
 """
 
-#
 # Find Tests
-#
 tests = sorted(glob.glob('tests/test_**.py'))
 links = [
     "[{name}]({x})".format(x=x, name=os.path.basename(x).replace('.py', '')) for

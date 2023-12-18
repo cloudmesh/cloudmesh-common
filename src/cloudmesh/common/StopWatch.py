@@ -84,7 +84,6 @@ unique name.
     # We also showcase how to add a message to timers
     )
 
-
 """
 
 import datetime
@@ -113,8 +112,7 @@ def progress(filename=None, # +
              with_banner=False,
              # variable we do not have, but should be in kwrags
              **kwargs):
-    """
-    Creates a printed line of the form
+    """Creates a printed line of the form
 
         "# cloudmesh status=ready progress=0 pid=$$ time='2022-08-05 16:29:40.228901'"
 
@@ -122,23 +120,20 @@ def progress(filename=None, # +
     If PID contains the string SLURM it will give the SLURM_TASK_ID
     Otherwise it will take the value passed along in pid
 
-    :param status: String representation of the status
-    :type status: str
-    :param progress: Progress in value from 0 to 100
-    :type progress: int | str
-    :param pid: Process ID. If not specified, it used the underlaying PID from the OS, or the task id from SLURM or
-                LSF if submitted through a queueing system.
-    :type pid: int
-    :param time: current time
-    :type time: str
-    :param stdout: if TRue Prints the progress, if False does not pring, defaut is print
-    :type stdout: bool
-    :param filename: where to write the progress as a file
-    :type filename: str
-    :param kwargs: additional arguments as key=value
-    :type kwargs: dict
-    :return: progress string
-    :rtype: str
+    Args:
+        status (str): String representation of the status
+        progress (int | str): Progress in value from 0 to 100
+        pid (int): Process ID. If not specified, it used the underlaying
+            PID from the OS, or the task id from SLURM or LSF if
+            submitted through a queueing system.
+        time (str): current time
+        stdout (bool): if TRue Prints the progress, if False does not
+            pring, defaut is print
+        filename (str): where to write the progress as a file
+        **kwargs (dict): additional arguments as key=value
+
+    Returns:
+        str: progress string
     """
     if type(progress) in ['int', 'float']:
         progress = str(progress)
@@ -171,12 +166,13 @@ def progress(filename=None, # +
     return msg
 
 def rename(newname):
-    """
-    decorator to rename a function
-    :param newname: function name
-    :type newname: str
-    :return: renamed function
-    :rtype: object
+    """decorator to rename a function
+
+    Args:
+        newname (str): function name
+
+    Returns:
+        object: renamed function
     """
 
     def decorator(f):
@@ -187,12 +183,14 @@ def rename(newname):
 
 
 def benchmark(func):
-    """
-    decorator to benchmark a function
-    :param func: function
-    :type func: object
-    :return: function with benchmarks based on the name of the function
-    :rtype: object
+    """decorator to benchmark a function
+
+    Args:
+        func (object): function
+
+    Returns:
+        object: function with benchmarks based on the name of the
+        function
     """
 
     @rename(func.__name__)
@@ -205,9 +203,7 @@ def benchmark(func):
 
 
 class StopWatch(object):
-    """
-    A class to measure times between events.
-    """
+    """A class to measure times between events."""
     debug = False
     verbose = True
     # Timer start dict
@@ -281,14 +277,11 @@ class StopWatch(object):
 
     @classmethod
     def status(cls, name, value):
-        """
-        starts a timer with the given name.
+        """starts a timer with the given name.
 
-        :param name: the name of the timer
-        :type name: string
-        :param value: value of the nameed of a status
-        :type value: bool
-
+        Args:
+            name (string): the name of the timer
+            value (bool): value of the nameed of a status
         """
         if cls.debug:
             print("Timer", name, "status", value)
@@ -296,42 +289,35 @@ class StopWatch(object):
 
     @classmethod
     def get_message(cls, name):
-        """
-        starts a timer with the given name.
+        """starts a timer with the given name.
 
-        :param name: the name of the timer
-        :type name: string
-
+        Args:
+            name (string): the name of the timer
         """
         return cls.timer_msg[name]
 
     @classmethod
     def message(cls, name, value):
-        """
-        starts a timer with the given name.
+        """starts a timer with the given name.
 
-        :param name: the name of the timer
-        :type name: string
-        :param value: the value of the message
-        :type value: bool
-
+        Args:
+            name (string): the name of the timer
+            value (bool): the value of the message
         """
         cls.timer_msg[name] = value
 
     @classmethod
     def event(cls, name, msg=None, values=None, value=None, stack_offset=2):
-        """
-        Adds an event with a given name, where start and stop is the same time.
+        """Adds an event with a given name, where start and stop is the same time.
 
-        :param name: the name of the timer
-        :type name: string
-        :param msg: a message to attach to this event
-        :type msg: string
-        :param values: data that is associated with the event that is converted
-                       to a string
-        :type values: object
-        :returns: None
-        :rtype: None
+        Args:
+            name (string): the name of the timer
+            msg (string): a message to attach to this event
+            values (object): data that is associated with the event that
+                is converted to a string
+
+        Returns:
+            None: None
         """
         values = values or value
 
@@ -350,17 +336,15 @@ class StopWatch(object):
 
     @classmethod
     def start(cls, name, values=None, value=None):
-        """
-        starts a timer with the given name.
+        """starts a timer with the given name.
 
-        :param name: the name of the timer
-        :type name: string
-        :param values: any python object with a __str__ method to record with
-                       the event.
-        :type values: object
+        Args:
+            name (string): the name of the timer
+            values (object): any python object with a __str__ method to
+                record with the event.
 
-        :returns: None
-        :rtype: None
+        Returns:
+            None: None
         """
         values = values or value
 
@@ -382,16 +366,14 @@ class StopWatch(object):
 
     @classmethod
     def stop(cls, name, state=True, values=None, value=None):
-        """
-        stops the timer with a given name.
+        """stops the timer with a given name.
 
-        :param name: the name of the timer
-        :type name: string
-        :param state: When true, updates the status of the timer.
-        :type state: bool
+        Args:
+            name (string): the name of the timer
+            state (bool): When true, updates the status of the timer.
 
-        :returns: None
-        :rtype: None
+        Returns:
+            None: None
         """
         values = values or value
 
@@ -408,23 +390,23 @@ class StopWatch(object):
 
     @classmethod
     def get_status(cls, name):
-        """
-        sets the status of the timer with a given name.
+        """sets the status of the timer with a given name.
 
-        :param name: the name of the timer
-        :type name: string
+        Args:
+            name (string): the name of the timer
         """
         return cls.timer_status[name]
 
     # noinspection PyPep8
     @classmethod
     def get(cls, name, digits=4):
-        """
-        returns the time of the timer.
+        """returns the time of the timer.
 
-        :param name: the name of the timer
-        :type name: string
-        :rtype: the elapsed time
+        Args:
+            name (string): the name of the timer
+
+        Returns:
+            the elapsed time
         """
         if name in cls.timer_end:
             try:
@@ -441,12 +423,13 @@ class StopWatch(object):
 
     @classmethod
     def sum(cls, name, digits=4):
-        """
-        returns the sum of the timer if used multiple times
+        """returns the sum of the timer if used multiple times
 
-        :param name: the name of the timer
-        :type name: string
-        :rtype: the elapsed time
+        Args:
+            name (string): the name of the timer
+
+        Returns:
+            the elapsed time
         """
         if name in cls.timer_end:
             try:
@@ -462,9 +445,7 @@ class StopWatch(object):
 
     @classmethod
     def clear(cls):
-        """
-        clear start and end timer_start
-        """
+        """clear start and end timer_start"""
         cls.timer_start.clear()
         cls.timer_end.clear()
         cls.timer_sum.clear()
@@ -474,10 +455,13 @@ class StopWatch(object):
 
     @classmethod
     def print(cls, *args):
-        """
-        prints a timer. The first argument is the label if it exists, the last is the timer
-        :param args: label, name
-        :return:
+        """prints a timer. The first argument is the label if it exists, the last is the timer
+
+        Args:
+            *args: label, name
+
+        Returns:
+
         """
         if cls.verbose:
             if len(args) == 2:
@@ -487,19 +471,22 @@ class StopWatch(object):
 
     @classmethod
     def output(cls, name):
-        """
-        prints a timer. The first argument is the label if it exists, the last is the timer
-        :param args: label, name
-        :return:
+        """prints a timer. The first argument is the label if it exists, the last is the timer
+
+        Args:
+            args: label, name
+
+        Returns:
+
         """
         print(name, str("{0:.2f}".format(cls.get(name))), "s")
 
     @classmethod
     def __str__(cls):
-        """
-        returns the string representation of the StopWatch
-        :return: string of the StopWatch
-        :rtype: str
+        """returns the string representation of the StopWatch
+
+        Returns:
+            str: string of the StopWatch
         """
         s = ""
         for t in cls.timer_end:
@@ -515,13 +502,13 @@ class StopWatch(object):
 
     @classmethod
     def systeminfo(cls, data=None):
-        """
-        Print information about the system
+        """Print information about the system
 
-        :param data: additional data to be integrated
-        :type data: dict
-        :return: a table with data
-        :rtype: str
+        Args:
+            data (dict): additional data to be integrated
+
+        Returns:
+            str: a table with data
         """
         data_platform = cm_systeminfo()
         if data is not None:
@@ -547,27 +534,21 @@ class StopWatch(object):
                       user=None,
                       total=False,
                       ):
-        """
-        prints out all timers in a convenient benchmark table
+        """prints out all timers in a convenient benchmark table
 
-        :param sysinfo: controls if system info shoul be printed.
-        :type sysinfo: bool
-        :param csv: contols if the data should be printed also as csv strings
-        :type csv: bool
-        :param prefix: The prefix used for the csv string
-        :type prefix: str
-        :param tag: overwrites the tag
-        :type tag: str
-        :param sum: prints the sums (not used)
-        :type sum: bool
-        :param node: overwrites the name of the node
-        :type node: str
-        :param user: overwrites the name of the user
-        :type user: str
-        :param attributes: list of additional attributes to print
-        :type attributes: list
-        :return: prints the information
-        :rtype: stdout
+        Args:
+            sysinfo (bool): controls if system info shoul be printed.
+            csv (bool): contols if the data should be printed also as
+                csv strings
+            prefix (str): The prefix used for the csv string
+            tag (str): overwrites the tag
+            sum (bool): prints the sums (not used)
+            node (str): overwrites the name of the node
+            user (str): overwrites the name of the user
+            attributes (list): list of additional attributes to print
+
+        Returns:
+            stdout: prints the information
         """
 
         #
@@ -645,27 +626,21 @@ class StopWatch(object):
                   attributes=None,
                   total=False,
                   filename=None):
-        """
-        prints out all timers in a convenient benchmark table
+        """prints out all timers in a convenient benchmark table
 
-        :param sysinfo: controls if system info shoul be printed.
-        :type sysinfo: bool
-        :param csv: contols if the data should be printed also as csv strings
-        :type csv: bool
-        :param prefix: The prefix used for the csv string
-        :type prefix: str
-        :param tag: overwrites the tag
-        :type tag: str
-        :param sum: prints the sums (not used)
-        :type sum: bool
-        :param node: overwrites the name of the node
-        :type node: str
-        :param user: overwrites the name of the user
-        :type user: str
-        :param attributes: list of additional attributes to print
-        :type attributes: list
-        :return: prints the information
-        :rtype: stdout
+        Args:
+            sysinfo (bool): controls if system info shoul be printed.
+            csv (bool): contols if the data should be printed also as
+                csv strings
+            prefix (str): The prefix used for the csv string
+            tag (str): overwrites the tag
+            sum (bool): prints the sums (not used)
+            node (str): overwrites the name of the node
+            user (str): overwrites the name of the user
+            attributes (list): list of additional attributes to print
+
+        Returns:
+            stdout: prints the information
         """
 
         #
@@ -837,8 +812,7 @@ class StopWatch(object):
                          'user',
                          'uname.system',
                          'platform.version']):
-        """
-        Loads data written to a file from the #csv lines.
+        """Loads data written to a file from the #csv lines.
         If the timer name has spaces in it, it must also have a label tag in which each lable is the name when
         splitting up the timer name. The list of attributes is the list specified plus the once generated from the
         timer name by splitting.
@@ -846,13 +820,12 @@ class StopWatch(object):
         Example:
             data = StopWatch.load(logfile, label=["name", "n"], attributes=["timer", "time", "user", "uname.node"])
 
+        Args:
+            label
+            attributes
 
-        :param label:
-        :type label:
-        :param attributes:
-        :type attributes:
-        :return:
-        :rtype:
+        Returns:
+
         """
         from cloudmesh.common.Shell import Shell
         data = []

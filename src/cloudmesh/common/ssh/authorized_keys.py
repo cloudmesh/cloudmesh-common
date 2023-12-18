@@ -1,6 +1,4 @@
-"""
-authorized key management.
-"""
+"""authorized key management."""
 # TODO: needs pytests
 import io
 import itertools
@@ -15,9 +13,11 @@ from cloudmesh.common.util import tempdir
 def get_fingerprint_from_public_key(pubkey):
     """Generate the fingerprint of a public key
 
-    :param str pubkey: the value of the public key
-    :returns: fingerprint
-    :rtype: str
+    Args:
+        pubkey (str): the value of the public key
+
+    Returns:
+        str: fingerprint
     """
 
     # TODO: why is there a tmpdir?
@@ -39,20 +39,20 @@ def get_fingerprint_from_public_key(pubkey):
 
 
 class AuthorizedKeys(object):
-    """
-    Class to manage authorized keys.
-    """
+    """Class to manage authorized keys."""
     def __init__(self):
         self._order = dict()
         self._keys = dict()
 
     @classmethod
     def load(cls, path):
-        """
-        load the keys from a path
+        """load the keys from a path
 
-        :param path: the filename (path) in which we find the keys
-        :return:
+        Args:
+            path: the filename (path) in which we find the keys
+
+        Returns:
+
         """
         auth = cls()
         with open(path) as fd:
@@ -64,10 +64,13 @@ class AuthorizedKeys(object):
         return auth
 
     def add(self, pubkey):
-        """
-        add a public key.
-        :param pubkey: the filename to the public key
-        :return:
+        """add a public key.
+
+        Args:
+            pubkey: the filename to the public key
+
+        Returns:
+
         """
         f = get_fingerprint_from_public_key(pubkey)
         if f not in self._keys:
@@ -75,12 +78,14 @@ class AuthorizedKeys(object):
             self._keys[f] = pubkey
 
     def remove(self, pubkey):
-        """
-        Removes the public key
+        """Removes the public key
         TODO: this method is not implemented
 
-        :param pubkey: the filename of the public key
-        :return:
+        Args:
+            pubkey: the filename of the public key
+
+        Returns:
+
         """
         raise NotImplementedError()
 

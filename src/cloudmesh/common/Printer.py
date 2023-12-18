@@ -1,6 +1,4 @@
-"""
-Convenient methods and classes to print tables.
-"""
+"""Convenient methods and classes to print tables."""
 import json
 
 import oyaml as yaml
@@ -15,9 +13,7 @@ from dateutil import parser
 
 
 class Printer(object):
-    """
-    A simple Printer class with convenient methods to print dictionary, tables, csv, lists
-    """
+    """A simple Printer class with convenient methods to print dictionary, tables, csv, lists"""
 
     @classmethod
     def flatwrite(cls, table,
@@ -30,18 +26,21 @@ class Printer(object):
                   sep=".",
                   max_width=48
                   ):
-        """
-        writes the information given in the table
-        :param table: the table of values
-        :param order: the order of the columns
-        :param header: the header for the columns
-        :param output: the format (default is table, values are raw, csv, json, yaml, dict
-        :param sort_keys: if true the table is sorted
-        :param show_none: passed along to the list or dict printer
-        :param sep: uses sep as the separator for csv printer
-        :param max_width: maximum width for a cell
-        :type max_width: int
-        :return:
+        """writes the information given in the table
+
+        Args:
+            table: the table of values
+            order: the order of the columns
+            header: the header for the columns
+            output: the format (default is table, values are raw, csv,
+                json, yaml, dict
+            sort_keys: if true the table is sorted
+            show_none: passed along to the list or dict printer
+            sep: uses sep as the separator for csv printer
+            max_width (int): maximum width for a cell
+
+        Returns:
+
         """
 
         flat = flatten(table, sep=sep)
@@ -65,17 +64,20 @@ class Printer(object):
               show_none="",
               max_width=48
               ):
-        """
-        writes the information given in the table
-        :param table: the table of values
-        :param order: the order of the columns
-        :param header: the header for the columns
-        :param output: the format (default is table, values are raw, csv, json, yaml, dict
-        :param sort_keys: if true the table is sorted
-        :param show_none: passed along to the list or dict printer
-        :param max_width: maximum width for a cell
-        :type max_width: int
-        :return:
+        """writes the information given in the table
+
+        Args:
+            table: the table of values
+            order: the order of the columns
+            header: the header for the columns
+            output: the format (default is table, values are raw, csv,
+                json, yaml, dict
+            sort_keys: if true the table is sorted
+            show_none: passed along to the list or dict printer
+            max_width (int): maximum width for a cell
+
+        Returns:
+
         """
         if output == "raw":
             return table
@@ -116,15 +118,17 @@ class Printer(object):
              max_width=48
              ):
         """
-        :param l: l is a list not a dict
-        :param order:
-        :param header:
-        :param output:
-        :param sort_keys:
-        :param show_none:
-        :param max_width: maximum width for a cell
-        :type max_width: int
-        :return:
+        Args:
+            l: l is a list not a dict
+            order
+            header
+            output
+            sort_keys
+            show_none
+            max_width (int): maximum width for a cell
+
+        Returns:
+
         """
 
         d = {}
@@ -152,22 +156,20 @@ class Printer(object):
              show_none="",
              max_width=48):
         """
-        :param d: A a dict with dicts of the same type.
-        :type d: dict
-        :param order: The order in which the columns are printed.
-                      The order is specified by the key names of the dict.
-        :type order: list
-        :param header: The Header of each of the columns
-        :type header: list or tuple of field names
-        :param output: type of output (table, csv, json, yaml or dict)
-        :type output: string
-        :param sort_keys: list
-        :type sort_keys: bool
-        :param show_none: prints None if True for None values otherwise ""
-        :type show_none: string
-        :param max_width: maximum width for a cell
-        :type max_width: int
-        :return:
+        Args:
+            d (dict): A a dict with dicts of the same type.
+            order (list): The order in which the columns are printed.
+                The order is specified by the key names of the dict.
+            header (list or tuple of field names): The Header of each of
+                the columns
+            output (string): type of output (table, csv, json, yaml or
+                dict)
+            sort_keys (bool): list
+            show_none (string): prints None if True for None values
+                otherwise ""
+            max_width (int): maximum width for a cell
+
+        Returns:
 
         """
 
@@ -209,19 +211,18 @@ class Printer(object):
     @classmethod
     def csv(cls, d, order=None, header=None, humanize=None,
             sort_keys=True):
-        """
-        prints a table in csv format
+        """prints a table in csv format
 
-        :param d: A a dict with dicts of the same type.
-        :type d: dict
-        :param order: The order in which the columns are printed.
-                      The order is specified by the key names of the dict.
-        :type order:
-        :param header: The Header of each of the columns
-        :type header: list or tuple of field names
-        :param sort_keys: TODO - not yet implemented
-        :type sort_keys: bool
-        :return: a string representing the table in csv format
+        Args:
+            d (dict): A a dict with dicts of the same type.
+            order: The order in which the columns are printed. The order
+                is specified by the key names of the dict.
+            header (list or tuple of field names): The Header of each of
+                the columns
+            sort_keys (bool): TODO - not yet implemented
+
+        Returns:
+            a string representing the table in csv format
         """
 
         first_element = list(d)[0]
@@ -296,21 +297,19 @@ class Printer(object):
                    show_none="",
                    humanize=None,
                    max_width=48):
-        """
-        prints a pretty table from an dict of dicts
+        """prints a pretty table from an dict of dicts
 
-        :param d: A a dict with dicts of the same type. Each key will be a column
-        :param order: The order in which the columns are printed.
-                      The order is specified by the key names of the dict.
-        :param header: The Header of each of the columns
-        :type header: A list of string
-        :param sort_keys: Key(s) of the dict to be used for sorting.
-                          This specify the column(s) in the table for sorting.
-        :type sort_keys: string or a tuple of string (for sorting with multiple columns)
-        :param show_none: prints None if True for None values
-        :type show_none: string
-        :param max_width: maximum width for a cell
-        :type max_width: int
+        Args:
+            d: A a dict with dicts of the same type. Each key will be a
+                column
+            order: The order in which the columns are printed. The order
+                is specified by the key names of the dict.
+            header (A list of string): The Header of each of the columns
+            sort_keys (string or a tuple of string (for sorting with multiple columns)):
+                Key(s) of the dict to be used for sorting. This specify
+                the column(s) in the table for sorting.
+            show_none (string): prints None if True for None values
+            max_width (int): maximum width for a cell
         """
 
         start = DateTime.now()
@@ -374,19 +373,18 @@ class Printer(object):
     def attribute(cls, d, header=None, order=None, sort_keys=True,
                   humanize=None,
                   output="table"):
-        """
-        prints a attribute/key value table
+        """prints a attribute/key value table
 
-        :param d: A a dict with dicts of the same type.
-                  Each key will be a column
-        :param order: The order in which the columns are printed.
-                       The order is specified by the key names of the dict.
-        :param header:  The Header of each of the columns
-        :type header:   A list of string
-        :param sort_keys:   Key(s) of the dict to be used for sorting.
-                             This specify the column(s) in the table for sorting.
-        :type sort_keys:    string or a tuple of string (for sorting with multiple columns)
-        :param output: the output format table, csv, dict, json
+        Args:
+            d: A a dict with dicts of the same type. Each key will be a
+                column
+            order: The order in which the columns are printed. The order
+                is specified by the key names of the dict.
+            header (A list of string): The Header of each of the columns
+            sort_keys (string or a tuple of string (for sorting with multiple columns)):
+                Key(s) of the dict to be used for sorting. This specify
+                the column(s) in the table for sorting.
+            output: the output format table, csv, dict, json
         """
 
         if header is None:
@@ -421,18 +419,24 @@ class Printer(object):
 
     @classmethod
     def print_list(cls, l, output='table'):    # noqa: E741
-        """
-        prints a list
-        :param l: the list
-        :param output: the output, default is a table
-        :return:
+        """prints a list
+
+        Args:
+            l: the list
+            output: the output, default is a table
+
+        Returns:
+
         """
 
         def dict_from_list(l):   # noqa: E741
-            """
-            returns a dict from a list for printing
-            :param l: the list
-            :return:
+            """returns a dict from a list for printing
+
+            Args:
+                l: the list
+
+            Returns:
+
             """
             d = dict([(idx, item) for idx, item in enumerate(l)])
             return d
@@ -462,13 +466,13 @@ class Printer(object):
 
     @classmethod
     def row_table(cls, d, order=None, labels=None):
-        """
-        prints a pretty table from data in the dict.
+        """prints a pretty table from data in the dict.
 
-        :param d: A dict to be printed
-        :param order: The order in which the columns are printed.
-                      The order is specified by the key names of the dict.
-        :param labels: The array of labels for the column
+        Args:
+            d: A dict to be printed
+            order: The order in which the columns are printed. The order
+                is specified by the key names of the dict.
+            labels: The array of labels for the column
         """
         # header
         header = list(d)

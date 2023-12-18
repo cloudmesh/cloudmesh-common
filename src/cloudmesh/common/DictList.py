@@ -2,8 +2,7 @@ from pprint import pprint
 
 
 class DictList(dict):
-    """
-    A class to convert lists of dicts to dicts.
+    """A class to convert lists of dicts to dicts.
 
     Example:
 
@@ -31,16 +30,15 @@ class DictList(dict):
         #  {'name': 'vm3', 'status': 'on', 'x': 2},
         #  {'name': 'vm4', 'status': 'on', 'x': 3}]
 
-
     """
 
     def __init__(self, entries=None, key="name", position="x"):
-        """
-        initializes the DotDict List
+        """initializes the DotDict List
 
-        :param entries: a list of dict
-        :param key: a key that is used as name within the dict
-        :param position: the name of a key that stores the order
+        Args:
+            entries: a list of dict
+            key: a key that is used as name within the dict
+            position: the name of a key that stores the order
         """
 
         if type(entries) == list:
@@ -56,10 +54,10 @@ class DictList(dict):
             raise ValueError("type not supported")
 
     def list(self):
-        """
-        Lists the entries
+        """Lists the entries
 
-        :return:
+        Returns:
+
         """
         return list(self.values())
 

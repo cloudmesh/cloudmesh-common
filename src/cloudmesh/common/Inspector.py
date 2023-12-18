@@ -19,10 +19,10 @@ print("\n".join(c.__path__))
 
 
 def inheritors(klass):
-    """
-    returns the inheritors of a class if it is loaded
+    """returns the inheritors of a class if it is loaded
 
-    :return: a set of classes
+    Returns:
+        a set of classes
     """
     subclasses = set()
     work = [klass]

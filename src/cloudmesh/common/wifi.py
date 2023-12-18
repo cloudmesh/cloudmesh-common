@@ -1,5 +1,4 @@
-"""
-Implementation of a function the set the WIFI configuration.
+"""Implementation of a function the set the WIFI configuration.
 This function is primarily developed for a Raspberry PI
 """
 import textwrap
@@ -10,8 +9,7 @@ from cloudmesh.common.util import writefile
 
 
 class Wifi:
-    """
-    The class is used to group a number of useful variables and functions so
+    """The class is used to group a number of useful variables and functions so
     it is easier to program and manage Wifi configurations.
 
     The default location for the configuration file is
@@ -54,23 +52,19 @@ class Wifi:
             psk=True,
             location=location,
             sudo=False):
-        """
-        Sets the wifi. Only works for psk based wifi
+        """Sets the wifi. Only works for psk based wifi
 
-        :param ssid: The ssid
-        :type ssid: str
-        :param password: The password
-        :type password: str
-        :param country: Two digit country code
-        :type country: str
-        :param psk: If true uses psk authentication
-        :type psk: bool
-        :param location: The file where the configuration file should be written to
-        :type location: str
-        :param sudo: If tru the write will be done with sudo
-        :type sudo: bool
-        :return: True if success
-        :rtype: bool
+        Args:
+            ssid (str): The ssid
+            password (str): The password
+            country (str): Two digit country code
+            psk (bool): If true uses psk authentication
+            location (str): The file where the configuration file should
+                be written to
+            sudo (bool): If tru the write will be done with sudo
+
+        Returns:
+            bool: True if success
         """
 
         if ssid is None or (psk and password is None):

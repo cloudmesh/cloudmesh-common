@@ -42,12 +42,13 @@ def tempdir(*args, **kwargs):
 
 
 def check_root(dryrun=False, terminate=True):
-    """
-    check if I am the root user. If not, simply exits the program.
-    :param dryrun: if set to true, does not terminate if not root user
-    :type dryrun: bool
-    :param terminate: terminates if not root user and dryrun is False
-    :type terminate: bool
+    """check if I am the root user. If not, simply exits the program.
+
+    Args:
+        dryrun (bool): if set to true, does not terminate if not root
+            user
+        terminate (bool): terminates if not root user and dryrun is
+            False
     """
     uid = os.getuid()
     if uid == 0:
@@ -59,15 +60,16 @@ def check_root(dryrun=False, terminate=True):
 
 
 def exponential_backoff(fn, sleeptime_s_max=30 * 60):
-    """
-    Calls `fn` until it returns True, with an exponentially increasing wait
+    """Calls `fn` until it returns True, with an exponentially increasing wait
     time between calls
 
-    :param fn: the function to be called that returns Truw or False
-    :type fn: object
-    :param sleeptime_s_max: the sleep time in milliseconds
-    :type sleeptime_s_max: int
-    :return: None
+    Args:
+        fn (object): the function to be called that returns Truw or
+            False
+        sleeptime_s_max (int): the sleep time in milliseconds
+
+    Returns:
+        None
     """
     sleeptime_ms = 500
     while True:
@@ -83,15 +85,15 @@ def exponential_backoff(fn, sleeptime_s_max=30 * 60):
 
 
 def download(source, destination, force=False):
-    """
-    Downloads the file from source to destination
+    """Downloads the file from source to destination
 
     For large files, see cloudmesh.common.Shell.download
 
-    :param source: The http source
-    :param destination: The destination in the file system
-    :param force: If True the file will be downloaded even if
-                  it already exists
+    Args:
+        source: The http source
+        destination: The destination in the file system
+        force: If True the file will be downloaded even if it already
+            exists
     """
     if os.path.isfile(destination) and not force:
         Console.warning(f"File {destination} already exists. "
@@ -104,13 +106,13 @@ def download(source, destination, force=False):
         open(destination, 'wb').write(r.content)
 
 def csv_to_list(csv_string, sep=","):
-    """
-    Converts a CSV table from a string to a list of lists
+    """Converts a CSV table from a string to a list of lists
 
-    :param csv_string: The CSV table
-    :type csv_string: string
-    :return: list of lists
-    :rtype: list
+    Args:
+        csv_string (string): The CSV table
+
+    Returns:
+        list: list of lists
     """
     reader = csv.reader(csv_string.splitlines(), delimiter=sep)
 
@@ -121,13 +123,15 @@ def csv_to_list(csv_string, sep=","):
     return list_of_lists
 
 def search(lines, pattern):
-    """
-    return all lines that match the pattern
+    """return all lines that match the pattern
     #TODO: we need an example
 
-    :param lines:
-    :param pattern:
-    :return:
+    Args:
+        lines
+        pattern
+
+    Returns:
+
     """
     p = pattern.replace("*", ".*")
     test = re.compile(p)
@@ -152,11 +156,13 @@ def grep(pattern, filename):
 
 
 def is_local(host):
-    """
-    Checks if the host is the localhost
+    """Checks if the host is the localhost
 
-    :param host: The hostname or ip
-    :return: True if the host is the localhost
+    Args:
+        host: The hostname or ip
+
+    Returns:
+        True if the host is the localhost
     """
     return host in ["127.0.0.1",
                     "localhost",
@@ -169,10 +175,10 @@ def is_local(host):
 
 # noinspection PyPep8
 def is_gitbash():
-    """
-    returns True if you run in a Windows gitbash
+    """returns True if you run in a Windows gitbash
 
-    :return: True if gitbash
+    Returns:
+        True if gitbash
     """
     try:
         exepath = os.environ['EXEPATH']
@@ -182,10 +188,10 @@ def is_gitbash():
 
 
 def is_powershell():
-    """
-    True if you run in powershell
+    """True if you run in powershell
 
-    :return: True if you run in powershell
+    Returns:
+        True if you run in powershell
     """
     # psutil.Process(parent_pid).name() returns -
     # cmd.exe for CMD
@@ -198,10 +204,10 @@ def is_powershell():
         return False
 
 def is_cmd_exe():
-    """
-    return True if you run in a Windows CMD
+    """return True if you run in a Windows CMD
 
-    :return: True if you run in CMD
+    Returns:
+        True if you run in CMD
     """
     if is_gitbash():
         return False
@@ -213,10 +219,10 @@ def is_cmd_exe():
 
 
 def path_expand(text, slashreplace=True):
-    """ returns a string with expanded variable.
+    """returns a string with expanded variable.
 
-    :param text: the path to be expanded, which can include ~ and environment variables
-    :param text: string
+        :param text: the path to be expanded, which can include ~ and environment variables
+        :param text: string
 
     """
     result = os.path.expandvars(os.path.expanduser(text))
@@ -232,10 +238,13 @@ def path_expand(text, slashreplace=True):
 
 
 def convert_from_unicode(data):
-   """
-   Converts unicode data to a string
-   :param data: the data to convert
-   :return: converted data
+   """Converts unicode data to a string
+
+   Args:
+       data: the data to convert
+
+   Returns:
+       converted data
    """
    if isinstance(data, str):
        return str(data)
@@ -250,9 +259,10 @@ def convert_from_unicode(data):
 def yn_choice(message, default='y', tries=None):
     """asks for a yes/no question.
 
-    :param tries: the number of tries
-    :param message: the message containing the question
-    :param default: the default answer
+    Args:
+        tries: the number of tries
+        message: the message containing the question
+        default: the default answer
     """
     # http://stackoverflow.com/questions/3041986/python-command-line-yes-no-input"""
     choices = 'Y/n' if default.lower() in ('y', 'yes') else 'y/N'
@@ -276,20 +286,18 @@ def yn_choice(message, default='y', tries=None):
 def str_banner(txt=None, c="-", prefix="#", debug=True, label=None,
                color="BLUE", padding=False,
                figlet=False, font="big"):
-    """
-    prints a banner of the form with a frame of # around the txt::
+    """prints a banner of the form with a frame of # around the txt::
 
     # --------------------------
     # txt
     # --------------------------
 
-    :param color: prints in the given color
-    :param label: adds a label
-    :param debug: prints only if debug is true
-    :param txt: a text message to be printed
-    :type txt: string
-    :param c: the character used instead of c
-    :type c: character
+    Args:
+        color: prints in the given color
+        label: adds a label
+        debug: prints only if debug is true
+        txt (string): a text message to be printed
+        c (character): the character used instead of c
     """
     output = ""
     if debug:
@@ -318,22 +326,20 @@ def str_banner(txt=None, c="-", prefix="#", debug=True, label=None,
 def banner(txt=None, c="-", prefix="#", debug=True, label=None,
            color="BLUE", padding=False,
            figlet=False, font="big"):
-    """
-    prints a banner of the form with a frame of # around the txt::
+    """prints a banner of the form with a frame of # around the txt::
 
     # --------------------------
     # txt
     # --------------------------
 
-    :param color: prints in the given color
-    :param label: adds a label
-    :param debug: prints only if debug is true
-    :param txt: a text message to be printed
-    :type txt: string
-    :param c: the character used instead of c
-    :type c: character
-    :param padding: ads additional comment line around the text so the banner is larger
-    :type padding: bool
+    Args:
+        color: prints in the given color
+        label: adds a label
+        debug: prints only if debug is true
+        txt (string): a text message to be printed
+        c (character): the character used instead of c
+        padding (bool): ads additional comment line around the text so
+            the banner is larger
     """
 
     output = str_banner(txt=txt, c=c, prefix=prefix, debug=debug, label=label,
@@ -343,13 +349,12 @@ def banner(txt=None, c="-", prefix="#", debug=True, label=None,
 
 # noinspection PyPep8Naming
 def HEADING(txt=None, c="#", color="HEADER"):
-    """
-    Prints a message to stdout with #### surrounding it. This is useful for
+    """Prints a message to stdout with #### surrounding it. This is useful for
     pytests to better distinguish them.
 
-    :param c: uses the given char to wrap the header
-    :param txt: a text message to be printed
-    :type txt: string
+    Args:
+        c: uses the given char to wrap the header
+        txt (string): a text message to be printed
     """
     frame = inspect.getouterframes(inspect.currentframe())
 
@@ -367,9 +372,7 @@ def HEADING(txt=None, c="#", color="HEADER"):
 
 # noinspection PyPep8Naming
 def FUNCTIONNAME():
-    """
-    Returns the name of a function.
-    """
+    """Returns the name of a function."""
     frame = inspect.getouterframes(inspect.currentframe())
 
     filename = frame[1][1].replace(os.getcwd(), "")
@@ -380,14 +383,15 @@ def FUNCTIONNAME():
 
 def backup_name(filename):
     """
-    :param filename: given a filename creates a backup name of the form
-                     filename.bak.1. If the filename already exists
-                     the number will be increased as  much as needed so
-                     the file does not exist in the given location.
-                     The filename can consists a path and is expanded
-                     with ~ and environment variables.
-    :type filename: string
-    :rtype: string
+    Args:
+        filename (string): given a filename creates a backup name of the
+            form filename.bak.1. If the filename already exists the
+            number will be increased as  much as needed so the file does
+            not exist in the given location. The filename can consists a
+            path and is expanded with ~ and environment variables.
+
+    Returns:
+        string
     """
     location = path_expand(filename)
     n = 0
@@ -401,13 +405,16 @@ def backup_name(filename):
 
 
 def auto_create_version(class_name, version, filename="__init__.py"):
-    """
-    creates a version number in the __init__.py file.
+    """creates a version number in the __init__.py file.
     it can be accessed with __version__
-    :param class_name:
-    :param version:
-    :param filename:
-    :return:
+
+    Args:
+        class_name
+        version
+        filename
+
+    Returns:
+
     """
     version_filename = Path(
         "{classname}/{filename}".format(classname=class_name,
@@ -422,13 +429,12 @@ def auto_create_version(class_name, version, filename="__init__.py"):
 
 
 def auto_create_requirements(requirements):
-    """
-
-    creates a requirement.txt file form the requirements in the list. If the file
+    """creates a requirement.txt file form the requirements in the list. If the file
     exists, it get changed only if the
     requirements in the list are different from the existing file
 
-    :param requirements: the requirements in a list
+    Args:
+        requirements: the requirements in a list
     """
     banner("Creating requirements.txt file")
     try:
@@ -445,13 +451,12 @@ def auto_create_requirements(requirements):
 
 
 def copy_files(files_glob, source_dir, dest_dir):
-    """
-    copies the files to the destination
+    """copies the files to the destination
 
-    :param files_glob: `*.yaml`
-    :param source_dir: source directory
-    :param dest_dir: destination directory
-
+    Args:
+        files_glob: `*.yaml`
+        source_dir: source directory
+        dest_dir: destination directory
     """
 
     files = glob.iglob(os.path.join(source_dir, files_glob))
@@ -461,13 +466,16 @@ def copy_files(files_glob, source_dir, dest_dir):
 
 
 def readfile(filename, mode='r', encoding=None):
-    """
-    returns the content of a file
-    :param filename: the filename
-    :param encoding: type of encoding to read the file.
+    """returns the content of a file
+
+    Args:
+        filename: the filename
+        encoding: type of encoding to read the file.
     if None then no encoding is used.
     other values are utf-8, cp850
-    :return:
+
+    Returns:
+
     """
     if mode != 'r' and mode != 'rb':
         Console.error(f"incorrect mode : expected 'r' or 'rb' given {mode}")
@@ -485,11 +493,14 @@ def readfile(filename, mode='r', encoding=None):
 
 
 def writefile(filename, content):
-    """
-    writes the content into the file
-    :param filename: the filename
-    :param content: teh content
-    :return:
+    """writes the content into the file
+
+    Args:
+        filename: the filename
+        content: teh content
+
+    Returns:
+
     """
     directory = os.path.dirname(filename)
     if directory not in [None, '']:
@@ -499,24 +510,28 @@ def writefile(filename, content):
         outfile.truncate()
 
 def appendfile(filename, content):
-    """
-    writes the content into the file
-    :param filename: the filename
-    :param content: teh content
-    :return:
+    """writes the content into the file
+
+    Args:
+        filename: the filename
+        content: teh content
+
+    Returns:
+
     """
     with open(path_expand(filename), 'a') as outfile:
         outfile.write(content)
 
 
 def writefd(filename, content, mode='w', flags=os.O_RDWR | os.O_CREAT, mask=0o600):
-    """
-    writes the content into the file and control permissions
-    :param filename: the full or relative path to the filename
-    :param content: the content being written
-    :param mode: the write mode ('w') or write bytes mode ('wb')
-    :param flags: the os flags that determine the permissions for the file
-    :param mask: the mask that the permissions will be applied to
+    """writes the content into the file and control permissions
+
+    Args:
+        filename: the full or relative path to the filename
+        content: the content being written
+        mode: the write mode ('w') or write bytes mode ('wb')
+        flags: the os flags that determine the permissions for the file
+        mask: the mask that the permissions will be applied to
     """
     if mode != 'w' and mode != 'wb':
         Console.error(f"incorrect mode : expected 'w' or 'wb' given {mode}")
@@ -528,18 +543,16 @@ def writefd(filename, content, mode='w', flags=os.O_RDWR | os.O_CREAT, mask=0o60
 
 
 def sudo_readfile(filename, split=True, trim=False):
-    """
-    Reads the content of the file as sudo and returns the result
+    """Reads the content of the file as sudo and returns the result
 
-    :param filename: the filename
-    :type filename: str
-    :param split: uf true returns a list of lines
-    :type split: bool
-    :param trim: trim trailing whitespace. This is useful to
-                 prevent empty string entries when splitting by '\n'
-    :type trim: bool
-    :return: the content
-    :rtype: str or list
+    Args:
+        filename (str): the filename
+        split (bool): uf true returns a list of lines
+        trim (bool): trim trailing whitespace. This is useful to prevent
+            empty string entries when splitting by '\n'
+
+    Returns:
+        str or list: the content
     """
     result = subprocess.getoutput(f"sudo cat {filename}")
 
@@ -554,13 +567,16 @@ def sudo_readfile(filename, split=True, trim=False):
 
 # Reference: http://interactivepython.org/runestone/static/everyday/2013/01/3_password.html
 def generate_password(length=8, lower=True, upper=True, number=True):
-    """
-    generates a simple password. We should not really use this in production.
-    :param length: the length of the password
-    :param lower: True of lower case characters are allowed
-    :param upper: True if upper case characters are allowed
-    :param number: True if numbers are allowed
-    :return:
+    """generates a simple password. We should not really use this in production.
+
+    Args:
+        length: the length of the password
+        lower: True of lower case characters are allowed
+        upper: True if upper case characters are allowed
+        number: True if numbers are allowed
+
+    Returns:
+
     """
     lletters = "abcdefghijklmnopqrstuvwxyz"
     uletters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"

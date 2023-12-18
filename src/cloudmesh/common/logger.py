@@ -1,6 +1,4 @@
-"""
-simple logging convenience framework
-"""
+"""simple logging convenience framework"""
 import logging
 import os
 
@@ -65,9 +63,10 @@ def LOGGER(filename):
 
 # noinspection PyPep8Naming
 def LOGGING_ON(log):
-    """
-    Switches logging on
-    :param log: the logger for which we switch logging on
+    """Switches logging on
+
+    Args:
+        log: the logger for which we switch logging on
     """
     try:
         log.setLevel(logging.DEBUG)
@@ -78,9 +77,10 @@ def LOGGING_ON(log):
 
 # noinspection PyPep8Naming
 def LOGGING_OFF(log):
-    """
-    Switches logging off
-    :param log: the logger for which we switch logging off
+    """Switches logging off
+
+    Args:
+        log: the logger for which we switch logging off
     """
     try:
         log.setLevel(logging.CRITICAL)

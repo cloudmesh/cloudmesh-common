@@ -45,15 +45,19 @@ def VERBOSE(msg, label=None, color="BLUE", verbose=9, location=True,
                      "EC2_SECRET_KEY",
                      "MONGO_PASSWORD"]
             ):
-    """
-    Prints a data structure in verbose mode
+    """Prints a data structure in verbose mode
 
-    :param msg: the msg to be printed, can be a data structure such as a dict
-    :param label: the  label to be used, defaults to the name of the msg variable
-    :param color: the color
-    :param verbose: indicates when to print it. If verbose in cloudmesh is
-                    higher than the specified value it is printed
-    :return:
+    Args:
+        msg: the msg to be printed, can be a data structure such as a
+            dict
+        label: the  label to be used, defaults to the name of the msg
+            variable
+        color: the color
+        verbose: indicates when to print it. If verbose in cloudmesh is
+            higher than the specified value it is printed
+
+    Returns:
+
     """
 
     _verbose = int(Variables()["verbose"] or 0)

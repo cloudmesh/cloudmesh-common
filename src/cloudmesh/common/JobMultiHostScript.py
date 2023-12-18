@@ -7,8 +7,7 @@ from cloudmesh.common.parameter import Parameter
 
 
 class JobMultiHostScript:
-    '''
-    The JobMultiHostScript is a simple mechanism to run a number of commands formylated
+    '''The JobMultiHostScript is a simple mechanism to run a number of commands formylated
     in a script in parallel over the hosts provided. The script is interpreted line
     by line and does not support multi line commands at this time. (Not difficult
     to implement when looking at \\ at the end of a line.)

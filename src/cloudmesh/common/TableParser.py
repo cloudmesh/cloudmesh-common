@@ -50,19 +50,23 @@ class TableParser(object):
         comment_chars="+#",
     ):
         """
+        Args:
+            header: if true the first line is a header. Not implemented
+            index: if true, identifies one of the header column as index
+                for dict key naming
+            change: an array of tuples of characters that need to be
+                changed to allow key creation in the dict
+            strip: if true the the lines start and end with the
+                separator
+            lower: converts headers to lower case
+            strip_seperator: removes the spaces before and after the
+                separator
+            seperator: the separator character, default is |
+            comment_chars: lines starting with this chars will be
+                ignored
 
-        :param header: if true the first line is a header. Not implemented
-        :param index: if true, identifies one of the header column as index
-                      for dict key naming
-        :param change: an array of tuples of characters that need to be
-                       changed to allow key creation in the dict
-        :param strip: if true the the lines start and end with the separator
-        :param lower: converts headers to lower case
-        :param strip_seperator: removes the spaces before and after the
-                                separator
-        :param seperator: the separator character, default is |
-        :param comment_chars: lines starting with this chars will be ignored
-        :return:
+        Returns:
+
         """
         if change is None:
             change = [(":", "_"), ("(", "_"), (")", ""), ("/", "_")]
@@ -80,8 +84,11 @@ class TableParser(object):
 
     def clean(self, line):
         """
-        :param line: cleans the string
-        :return:
+        Args:
+            line: cleans the string
+
+        Returns:
+
         """
         # print ("-" + line + "-")
         if line == "":
@@ -107,9 +114,10 @@ class TableParser(object):
         return self.lines
 
     def _get_headers(self):
-        """
-        assumes comment have been stripped with extract
-        :return:
+        """assumes comment have been stripped with extract
+
+        Returns:
+
         """
 
         header = self.lines[0]
@@ -122,10 +130,11 @@ class TableParser(object):
 
     def to_dict(self, table):
         """
+        Args:
+            table (string): converts a stream called line to a dict
 
-        :param table: converts a stream called line to a dict
-        :type table: string
-        :return: the dict
+        Returns:
+            the dict
         """
 
         self.extract_lines(table)
@@ -150,9 +159,11 @@ class TableParser(object):
 
     def to_list(self, table):
         """
-        :param table: converts a stream called line to a list
-        :type table: string
-        :return: the list
+        Args:
+            table (string): converts a stream called line to a list
+
+        Returns:
+            the list
         """
         self.extract_lines(table)
 

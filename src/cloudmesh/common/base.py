@@ -12,8 +12,7 @@ def directory_exists(directory_name):
 
 class Base:
 
-    """
-    The Base path for te cloudmesh.yaml file can be set automatically with this class
+    """The Base path for te cloudmesh.yaml file can be set automatically with this class
     The following test are done in that order
 
     base = Base()

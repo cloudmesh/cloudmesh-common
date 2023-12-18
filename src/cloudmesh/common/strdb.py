@@ -23,8 +23,7 @@ yaml.SafeLoader.add_constructor(u'tag:yaml.org,2002:python/unicode', yaml_constr
 #  the db api
 
 class YamlDB(object):
-    """A YAML-backed Key-Value database to store strings
-    """
+    """A YAML-backed Key-Value database to store strings"""
 
     def __init__(self, path):
         self._db = dict()

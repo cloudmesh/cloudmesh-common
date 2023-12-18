@@ -1,7 +1,6 @@
 # noinspection PyPep8Naming
 class dotdict(dict):
-    """
-    A convenient dot dict class::
+    """A convenient dot dict class::
 
         a = dotdict({"argument": "value"})
 
@@ -11,11 +10,13 @@ class dotdict(dict):
     """
 
     def __getattr__(self, attr):
-        """
-        retirns an element
+        """retirns an element
 
-        :param attr: the attribute key
-        :return: teh value
+        Args:
+            attr: the attribute key
+
+        Returns:
+            teh value
         """
         return self.get(attr)
 

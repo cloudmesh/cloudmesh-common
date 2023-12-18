@@ -1,5 +1,4 @@
-"""
-A convenient method to execute shell commands and return their output. Note:
+"""A convenient method to execute shell commands and return their output. Note:
 that this method requires that the command be completely execute before the
 output is returned. FOr many activities in cloudmesh this is sufficient.
 
@@ -112,18 +111,18 @@ class Pip(object):
 
 
 class SubprocessError(Exception):
-    """
-    Manages the formatting of the error and stdout.
+    """Manages the formatting of the error and stdout.
     This command should not be directly called. Instead use Shell
     """
 
     def __init__(self, cmd, returncode, stderr, stdout):
-        """
-        sets the error
-        :param cmd: the command executed
-        :param returncode: the return code
-        :param stderr: the stderr
-        :param stdout: the stdout
+        """sets the error
+
+        Args:
+            cmd: the command executed
+            returncode: the return code
+            stderr: the stderr
+            stdout: the stdout
         """
         self.cmd = cmd
         self.returncode = returncode
@@ -133,12 +132,15 @@ class SubprocessError(Exception):
     def __str__(self):
 
         def indent(lines, amount, ch=' '):
-            """
-            indent the lines by multiples of ch
-            :param lines:
-            :param amount:
-            :param ch:
-            :return:
+            """indent the lines by multiples of ch
+
+            Args:
+                lines
+                amount
+                ch
+
+            Returns:
+
             """
             padding = amount * ch
             return padding + ('\n' + padding).join(lines.split('\n'))
@@ -157,20 +159,20 @@ class SubprocessError(Exception):
 
 
 class Subprocess(object):
-    """
-    Executes a command. This class should not be directly used, but
+    """Executes a command. This class should not be directly used, but
     instead you should use Shell.
     """
 
     def __init__(self, cmd, cwd=None, stderr=subprocess.PIPE,
                  stdout=subprocess.PIPE, env=None):
-        """
-        execute the given command
-        :param cmd: the command
-        :param cwd: the directory in which to execute the command
-        :param stderr: the pipe for stderror
-        :param stdout: the pipe for the stdoutput
-        :param env:
+        """execute the given command
+
+        Args:
+            cmd: the command
+            cwd: the directory in which to execute the command
+            stderr: the pipe for stderror
+            stdout: the pipe for the stdoutput
+            env
         """
         Console.debug_msg('Running cmd: {}'.format(' '.join(map(quote, cmd))))
 
@@ -188,8 +190,7 @@ class Subprocess(object):
 
 
 class Shell(object):
-    """
-    The shell class allowing us to conveniently access many operating system commands.
+    """The shell class allowing us to conveniently access many operating system commands.
     TODO: This works well on Linux and OSX, but has not been tested much on Windows
     """
 
@@ -278,13 +279,16 @@ class Shell(object):
 
     @staticmethod
     def run_timed(label, command, encoding=None, service=None):
-        """
-        runs the command and uses the StopWatch to time it
-        :param label: name of the StopWatch
-        :param command: the command to be executed
-        :param encoding: the encoding
-        :param service: a prefix to the stopwatch label
-        :return:
+        """runs the command and uses the StopWatch to time it
+
+        Args:
+            label: name of the StopWatch
+            command: the command to be executed
+            encoding: the encoding
+            service: a prefix to the stopwatch label
+
+        Returns:
+
         """
         _label = str(label)
         print(_label, command)
@@ -295,11 +299,14 @@ class Shell(object):
 
     @staticmethod
     def run(command, exitcode="", encoding='utf-8', replace=True, timeout=None):
-        """
-        executes the command and returns the output as string
-        :param command:
-        :param encoding:
-        :return:
+        """executes the command and returns the output as string
+
+        Args:
+            command
+            encoding
+
+        Returns:
+
         """
 
         if sys.platform == "win32":
@@ -330,13 +337,15 @@ class Shell(object):
 
     @staticmethod
     def run2(command, encoding='utf-8'):
-        """
-        executes the command and returns the output as string. This command also
+        """executes the command and returns the output as string. This command also
         allows execution of 32 bit commands.
 
-        :param command: the program or command to be executed
-        :param encoding: encoding of the output
-        :return:
+        Args:
+            command: the program or command to be executed
+            encoding: encoding of the output
+
+        Returns:
+
         """
         if platform.lower() == 'win32':
             import ctypes
@@ -382,14 +391,19 @@ class Shell(object):
                 witherror=True):
         """Run Shell command
 
-        :param witherror: if set to False the error will not be printed
-        :param traceflag: if set to true the trace is printed in case of an error
-        :param cwd: the current working directory in which the command is
+        Args:
+            witherror: if set to False the error will not be printed
+            traceflag: if set to true the trace is printed in case of an
+                error
+            cwd: the current working directory in which the command is
+            shell: if set to true the subprocess is called as part of a
+                shell
+            cmd: command to run
+            arguments: we do not know yet
         supposed to be executed.
-        :param shell: if set to true the subprocess is called as part of a shell
-        :param cmd: command to run
-        :param arguments: we do not know yet
-        :return:
+
+        Returns:
+
         """
         # print "--------------"
         result = None
@@ -464,19 +478,20 @@ class Shell(object):
 
     @staticmethod
     def oneline(script, seperator=" && "):
-        """
-        converts a script to one line command.
+        """converts a script to one line command.
         THis is useful to run a single ssh command and pass a one line script.
 
-        :param script:
-        :return:
+        Args:
+            script
+
+        Returns:
+
         """
         return seperator.join(textwrap.dedent(script).strip().splitlines())
 
     @staticmethod
     def is_choco_installed():
-        """
-        return true if chocolatey windows package manager is installed
+        """return true if chocolatey windows package manager is installed
         return false if not installed or if not windows
         """
         if not os_is_windows():
@@ -490,8 +505,7 @@ class Shell(object):
 
     @staticmethod
     def install_chocolatey():
-        """
-        install chocolatey windows package manager
+        """install chocolatey windows package manager
         windows only
         """
 
@@ -637,26 +651,24 @@ class Shell(object):
 
     @staticmethod
     def is_root():
-        """
-        checks if the user is root
+        """checks if the user is root
 
-        :return: True if the user is root
-        :rtype: boolean
+        Returns:
+            boolean: True if the user is root
         """
         username = subprocess.getoutput("whoami")
         return username == "root"
 
     @staticmethod
     def rmdir(top, verbose=False):
-        """
-        removes a directory
+        """removes a directory
 
-        :param top: removes the directory tree from the top
-        :type top: str
-        :param verbose: unused
-        :type verbose: unused
-        :return: void
-        :rtype: void
+        Args:
+            top (str): removes the directory tree from the top
+            verbose (unused): unused
+
+        Returns:
+            void: void
         """
         p = Path(top)
         if not p.exists():
@@ -766,8 +778,11 @@ class Shell(object):
     @staticmethod
     def browser(filename=None):
         """
-        :param filename:
-        :return:
+        Args:
+            filename
+
+        Returns:
+
         """
         if not os.path.isabs(filename) and 'http' not in filename:
             filename = Shell.map_filename(filename).path
@@ -795,29 +810,28 @@ class Shell(object):
 
     @staticmethod
     def terminal_title(name):
-        """
-        sets the title of the terminal
+        """sets the title of the terminal
 
-        :param name: the title
-        :type name: str
-        :return: void
-        :rtype: void
+        Args:
+            name (str): the title
+
+        Returns:
+            void: void
         """
         return f'echo -n -e \"\033]0;{name}\007\"'
 
     @classmethod
     def terminal(cls, command='pwd', title=None, kind=None):
-        """
-        starts a terminal and executes the command in that terminal
+        """starts a terminal and executes the command in that terminal
 
-        :param command: the command to be executed
-        :type command: str
-        :param title: the title
-        :type title: str
-        :param kind: for windows you can set "cmd", "powershell", or "gitbash"
-        :type kind: str
-        :return: void
-        :rtype: void
+        Args:
+            command (str): the command to be executed
+            title (str): the title
+            kind (str): for windows you can set "cmd", "powershell", or
+                "gitbash"
+
+        Returns:
+            void: void
         """
         # title nameing not implemented
         print(platform)
@@ -877,9 +891,10 @@ class Shell(object):
 
     @classmethod
     def get_python(cls):
-        """
-        returns the python and pip version
-        :return: python version, pip version
+        """returns the python and pip version
+
+        Returns:
+            python version, pip version
         """
         python_version = sys.version_info[:3]
         v_string = [str(i) for i in python_version]
@@ -891,16 +906,18 @@ class Shell(object):
 
     @classmethod
     def check_output(cls, *args, **kwargs):
-        """Thin wrapper around :func:`subprocess.check_output`
-        """
+        """Thin wrapper around :func:`subprocess.check_output`"""
         return subprocess.check_output(*args, **kwargs)
 
     @classmethod
     def ls(cls, directory=".", match=None):
-        """
-        executes ls with the given arguments
-        :param args:
-        :return: list
+        """executes ls with the given arguments
+
+        Args:
+            args
+
+        Returns:
+            list
         """
         import re
         if match == None:
@@ -930,20 +947,23 @@ class Shell(object):
     @classmethod
     # @NotImplementedInWindows
     def unix_ls(cls, *args):
-        """
-        executes ls with the given arguments
-        :param args:
-        :return:
+        """executes ls with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         return cls.execute('ls', args)
 
     @staticmethod
     def ps(short=False, attributes=None):
-        """
-        using psutil to return the process information pid, name and comdline,
+        """using psutil to return the process information pid, name and comdline,
         cmdline may be a list
 
-        :return: a list of dicts of process information
+        Returns:
+            a list of dicts of process information
         """
         found = []
         for proc in psutil.process_iter():
@@ -967,20 +987,26 @@ class Shell(object):
 
     @classmethod
     def bash(cls, *args):
-        """
-        executes bash with the given arguments
-        :param args:
-        :return:
+        """executes bash with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         return cls.execute('bash', args)
 
     @classmethod
     # @NotImplementedInWindows
     def brew(cls, *args):
-        """
-        executes bash with the given arguments
-        :param args:
-        :return:
+        """executes bash with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         NotImplementedInWindows()
         return cls.execute('brew', args)
@@ -988,10 +1014,13 @@ class Shell(object):
     @classmethod
     # @NotImplementedInWindows
     def cat(cls, *args):
-        """
-        executes cat with the given arguments
-        :param args:
-        :return:
+        """executes cat with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         if os_is_windows() and is_gitbash():
             content = readfile(args[0])
@@ -1001,20 +1030,26 @@ class Shell(object):
 
     @classmethod
     def git(cls, *args):
-        """
-        executes git with the given arguments
-        :param args:
-        :return:
+        """executes git with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         return cls.execute('git', args)
 
     # noinspection PyPep8Naming
     @classmethod
     def VBoxManage(cls, *args):
-        """
-        executes VboxManage with the given arguments
-        :param args:
-        :return:
+        """executes VboxManage with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
 
         if platform == "darwin":
@@ -1025,46 +1060,61 @@ class Shell(object):
 
     @classmethod
     def blockdiag(cls, *args):
-        """
-        executes blockdiag with the given arguments
-        :param args:
-        :return:
+        """executes blockdiag with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         return cls.execute('blockdiag', args)
 
     @classmethod
     def cm(cls, *args):
-        """
-        executes cm with the given arguments
-        :param args:
-        :return:
+        """executes cm with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         return cls.execute('cm', args)
 
     @classmethod
     def cms(cls, *args):
-        """
-        executes cm with the given arguments
-        :param args:
-        :return:
+        """executes cm with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         return cls.execute('cms', args)
 
     @classmethod
     def cmsd(cls, *args):
-        """
-        executes cm with the given arguments
-        :param args:
-        :return:
+        """executes cm with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         return cls.execute('cmsd', args)
 
     @classmethod
     def head(cls, filename=None, lines=10):
-        """
-        executes head with the given arguments
-        :param args:
-        :return:
+        """executes head with the given arguments
+
+        Args:
+            args
+
+        Returns:
+
         """
         filename = cls.map_filename(filename).path
         r = Shell.run(f'head -n {lines} {filename}')
@@ -1072,10 +1122,13 @@ class Shell(object):
 
     @classmethod
     def keystone(cls, *args):
-        """
-        executes keystone with the given arguments
-        :param args:
-        :return:
+        """executes keystone with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         return cls.execute('keystone', args)
 
@@ -1097,10 +1150,13 @@ class Shell(object):
     @classmethod
     # @NotImplementedInWindows
     def kill(cls, *args):
-        """
-        executes kill with the given arguments
-        :param args:
-        :return:
+        """executes kill with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         NotImplementedInWindows()
         # TODO: use tasklisk, compare to linux
@@ -1108,8 +1164,7 @@ class Shell(object):
 
     @classmethod
     def download(cls, source, destination, force=False, provider=None, chunk_size=128):
-        """
-        Given a source url and a destination filename, download the file at the source url
+        """Given a source url and a destination filename, download the file at the source url
         to the destination.
 
         If provider is None, the request lib is used
@@ -1147,38 +1202,50 @@ class Shell(object):
 
     @classmethod
     def mount(cls, *args):
-        """
-        mounts a given mountpoint to a file
-        :param args:
-        :return:
+        """mounts a given mountpoint to a file
+
+        Args:
+            *args
+
+        Returns:
+
         """
         return cls.execute('mount', args)
 
     @classmethod
     def umount(cls, *args):
-        """
-        umounts a given mountpoint to a file
-        :param args:
-        :return:
+        """umounts a given mountpoint to a file
+
+        Args:
+            *args
+
+        Returns:
+
         """
         return cls.execute('umount', args)
 
     @classmethod
     def nova(cls, *args):
-        """
-        executes nova with the given arguments
-        :param args:
-        :return:
+        """executes nova with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         return cls.execute('nova', args)
 
     @classmethod
     def ping(cls, host=None, count=1):
-        """
-        execute ping
-        :param host: the host to ping
-        :param count: the number of pings
-        :return:
+        """execute ping
+
+        Args:
+            host: the host to ping
+            count: the number of pings
+
+        Returns:
+
         """
         r = None
         option = '-n' if os_is_windows() else '-c'
@@ -1192,19 +1259,25 @@ class Shell(object):
 
     @classmethod
     def pwd(cls, *args):
-        """
-        executes pwd with the given arguments
-        :param args:
-        :return:
+        """executes pwd with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         return os.getcwd()
 
     @classmethod
     def rackdiag(cls, *args):
-        """
-        executes rackdiag with the given arguments
-        :param args:
-        :return:
+        """executes rackdiag with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         return cls.execute('rackdiag', args)
 
@@ -1224,10 +1297,13 @@ class Shell(object):
 
     @classmethod
     def rm(cls, location):
-        """
-        executes rm with the given arguments
-        :param args:
-        :return:
+        """executes rm with the given arguments
+
+        Args:
+            args
+
+        Returns:
+
         """
         try:
             location = cls.map_filename(location).path
@@ -1236,29 +1312,38 @@ class Shell(object):
             pass
     @classmethod
     def rsync(cls, *args):
-        """
-        executes rsync with the given arguments
-        :param args:
-        :return:
+        """executes rsync with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         return cls.execute('rsync', args)
 
     @classmethod
     def scp(cls, *args):
-        """
-        executes scp with the given arguments
-        :param args:
-        :return:
+        """executes scp with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         return cls.execute('scp', args)
 
     @classmethod
     # @NotImplementedInWindows
     def sort(cls, *args):
-        """
-        executes sort with the given arguments
-        :param args:
-        :return:
+        """executes sort with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         NotImplementedInWindows()
         # TODO: https://superuser.com/questions/1316317/is-there-a-windows-equivalent-to-the-unix-uniq
@@ -1266,29 +1351,38 @@ class Shell(object):
 
     @classmethod
     def sh(cls, *args):
-        """
-        executes sh with the given arguments
-        :param args:
-        :return:
+        """executes sh with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         return cls.execute('sh', args)
 
     @classmethod
     def ssh(cls, *args):
-        """
-        executes ssh with the given arguments
-        :param args:
-        :return:
+        """executes ssh with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         return cls.execute('ssh', args)
 
     @classmethod
     # @NotImplementedInWindows
     def sudo(cls, *args):
-        """
-        executes sudo with the given arguments
-        :param args:
-        :return:
+        """executes sudo with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         NotImplementedInWindows()
         # TODO: https://stackoverflow.com/questions/9652720/how-to-run-sudo-command-in-windows
@@ -1296,10 +1390,13 @@ class Shell(object):
 
     @classmethod
     def tail(cls, filename=None, lines=10):
-        """
-        executes tail with the given arguments
-        :param args:
-        :return:
+        """executes tail with the given arguments
+
+        Args:
+            args
+
+        Returns:
+
         """
         filename = cls.map_filename(filename).path
         r = Shell.run(f'tail -n {lines} {filename}')
@@ -1307,48 +1404,63 @@ class Shell(object):
 
     @classmethod
     def vagrant(cls, *args):
-        """
-        executes vagrant with the given arguments
-        :param args:
-        :return:
+        """executes vagrant with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         return cls.execute('vagrant', args, shell=True)
 
     @classmethod
     def pandoc(cls, *args):
-        """
-        executes vagrant with the given arguments
-        :param args:
-        :return:
+        """executes vagrant with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         return cls.execute('pandoc', args)
 
     @classmethod
     def mongod(cls, *args):
-        """
-        executes mongod with the given arguments
-        :param args:
-        :return:
+        """executes mongod with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         return cls.execute('mongod', args)
 
     @classmethod
     # @NotImplementedInWindows
     def dialog(cls, *args):
-        """
-        executes dialof with the given arguments
-        :param args:
-        :return:
+        """executes dialof with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         NotImplementedInWindows()
         return cls.execute('dialog', args)
 
     @classmethod
     def pip(cls, *args):
-        """
-        executes pip with the given arguments
-        :param args:
-        :return:
+        """executes pip with the given arguments
+
+        Args:
+            *args
+
+        Returns:
+
         """
         return cls.execute('pip', args)
 
@@ -1367,11 +1479,14 @@ class Shell(object):
 
     @classmethod
     def cm_grep(cls, lines, what):
-        """
-        returns all lines that contain what
-        :param lines:
-        :param what:
-        :return:
+        """returns all lines that contain what
+
+        Args:
+            lines
+            what
+
+        Returns:
+
         """
         if type(lines) == str:
             _lines = lines.splitlines()
@@ -1385,11 +1500,14 @@ class Shell(object):
 
     @classmethod
     def remove_line_with(cls, lines, what):
-        """
-        returns all lines that do not contain what
-        :param lines:
-        :param what:
-        :return:
+        """returns all lines that do not contain what
+
+        Args:
+            lines
+            what
+
+        Returns:
+
         """
         if type(lines) == str:
             _lines = lines.splitlines()
@@ -1403,11 +1521,14 @@ class Shell(object):
 
     @classmethod
     def find_lines_with(cls, lines, what):
-        """
-        returns all lines that contain what
-        :param lines:
-        :param what:
-        :return:
+        """returns all lines that contain what
+
+        Args:
+            lines
+            what
+
+        Returns:
+
         """
         if type(lines) == str:
             _lines = lines.splitlines()
@@ -1421,11 +1542,14 @@ class Shell(object):
 
     @classmethod
     def find_lines_from(cls, lines, what):
-        """
-        returns all lines that come after a particular line
-        :param lines:
-        :param what:
-        :return:
+        """returns all lines that come after a particular line
+
+        Args:
+            lines
+            what
+
+        Returns:
+
         """
         if type(lines) == str:
             _lines = lines.splitlines()
@@ -1441,11 +1565,14 @@ class Shell(object):
 
     @classmethod
     def find_lines_between(cls, lines, what_from, what_to):
-        """
-        returns all lines that come between the markers
-        :param lines:
-        :param what:
-        :return:
+        """returns all lines that come between the markers
+
+        Args:
+            lines
+            what
+
+        Returns:
+
         """
         select = Shell.find_lines_from(lines, what_from)
         select = Shell.find_lines_to(select, what_to)
@@ -1453,11 +1580,14 @@ class Shell(object):
 
     @classmethod
     def find_lines_to(cls, lines, what):
-        """
-        returns all lines that come before a particular line
-        :param lines:
-        :param what:
-        :return:
+        """returns all lines that come before a particular line
+
+        Args:
+            lines
+            what
+
+        Returns:
+
         """
         if type(lines) == str:
             _lines = lines.splitlines()
@@ -1474,9 +1604,7 @@ class Shell(object):
 
     @classmethod
     def terminal_type(cls):
-        """
-        returns  darwin, cygwin, cmd, or linux
-        """
+        """returns  darwin, cygwin, cmd, or linux"""
         what = sys.platform
 
         kind = 'UNDEFINED_TERMINAL_TYPE'
@@ -1493,10 +1621,13 @@ class Shell(object):
 
     @classmethod
     def which(cls, command):
-        """
-        returns the path of the command with which
-        :param command: teh command
-        :return: the path
+        """returns the path of the command with which
+
+        Args:
+            command: teh command
+
+        Returns:
+            the path
         """
         if os_is_windows():
             return Shell.run(f"where {command}")
@@ -1505,18 +1636,22 @@ class Shell(object):
 
     @classmethod
     def command_exists(cls, name):
-        """
-        returns True if the command exists
-        :param name:
-        :return:
+        """returns True if the command exists
+
+        Args:
+            name
+
+        Returns:
+
         """
         return cls.which(name) is not None
 
     @classmethod
     def operating_system(cls):
-        """
-        the name of the os
-        :return: the name of the os
+        """the name of the os
+
+        Returns:
+            the name of the os
         """
         return platform
 
@@ -1534,9 +1669,10 @@ class Shell(object):
 
     @classmethod
     def check_python(cls):
-        """
-        checks if the python version is supported
-        :return: True if it is supported
+        """checks if the python version is supported
+
+        Returns:
+            True if it is supported
         """
         python_version = sys.version_info[:3]
 
@@ -1585,13 +1721,13 @@ class Shell(object):
 
     @classmethod
     def copy_source(cls, source, destination):
-        """
-        copys a file or a directory to the destination
+        """copys a file or a directory to the destination
 
-        :param destination: destination directory
-        :type destination: str
-        :return: None
-        :rtype: None
+        Args:
+            destination (str): destination directory
+
+        Returns:
+            None: None
         """
         try:
             if os.path.isfile(source):  # If the source is a file
@@ -1646,10 +1782,13 @@ class Shell(object):
 
     @classmethod
     def mkdir(cls, directory):
-        """
-        creates a directory with all its parents in ots name
-        :param directory: the path of the directory
-        :return:
+        """creates a directory with all its parents in ots name
+
+        Args:
+            directory: the path of the directory
+
+        Returns:
+
         """
         d = cls.map_filename(directory).path
         try:
@@ -1666,11 +1805,14 @@ class Shell(object):
 
 
     def unzip(cls, source_filename, dest_dir):
-        """
-        unzips a file into the destination directory
-        :param source_filename: the source
-        :param dest_dir: the destination directory
-        :return:
+        """unzips a file into the destination directory
+
+        Args:
+            source_filename: the source
+            dest_dir: the destination directory
+
+        Returns:
+
         """
 
         with zipfile.ZipFile(source_filename) as zf:
@@ -1689,11 +1831,13 @@ class Shell(object):
 
     @staticmethod
     def edit(filename):
-        """
-        opens an editing program to edit specified filename
+        """opens an editing program to edit specified filename
 
-        :param filename: file to edit
-        :return: nothing
+        Args:
+            filename: file to edit
+
+        Returns:
+            nothing
         """
         if os_is_mac():
             # try to see what programs are available
@@ -1735,20 +1879,25 @@ class Shell(object):
     @classmethod
     # @NotImplementedInWindows
     def lsb_release(cls):
-        """
-        executes lsb_release command
-        :param args:
-        :return:
+        """executes lsb_release command
+
+        Args:
+            args
+
+        Returns:
+
         """
         NotImplementedInWindows()
         return cls.execute('lsb_release', ['-a'])
 
     @classmethod
     def distribution(cls):
-        """
-        executes lsb_release command
-        :param args:
-        :return:
+        """executes lsb_release command
+
+        Args:
+            args
+
+        Returns:
 
         TODO: needs testing
         """
@@ -1842,9 +1991,10 @@ class Shell(object):
 
 
 def main():
-    """
-    a test that should actually be added into a pytest
-    :return:
+    """a test that should actually be added into a pytest
+
+    Returns:
+
     """
 
     print(Shell.terminal_type())

@@ -69,7 +69,6 @@ unique name.
     print (content.strip())
     print (79*"=")
 
-
     StopWatch.event("event-stop")
 
     StopWatch.benchmark(sysinfo=False,
@@ -92,7 +91,6 @@ provides utilities to enable and annotate mlperf_logging messages.  To
 enable, you must first install mlperf-logging, which can be installed
 via pypi, or you can install the latest by using one of the below
 commands:
-
 
 ::
     git clone https://github.com/mlperf/logging.git mlperf-logging
@@ -161,7 +159,6 @@ event, you can call
 ::
     StopWatch.event("MyLoggingEvent", values={'custom': 123}, suppress_stopwatch=True)
 
-
 And this will only create a mllog entry, bypassing all StopWatch logic.
 
 Finally, there is a utility method that generates a series of mllog
@@ -191,12 +188,13 @@ from cloudmesh.common.util import writefile
 
 
 def rename(newname):
-    """
-    decorator to rename a function
-    :param newname: function name
-    :type newname: str
-    :return: renamed function
-    :rtype: object
+    """decorator to rename a function
+
+    Args:
+        newname (str): function name
+
+    Returns:
+        object: renamed function
     """
 
     def decorator(f):
@@ -207,12 +205,14 @@ def rename(newname):
 
 
 def benchmark(func):
-    """
-    decorator to benchmark a function
-    :param func: function
-    :type func: object
-    :return: function with benchmarks based on the name of the function
-    :rtype: object
+    """decorator to benchmark a function
+
+    Args:
+        func (object): function
+
+    Returns:
+        object: function with benchmarks based on the name of the
+        function
     """
 
     @rename(func.__name__)
@@ -234,9 +234,7 @@ def import_mllog():
 
 
 class StopWatch(object):
-    """
-    A class to measure times between events.
-    """
+    """A class to measure times between events."""
     debug = False
     verbose = True
     # Timer start dict
@@ -418,13 +416,11 @@ class StopWatch(object):
     @classmethod
     def organization_submission(cls, configfile=None, **argv):
         """
+        Args:
+            configfile
+            **argv
 
-        :param configfile:
-        :type configfile:
-        :param argv:
-        :type argv:
-        :return:
-        :rtype:
+        Returns:
 
         submission:
           benchmark: earthquake
@@ -511,14 +507,11 @@ class StopWatch(object):
 
     @classmethod
     def status(cls, name, value):
-        """
-        starts a timer with the given name.
+        """starts a timer with the given name.
 
-        :param name: the name of the timer
-        :type name: string
-        :param value: value of the nameed of a status
-        :type value: bool
-
+        Args:
+            name (string): the name of the timer
+            value (bool): value of the nameed of a status
         """
         if cls.debug:
             print("Timer", name, "status", value)
@@ -526,25 +519,20 @@ class StopWatch(object):
 
     @classmethod
     def get_message(cls, name):
-        """
-        starts a timer with the given name.
+        """starts a timer with the given name.
 
-        :param name: the name of the timer
-        :type name: string
-
+        Args:
+            name (string): the name of the timer
         """
         return cls.timer_msg[name]
 
     @classmethod
     def message(cls, name, value):
-        """
-        starts a timer with the given name.
+        """starts a timer with the given name.
 
-        :param name: the name of the timer
-        :type name: string
-        :param value: the value of the message
-        :type value: bool
-
+        Args:
+            name (string): the name of the timer
+            value (bool): the value of the message
         """
         cls.timer_msg[name] = value
 
@@ -559,28 +547,22 @@ class StopWatch(object):
               stack_offset=2,
               executioncounter=True,
               metadata=None):
-        """
-        Adds an event with a given name, where start and stop is the same time.
+        """Adds an event with a given name, where start and stop is the same time.
 
-        :param name: the name of the timer
-        :type name: string
-        :param msg: a message to attach to this event
-        :type msg: string
-        :param values: data that is associated with the event that is converted
-                       to a string
-        :type values: object
-        :param mllog_key: Specifies the key to be used in mlperf_logging.
-                          If none, it will use the `name` value.
-        :type mllog_key: string
-        :param suppress_stopwatch: suppresses executing any stopwatch code.
-                                Useful when only logging an mllog event.
-        :type suppress_stopwatch: bool
-        :param suppress_mllog: suppresses executing any mllog code.  Useful
-                               when only interacting with stopwatch timers.
-        :type suppress_mllog: bool
+        Args:
+            name (string): the name of the timer
+            msg (string): a message to attach to this event
+            values (object): data that is associated with the event that
+                is converted to a string
+            mllog_key (string): Specifies the key to be used in
+                mlperf_logging. If none, it will use the `name` value.
+            suppress_stopwatch (bool): suppresses executing any
+                stopwatch code. Useful when only logging an mllog event.
+            suppress_mllog (bool): suppresses executing any mllog code.
+                Useful when only interacting with stopwatch timers.
 
-        :returns: None
-        :rtype: None
+        Returns:
+            None: None
         """
         name = key
         values = values or value
@@ -614,12 +596,12 @@ class StopWatch(object):
         """Logs an event using the passed keywords as parameters to be logged,
            prefiltered by mlperf_logging's standard api.
 
-        :param kwargs: an unpacked dictionary of key=value entries to be
-                       leveraged when logging an event to both the cloudmesh
-                       stopwatch and mllog.  If the keyword matches
-                       mlperf_logging's constants, the value will be replaced
-                       with the standardized string
-        :type kwargs: dict
+        Args:
+            **kwargs (dict): an unpacked dictionary of key=value entries
+                to be leveraged when logging an event to both the
+                cloudmesh stopwatch and mllog.  If the keyword matches
+                mlperf_logging's constants, the value will be replaced
+                with the standardized string
         """
         for key, value in kwargs.items():
             mlkey = cls._mllog_lookup(key)
@@ -631,11 +613,11 @@ class StopWatch(object):
            mlperf constant.  If the value isn't found, it will return a string
            of the pattern mllog-event-{key}
 
-        :param key: The name of the constant to look up
-        :type key: string
+        Args:
+            key (string): The name of the constant to look up
 
-        :returns: The decoded value of the constant.
-        :rtype: string
+        Returns:
+            string: The decoded value of the constant.
         """
         try:
             from mlperf_logging.mllog import constants as mlconst
@@ -656,29 +638,24 @@ class StopWatch(object):
               suppress_stopwatch=False,
               suppress_mllog=False,
               metadata=None):
-        """
-        starts a timer with the given name.
+        """starts a timer with the given name.
 
-        :param name: the name of the timer
-        :type name: string
-        :param values: any python object with a __str__ method to record with
-                       the event.
-        :type values: object
-        :param mllog_key: Specifies the string name of an mllog constant to
-                          associate to this timer start.  If no value is passed
-                          and mllogging is enabled, then `name` is used.
-        :type mllog_key: string
-        :param suppress_stopwatch: When true, prevents all traditional
-                                   stopwatch logic from running.  This is
-                                   useful when attempting to interact with
-                                   mllog-only.
-        :type suppress_stopwatch: bool
-        :param suppress_mllog: When true, prevents all mllog events from
-                               executing.  Useful when working with stopwatch
-                               timers-only.
+        Args:
+            name (string): the name of the timer
+            values (object): any python object with a __str__ method to
+                record with the event.
+            mllog_key (string): Specifies the string name of an mllog
+                constant to associate to this timer start.  If no value
+                is passed and mllogging is enabled, then `name` is used.
+            suppress_stopwatch (bool): When true, prevents all
+                traditional stopwatch logic from running.  This is
+                useful when attempting to interact with mllog-only.
+            suppress_mllog: When true, prevents all mllog events from
+                executing.  Useful when working with stopwatch timers-
+                only.
 
-        :returns: None
-        :rtype: None
+        Returns:
+            None: None
         """
         name = key
         values = values or value
@@ -722,28 +699,23 @@ class StopWatch(object):
              suppress_stopwatch=False,
              suppress_mllog=False,
              metadata=None):
-        """
-        stops the timer with a given name.
+        """stops the timer with a given name.
 
-        :param name: the name of the timer
-        :type name: string
-        :param state: When true, updates the status of the timer.
-        :type state: bool
-        :param mllog_key: Specifies the string name of an mllog constant to
-                          associate to this timer start.  If no value is passed
-                          and mllogging is enabled, then `name` is used.
-        :type mllog_key: string
-        :param suppress_stopwatch: When true, prevents all traditional
-                                   stopwatch logic from running.  This is
-                                   useful when attempting to interact with
-                                   mllog-only.
-        :type suppress_stopwatch: bool
-        :param suppress_mllog: When true, prevents all mllog events from
-                               executing.  Useful when working with stopwatch
-                               timers-only.
+        Args:
+            name (string): the name of the timer
+            state (bool): When true, updates the status of the timer.
+            mllog_key (string): Specifies the string name of an mllog
+                constant to associate to this timer start.  If no value
+                is passed and mllogging is enabled, then `name` is used.
+            suppress_stopwatch (bool): When true, prevents all
+                traditional stopwatch logic from running.  This is
+                useful when attempting to interact with mllog-only.
+            suppress_mllog: When true, prevents all mllog events from
+                executing.  Useful when working with stopwatch timers-
+                only.
 
-        :returns: None
-        :rtype: None
+        Returns:
+            None: None
         """
 
         name=key
@@ -780,11 +752,10 @@ class StopWatch(object):
 
     @classmethod
     def get_status(cls, key=None):
-        """
-        sets the status of the timer with a given name.
+        """sets the status of the timer with a given name.
 
-        :param name: the name of the timer
-        :type name: string
+        Args:
+            name (string): the name of the timer
         """
         name = key
         return cls.timer_status[name]
@@ -792,12 +763,13 @@ class StopWatch(object):
     # noinspection PyPep8
     @classmethod
     def get(cls, name, digits=4):
-        """
-        returns the time of the timer.
+        """returns the time of the timer.
 
-        :param name: the name of the timer
-        :type name: string
-        :rtype: the elapsed time
+        Args:
+            name (string): the name of the timer
+
+        Returns:
+            the elapsed time
         """
         if name in cls.timer_end:
             try:
@@ -814,12 +786,13 @@ class StopWatch(object):
 
     @classmethod
     def sum(cls, name, digits=4):
-        """
-        returns the sum of the timer if used multiple times
+        """returns the sum of the timer if used multiple times
 
-        :param name: the name of the timer
-        :type name: string
-        :rtype: the elapsed time
+        Args:
+            name (string): the name of the timer
+
+        Returns:
+            the elapsed time
         """
         if name in cls.timer_end:
             try:
@@ -835,9 +808,7 @@ class StopWatch(object):
 
     @classmethod
     def clear(cls):
-        """
-        clear start and end timer_start
-        """
+        """clear start and end timer_start"""
         cls.timer_start.clear()
         cls.timer_end.clear()
         cls.timer_sum.clear()
@@ -847,10 +818,13 @@ class StopWatch(object):
 
     @classmethod
     def print(cls, *args):
-        """
-        prints a timer. The first argument is the label if it exists, the last is the timer
-        :param args: label, name
-        :return:
+        """prints a timer. The first argument is the label if it exists, the last is the timer
+
+        Args:
+            *args: label, name
+
+        Returns:
+
         """
         if cls.verbose:
             if len(args) == 2:
@@ -860,20 +834,23 @@ class StopWatch(object):
 
     @classmethod
     def output(cls, key=None):
-        """
-        prints a timer. The first argument is the label if it exists, the last is the timer
-        :param args: label, name
-        :return:
+        """prints a timer. The first argument is the label if it exists, the last is the timer
+
+        Args:
+            args: label, name
+
+        Returns:
+
         """
         name=key
         print(name, str("{0:.2f}".format(cls.get(name))), "s")
 
     @classmethod
     def __str__(cls):
-        """
-        returns the string representation of the StopWatch
-        :return: string of the StopWatch
-        :rtype: str
+        """returns the string representation of the StopWatch
+
+        Returns:
+            str: string of the StopWatch
         """
         s = ""
         for t in cls.timer_end:
@@ -889,13 +866,13 @@ class StopWatch(object):
 
     @classmethod
     def systeminfo(cls, data=None):
-        """
-        Print information about the system
+        """Print information about the system
 
-        :param data: additional data to be integrated
-        :type data: dict
-        :return: a table with data
-        :rtype: str
+        Args:
+            data (dict): additional data to be integrated
+
+        Returns:
+            str: a table with data
         """
         data_platform = cm_systeminfo()
         if data is not None:
@@ -921,27 +898,21 @@ class StopWatch(object):
                       user=None,
                       total=False,
                       ):
-        """
-        prints out all timers in a convenient benchmark table
+        """prints out all timers in a convenient benchmark table
 
-        :param sysinfo: controls if system info shoul be printed.
-        :type sysinfo: bool
-        :param csv: contols if the data should be printed also as csv strings
-        :type csv: bool
-        :param prefix: The prefix used for the csv string
-        :type prefix: str
-        :param tag: overwrites the tag
-        :type tag: str
-        :param sum: prints the sums (not used)
-        :type sum: bool
-        :param node: overwrites the name of the node
-        :type node: str
-        :param user: overwrites the name of the user
-        :type user: str
-        :param attributes: list of additional attributes to print
-        :type attributes: list
-        :return: prints the information
-        :rtype: stdout
+        Args:
+            sysinfo (bool): controls if system info shoul be printed.
+            csv (bool): contols if the data should be printed also as
+                csv strings
+            prefix (str): The prefix used for the csv string
+            tag (str): overwrites the tag
+            sum (bool): prints the sums (not used)
+            node (str): overwrites the name of the node
+            user (str): overwrites the name of the user
+            attributes (list): list of additional attributes to print
+
+        Returns:
+            stdout: prints the information
         """
 
         #
@@ -1019,27 +990,21 @@ class StopWatch(object):
                   attributes=None,
                   total=False,
                   filename=None):
-        """
-        prints out all timers in a convenient benchmark table
+        """prints out all timers in a convenient benchmark table
 
-        :param sysinfo: controls if system info should be printed.
-        :type sysinfo: bool
-        :param csv: controls if the data should be printed also as csv strings
-        :type csv: bool
-        :param prefix: The prefix used for the csv string
-        :type prefix: str
-        :param tag: overwrites the tag
-        :type tag: str
-        :param sum: prints the sums (not used)
-        :type sum: bool
-        :param node: overwrites the name of the node
-        :type node: str
-        :param user: overwrites the name of the user
-        :type user: str
-        :param attributes: list of additional attributes to print
-        :type attributes: list
-        :return: prints the information
-        :rtype: stdout
+        Args:
+            sysinfo (bool): controls if system info should be printed.
+            csv (bool): controls if the data should be printed also as
+                csv strings
+            prefix (str): The prefix used for the csv string
+            tag (str): overwrites the tag
+            sum (bool): prints the sums (not used)
+            node (str): overwrites the name of the node
+            user (str): overwrites the name of the user
+            attributes (list): list of additional attributes to print
+
+        Returns:
+            stdout: prints the information
         """
 
         #
@@ -1211,8 +1176,7 @@ class StopWatch(object):
                          'user',
                          'uname.system',
                          'platform.version']):
-        """
-        Loads data written to a file from the #csv lines.
+        """Loads data written to a file from the #csv lines.
         If the timer name has spaces in it, it must also have a label tag in which each lable is the name when
         splitting up the timer name. The list of attributes is the list specified plus the once generated from the
         timer name by splitting.
@@ -1220,13 +1184,12 @@ class StopWatch(object):
         Example:
             data = StopWatch.load(logfile, label=["name", "n"], attributes=["timer", "time", "user", "uname.node"])
 
+        Args:
+            label
+            attributes
 
-        :param label:
-        :type label:
-        :param attributes:
-        :type attributes:
-        :return:
-        :rtype:
+        Returns:
+
         """
         from cloudmesh.common.Shell import Shell
         data = []
@@ -1252,8 +1215,7 @@ class StopWatch(object):
 
     @classmethod
     def deactivate_mllog(cls):
-        """Disables the mllog capabilities and closes all registered handlers.
-        """
+        """Disables the mllog capabilities and closes all registered handlers."""
         handlers = cls.mllogger.logger.handlers.copy()
         for handler in handlers:
             try:

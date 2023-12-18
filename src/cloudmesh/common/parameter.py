@@ -6,8 +6,7 @@ class Parameter(object):
 
     @staticmethod
     def parse(arguments, **kwargs):
-        """
-        parses arguments based on their kind and aplies Parameter.expand or
+        """parses arguments based on their kind and aplies Parameter.expand or
         Parameter.arguments.dict. It is defined by specifying the name in arguments,
         followed by the keyword, expand,or dict. Example
 
@@ -21,12 +20,14 @@ class Parameter(object):
            arguments.parameter = Parameter.expand(arguments.paramete)
            arguments.experiment = Parameeter.arguments_to_dict(arguments.experiment)
 
-        :param arguments: the dict or doctdict with the arguments
-        :type arguments: dict or doctdict
-        :param kind: dict with the names of the arguments that need to be remapped
-        :type kind: dict
-        :return: a doctdict with parsed and remapped arguments
-        :rtype: dotdict
+        Args:
+            arguments (dict or doctdict): the dict or doctdict with the
+                arguments
+            kind (dict): dict with the names of the arguments that need
+                to be remapped
+
+        Returns:
+            dotdict: a doctdict with parsed and remapped arguments
         """
         result = dotdict(arguments)
         if kwargs is not None:
@@ -42,12 +43,14 @@ class Parameter(object):
 
     @staticmethod
     def _expand(values):
-        """
-        given a string of the form "a,g-h,k,x-z"
+        """given a string of the form "a,g-h,k,x-z"
         expand it tl a list with all characters between the - being expanded
 
-        :param values: string of the form "a,g-h,k,x-z"
-        :return:
+        Args:
+            values: string of the form "a,g-h,k,x-z"
+
+        Returns:
+
         """
         if "," in values:
             found = values.split(",")
@@ -65,11 +68,13 @@ class Parameter(object):
 
     @classmethod
     def expand_string(cls, parameter):
-        """
-        can expand strings, but only allows either, or - in [] not mixed
+        """can expand strings, but only allows either, or - in [] not mixed
 
-        :param parameter: string of the form prefix[a,g-h,k,x-z]postfix
-        :return:
+        Args:
+            parameter: string of the form prefix[a,g-h,k,x-z]postfix
+
+        Returns:
+
         """
         print("O", parameter)
 
@@ -97,17 +102,19 @@ class Parameter(object):
 
     @classmethod
     def expand(cls, parameter, allow_duplicates=False, sort=False, sep=":"):
-        """
-        Parameter.expand("a[0-1]")  -> ["a0", "a1"]
+        """Parameter.expand("a[0-1]")  -> ["a0", "a1"]
         Content sensitive : expansion
         Parameter.expand("local:a0,a1")  -> ["local:a0", "local:a1"]
         instead of
         Parameter.expand("local:[a0,a1]")  -> ["local:a0", "local:a1"]
 
-        :param parameter:
-        :param allow_duplicates:
-        :param sort:
-        :return:
+        Args:
+            parameter
+            allow_duplicates
+            sort
+
+        Returns:
+
         """
         if type(parameter) == list or parameter is None:
             return parameter
@@ -140,12 +147,14 @@ class Parameter(object):
 
     @staticmethod
     def find(name, *dicts):
-        """
-        Finds the value for the key name in multiple dicts
+        """Finds the value for the key name in multiple dicts
 
-        :param name: the key to find
-        :param dicts: the list of dicts
-        :return:
+        Args:
+            name: the key to find
+            *dicts: the list of dicts
+
+        Returns:
+
         """
         for d in dicts:
             if type(d) == str:
@@ -157,12 +166,14 @@ class Parameter(object):
 
     @staticmethod
     def find_bool(name, *dicts):
-        """
-        Finds the value for the key name in multiple dicts
+        """Finds the value for the key name in multiple dicts
 
-        :param name: the key to find
-        :param dicts: the list of dicts
-        :return:
+        Args:
+            name: the key to find
+            *dicts: the list of dicts
+
+        Returns:
+
         """
         value = False
 
@@ -181,13 +192,15 @@ class Parameter(object):
 
     @staticmethod
     def arguments_to_dict(arguments):
-        """
-        converts a string of the form "a=1,b=2" to a dict
+        """converts a string of the form "a=1,b=2" to a dict
         {"a":"1", "b":"2"}
         all values are strings
 
-        :param arguments: the argument string
-        :return: a dic of argument and values
+        Args:
+            arguments: the argument string
+
+        Returns:
+            a dic of argument and values
         """
         if arguments is None or len(arguments) == 0:
             return None

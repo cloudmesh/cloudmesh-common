@@ -1,6 +1,4 @@
-"""
-class that specifies where we read the cloudmesh.yaml file from
-"""
+"""class that specifies where we read the cloudmesh.yaml file from"""
 import os
 from pathlib import Path
 
@@ -30,12 +28,14 @@ class Location:
             self.__dict__ = Location._shared_state
 
     def write(self, filename, content):
-        """
-        Write a file to the configuration directory
+        """Write a file to the configuration directory
 
-        :param filename: The filename
-        :param content:  The content
-        :return:
+        Args:
+            filename: The filename
+            content: The content
+
+        Returns:
+
         """
         path = self.file(filename)
         directory = os.path.dirname(path)
@@ -43,19 +43,21 @@ class Location:
         writefile(path, content)
 
     def read(self, filename):
-        """
-        Read a file from the configuration directory
+        """Read a file from the configuration directory
 
-        :param filename: The filename
-        :return: The content
+        Args:
+            filename: The filename
+
+        Returns:
+            The content
         """
         return readfile(self.file(filename))
 
     def file(self, filename):
-        """
-        The location of the config file in the cloudmesh configuration directory
+        """The location of the config file in the cloudmesh configuration directory
 
-        :param filename: the filenam
+        Args:
+            filename: the filenam
         """
         return Path(self.directory) / filename
 

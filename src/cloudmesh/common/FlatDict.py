@@ -41,15 +41,16 @@ print ("Type Load from dict", f)
 
 
 def key_prefix_replace(d, prefix, new_prefix=""):
-    """
-    replaces the list of prefix in keys of a flattened dict
+    """replaces the list of prefix in keys of a flattened dict
 
-    :param d: the flattened dict
-    :param prefix: a list of prefixes that are replaced with a new prefix.
-                   Typically this will be ""
-    :type prefix: list of str
-    :param new_prefix: The new prefix. By default it is set to ""
-    :return: the dict with the keys replaced as specified
+    Args:
+        d: the flattened dict
+        prefix (list of str): a list of prefixes that are replaced with
+            a new prefix. Typically this will be ""
+        new_prefix: The new prefix. By default it is set to ""
+
+    Returns:
+        the dict with the keys replaced as specified
     """
     items = []
     for k, v in list(d.items()):
@@ -68,13 +69,16 @@ def flatme(d):
 
 
 def flatten(d, parent_key='', sep='__'):
-    """
-    flattens the dict into a one dimensional dictionary
+    """flattens the dict into a one dimensional dictionary
 
-    :param d: multidimensional dict
-    :param parent_key: replaces from the parent key
-    :param sep: the separation character used when fattening. the default is __
-    :return: the flattened dict
+    Args:
+        d: multidimensional dict
+        parent_key: replaces from the parent key
+        sep: the separation character used when fattening. the default
+            is __
+
+    Returns:
+        the flattened dict
     """
     # http://stackoverflow.com/questions/6027558/flatten-nested-python-dictionaries-compressing-keys
     if type(d) == list:
@@ -96,25 +100,25 @@ def flatten(d, parent_key='', sep='__'):
 
 
 class FlatDict(dict):
-    """
-    A data structure to manage a flattened dict. It is initialized by passing
+    """A data structure to manage a flattened dict. It is initialized by passing
     the dict at time of initialization.
     """
 
     @property
     def dict(self):
-        """
-        returns the dict
-        :return: dict
+        """returns the dict
+
+        Returns:
+            dict
         """
         return self.__dict__
 
     def __init__(self, d=None, expand=["os.", "cm.", "cloudmesh."], sep="__"):
-        """
-        initializes the flat dics
+        """initializes the flat dics
 
-        :param d: the dict data
-        :param sep: The character used to indicate an hirachie a__b
+        Args:
+            d: the dict data
+            sep: The character used to indicate an hirachie a__b
         """
         if d is None:
             d = {}
@@ -130,20 +134,22 @@ class FlatDict(dict):
             self.expand_cm = "cm." in expand
 
     def __setitem__(self, key, item):
-        """
-        sets an item at a key
+        """sets an item at a key
 
-        :param key: this is the key
-        :param item:  this is the item to be set
+        Args:
+            key: this is the key
+            item: this is the item to be set
         """
         self.__dict__[key] = item
 
     def __getitem__(self, key):
-        """
-        gets an item form the key
+        """gets an item form the key
 
-        :param key: the key
-        :return: the value
+        Args:
+            key: the key
+
+        Returns:
+            the value
         """
         return self.__dict__[key]
 
@@ -151,43 +157,45 @@ class FlatDict(dict):
         return repr(self.__dict__)
 
     def __str__(self):
-        """
-        The string representation of the dict
+        """The string representation of the dict
 
-        :return: str
+        Returns:
+            str
         """
         return str(self.__dict__)
 
     def __len__(self):
-        """
-        number of elements in the dict
+        """number of elements in the dict
 
-        :return: int
+        Returns:
+            int
         """
         return len(self.__dict__)
 
     def __delitem__(self, key):
-        """
-        delete the specified item
+        """delete the specified item
 
-        :param key: key of the item
-        :return: dict with the elementremoved
+        Args:
+            key: key of the item
+
+        Returns:
+            dict with the elementremoved
         """
         del self.__dict__[key]
 
     def keys(self):
-        """
-        returns the keys
+        """returns the keys
 
-        :return: list of keys
+        Returns:
+            list of keys
         """
         return list(self.__dict__.keys())
 
     def values(self):
-        """
-        list of all values
+        """list of all values
 
-        :return: list
+        Returns:
+            list
         """
         return list(self.__dict__.values())
 
@@ -213,9 +221,7 @@ class FlatDict(dict):
         return self.get(attr)
 
     def search(self, key, value=None):
-        """
-
-        returns from a flatdict all keys that match the given pattern and
+        """returns from a flatdict all keys that match the given pattern and
         have the given value. If the value None is specified or ommitted, all
         keys are returned regardless of value.
 
@@ -223,9 +229,12 @@ class FlatDict(dict):
 
             search("cloudmesh.cloud.*.cm.active", True)
 
-        :param key: The key pattern to be searched (given as regex)
-        :param value: The value
-        :return: keys matching the vakue in flat dict format.
+        Args:
+            key: The key pattern to be searched (given as regex)
+            value: The value
+
+        Returns:
+            keys matching the vakue in flat dict format.
         """
         flat = FlatDict(self.__dict__, sep=".")
         r = re.compile(key)
@@ -242,8 +251,7 @@ class FlatDict(dict):
     # Modified idea from
     # https://stackoverflow.com/questions/50607128/creating-a-nested-dictionary-from-a-flattened-dictionary
     def unflatten(self):
-        """
-        unflattens the falt dict bac to a regular dict
+        """unflattens the falt dict bac to a regular dict
 
         Returns:
         """
@@ -272,19 +280,18 @@ class FlatDict(dict):
         self.__init__(config, sep=sep)
 
     def load(self, content=None, expand=True, sep="."):
-        """
-        This function reads in the dict based on the values and types provided
+        """This function reads in the dict based on the values and types provided
         If the filename is provided its read from the filename
         If content is a string the string will be converted from yaml to a dict
         If a dict is provided the dict is read
-        :param content:
-        :type content:
-        :param expand:
-        :type expand:
-        :param sep:
-        :type sep:
-        :return:
-        :rtype:
+
+        Args:
+            content
+            expand
+            sep
+
+        Returns:
+
         """
         if content is None:
             config = None
@@ -315,15 +322,16 @@ class FlatDict(dict):
         return r
 
     def apply(self, content, write=True):
-        """
-        converts a string or the contents of a file with the
+        """converts a string or the contents of a file with the
         values of the flatdict
-        :param write: if a file is specified write determins if the old file is overwritten in place
-        :type write: boolean
-        :param content:
-        :type content:
-        :return:
-        :rtype:
+
+        Args:
+            write (boolean): if a file is specified write determins if
+                the old file is overwritten in place
+            content
+
+        Returns:
+
         """
 
         if content is None:
@@ -349,11 +357,12 @@ class FlatDict2(object):
 
     @classmethod
     def convert(cls, obj, flatten=True):
-        """
-            This function converts object into a Dict optionally Flattening it
-            :param obj: Object to be converted
-            :param flatten: boolean to specify if the dict has to be flattened
-            :return dict: the dict of the object (Flattened or Un-flattened)
+        """This function converts object into a Dict optionally Flattening it
+
+        Args:
+            obj: Object to be converted
+            flatten: boolean to specify if the dict has to be flattened
+        :return dict: the dict of the object (Flattened or Un-flattened)
         """
         dict_result = cls.object_to_dict(obj)
         if flatten:
@@ -362,9 +371,7 @@ class FlatDict2(object):
 
     @classmethod
     def object_to_dict(cls, obj):
-        """
-            This function converts Objects into Dictionary
-        """
+        """This function converts Objects into Dictionary"""
         dict_obj = dict()
         if obj is not None:
             if type(obj) == list:
@@ -393,8 +400,7 @@ class FlatDict2(object):
 
 def read_config_parameters(filename=None,
                            d=None):
-    """
-    This file reads in configuration parameters defined in a yaml file and
+    """This file reads in configuration parameters defined in a yaml file and
     produces a flattend dict. It reads in the yaml date from a filename and/or
     a string.  If both are specified the data in the filename will be read first
     and updated with the string.
@@ -415,12 +421,14 @@ def read_config_parameters(filename=None,
      'experiment.learning_rate': 0.01,
      'experiment.gpu': 'a100'}
 
-    :param filename: The filename to read the yaml data from if the filename is not None
-    :type filename: string
-    :param d: The yaml data includes in a string. That will be added to the dict
-    :type d: string
-    :return: the flattned dict
-    :rtype: dict
+    Args:
+        filename (string): The filename to read the yaml data from if
+            the filename is not None
+        d (string): The yaml data includes in a string. That will be
+            added to the dict
+
+    Returns:
+        dict: the flattned dict
     """
     if filename is None:
         config = {}
@@ -435,8 +443,7 @@ def read_config_parameters(filename=None,
 
 
 def read_config_parameters_from_string(content=None, d=None):
-    """
-    This file reads in configuration parameters defined in a yaml file and
+    """This file reads in configuration parameters defined in a yaml file and
     produces a flattend dict. It reads in the yaml date from a filename and/or
     a string.  If both are specified the data in the filename will be read first
     and updated with the string.
@@ -457,12 +464,14 @@ def read_config_parameters_from_string(content=None, d=None):
      'experiment.learning_rate': 0.01,
      'experiment.gpu': 'a100'}
 
-    :param content: The filename to read the yaml data from if the filename is not None
-    :type content: string
-    :param d: The yaml data includes in a string. That will be added to the dict
-    :type d: string
-    :return: the flattned dict
-    :rtype: dict
+    Args:
+        content (string): The filename to read the yaml data from if the
+            filename is not None
+        d (string): The yaml data includes in a string. That will be
+            added to the dict
+
+    Returns:
+        dict: the flattned dict
     """
     if content is None:
         config = {}
@@ -482,13 +491,15 @@ def read_config_parameters_from_string(content=None, d=None):
 
 def read_config_parameters_from_dict(content=None, d=None):
     """
+    Args:
+        content
+        d (string): The yaml data includes in a string. That will be
+            added to the dict
+        filename (string): The filename to read the yaml data from if
+            the filename is not None
 
-    :param content:
-    :type content:
-    :param d:
-    :type d:
-    :return:
-    :rtype:
+    Returns:
+        dict: the flattned dict
 
     This file reads in configuration parameters defined in a yaml file and
     produces a flattend dict. It reads in the yaml date from a filename and/or
@@ -511,12 +522,6 @@ def read_config_parameters_from_dict(content=None, d=None):
      'experiment.learning_rate': 0.01,
      'experiment.gpu': 'a100'}
 
-    :param filename: The filename to read the yaml data from if the filename is not None
-    :type filename: string
-    :param d: The yaml data includes in a string. That will be added to the dict
-    :type d: string
-    :return: the flattned dict
-    :rtype: dict
     """
     if content is None:
         config = {}
@@ -539,22 +544,17 @@ def expand_config_parameters(flat=None,
                              expand_cloudmesh=True,
                              debug=False,
                              depth=100):
-    """
-    expands all variables in the flat dict if they are specified in the values of the flatdict.
+    """expands all variables in the flat dict if they are specified in the values of the flatdict.
 
-    :param flat: The flat dict
-    :type flat: FlatDict
-    :param expand_yaml: 
-    :type expand_yaml: 
-    :param expand_os: 
-    :type expand_os: 
-    :param expand_cloudmesh: 
-    :type expand_cloudmesh:
-    :param depth: the levels of recursive {variables} to replace
-    :type depth: int
-    :return: the dict with th ereplaced values
-    :rtype: dict    
+    Args:
+        flat (FlatDict): The flat dict
+        expand_yaml
+        expand_os
+        expand_cloudmesh
+        depth (int): the levels of recursive {variables} to replace
 
+    Returns:
+        dict: the dict with th ereplaced values
 
     from cloudmesh.common.util import readfile
     from cloudmesh.common.FlatDict import read_config_parameters, flatten, expand_config_parameters

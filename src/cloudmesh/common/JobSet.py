@@ -14,8 +14,7 @@ from cloudmesh.common.util import readfile
 
 # TODO: pytest
 class JobSet:
-    """
-    JobSet is a general execution framework for running a set of jobs on which
+    """JobSet is a general execution framework for running a set of jobs on which
     we specify a self defined job executor function. Through this framework it
     is possible to very flexibly integrate different JobSets on which are
     executed based on the executor. The jobset is executed in parallel and a run
@@ -75,9 +74,7 @@ class JobSet:
 
     @staticmethod
     def ssh(spec):
-        """
-
-        name: name of the job
+        """name: name of the job
         host: host on which we execute
         os:   if true use os.system, this uses a temporary file, so be careful
               if false use subprocess.check_output
@@ -87,8 +84,11 @@ class JobSet:
         success: Ture if successfull e.g. returncode == 0
         status: a status: defined, running, done, failed
 
-        :param spec:
-        :return:
+        Args:
+            spec
+
+        Returns:
+
         """
         spec = dotdict(spec)
         hostname = platform.uname()[1]

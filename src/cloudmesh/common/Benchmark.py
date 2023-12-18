@@ -6,21 +6,43 @@ import yaml
 from cloudmesh.common.StopWatch import StopWatch
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.variables import Variables
-
+#
+#
 
 # pylint: disable=C0103
 # noinspection PyPep8Naming
 class Benchmark(object):
+    """A utility class for benchmarking code execution and generating benchmark-related information.
+
+    Attributes:
+        None
+
+    Methods:
+        - debug(): Sets the CMS shell variables for trace, debug, and verbosity.
+        - name(with_class=False): Retrieves the name of the calling method with an option to include the class name.
+        - Start(status=True): Starts a timer associated with the calling method's name.
+        - Status(value=True): Prints the status of a timer associated with the calling method's name.
+        - Stop(): Stops a timer associated with the calling method's name.
+        - print(sysinfo=True, csv=True, tag=None, node=None, user=None): Prints benchmark information with all timers.
+        - yaml(path, n): Creates a Cloudmesh service YAML test file with specified attributes.
+        - file(path, n): Creates a file of a given size in binary megabytes and returns the size in megabytes.
+
+    Note:
+        This class relies on the StopWatch class for timer functionality.
+    """
+
 
     @staticmethod
     def debug():
-        """
-        sets the cms shell variables
+        """Sets the CMS shell variables for trace, debug, and verbosity.
+        The values will be
 
-          trace = True
-          debug = True
-          verbose = 10
+            trace = True
+            debug = True
+            verbose = 10
 
+        Usage:
+            Benchmark.debug()
         """
         variables = Variables()
         variables["trace"] = True
@@ -29,10 +51,13 @@ class Benchmark(object):
 
     @staticmethod
     def name(with_class=False):
-        """
-        name of the calling method
+        """Retrieves the name of the calling method with an option to include the class name.
 
-        :return: the name
+        Args:
+            with_class (bool): If True, includes the class name in the method name.
+
+        Returns:
+            str: The name of the calling method.
         """
         frame = inspect.getouterframes(inspect.currentframe())
         method = frame[2][3]
@@ -46,22 +71,37 @@ class Benchmark(object):
 
     @staticmethod
     def Start(status=True):
-        """
-        starts a timer while using the name of the calling method
+        """Starts a timer associated with the calling method's name.
+
+        Args:
+            status (bool): If True, starts the timer with the status.
+
+        Usage:
+        Benchmark.Start()
         """
         StopWatch.start(Benchmark.name(with_class=True))
 
     @staticmethod
     def Status(value=True):
-        """
-        starts a timer while using the name of the calling method
+        """gives the status of  a timer while using the name of the calling method
+
+        Args:
+            value (boolean): if true adds the class
+
+        Returns:
+            None
+
+        Usage:
+            Benchmark.Status()
         """
         StopWatch.status(Benchmark.name(with_class=True), value)
 
     @staticmethod
     def Stop():
-        """
-        stops a timer while using the name of the calling method
+        """Stops a timer associated with the calling method's name.
+
+        Usage:
+            Benchmark.Stop()
         """
         StopWatch.stop(Benchmark.name(with_class=True))
         StopWatch.status(Benchmark.name(with_class=True), True)
@@ -72,8 +112,17 @@ class Benchmark(object):
               tag=None,
               node=None,
               user=None, ):
-        """
-        prints the benchmark information with all timers
+        """prints the benchmark information with all timers
+
+        Args:
+            sysinfo (boolean): if true, prints the system information
+            csv (boolean): if true also prints the csv data
+            tag (str): the tage to be used
+            node (str): the node name to be used
+            user (str): the ser to be used
+
+        Returns:
+            None
         """
         StopWatch.start("benchmark_start_stop")
         StopWatch.stop("benchmark_start_stop")
@@ -81,14 +130,17 @@ class Benchmark(object):
 
     @staticmethod
     def yaml(path, n):
-        """
-        creates a cloudmesh service yaml test file
+        """Creates a Cloudmesh service YAML test file with specified number of services.
 
-        Example: BenchmarkFiles.yaml("./t.yaml", 10)
+        Args:
+            path (str): The path for the YAML file.
+            n (int): Number of services to be included in the YAML file.
 
-        :param path: the path
-        :param n: number of services
-        :return:
+        Returns:
+            None
+
+        Usage:
+            Benchmark.yaml("./example.yaml", 10)
         """
         cm = {
             "cloudmesh": {}
@@ -106,20 +158,18 @@ class Benchmark(object):
     # noinspection SpellCheckingInspection
     @staticmethod
     def file(path, n):
-        """
-        create a file of given size in MB, the MB here is in binary not SI
-        units.
-        e.g. 1,048,576 Bytes
+        """Creates a file of a given size in binary megabytes and returns the size in megabytes.
 
-        Example: s = BenchmarkFiles.size("./sise.txt", 2)
-                 print(s)
+        Args:
+            path (str): The filename and path for the created file.
+            n (int): The size in binary megabytes.
 
-        :param path: the filename and path
-        :type path: string
-        :param n: the size in binary MB
-        :type n: integer
-        :return: size in MB
-        :rtype: float
+        Returns:
+            float: Size of the created file in megabytes.
+
+        Usage:
+            s = Benchmark.file("./example.txt", 2)
+            print(s)
         """
         location = path_expand(path)
         size = 1048576 * n  # size in bytes
@@ -133,4 +183,4 @@ class Benchmark(object):
         # except:
         #    pass
 
-        return s / 1048576.0
+        return int(s / 1048576.0)

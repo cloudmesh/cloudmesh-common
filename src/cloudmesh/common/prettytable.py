@@ -114,7 +114,8 @@ class PrettyTable(object):
         sortby - name of field to sort rows by
         sort_key - sorting key function, applied to data points before sorting
         valign - default valign for each row (None, "t", "m" or "b")
-        reversesort - True or False to sort in descending or ascending order"""
+        reversesort - True or False to sort in descending or ascending order
+        """
 
         self.encoding = kwargs.get("encoding", "UTF-8")
 
@@ -856,7 +857,8 @@ class PrettyTable(object):
         Arguments:
 
         row - row of data, should be a list with as many elements as the table
-        has fields"""
+        has fields
+        """
 
         if self._field_names and len(row) != len(self._field_names):
             raise Exception(
@@ -871,7 +873,8 @@ class PrettyTable(object):
 
         Arguments:
 
-        row_index - The index of the row you want to delete.  Indexing starts at 0."""
+        row_index - The index of the row you want to delete.  Indexing starts at 0.
+        """
 
         if row_index > len(self._rows) - 1:
             raise Exception("Cant delete row at index %d, table only has %d rows!" % (row_index, len(self._rows)))
@@ -887,7 +890,8 @@ class PrettyTable(object):
         column - column of data, should be a list with as many elements as the
         table has rows
         align - desired alignment for this column - "l" for left, "c" for centre and "r" for right
-        valign - desired vertical alignment for new columns - "t" for top, "m" for middle and "b" for bottom"""
+        valign - desired vertical alignment for new columns - "t" for top, "m" for middle and "b" for bottom
+        """
 
         if len(self._rows) in (0, len(column)):
             self._validate_align(align)
@@ -965,7 +969,8 @@ class PrettyTable(object):
 
         Arguments:
 
-        options - dictionary of option settings."""
+        options - dictionary of option settings.
+        """
 
         # Make a copy of only those rows in the slice range
         rows = copy.deepcopy(self._rows[options["start"]:options["end"]])
@@ -1013,7 +1018,8 @@ class PrettyTable(object):
         junction_char - single character string used to draw line junctions
         sortby - name of field to sort rows by
         sort_key - sorting key function, applied to data points before sorting
-        reversesort - True or False to sort in descending or ascending order"""
+        reversesort - True or False to sort in descending or ascending order
+        """
 
         options = self._get_options(kwargs)
 
@@ -1200,7 +1206,8 @@ class PrettyTable(object):
         right_padding_width - number of spaces on right hand side of column data
         sortby - name of field to sort rows by
         sort_key - sorting key function, applied to data points before sorting
-        attributes - dictionary of name/value pairs to include as HTML attributes in the <table> tag"""
+        attributes - dictionary of name/value pairs to include as HTML attributes in the <table> tag
+        """
 
         options = self._get_options(kwargs)
 
@@ -1421,9 +1428,7 @@ class TableHandler(HTMLParser):
         self.last_content += data
 
     def generate_table(self, rows):
-        """
-        Generates from a list of rows a PrettyTable object.
-        """
+        """Generates from a list of rows a PrettyTable object."""
         table = PrettyTable(**self.kwargs)
         for row in self.rows:
             if len(row[0]) < self.max_row_width:
@@ -1439,9 +1444,7 @@ class TableHandler(HTMLParser):
         return table
 
     def make_fields_unique(self, fields):
-        """
-        iterates over the row and make each field unique
-        """
+        """iterates over the row and make each field unique"""
         for i in range(0, len(fields)):
             for j in range(i + 1, len(fields)):
                 if fields[i] == fields[j]:
@@ -1449,8 +1452,7 @@ class TableHandler(HTMLParser):
 
 
 def from_html(html_code, **kwargs):
-    """
-    Generates a list of PrettyTables from a string of HTML code. Each <table> in
+    """Generates a list of PrettyTables from a string of HTML code. Each <table> in
     the HTML becomes one PrettyTable object.
     """
 
@@ -1460,8 +1462,7 @@ def from_html(html_code, **kwargs):
 
 
 def from_html_one(html_code, **kwargs):
-    """
-    Generates a PrettyTables from a string of HTML code which contains only a
+    """Generates a PrettyTables from a string of HTML code which contains only a
     single <table>
     """
 
