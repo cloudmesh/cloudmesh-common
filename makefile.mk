@@ -8,21 +8,27 @@ define banner
 	@echo "############################################################"
 endef
 
-welcome:
+.PHONY: dist 
+
+welcome: ## Display welcome message
 	$(call banner, "Install ${package}")
 
-source: welcome
+source: welcome ## Install the package in source mode
 	pip install -e . -U
+
+pip: welcome ## Install the package in pip mode
+	pip install -e . -U --config-settings editable_mode=strict
+
 
 ##############################################################################
 # CHECK
 ##############################################################################
 
-flake8:
+flake8: ## Run flake8
 	cd ..; flake8 --max-line-length 124 --ignore=E722 $(package)/src/cloudmesh
 	cd ..; flake8 --max-line-length 124 --ignore=E722 $(package)/tests
 
-pylint:
+pylint: ## Run pylint
 	cd ..; pylint --rcfile=$(package)/.pylintrc  $(package)/src/cloudmesh
 	cd ..; pylint --rcfile=$(package)/.pylintrc  --disable=F0010 $(package)/tests
 
@@ -30,7 +36,7 @@ pylint:
 # CLEAN
 ##############################################################################
 
-clean:
+clean: ## Clean the project
 	$(call banner, "CLEAN")
 	rm -rf *.egg-info
 	rm -rf *.eggs
@@ -41,7 +47,7 @@ clean:
 	rm -rf .tmp
 	find . -type d -name '__pycache__' -exec rm -rf {} +
 
-cleanall:
+cleanall: ## Clean all the project
 	cd ../cloudmesh-common; make clean
 	cd ../cloudmesh-cmd5; make clean
 	cd ../cloudmesh-sys; make clean
@@ -56,7 +62,7 @@ cleanall:
 # INFO
 ##############################################################################
 
-info:
+info: ## Display info about the project
 	@echo "================================================="
 	@git remote show origin
 	@echo "================================================="
@@ -67,34 +73,32 @@ info:
 # TEST
 ##############################################################################
 
-test:
+test: ## Run tests
 	pytest -v --html=.report.html
 	open .report.html
 
-dtest:
+dtest: ## Run tests with no capture
 	pytest -v --capture=no
 
 ######################################################################
 # PYPI
 ######################################################################
 
-twine:
+twine: ## Install twine
 	pip install -U twine
 
-.PHONY: dist
-
-dist:
+dist: ## Build the package 
 	pip install -q build
 	python -m build
 	twine check dist/*
 
-local: welcome dist
+local: welcome dist ## Install the package locally
 	pip install dist/*.whl
 
-local-force:
+local-force: ## Install the package locally with force
 	pip install dist/*.whl --force-reinstall
 
-patch: clean twine
+patch: clean twine ## Build the package and upload it to testpypi
 	$(call banner, "patch")
 	pip install -r requirements-dev.txt
 	cms bumpversion patch
@@ -105,19 +109,19 @@ patch: clean twine
 	twine check dist/*
 	twine upload --repository testpypi  dist/*
 
-minor: clean
+minor: clean ## increase the minor version number
 	$(call banner, "minor")
 	cms bumpversion minor
 	@cat VERSION
 	@echo
 
-major: clean
+major: clean ## increase the major version number
 	$(call banner, "major")
 	cms bumpversion major
 	@cat VERSION
 	@echo
 
-release: clean
+release: clean ## create a release
 	$(call banner, "release")
 	git tag "v$(VERSION)"
 	git push origin main --tags
@@ -128,14 +132,11 @@ release: clean
 	@cat VERSION
 	@echo
 
-upload:
+upload: ## Upload the package to pypi
 	twine check dist/*
 	twine upload dist/*
 
-pip:
-	pip install --index-url https://test.pypi.org/simple/ $(package) -U
-
-log:
+log: ## Update the ChangeLog
 	$(call banner, log)
 	gitchangelog | fgrep -v ":dev:" | fgrep -v ":new:" > ChangeLog
 	git commit -m "chg: dev: Update ChangeLog" ChangeLog
