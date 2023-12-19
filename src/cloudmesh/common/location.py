@@ -9,7 +9,6 @@ from cloudmesh.common.util import path_expand
 from cloudmesh.common.util import readfile
 from cloudmesh.common.util import writefile
 
-
 class Location:
     _shared_state = None
 
