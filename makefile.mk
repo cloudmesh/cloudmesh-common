@@ -14,6 +14,10 @@ welcome:
 source: welcome
 	pip install -e . -U
 
+pip: welcome
+	pip install -e . -U --config-settings editable_mode=strict
+
+
 ##############################################################################
 # CHECK
 ##############################################################################
