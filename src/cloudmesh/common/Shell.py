@@ -54,6 +54,17 @@ from shlex import quote
 #    return new_f
 
 def windows_not_supported(f):
+    """
+    This is a decorator function that checks if the current platform is Windows. 
+    If it is, it prints an error message and returns an empty string. 
+    If it's not, it simply calls the decorated function with the provided arguments.
+
+    Args:
+        f (function): The function to be decorated.
+
+    Returns:
+        function: The decorated function which will either execute the original function or return an empty string based on the platform.
+    """
     def wrapper(*args, **kwargs):
         host = get_platform()
         if host == "windows":
@@ -66,16 +77,37 @@ def windows_not_supported(f):
 
 
 def NotImplementedInWindows():
+    """
+    Raises an error and exits the program if the method is called on Windows.
+
+    This function is intended to be used as a decorator to mark methods that are not implemented in Windows.
+
+    Raises:
+        ConsoleError: If the method is called on Windows.
+
+    """
     if sys.platform == "win32":
         Console.error(f"The method {__name__} is not implemented in Windows.")
         sys.exit()
 
-
 class Brew(object):
+    """
+    This class provides methods to interact with the Homebrew package manager on macOS.
+    It uses the Shell class to execute brew commands.
+
+    Methods:
+        install: Installs a package using brew. If the package is already installed, it prints a message and does nothing.
+                 If the installation is successful, it prints a success message. If there's an error, it prints an error message.
+        version: Prints the version of a given package.
+    """
 
     @classmethod
     def install(cls, name):
+        """
+        Installs a package using the brew package manager.
 
+        :param name: The name of the package to install.
+        """
         r = Shell.brew("install", name)
         print(r)
 
@@ -91,13 +123,33 @@ class Brew(object):
 
     @classmethod
     def version(cls, name):
+        """
+        Get the version of a package using Homebrew.
+
+        Parameters:
+        - name (str): The name of the package.
+
+        Returns:
+        - str: The version of the package.
+
+        """
         r = Shell.brew("ls", "--version", "name")
         print(r)
 
 
 class Pip(object):
+    """A class for managing pip installations."""
+
     @classmethod
     def install(cls, name):
+        """Install a package using pip.
+
+        Args:
+            name (str): The name of the package to install.
+
+        Returns:
+            str: The output of the pip install command.
+        """
         r = Shell.pip("install", name)
         if f"already satisfied: {name}" in r:
             print(name, "... already installed")
@@ -130,32 +182,40 @@ class SubprocessError(Exception):
         self.stdout = stdout
 
     def __str__(self):
+            """
+            Returns a string representation of the Shell object.
 
-        def indent(lines, amount, ch=' '):
-            """indent the lines by multiples of ch
-
-            Args:
-                lines
-                amount
-                ch
+            The string includes the command, exit code, stderr, and stdout (if available).
 
             Returns:
-
+                str: A string representation of the Shell object.
             """
-            padding = amount * ch
-            return padding + ('\n' + padding).join(lines.split('\n'))
 
-        cmd = ' '.join(map(quote, self.cmd))
-        s = ''
-        s += 'Command: %s\n' % cmd
-        s += 'Exit code: %s\n' % self.returncode
+            def indent(lines, amount, ch=' '):
+                """indent the lines by multiples of ch
 
-        if self.stderr:
-            s += 'Stderr:\n' + indent(self.stderr, 4)
-        if self.stdout:
-            s += 'Stdout:\n' + indent(self.stdout, 4)
+                Args:
+                    lines
+                    amount
+                    ch
 
-        return s
+                Returns:
+
+                """
+                padding = amount * ch
+                return padding + ('\n' + padding).join(lines.split('\n'))
+
+            cmd = ' '.join(map(quote, self.cmd))
+            s = ''
+            s += 'Command: %s\n' % cmd
+            s += 'Exit code: %s\n' % self.returncode
+
+            if self.stderr:
+                s += 'Stderr:\n' + indent(self.stderr, 4)
+            if self.stdout:
+                s += 'Stdout:\n' + indent(self.stdout, 4)
+
+            return s
 
 
 class Subprocess(object):
@@ -194,6 +254,12 @@ class Shell(object):
     TODO: This works well on Linux and OSX, but has not been tested much on Windows
     """
 
+    # Rest of the code...
+class Shell(object):
+    """The shell class allowing us to conveniently access many operating system commands.
+    TODO: This works well on Linux and OSX, but has not been tested much on Windows
+    """
+
     # TODO: we have not supported cygwin for a while
     # cygwin_path = 'bin'  # i copied fom C:\cygwin\bin
 
@@ -224,6 +290,19 @@ class Shell(object):
     # ls = cls.execute('cmd', args...)
     @staticmethod
     def timezone(default="America/Indiana/Indianapolis"):
+        """
+        Retrieves the timezone of the current system.
+
+        Parameters:
+        - default (str): The default timezone to return if the system's timezone cannot be determined.
+
+        Returns:
+        - str: The timezone of the current system.
+
+        Raises:
+        - IndexError: If the system's timezone cannot be determined and no default timezone is provided.
+        """
+        
         # BUG we need to be able to pass the default from the cmdline
         host = get_platform()
         if host == "windows":
@@ -239,6 +318,16 @@ class Shell(object):
     @staticmethod
     @windows_not_supported
     def locale():
+        """
+        Get the current locale of the system.
+
+        Returns:
+            str: The current locale of the system.
+
+        Raises:
+            IndexError: If the locale cannot be determined.
+
+        """
         try:
             result = Shell.run('locale').split('\n')[0].split('_')[1].split('.')[0].lower()
             return result
@@ -248,6 +337,12 @@ class Shell(object):
 
     @staticmethod
     def ssh_enabled():
+        """
+        Checks if SSH is enabled on the current operating system.
+
+        Returns:
+            bool: True if SSH is enabled, False otherwise.
+        """
         if os_is_linux():
             try:
                 r = Shell.run("which sshd")
@@ -287,7 +382,7 @@ class Shell(object):
             encoding: the encoding
             service: a prefix to the stopwatch label
 
-        Returns:
+        Returns: 
 
         """
         _label = str(label)
@@ -566,6 +661,15 @@ class Shell(object):
 
     @staticmethod
     def install_choco_package(package: str):
+        """
+        Installs a package using Chocolatey.
+
+        Parameters:
+        - package (str): The name of the package to install.
+
+        Returns:
+        - bool: True if the package installation was successful, False otherwise.
+        """
         if not Shell.is_choco_installed():
             Console.error("Chocolatey not installed, or terminal needs to be reloaded.")
             return False
@@ -591,6 +695,12 @@ class Shell(object):
 
     @staticmethod
     def install_brew():
+        """
+        Installs Homebrew on macOS if it is not already installed.
+        This method checks if Homebrew is already installed, and if not, it installs it using a script.
+        The script prompts the user for their macOS password and installs Homebrew using the installation script from the official Homebrew repository.
+        After installation, it checks if Homebrew is successfully installed and returns True if it is, or False otherwise.
+        """
         # from elevate import elevate
 
         # elevate()
@@ -683,6 +793,16 @@ class Shell(object):
 
     @staticmethod
     def dot2svg(filename, engine='dot'):
+        """
+        Converts a Graphviz DOT file to SVG format using the specified engine.
+
+        Parameters:
+        - filename (str): The path to the DOT file.
+        - engine (str): The Graphviz engine to use for conversion. Default is 'dot'.
+
+        Returns:
+        None
+        """
         data = {
             'engine': engine,
             'file': filename.replace(".dot", "")
@@ -693,6 +813,15 @@ class Shell(object):
 
     @staticmethod
     def map_filename(name):
+        """
+        Maps a given filename to a dotdict object containing information about the file.
+
+        Parameters:
+        - name (str): The filename to be mapped.
+
+        Returns:
+        - result (dotdict): A dotdict object containing the mapped information about the file.
+        """
         pwd = os.getcwd()
 
         _name = str(name)
@@ -790,6 +919,16 @@ class Shell(object):
 
     @staticmethod
     def fetch(filename=None, destination=None):
+        """
+        Fetches the content of a file specified by the filename and returns it.
+        
+        Parameters:
+        - filename (str): The path or URL of the file to fetch.
+        - destination (str): The path where the fetched content should be saved (optional).
+        
+        Returns:
+        - str: The content of the fetched file.
+        """
         _filename = Shell.map_filename(filename)
 
         content = None
@@ -816,7 +955,7 @@ class Shell(object):
             name (str): the title
 
         Returns:
-            void: void
+            void: This function does not return any value.
         """
         return f'echo -n -e \"\033]0;{name}\007\"'
 
@@ -869,10 +1008,20 @@ class Shell(object):
 
     @classmethod
     def live(cls, command, cwd=None):
+        """
+        Executes a command in the shell and returns the output.
+
+        Parameters:
+        - command (str): The command to be executed.
+        - cwd (str): The current working directory for the command execution. If not provided, the current working directory is used.
+
+        Returns:
+        - data (dotdict): A dotdict object containing the status and text output of the command execution.
+        """
         if cwd is None:
             cwd = os.getcwd()
         process = subprocess.Popen(shlex.split(command), cwd=cwd,
-                                   stdout=subprocess.PIPE)
+                                    stdout=subprocess.PIPE)
         result = b''
         while True:
             output = process.stdout.read(1)
@@ -906,28 +1055,51 @@ class Shell(object):
 
     @classmethod
     def check_output(cls, *args, **kwargs):
-        """Thin wrapper around :func:`subprocess.check_output`"""
+        """Thin wrapper around :func:`subprocess.check_output`
+
+        Executes a command in the shell and returns the output as a byte string.
+
+        Args:
+            *args: Positional arguments to be passed to :func:`subprocess.check_output`.
+            **kwargs: Keyword arguments to be passed to :func:`subprocess.check_output`.
+
+        Returns:
+            bytes: The output of the command as a byte string.
+
+        Raises:
+            CalledProcessError: If the command exits with a non-zero status.
+
+        """
         return subprocess.check_output(*args, **kwargs)
+
 
     @classmethod
     def ls(cls, directory=".", match=None):
-        """executes ls with the given arguments
+        """
+        Executes the 'ls' command with the given arguments.
 
         Args:
-            args
+            directory (str): The directory to list files from. Default is the current directory.
+            match (str): Regular expression pattern to match filenames against. Default is None.
 
         Returns:
-            list
+            list: A list of filenames matching the given pattern (if provided) in the specified directory.
         """
         import re
         if match == None:
-            files = os.listdir('.')
+            files = os.listdir(directory)
         else:
-            files = [f for f in os.listdir('.') if re.match(match, f)]
+            files = [f for f in os.listdir(directory) if re.match(match, f)]
         return files
 
     @classmethod
     def gpu_name(cls):
+        """
+        Retrieves the name of the GPU using the 'nvidia-smi' command.
+
+        Returns:
+            str: The name of the GPU, or None if the command fails.
+        """
         name = None
         try:
             name = Shell.run("nvidia-smi --query-gpu=gpu_name --format=csv,noheader")
@@ -935,35 +1107,34 @@ class Shell(object):
             pass
         return name
 
-    @classmethod
-    def gpu_name(cls):
-        content = None
-        try:
-            name = Shell.run("nvidia-smi")
-        except:
-            pass
-        return content
 
     @classmethod
     # @NotImplementedInWindows
     def unix_ls(cls, *args):
-        """executes ls with the given arguments
+            """
+            Executes the linux 'ls' command with the given arguments.
 
-        Args:
-            *args
+            Args:
+                *args: Additional arguments to be passed to the 'ls' command.
 
-        Returns:
-
-        """
-        return cls.execute('ls', args)
+            Returns:
+                The output of the 'ls' command as a string.
+            """
+            return cls.execute('ls', args)
 
     @staticmethod
     def ps(short=False, attributes=None):
-        """using psutil to return the process information pid, name and comdline,
+        """
+        using psutil to return the process information pid, name and comdline,
         cmdline may be a list
 
+        Args:
+            short (bool): Flag to determine whether to return short process information or not.
+            attributes (list): List of attributes to include in the process information.
+
         Returns:
-            a list of dicts of process information
+            list: A list of dictionaries containing process information.
+
         """
         found = []
         for proc in psutil.process_iter():
@@ -987,26 +1158,27 @@ class Shell(object):
 
     @classmethod
     def bash(cls, *args):
-        """executes bash with the given arguments
+        """
+        Executes bash with the given arguments.
 
         Args:
-            *args
+            *args: The arguments to be passed to the bash command.
 
         Returns:
-
+            The output of the bash command.
         """
         return cls.execute('bash', args)
 
     @classmethod
     # @NotImplementedInWindows
     def brew(cls, *args):
-        """executes bash with the given arguments
+        """Executes the 'brew' command with the given arguments.
 
         Args:
-            *args
+            *args: The arguments to be passed to the 'brew' command.
 
         Returns:
-
+            The output of the 'brew' command.
         """
         NotImplementedInWindows()
         return cls.execute('brew', args)
@@ -1017,10 +1189,10 @@ class Shell(object):
         """executes cat with the given arguments
 
         Args:
-            *args
+            *args: Variable length argument list of strings representing the files to be read.
 
         Returns:
-
+            content (str): The content of the file(s) if executed on Git Bash on Windows, otherwise the output of the 'cat' command.
         """
         if os_is_windows() and is_gitbash():
             content = readfile(args[0])
@@ -1030,26 +1202,26 @@ class Shell(object):
 
     @classmethod
     def git(cls, *args):
-        """executes git with the given arguments
+        """Executes git with the given arguments.
 
         Args:
-            *args
+            *args: Variable number of arguments to be passed to git command.
 
         Returns:
-
+            The output of the git command execution.
         """
         return cls.execute('git', args)
 
     # noinspection PyPep8Naming
     @classmethod
     def VBoxManage(cls, *args):
-        """executes VboxManage with the given arguments
+        """Executes VBoxManage with the given arguments.
 
         Args:
-            *args
+            *args: Variable number of arguments to be passed to VBoxManage.
 
         Returns:
-
+            The output of the VBoxManage command.
         """
 
         if platform == "darwin":
@@ -1060,13 +1232,13 @@ class Shell(object):
 
     @classmethod
     def blockdiag(cls, *args):
-        """executes blockdiag with the given arguments
+        """Executes blockdiag with the given arguments.
 
         Args:
-            *args
+            *args: Variable length argument list.
 
         Returns:
-
+            The result of executing blockdiag with the given arguments.
         """
         return cls.execute('blockdiag', args)
 
@@ -1075,34 +1247,50 @@ class Shell(object):
         """executes cm with the given arguments
 
         Args:
-            *args
+            *args: Variable length argument list
 
         Returns:
-
+            None
         """
         return cls.execute('cm', args)
 
-    @classmethod
-    def cms(cls, *args):
-        """executes cm with the given arguments
+
+    @staticmethod
+    def cms(command, encoding='utf-8'):
+        """
+        Executes a command using the 'cms' command-line tool.
 
         Args:
-            *args
+            command (str): The command to be executed.
+            encoding (str): The encoding to be used for the command output. Default is 'utf-8'.
 
         Returns:
+            str: The output of the command.
 
+        """
+        return Shell.run("cms " + command, encoding=encoding)
+    
+    @classmethod
+    def cms_exec(cls, *args):
+        """executes cms with the given arguments
+
+        Args:
+            *args: Variable length argument list
+
+        Returns:
+            The output of the 'cms' command execution
         """
         return cls.execute('cms', args)
 
     @classmethod
     def cmsd(cls, *args):
-        """executes cm with the given arguments
+        """executes cmsd with the given arguments
 
         Args:
-            *args
+            *args: Variable length argument list
 
         Returns:
-
+            None
         """
         return cls.execute('cmsd', args)
 
@@ -1111,10 +1299,11 @@ class Shell(object):
         """executes head with the given arguments
 
         Args:
-            args
+            filename (str): The name of the file to read from. If None, the file will be read from stdin.
+            lines (int): The number of lines to display. Default is 10.
 
         Returns:
-
+            str: The output of the head command.
         """
         filename = cls.map_filename(filename).path
         r = Shell.run(f'head -n {lines} {filename}')
@@ -1122,19 +1311,30 @@ class Shell(object):
 
     @classmethod
     def keystone(cls, *args):
-        """executes keystone with the given arguments
+        """Executes the keystone command with the given arguments.
 
         Args:
-            *args
+            *args: The arguments to be passed to the keystone command.
 
         Returns:
-
+            The output of the keystone command.
         """
         return cls.execute('keystone', args)
 
     @staticmethod
     def kill_pid(pid):
+        """
+        Kills a process with the given PID.
 
+        Parameters:
+        pid (str): The PID of the process to be killed.
+
+        Returns:
+        str: The result of the kill operation.
+
+        Raises:
+        subprocess.CalledProcessError: If the process is already down.
+        """
         if sys.platform == 'win32':
             try:
                 result = Shell.run(f"taskkill /IM {pid} /F")
@@ -1150,13 +1350,13 @@ class Shell(object):
     @classmethod
     # @NotImplementedInWindows
     def kill(cls, *args):
-        """executes kill with the given arguments
+        """Executes the kill command with the given arguments.
 
         Args:
-            *args
+            *args: The arguments to be passed to the kill command.
 
         Returns:
-
+            The output of the kill command execution.
         """
         NotImplementedInWindows()
         # TODO: use tasklisk, compare to linux
@@ -1167,8 +1367,24 @@ class Shell(object):
         """Given a source url and a destination filename, download the file at the source url
         to the destination.
 
-        If provider is None, the request lib is used
-        If provider is 'system', wget, curl, and requests lib are attempted in that order
+        Args:
+            source (str): The URL of the file to be downloaded.
+            destination (str): The path where the downloaded file will be saved.
+            force (bool, optional): If set to True, the file will be downloaded even if it already exists at the destination. Defaults to False.
+            provider (str, optional): The provider to be used for downloading the file. If None, the request library is used. If 'system', wget, curl, and requests library are attempted in that order. Defaults to None.
+            chunk_size (int, optional): The size of each chunk to be downloaded. Defaults to 128.
+
+        Returns:
+            str: The path of the downloaded file.
+
+        Raises:
+            None
+
+        Note:
+            If provider is 'system', the function will first try to download the file using wget, then curl, and finally the requests library.
+
+            If provider is None, the request lib is used
+            If provider is 'system', wget, curl, and requests lib are attempted in that order
         """
         destination = path_expand(destination)
 
@@ -1193,7 +1409,7 @@ class Shell(object):
 
         with open(destination, 'wb') as fd:
             with tqdm(total=total_size, unit="B",
-                      unit_scale=True, desc=destination, initial=0, ascii=True) as pbar:
+                        unit_scale=True, desc=destination, initial=0, ascii=True) as pbar:
                 for chunk in r.iter_content(chunk_size=chunk_size):
                     fd.write(chunk)
                     pbar.update(len(chunk))
@@ -1205,10 +1421,10 @@ class Shell(object):
         """mounts a given mountpoint to a file
 
         Args:
-            *args
+            *args: Variable length argument list.
 
         Returns:
-
+            None
         """
         return cls.execute('mount', args)
 
@@ -1217,22 +1433,22 @@ class Shell(object):
         """umounts a given mountpoint to a file
 
         Args:
-            *args
+            *args: Variable length argument list of mountpoints to be unmounted.
 
         Returns:
-
+            None
         """
         return cls.execute('umount', args)
 
     @classmethod
     def nova(cls, *args):
-        """executes nova with the given arguments
+        """Executes the 'nova' command with the given arguments.
 
         Args:
-            *args
+            *args: The arguments to be passed to the 'nova' command.
 
         Returns:
-
+            The output of the 'nova' command execution.
         """
         return cls.execute('nova', args)
 
@@ -1241,17 +1457,17 @@ class Shell(object):
         """execute ping
 
         Args:
-            host: the host to ping
-            count: the number of pings
+            host (str): the host to ping
+            count (int): the number of pings
 
         Returns:
-
+            str: the output of the ping command
         """
         r = None
         option = '-n' if os_is_windows() else '-c'
         parameters = "{option} {count} {host}".format(option=option,
-                                                      count=count,
-                                                      host=host)
+                                                        count=count,
+                                                        host=host)
         r = Shell.run(f'ping {parameters}')
         if r is None:
             Console.error("ping is not installed")
@@ -1265,23 +1481,34 @@ class Shell(object):
             *args
 
         Returns:
-
+            The current working directory as a string.
         """
         return os.getcwd()
 
     @classmethod
     def rackdiag(cls, *args):
-        """executes rackdiag with the given arguments
+        """Executes rackdiag with the given arguments.
 
         Args:
-            *args
+            *args: Additional arguments to be passed to rackdiag.
 
         Returns:
-
+            The result of executing rackdiag with the given arguments.
         """
         return cls.execute('rackdiag', args)
 
+    @staticmethod
     def count_files(directory, recursive=False):
+        """
+        Counts the number of files in a directory.
+
+        Parameters:
+        directory (str): The path to the directory.
+        recursive (bool): Flag indicating whether to count files recursively in subdirectories. Default is False.
+
+        Returns:
+        int: The number of files in the directory.
+        """
         count = 0
         if recursive:
             for root, dirs, files in os.walk(directory):
@@ -1297,28 +1524,29 @@ class Shell(object):
 
     @classmethod
     def rm(cls, location):
-        """executes rm with the given arguments
+        """Executes the rm command to remove a file.
 
         Args:
-            args
+            location (str): The path of the file to be removed.
 
         Returns:
-
+            None
         """
         try:
             location = cls.map_filename(location).path
             os.remove(location)
         except:
             pass
+
     @classmethod
     def rsync(cls, *args):
         """executes rsync with the given arguments
 
         Args:
-            *args
+            *args: Variable length argument list.
 
         Returns:
-
+            None
         """
         return cls.execute('rsync', args)
 
@@ -1327,23 +1555,26 @@ class Shell(object):
         """executes scp with the given arguments
 
         Args:
-            *args
+            *args: The arguments to be passed to scp command.
 
         Returns:
-
+            None
         """
         return cls.execute('scp', args)
 
     @classmethod
     # @NotImplementedInWindows
     def sort(cls, *args):
-        """executes sort with the given arguments
+        """Executes the sort command with the given arguments.
 
         Args:
-            *args
+            *args: Variable number of arguments to be passed to the sort command.
 
         Returns:
+            The output of the sort command.
 
+        Raises:
+            NotImplementedInWindows: If the method is called on a Windows system.
         """
         NotImplementedInWindows()
         # TODO: https://superuser.com/questions/1316317/is-there-a-windows-equivalent-to-the-unix-uniq
@@ -1354,10 +1585,10 @@ class Shell(object):
         """executes sh with the given arguments
 
         Args:
-            *args
+            *args: Variable length argument list of strings representing the command and its arguments.
 
         Returns:
-
+            The output of the executed command as a string.
         """
         return cls.execute('sh', args)
 
@@ -1366,10 +1597,10 @@ class Shell(object):
         """executes ssh with the given arguments
 
         Args:
-            *args
+            *args: variable number of arguments to be passed to ssh command
 
         Returns:
-
+            The output of the ssh command execution
         """
         return cls.execute('ssh', args)
 
@@ -1379,9 +1610,10 @@ class Shell(object):
         """executes sudo with the given arguments
 
         Args:
-            *args
+            *args: The arguments to be passed to the sudo command.
 
         Returns:
+            The output of the sudo command.
 
         """
         NotImplementedInWindows()
@@ -1393,10 +1625,11 @@ class Shell(object):
         """executes tail with the given arguments
 
         Args:
-            args
+            filename (str): The name of the file to tail.
+            lines (int): The number of lines to display from the end of the file.
 
         Returns:
-
+            str: The output of the tail command.
         """
         filename = cls.map_filename(filename).path
         r = Shell.run(f'tail -n {lines} {filename}')
@@ -1407,22 +1640,22 @@ class Shell(object):
         """executes vagrant with the given arguments
 
         Args:
-            *args
+            *args: variable number of arguments to be passed to vagrant command
 
         Returns:
-
+            The output of the vagrant command execution
         """
         return cls.execute('vagrant', args, shell=True)
 
     @classmethod
     def pandoc(cls, *args):
-        """executes vagrant with the given arguments
+        """Executes pandoc with the given arguments.
 
         Args:
-            *args
+            *args: The arguments to be passed to pandoc.
 
         Returns:
-
+            The output of the pandoc command.
         """
         return cls.execute('pandoc', args)
 
@@ -1431,23 +1664,23 @@ class Shell(object):
         """executes mongod with the given arguments
 
         Args:
-            *args
+            *args: Additional arguments to be passed to mongod command
 
         Returns:
-
+            The output of the mongod command execution
         """
         return cls.execute('mongod', args)
 
     @classmethod
     # @NotImplementedInWindows
     def dialog(cls, *args):
-        """executes dialof with the given arguments
+        """Executes dialog with the given arguments.
 
         Args:
-            *args
+            *args: Variable length argument list.
 
         Returns:
-
+            The output of the dialog command.
         """
         NotImplementedInWindows()
         return cls.execute('dialog', args)
@@ -1457,15 +1690,27 @@ class Shell(object):
         """executes pip with the given arguments
 
         Args:
-            *args
+            *args: variable number of arguments to be passed to pip command
 
         Returns:
-
+            The output of the pip command execution
         """
         return cls.execute('pip', args)
 
     @classmethod
     def fgrep(cls, string=None, file=None):
+        """
+        Searches for a string in a file using the 'fgrep' command on Unix-based systems
+        or the 'grep -F' command on Windows systems.
+
+        Parameters:
+        - string (str): The string to search for.
+        - file (str): The file to search in.
+
+        Returns:
+        - str: The output of the 'fgrep' or 'grep -F' command.
+
+        """
         if not os_is_windows():
             r = Shell.run(f'fgrep {string} {file}')
         else:
@@ -1474,6 +1719,20 @@ class Shell(object):
 
     @classmethod
     def grep(cls, string=None, file=None):
+        """
+        Searches for a string in a file using the 'grep' command.
+
+        Parameters:
+        - string (str): The string to search for.
+        - file (str): The file to search in.
+
+        Returns:
+        - str: The output of the 'grep' command.
+
+        Example:
+        >>> Shell.grep('pattern', 'file.txt')
+        'line containing pattern'
+        """
         r = Shell.run(f'grep {string} {file}')
         return r
 
@@ -1482,11 +1741,11 @@ class Shell(object):
         """returns all lines that contain what
 
         Args:
-            lines
-            what
+            lines (str or list): The lines to search for the specified string.
+            what (str): The string to search for in the lines.
 
         Returns:
-
+            list: A list of lines that contain the specified string.
         """
         if type(lines) == str:
             _lines = lines.splitlines()
@@ -1503,11 +1762,11 @@ class Shell(object):
         """returns all lines that do not contain what
 
         Args:
-            lines
-            what
+            lines (str or list): The lines to filter.
+            what (str): The substring to search for in each line.
 
         Returns:
-
+            list: The filtered lines that do not contain the specified substring.
         """
         if type(lines) == str:
             _lines = lines.splitlines()
@@ -1524,11 +1783,11 @@ class Shell(object):
         """returns all lines that contain what
 
         Args:
-            lines
-            what
+            lines (str or list): The lines to search in. It can be either a string or a list of strings.
+            what (str): The substring to search for in each line.
 
         Returns:
-
+            list: A list of lines that contain the specified substring.
         """
         if type(lines) == str:
             _lines = lines.splitlines()
@@ -1542,14 +1801,14 @@ class Shell(object):
 
     @classmethod
     def find_lines_from(cls, lines, what):
-        """returns all lines that come after a particular line
+        """Returns all lines that come after a particular line.
 
         Args:
-            lines
-            what
+            lines (str or list): The lines to search.
+            what (str): The line to search for.
 
         Returns:
-
+            list: The lines that come after the specified line.
         """
         if type(lines) == str:
             _lines = lines.splitlines()
@@ -1568,11 +1827,12 @@ class Shell(object):
         """returns all lines that come between the markers
 
         Args:
-            lines
-            what
+            lines (list): The list of lines to search within.
+            what_from (str): The starting marker.
+            what_to (str): The ending marker.
 
         Returns:
-
+            list: The lines that come between the starting and ending markers.
         """
         select = Shell.find_lines_from(lines, what_from)
         select = Shell.find_lines_to(select, what_to)
@@ -1583,11 +1843,11 @@ class Shell(object):
         """returns all lines that come before a particular line
 
         Args:
-            lines
-            what
+            lines (str or list): The lines to search in. It can be either a string or a list of strings.
+            what (str): The line to search for.
 
         Returns:
-
+            list: A list of lines that come before the line containing the specified text.
         """
         if type(lines) == str:
             _lines = lines.splitlines()
@@ -1604,7 +1864,11 @@ class Shell(object):
 
     @classmethod
     def terminal_type(cls):
-        """returns  darwin, cygwin, cmd, or linux"""
+        """returns the type of the terminal based on the current operating system.
+
+        Returns:
+            str: The type of the terminal. Possible values are 'linux', 'darwin', 'cygwin', 'windows', or 'UNDEFINED_TERMINAL_TYPE'.
+        """
         what = sys.platform
 
         kind = 'UNDEFINED_TERMINAL_TYPE'
@@ -1624,10 +1888,10 @@ class Shell(object):
         """returns the path of the command with which
 
         Args:
-            command: teh command
+            command (str): The command to search for.
 
         Returns:
-            the path
+            str: The path of the command.
         """
         if os_is_windows():
             return Shell.run(f"where {command}")
@@ -1639,10 +1903,10 @@ class Shell(object):
         """returns True if the command exists
 
         Args:
-            name
+            name (str): The name of the command to check.
 
         Returns:
-
+            bool: True if the command exists, False otherwise.
         """
         return cls.which(name) is not None
 
@@ -1657,15 +1921,22 @@ class Shell(object):
 
     @staticmethod
     def get_pid(name, service="psutil"):
+        """
+        Get the process ID (PID) of a running process by its name.
+
+        Parameters:
+        - name (str): The name of the process.
+        - service (str): The name of the service to use for retrieving process information (default: "psutil").
+
+        Returns:
+        - int: The PID of the process, or None if the process is not found.
+        """
         pid = None
         for proc in psutil.process_iter():
             if name in proc.name():
                 pid = proc.pid
         return pid
 
-    @staticmethod
-    def cms(command, encoding='utf-8'):
-        return Shell.run("cms " + command, encoding=encoding)
 
     @classmethod
     def check_python(cls):
@@ -1721,13 +1992,18 @@ class Shell(object):
 
     @classmethod
     def copy_source(cls, source, destination):
-        """copys a file or a directory to the destination
+        """Copies a file or a directory to the destination.
 
         Args:
-            destination (str): destination directory
+            source (str): Path to the source file or directory.
+            destination (str): Path to the destination directory.
 
         Returns:
-            None: None
+            None
+
+        Raises:
+            FileNotFoundError: If the source file or directory does not exist.
+            Exception: If an error occurs during the copy process.
         """
         try:
             if os.path.isfile(source):  # If the source is a file
@@ -1741,6 +2017,17 @@ class Shell(object):
 
     @classmethod
     def copy(cls, source, destination, expand=False):
+        """
+        Copy a file from source to destination. Uses shutil.copy2.
+
+        Parameters:
+        source (str): The path of the source file.
+        destination (str): The path of the destination file.
+        expand (bool): If True, expand the source and destination paths using `path_expand` function.
+
+        Returns:
+        None
+        """
         if expand:
             s = path_expand(source)
             d = path_expand(destination)
@@ -1751,7 +2038,16 @@ class Shell(object):
 
     @classmethod
     def copy_file(cls, source, destination, verbose=False):
+        """
+        Copy a file from source to destination.
 
+        :param source: The source file path.
+        :type source: str
+        :param destination: The destination file path.
+        :type destination: str
+        :param verbose: Whether to print verbose output, defaults to False.
+        :type verbose: bool
+        """
         try:
             s = Shell.map_filename(source)
             d = Shell.map_filename(destination)
@@ -1785,9 +2081,13 @@ class Shell(object):
         """creates a directory with all its parents in ots name
 
         Args:
-            directory: the path of the directory
+            directory (str): the path of the directory
 
         Returns:
+            bool: True if the directory is successfully created, False otherwise
+
+        Raises:
+            Exception: If there is an error creating the directory
 
         """
         d = cls.map_filename(directory).path
@@ -1805,16 +2105,15 @@ class Shell(object):
 
 
     def unzip(cls, source_filename, dest_dir):
-        """unzips a file into the destination directory
+        """Unzips a file into the destination directory.
 
         Args:
-            source_filename: the source
-            dest_dir: the destination directory
+            source_filename (str): The path of the source file.
+            dest_dir (str): The path of the destination directory.
 
         Returns:
-
+            None
         """
-
         with zipfile.ZipFile(source_filename) as zf:
             for member in zf.infolist():
                 # Path traversal defense copied from
@@ -1831,13 +2130,13 @@ class Shell(object):
 
     @staticmethod
     def edit(filename):
-        """opens an editing program to edit specified filename
+        """Opens an editing program to edit the specified filename.
 
         Args:
-            filename: file to edit
+            filename (str): The file to edit.
 
         Returns:
-            nothing
+            None
         """
         if os_is_mac():
             # try to see what programs are available
@@ -1879,27 +2178,31 @@ class Shell(object):
     @classmethod
     # @NotImplementedInWindows
     def lsb_release(cls):
-        """executes lsb_release command
+        """Executes the lsb_release command.
 
         Args:
-            args
+            None
 
         Returns:
-
+            The output of the lsb_release command.
         """
         NotImplementedInWindows()
         return cls.execute('lsb_release', ['-a'])
 
     @classmethod
     def distribution(cls):
-        """executes lsb_release command
-
-        Args:
-            args
+        """Executes the lsb_release command to determine the distribution and version of the operating system.
 
         Returns:
+            A dictionary containing the following information:
+            - platform: The lowercase name of the platform (e.g., linux, darwin, win32).
+            - distribution: The lowercase name of the distribution (e.g., debian, ubuntu, macos, windows).
+            - version: The version of the operating system.
 
-        TODO: needs testing
+        Raises:
+            NotImplementedError: If the lsb_release command is not found for the platform.
+
+        TODO: This method needs testing.
         """
 
         machine = platform.lower()
@@ -1948,6 +2251,16 @@ class Shell(object):
 
     @staticmethod
     def open(filename=None, program=None):
+        """
+        Opens the specified file using the default program associated with its file type.
+
+        Parameters:
+        - filename (str): The path of the file to be opened.
+        - program (str): Optional. The name of the program to be used for opening the file.
+
+        Returns:
+        - int: The return code of the shell command executed for opening the file.
+        """
         if not os.path.isabs(filename):
             filename = path_expand(filename)
 
@@ -1967,6 +2280,16 @@ class Shell(object):
 
     @staticmethod
     def sys_user():
+        """
+        Returns the username of the current system user.
+
+        If the operating system is Windows, it retrieves the username from the 'USERNAME' environment variable.
+        Otherwise, it tries to retrieve the username from the 'USER' environment variable.
+        If the 'USER' environment variable is not available, it uses the 'whoami' command to get the username.
+
+        Returns:
+            str: The username of the current system user.
+        """
         if os_is_windows():
             localuser = os.environ["USERNAME"]
         else:
@@ -1979,6 +2302,12 @@ class Shell(object):
 
     @staticmethod
     def user():
+        """
+        Returns the username of the current system user.
+
+        :return: The username of the current system user.
+        :rtype: str
+        """
         return str(Shell.sys_user())
 
     # @staticmethod
@@ -1987,6 +2316,12 @@ class Shell(object):
 
     @staticmethod
     def host():
+        """
+        Returns the hostname of the current system.
+
+        :return: The hostname of the current system.
+        :rtype: str
+        """
         return os_platform.node()
 
 
