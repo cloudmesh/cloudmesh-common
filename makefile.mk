@@ -46,6 +46,7 @@ clean: ## Clean the project
 	rm -rf .tox
 	rm -rf .tmp
 	find . -type d -name '__pycache__' -exec rm -rf {} +
+	pip uninstall ${package} -y
 
 cleanall: ## Clean all the project
 	cd ../cloudmesh-common; make clean
