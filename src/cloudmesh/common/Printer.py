@@ -17,66 +17,71 @@ class Printer(object):
 
     @classmethod
     def flatwrite(cls, table,
+                      order=None,
+                      header=None,
+                      output="table",
+                      sort_keys=True,
+                      show_none="",
+                      humanize=None,
+                      sep=".",
+                      max_width=48
+                      ):
+        """Writes the information given in the table.
+
+        Args:
+            table (list or dict): The table of values.
+            order (list, optional): The order of the columns. Defaults to None.
+            header (list, optional): The header for the columns. Defaults to None.
+            output (str, optional): The format of the output. Defaults to "table".
+                Possible values are "raw", "csv", "json", "yaml", "dict".
+            sort_keys (bool, optional): If True, the table is sorted. Defaults to True.
+            show_none (str, optional): Passed along to the list or dict printer. Defaults to "".
+            sep (str, optional): The separator for csv printer. Defaults to ".".
+            max_width (int, optional): Maximum width for a cell. Defaults to 48.
+
+        Returns:
+            str: The formatted output.
+
+        """
+        flat = flatten(table, sep=sep)
+
+        return Printer.write(flat,
+                                sort_keys=sort_keys,
+                                order=order,
+                                header=header,
+                                output=output,
+                                humanize=humanize,
+                                max_width=max_width
+                                )
+
+    @classmethod
+    def write(cls, table,
                   order=None,
                   header=None,
                   output="table",
                   sort_keys=True,
-                  show_none="",
                   humanize=None,
-                  sep=".",
+                  show_none="",
                   max_width=48
                   ):
         """writes the information given in the table
 
         Args:
-            table: the table of values
-            order: the order of the columns
-            header: the header for the columns
-            output: the format (default is table, values are raw, csv,
-                json, yaml, dict
-            sort_keys: if true the table is sorted
-            show_none: passed along to the list or dict printer
-            sep: uses sep as the separator for csv printer
+            table (list or dict): the table of values
+            order (list): the order of the columns
+            header (list): the header for the columns
+            output (str): the format (default is table, values are raw, csv,
+                json, yaml, dict)
+            sort_keys (bool): if True, the table is sorted
+            humanize (bool): if True, humanize the values in the table
+            show_none (str): passed along to the list or dict printer
             max_width (int): maximum width for a cell
 
         Returns:
-
-        """
-
-        flat = flatten(table, sep=sep)
-
-        return Printer.write(flat,
-                             sort_keys=sort_keys,
-                             order=order,
-                             header=header,
-                             output=output,
-                             humanize=humanize,
-                             max_width=max_width
-                             )
-
-    @classmethod
-    def write(cls, table,
-              order=None,
-              header=None,
-              output="table",
-              sort_keys=True,
-              humanize=None,
-              show_none="",
-              max_width=48
-              ):
-        """writes the information given in the table
-
-        Args:
-            table: the table of values
-            order: the order of the columns
-            header: the header for the columns
-            output: the format (default is table, values are raw, csv,
-                json, yaml, dict
-            sort_keys: if true the table is sorted
-            show_none: passed along to the list or dict printer
-            max_width (int): maximum width for a cell
-
-        Returns:
+            The formatted table based on the specified output format.
+            If output is "raw", the original table is returned.
+            If table is None, None is returned.
+            If table is of unknown type, an error message is printed to the console.
 
         """
         if output == "raw":
@@ -104,33 +109,36 @@ class Printer(object):
                             show_none=show_none,
                             max_width=max_width)
         else:
-            Console.error("unkown type {0}".format(type(table)))
+            Console.error("unknown type {0}".format(type(table)))
 
     @classmethod
     def list(cls,
-             l,                 # noqa: E741
-             order=None,
-             header=None,
-             output="table",
-             sort_keys=True,
-             humanize=None,
-             show_none="",
-             max_width=48
-             ):
+                 l,                 # noqa: E741
+                 order=None,
+                 header=None,
+                 output="table",
+                 sort_keys=True,
+                 humanize=None,
+                 show_none="",
+                 max_width=48
+                 ):
         """
+        This method takes a list as input and formats it for printing in a tabular format.
+        
         Args:
-            l: l is a list not a dict
-            order
-            header
-            output
-            sort_keys
-            show_none
-            max_width (int): maximum width for a cell
-
+            l (list): The input list to be formatted.
+            order (list): The order in which the columns should be displayed.
+            header (list): The header labels for each column.
+            output (str): The output format. Default is "table".
+            sort_keys (bool): Whether to sort the keys. Default is True.
+            humanize (bool): Whether to humanize the values. Default is None.
+            show_none (str): The string to display for None values. Default is "".
+            max_width (int): The maximum width for a cell. Default is 48.
+        
         Returns:
-
+            dict: A dictionary containing the formatted list.
         """
-
+        
         d = {}
         count = 0
         for entry in l:
@@ -148,30 +156,31 @@ class Printer(object):
 
     @classmethod
     def dict(cls, d,
-             order=None,
-             header=None,
-             output="table",
-             sort_keys=True,
-             humanize=None,
-             show_none="",
-             max_width=48):
+                 order=None,
+                 header=None,
+                 output="table",
+                 sort_keys=True,
+                 humanize=None,
+                 show_none="",
+                 max_width=48):
         """
+        Prints a dictionary in various output formats.
+
         Args:
-            d (dict): A a dict with dicts of the same type.
+            d (dict): A dictionary with dictionaries of the same type.
             order (list): The order in which the columns are printed.
-                The order is specified by the key names of the dict.
-            header (list or tuple of field names): The Header of each of
-                the columns
-            output (string): type of output (table, csv, json, yaml or
-                dict)
-            sort_keys (bool): list
-            show_none (string): prints None if True for None values
-                otherwise ""
-            max_width (int): maximum width for a cell
+                The order is specified by the key names of the dictionary.
+            header (list or tuple of field names): The header of each of
+                the columns.
+            output (string): Type of output (table, csv, json, yaml, or dict).
+            sort_keys (bool): Whether to sort the keys of the dictionary.
+            humanize (function): A function to humanize the values in the dictionary.
+            show_none (string): If set to True, prints "None" for None values, otherwise prints an empty string.
+            max_width (int): Maximum width for a cell.
 
         Returns:
-
-        """
+            str: The formatted dictionary based on the specified output format.
+            """
 
         if output in ["table", "filter"]:
             if d == {}:
