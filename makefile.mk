@@ -14,10 +14,10 @@ welcome: ## Display welcome message
 	$(call banner, "Install ${package}")
 
 source: welcome ## Install the package in source mode
-	pip install -e . -U
+	pip install -e .
 
 pip: welcome ## Install the package in pip mode
-	pip install -e . -U --config-settings editable_mode=strict
+	pip install -e . --config-settings editable_mode=strict
 
 ##############################################################################
 # CHECK
