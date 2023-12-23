@@ -98,10 +98,10 @@ local: welcome dist ## Install the package locally
 local-force: ## Install the package locally with force
 	pip install dist/*.whl --force-reinstall
 
-patch: clean twine ## Build the package and upload it to testpypi
+patch: twine ## Build the package and upload it to testpypi
 	$(call banner, "patch")
 	pip install -r requirements-dev.txt
-	cms bumpversion patch
+	bumpversion patch
 	@VERSION=$$(cat VERSION); \
 		git commit -m "bump version ${VERSION}" .; git push
 	pip install -q build
@@ -109,19 +109,19 @@ patch: clean twine ## Build the package and upload it to testpypi
 	twine check dist/*
 	twine upload --repository testpypi  dist/*
 
-minor: clean ## increase the minor version number
+minor: ## increase the minor version number
 	$(call banner, "minor")
-	cms bumpversion minor
+	bumpversion minor
 	@cat VERSION
 	@echo
 
-major: clean ## increase the major version number
+major: ## increase the major version number
 	$(call banner, "major")
-	cms bumpversion major
+	bumpversion major
 	@cat VERSION
 	@echo
 
-release: clean ## create a release
+release: ## create a release
 	$(call banner, "release")
 	git tag "v$(VERSION)"
 	git push origin main --tags
