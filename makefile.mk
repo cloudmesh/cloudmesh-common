@@ -92,10 +92,10 @@ dist: ## Build the package
 	python -m build
 	twine check dist/*
 
-local: welcome dist ## Install the package locally
+local: welcome twine dist ## Install the package locally
 	pip install dist/*.whl
 
-local-force: ## Install the package locally with force
+local-force: welcome twine ## Install the package locally with force
 	pip install dist/*.whl --force-reinstall
 
 patch: twine ## Build the package and upload it to testpypi
