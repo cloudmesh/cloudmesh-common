@@ -1,5 +1,38 @@
 # Changelog
 
+## Changes so far in version 5
+
+## 5.0.26
+
+Summary of changes till 5.0.26
+
+* add calculate disk space
+* fix make pip
+* Merge branch 'main' of github.com:cloudmesh/cloudmesh-common
+* improve the printer
+* update project urls
+* add check for sudo
+* add pip uninstall from package
+* Merge branch 'main' of github.com:cloudmesh/cloudmesh-common
+* the delete tag for github is now in cloudmesh-git
+* update makefile
+* Add strict editable mode to pip installation
+* update docstring
+* update docstrings
+* Refactor Default class to include documentation
+* add v5 files
+* improve documentation
+* convert docstrings to google format
+* update bumpversion.yaml
+* add strict install
+* move the docker file test to future
+* do for now ignore the verbose test
+* print location of var file in verbose test
+* improve verbose test
+* improve verbose test
+* change install.sh to e.sh
+* moving towards toml
+
 ## 4.3.2
 
 Intermediate releases: 4.3.1, 4.3.0
