@@ -1038,6 +1038,15 @@ class Shell(object):
         })
         return data
 
+    @staticmethod
+    def calculate_disk_space(directory):
+        total_size = 0
+        for path, dirs, files in os.walk(directory):
+            for f in files:
+                fp = os.path.join(path, f)
+                total_size += os.path.getsize(fp)
+        return total_size
+
     @classmethod
     def get_python(cls):
         """returns the python and pip version
