@@ -36,7 +36,7 @@ terminal, such as errors, info, and regular messages
 ```python
 from cloudmesh.common.console import Console
 
-Console.error("this is an error printed in red wth prefix ERROR:")
+Console.error("this is an error printed in red with prefix ERROR:")
 Console.msg("this is a msg printed in black")
 Console.ok("this is an ok message printed in green")
 ``` 
