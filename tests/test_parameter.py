@@ -11,8 +11,6 @@ from cloudmesh.common.util import HEADING
 
 @pytest.mark.incremental
 class Test_Parameter:
-
-
     def test_string_expand_none(self):
         HEADING()
 
@@ -23,7 +21,6 @@ class Test_Parameter:
         print(result)
 
         assert result == check
-
 
     def test_expand(self):
         HEADING()
@@ -123,7 +120,6 @@ class Test_Parameter:
 
         assert result == check
 
-
     def test_string_expand_dash(self):
         HEADING()
 
@@ -150,7 +146,7 @@ class Test_Parameter:
         HEADING()
 
         parameter = "x[a,b-d,g,x-z]"
-        check =['xa', 'xb', 'xc', 'xd', 'xg', 'xx', 'xy', 'xz']
+        check = ["xa", "xb", "xc", "xd", "xg", "xx", "xy", "xz"]
 
         result = Parameter.expand_string(parameter)
         print(result)
@@ -162,11 +158,9 @@ class Test_Parameter:
 
         parameter = "red[01-02],red"
 
-        check =['red01', 'red02', 'red']
+        check = ["red01", "red02", "red"]
 
         result = Parameter.expand(parameter)
         print(result)
 
         assert result == check
-
-

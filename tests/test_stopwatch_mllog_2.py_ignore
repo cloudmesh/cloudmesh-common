@@ -24,10 +24,6 @@ from cloudmesh.common.util import banner
 from mlperf_logging import mllog
 import logging
 
-    #benchmark_constant = [
-#
-#]
-
 benchmark_config = """
 benchmark:
   name: Earthquake

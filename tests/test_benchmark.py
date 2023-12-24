@@ -1,14 +1,13 @@
 ###############################################################
-# pytest -v --capture=no tests/test_stopwatch.py
-# pytest -v --capture=no tests/test_stopwatch..py::Test_stopwatch.test_001
-# pytest -v  tests/test_stopwatch.py
+# pytest -v --capture=no tests/test_benchmark.py
+# pytest -v --capture=no tests/test_benchmark..py::Test_benchmark.test_001
+# pytest -v  tests/test_benchmark.py
 ###############################################################
 
 import time
 
 import pytest
 from cloudmesh.common.Benchmark import Benchmark
-
 from cloudmesh.common.util import HEADING
 
 

@@ -5,9 +5,11 @@
 ###############################################################
 import getpass
 
+import pytest
 from cloudmesh.common.Shell import Shell
 from cloudmesh.common.util import HEADING
-import pytest
+
+
 # from cloudmesh.common.Host import Host
 
 

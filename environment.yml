@@ -7,9 +7,7 @@ dependencies:
   - pyfiglet
   - python-dateutil
   - python-hostlist
-  - pytz
   - requests
   - simplejson
-  - six
   - tabulate
   - tqdm

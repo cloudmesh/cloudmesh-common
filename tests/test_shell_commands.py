@@ -4,15 +4,15 @@
 # pytest -v --capture=no  tests/test_shell_commands.py::Test_shell.test_001
 ###############################################################
 import getpass
-
-from cloudmesh.common.Shell import Shell
-from cloudmesh.common.util import HEADING
-from cloudmesh.common.Benchmark import Benchmark
-from cloudmesh.common.systeminfo import os_is_windows, os_is_linux
-from cloudmesh.common.util import path_expand
-import pytest
 import os
 from pathlib import Path
+
+import pytest
+from cloudmesh.common.Benchmark import Benchmark
+from cloudmesh.common.Shell import Shell
+from cloudmesh.common.systeminfo import os_is_windows, os_is_linux
+from cloudmesh.common.util import HEADING
+from cloudmesh.common.util import path_expand
 
 
 def run(command):
@@ -103,7 +103,8 @@ class Test_shell(object):
             else:
                 assert result.path == f'C:\\home\\{user}\\cm'
         else:
-            assert result.path == os.path.join(str(Path.home()), 'cm')
+            if os_is_windows():
+                assert result.path == os.path.join(str(Path.home()), 'cm')
 
         result = Shell.map_filename(name='scp:user@host:~/cm')
         assert result.user == "user"

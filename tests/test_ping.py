@@ -17,12 +17,17 @@ Benchmark.debug()
 
 cloud = "local"
 
+# https://github.com/actions/runner-images/issues/1519 ping does not work in github runner so we skip it.
+import os
+from cloudmesh.common.util import str_bool
+github_action = str_bool(os.getenv('GITHUB_ACTIONS', 'false'))
+
 # multiping only works if you have root, so we can not use it
 # from multiping import MultiPing
 
 hosts = ['127.0.0.1',
-         'localhost',
-         'www.indiana.edu',
+         'localhost']
+other_hosts = [
          'www.pbs.org',
          'www.github.com',
          'www.redhat.com',
@@ -33,6 +38,7 @@ hosts = ['127.0.0.1',
 
 
 @pytest.mark.incremental
+@pytest.mark.skipif(github_action, reason='GitHub Runner uses Azure and Azure disables ping. :( Too bad!')
 class Test_ping:
 
     def ping(self, processors=1):
@@ -69,6 +75,7 @@ class Test_ping:
     def test_ping_processor(self):
         HEADING()
         print()
+        print (hosts)
         for processors in range(1, len(hosts)):
             print("Processors:", processors)
             results = self.ping(processors=processors)

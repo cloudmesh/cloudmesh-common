@@ -1,0 +1,15 @@
+cloudmesh-bar
+cloudmesh-bumpversion
+cloudmesh-catalog
+cloudmesh-cc
+cloudmesh-cmd5
+cloudmesh-common
+cloudmesh-configuration
+cloudmesh-ee
+cloudmesh-git
+cloudmesh-gpu
+cloudmesh-manual
+cloudmesh-progress
+cloudmesh-rivanna
+cloudmesh-sys
+cloudmesh-vpn

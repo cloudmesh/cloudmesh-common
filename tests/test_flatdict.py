@@ -4,17 +4,19 @@
 # npytest -v --capture=no  tests/test_flatdict..py::Test_flatdict.test_001
 ###############################################################
 
+import os
 from pprint import pprint
 
-from cloudmesh.common.FlatDict import FlatDict
-from cloudmesh.common.FlatDict import flatten
-from cloudmesh.common.FlatDict import read_config_parameters
-from cloudmesh.common.FlatDict import expand_config_parameters
-
-from cloudmesh.common.util import HEADING
 import pytest
-from pprint import pprint
+import yaml
+from cloudmesh.common.FlatDict import FlatDict
+from cloudmesh.common.FlatDict import expand_config_parameters
+from cloudmesh.common.FlatDict import flatten
+from cloudmesh.common.util import HEADING
+from cloudmesh.common.util import writefile, readfile, banner
 
+
+# noinspection PyPep8Naming
 @pytest.mark.incremental
 class Test_Flatdict:
 
@@ -118,11 +120,8 @@ class Test_Flatdict:
         # assert f.user == 'GREGOR'
         # assert f['extra__minDisk'] == 40
 
-
     def test_expand_yaml_file(self):
         HEADING()
-
-        filename = "config.yaml"
 
         config = {
             "a": 2,
@@ -136,4 +135,87 @@ class Test_Flatdict:
 
         assert config["b"] == "test-" + str(config["a"])
         assert config["c"] == 6
+
+    def test_apply_str(self):
+        data = {
+            "a": 2,
+            "b": "test-{a}",
+            "c": "eval(3*{a})"
+        }
+
+        config = FlatDict()
+        config.load(content=data)
+
+        # config = read_config_parameters(filename=filename)
+        # config = expand_config_parameters(config)
+
+        pprint("config:")
+        print(config)
+
+        assert config["b"] == "test-" + str(config["a"])
+        assert config["c"] == 6
+
+        s = "a={a} {unkown}"
+
+        result = config.apply(s)
+
+        banner("converted")
+        print(result)
+
+        assert result == "a=2 {unkown}"
+
+    def test_apply_file(self):
+        HEADING()
+
+        config = {
+            "a": 2,
+            "b": "test-{a}",
+            "c": "eval(3*{a})",
+            "test": {
+                "a": "a",
+                "b": '{a}'}
+        }
+
+        filename = "/tmp/test.yaml"
+        with open(filename, "w") as f:
+            yaml.dump(config, f)
+
+        config = FlatDict()
+        config.load(content=filename)
+
+        # config = read_config_parameters(filename=filename)
+        # config = expand_config_parameters(config)
+
+        print("config:")
+        pprint(config)
+
+        assert config["b"] == "test-" + str(config["a"])
+        assert config["c"] == 6
+
+        s = "a={a} {unkown}"
+        name = ".tmp/a.txt"
+        writefile(name, s)
+        content = readfile(name)
+        print (content)
+
+        result = config.apply(name)
+        print()
+        print(result)
+
+        content = readfile(name).strip()
+
+        banner("converted")
+        print(content)
+
+        assert result == "a=2 {unkown}"
+        assert content == result
+
+    def test_config_in_yaml(self):
+        HEADING()
+
+        config = FlatDict(expand=["os.", "cm.", "cloudmesh."])
+        config .load("tests/config.in.yaml")
+
+        print("config:")
+        pprint(dict(config))
 

@@ -1,0 +1,77 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [
+    "setuptools >= 69",
+    "wheel >= 0.42",
+    "pip >= 23.2.1"
+]
+
+[project]
+name = "cloudmesh-common"
+version = "5.0.41"
+description = "A set of useful APIs for cloudmesh"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {file = "LICENSE"}
+authors = [
+  {name = "Gregor von Laszewski", email = "laszewski@gmail.com"}
+]
+maintainers = [
+  {name = "Gregor von Laszewski", email = "laszewski@gmail.com"}
+]
+keywords = ["helper library", "cloudmesh"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Environment :: Other Environment",
+    "Environment :: Plugins",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: Apache Software License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Microsoft :: Windows :: Windows 10",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: User Interfaces",
+    "Topic :: System",
+    "Topic :: System :: Distributed Computing",
+    "Topic :: System :: Shells",
+    "Topic :: Utilities",
+]
+
+dependencies = [
+    "python-dateutil",
+    "colorama",
+    "humanize",
+    "oyaml",
+    "pyfiglet",
+    "python-hostlist",
+    "requests",
+    "simplejson",
+    "tabulate",
+    "tqdm",
+    "pyyaml",
+    "psutil",
+    "pywin32; platform_system == 'Windows'",
+    "pyuac; platform_system == 'Windows'"
+]
+
+[project.urls]
+Homepage = "https://github.com/cloudmesh/cloudmesh-common"
+Documentation = "https://github.com/cloudmesh/cloudmesh-common/blob/main/README.md"
+Repository = "https://github.com/cloudmesh/cloudmesh-common.git"
+Issues = "https://github.com/cloudmesh/cloudmesh-common/issues"
+Changelog = "https://github.com/cloudmesh/cloudmesh-common/blob/main/CHANGELOG.md"
+
+[tool.setuptools.packages.find]
+where = ["src/"]
+include = ["cloudmesh.common"]

@@ -1,0 +1,89 @@
+name: cloudmask-rivanna
+
+sbatch:
+  time: "6:00:00"
+  mode: h
+  dir: scratch
+  nodes: 1
+  ntasks: 2
+  mem: 16G
+
+system:
+  host: "rivanna"
+  python: "3.10.8"
+  num_cpus: 1
+  platform: rivanna
+  accelerators_per_node: 1
+  constraint: ""
+  reservation: ""
+
+# Submission Information
+submission:
+  name: cloudmask
+  submitter: Gregor von Laszewski
+  email: laszewski@gmail.com
+  org: University of Virginia
+  division: open
+  version: mlcommons-osmi-v2.0
+  status: completed
+  platform: rivanna
+  accelerators_per_node: 1
+
+
+benchmark:
+  name: Osmi
+  user: Gregor von Laszewski
+  e-mail: laszewski@gmail.com
+  organisation: University of Virginia
+  division: closed
+  status: completed
+  platform: rivanna
+
+experiment:
+  card_name: "a100" # "v100,p100"
+  batch: "1"
+  ngpus: "1"
+  concurrency: "1"
+  model: "small_lstm"
+  repeat: "1"
+
+constant:
+  server: "localhost"
+  tfs_base_port: 8500
+  haproxy_port: 8443
+  nrequests: 32768
+
+project:
+  user: "/project/bii_dsc_community/{os.USER}"
+  dir: "/project/bii_dsc_community/{os.USER}/osmi"
+
+data:
+  output: "./outputs"
+  sif_dir: "/project/bii_dsc_community/{os.USER}/osmi/target/rivanna/image-singularity"
+  haproxy_sif: "{project.dir}/haproxy_latest.sif"
+  tfs_sif: "{project.dir}/serving_latest-gpu.sif"
+  osmi_sif: "{project.dir}/osmi.sif"
+  haproxy_cfg_file: haproxy-grpc.cfg
+
+
+test:
+  a: "a"
+  b: "{test.a}"
+  c: "{os.HOME}"
+  d: "{cm.verbose}"
+  e: "{cloudmesh.verbose}"
+
+user: "{os.USER}"
+
+
+model_config_list:
+  small_lstm:
+    base_path: "{project.dir}/osmi-bench/models/small_lstm"
+    model_platform: "tensorflow"
+  medium_cnn:
+    base_path: "{project.dir}/osmi-bench/models/medium_cnn"
+    model_platform: "tensorflow"
+  large_tcnn:
+    base_path: "{project.dir}/osmi-bench/models/large_tcnn"
+    model_platform: "tensorflow"
+

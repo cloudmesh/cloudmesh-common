@@ -1,0 +1,35 @@
+name: Python Package using Containers
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 5
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Build and run container
+      run: |
+        docker build -t my_container .
+        docker run my_container
+
+  build-windows:
+    runs-on: windows-latest
+    strategy:
+      max-parallel: 5
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Build and run container
+      run: |
+        docker build -t my_container .
+        docker run my_container

@@ -4,7 +4,12 @@
 # pytest -v --capture=no  tests/ssh/test_ssh..py::Test_name::<METHODNAME>
 ###############################################################
 
+# https://github.com/actions/runner-images/issues/1519 ping does not work in github runner so we skip it.
 import os
+
+from cloudmesh.common.util import str_bool
+
+github_action = str_bool(os.getenv('GITHUB_ACTIONS', 'false'))
 
 import pytest
 from cloudmesh.common.Benchmark import Benchmark
@@ -49,7 +54,8 @@ def craete_location(host):
 
 
 
-@pytest.mark.skipif(not Shell.ssh_enabled(), reason="SSH is not aenabled")
+@pytest.mark.skipif(not Shell.ssh_enabled(), reason="SSH is not enabled")
+@pytest.mark.skipif(github_action, reason='GitHub Runner uses Azure and Azure does not have an ssh key set up!')
 @pytest.mark.incremental
 class TestSsh:
 
@@ -71,6 +77,9 @@ class TestSsh:
             results = self.ssh(processors=processors)
             print(Printer.write(results))
             for result in results:
+                if "denied (publickey)" in result["stderr"].decode():
+                    pytest.skip("ssh test cannot proceed because ssh-copy-id not yet "
+                                "done.")
                 assert result["success"]
 
     #

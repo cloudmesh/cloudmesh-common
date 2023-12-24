@@ -6,9 +6,10 @@
 
 from pprint import pprint
 
+import pytest
 from cloudmesh.common.Printer import Printer
 from cloudmesh.common.util import HEADING
-import pytest
+
 
 @pytest.mark.incremental
 class Test_tables:

@@ -8,7 +8,6 @@ import time
 
 import pytest
 from cloudmesh.common.StopWatch import StopWatch
-
 from cloudmesh.common.util import HEADING
 
 
@@ -83,5 +82,5 @@ class Test_Printer:
         assert True
 
     def test_write_to_file(self):
-        StopWatch.benchmark(filename="cloudmesh.log", sysinfo=True, csv=True, sum=True, tag="pytest")
+        StopWatch.benchmark(filename=".tmp/cloudmesh.log", sysinfo=True, csv=True, sum=True, tag="pytest")
         assert True
