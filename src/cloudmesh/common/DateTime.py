@@ -1,6 +1,4 @@
-import calendar
 import datetime as TIME
-
 import humanize as HUMANIZE
 from dateutil import parser
 
@@ -38,7 +36,7 @@ class DateTime(object):
 
     @staticmethod
     def now():
-        return TIME.datetime.now(TIME.UTC)
+        return TIME.datetime.now(TIME.timezone)
     
     @staticmethod
     def local_now():
