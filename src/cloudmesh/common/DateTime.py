@@ -1,6 +1,8 @@
 import datetime as TIME
 import humanize as HUMANIZE
 from dateutil import parser
+from zoneinfo import ZoneInfo
+import tzlocal
 
 
 class DateTime(object):
@@ -36,11 +38,11 @@ class DateTime(object):
 
     @staticmethod
     def now():
-        return TIME.datetime.now(TIME.timezone)
+        return str(TIME.datetime.now())
     
     @staticmethod
-    def local_now():
-        return TIME.datetime.now()
+    def utc_now():
+        return str(TIME.datetime.utcnow())
 
     @staticmethod
     def natural(time):
@@ -58,7 +60,6 @@ class DateTime(object):
             return time
         else:
             return DateTime.humanize(time)
-        pass
 
     @staticmethod
     def humanize(time):
@@ -84,13 +85,12 @@ class DateTime(object):
     def local(time):
         return DateTime.utc_to_local(time)
 
+    @staticmethod
     def utc_to_local(time):
-        TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
-        utc = TIME.datetime.utcnow().strftime(TIME_FORMAT)
-        timestamp = calendar.timegm(
-            (TIME.datetime.strptime(utc, TIME_FORMAT)).timetuple())
-        local = TIME.datetime.fromtimestamp(timestamp).strftime(TIME_FORMAT)
-        return local + " " + str(DateTime.timezone)
+        TIME_FORMAT = '%Y-%m-%d %H:%M:%S.%f'
+        utc = TIME.datetime.strptime(str(time), TIME_FORMAT)
+        local_dt = utc.replace(tzinfo=ZoneInfo('UTC')).astimezone(tzlocal.get_localzone())
+        return local_dt.strftime(TIME_FORMAT) + " " + str(DateTime.timezone)
 
 
 if __name__ == "__main__":
