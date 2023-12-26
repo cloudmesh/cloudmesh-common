@@ -6,8 +6,7 @@ import yaml
 from cloudmesh.common.StopWatch import StopWatch
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.variables import Variables
-#
-#
+
 
 # pylint: disable=C0103
 # noinspection PyPep8Naming
@@ -30,7 +29,6 @@ class Benchmark(object):
     Note:
         This class relies on the StopWatch class for timer functionality.
     """
-
 
     @staticmethod
     def debug():
@@ -107,11 +105,13 @@ class Benchmark(object):
         StopWatch.status(Benchmark.name(with_class=True), True)
 
     @staticmethod
-    def print(sysinfo=True,
-              csv=True,
-              tag=None,
-              node=None,
-              user=None, ):
+    def print(
+        sysinfo=True,
+        csv=True,
+        tag=None,
+        node=None,
+        user=None,
+    ):
         """prints the benchmark information with all timers
 
         Args:
@@ -142,17 +142,13 @@ class Benchmark(object):
         Usage:
             Benchmark.yaml("./example.yaml", 10)
         """
-        cm = {
-            "cloudmesh": {}
-        }
+        cm = {"cloudmesh": {}}
         for i in range(0, n):
-            cm["cloudmesh"][f"service{i}"] = {
-                "attribute": f"service{i}"
-            }
+            cm["cloudmesh"][f"service{i}"] = {"attribute": f"service{i}"}
         pprint(cm)
         location = path_expand(path)
 
-        with open(location, 'w') as yaml_file:
+        with open(location, "w") as yaml_file:
             yaml.dump(cm, yaml_file, default_flow_style=False)
 
     # noinspection SpellCheckingInspection

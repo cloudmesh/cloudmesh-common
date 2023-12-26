@@ -11,16 +11,20 @@ import oyaml as yaml
 ###############################################################
 #  make yaml understand unicode
 
+
 def yaml_construct_unicode(self, node):
     return self.construct_scalar(node)
 
 
-yaml.Loader.add_constructor(u'tag:yaml.org,2002:python/unicode', yaml_construct_unicode)
-yaml.SafeLoader.add_constructor(u'tag:yaml.org,2002:python/unicode', yaml_construct_unicode)
+yaml.Loader.add_constructor("tag:yaml.org,2002:python/unicode", yaml_construct_unicode)
+yaml.SafeLoader.add_constructor(
+    "tag:yaml.org,2002:python/unicode", yaml_construct_unicode
+)
 
 
 ###############################################################
 #  the db api
+
 
 class YamlDB(object):
     """A YAML-backed Key-Value database to store strings"""
@@ -35,15 +39,15 @@ class YamlDB(object):
             os.makedirs(prefix)
 
         if os.path.exists(self.path):
-            with open(self.path, 'rb') as dbfile:
+            with open(self.path, "rb") as dbfile:
                 self._db = yaml.safe_load(dbfile) or dict()
 
         self.flush()
 
     def flush(self):
         string = yaml.dump(self._db, default_flow_style=False)
-        bits = bytes(string, encoding='utf-8')
-        with open(self.path, 'wb') as dbfile:
+        bits = bytes(string, encoding="utf-8")
+        with open(self.path, "wb") as dbfile:
             dbfile.write(bits)
 
     def __setitem__(self, k, v):

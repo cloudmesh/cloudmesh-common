@@ -101,17 +101,20 @@ from cloudmesh.common.util import banner
 from cloudmesh.common.util import readfile
 from cloudmesh.common.util import writefile
 
-def progress(filename=None, # +
-             status="ready", # +
-             progress: Union[int, str, float] = 0, # +
-             pid=None, # +
-             time=False,
-             stdout=True,
-             stderr=True,
-             append=None,
-             with_banner=False,
-             # variable we do not have, but should be in kwrags
-             **kwargs):
+
+def progress(
+    filename=None,  # +
+    status="ready",  # +
+    progress: Union[int, str, float] = 0,  # +
+    pid=None,  # +
+    time=False,
+    stdout=True,
+    stderr=True,
+    append=None,
+    with_banner=False,
+    # variable we do not have, but should be in kwrags
+    **kwargs,
+):
     """Creates a printed line of the form
 
         "# cloudmesh status=ready progress=0 pid=$$ time='2022-08-05 16:29:40.228901'"
@@ -135,7 +138,7 @@ def progress(filename=None, # +
     Returns:
         str: progress string
     """
-    if type(progress) in ['int', 'float']:
+    if type(progress) in ["int", "float"]:
         progress = str(progress)
     if pid is None:
         if "SLURM_JOB_ID" in os.environ:
@@ -148,7 +151,7 @@ def progress(filename=None, # +
     msg = f"# cloudmesh status={status} progress={progress} pid={pid}\n"
     if time:
         t = str(DateTime.now())
-        msg = msg +  f" time='{t}'"
+        msg = msg + f" time='{t}'"
     if kwargs:
         for name, value in kwargs.items():
             variables = variables + f" {name}={value}"
@@ -164,6 +167,7 @@ def progress(filename=None, # +
     if filename is not None:
         appendfile(filename, msg)
     return msg
+
 
 def rename(newname):
     """decorator to rename a function
@@ -204,6 +208,7 @@ def benchmark(func):
 
 class StopWatch(object):
     """A class to measure times between events."""
+
     debug = False
     verbose = True
     # Timer start dict
@@ -269,7 +274,6 @@ class StopWatch(object):
     #         }
     #     config["benchmark"].update(argv)
 
-
     @classmethod
     def keys(cls):
         """returns the names of the timers"""
@@ -333,7 +337,6 @@ class StopWatch(object):
         if cls.debug:
             print("Timer", name, "event ...")
 
-
     @classmethod
     def start(cls, name, values=None, value=None):
         """starts a timer with the given name.
@@ -348,7 +351,6 @@ class StopWatch(object):
         """
         values = values or value
 
-
         if cls.debug:
             print("Timer", name, "started ...")
         if name not in cls.timer_sum:
@@ -362,7 +364,6 @@ class StopWatch(object):
 
         if cls.debug:
             print("Timer", name, "start ...")
-
 
     @classmethod
     def stop(cls, name, state=True, values=None, value=None):
@@ -380,7 +381,9 @@ class StopWatch(object):
         cls.timer_end[name] = time.time()
         # if cumulate:
         #    cls.timer_end[name] = cls.timer_end[name] + cls.timer_last[name]
-        cls.timer_sum[name] = cls.timer_sum[name] + cls.timer_end[name] - cls.timer_start[name]
+        cls.timer_sum[name] = (
+            cls.timer_sum[name] + cls.timer_end[name] - cls.timer_start[name]
+        )
         cls.timer_status[name] = state
         if values:
             StopWatch.timer_values[name] = values
@@ -490,14 +493,15 @@ class StopWatch(object):
         """
         s = ""
         for t in cls.timer_end:
-            data = {"label": t,
-                    "start": str(cls.timer_start[t]),
-                    "end": str(cls.timer_end[t]),
-                    "status": str(cls.timer_status[t]),
-                    "elapsed": str(cls.get(t)),
-                    "newline": os.linesep}
-            s += "{label} {start} {end} {elapsed} {status} {newline}".format(
-                **data)
+            data = {
+                "label": t,
+                "start": str(cls.timer_start[t]),
+                "end": str(cls.timer_end[t]),
+                "status": str(cls.timer_status[t]),
+                "elapsed": str(cls.get(t)),
+                "newline": os.linesep,
+            }
+            s += "{label} {start} {end} {elapsed} {status} {newline}".format(**data)
         return s
 
     @classmethod
@@ -514,26 +518,23 @@ class StopWatch(object):
         if data is not None:
             data_platform.update(data)
         return Printer.attribute(
-            data_platform,
-            order=["Machine Attribute", "Value"],
-            output="table"
+            data_platform, order=["Machine Attribute", "Value"], output="table"
         )
 
     @classmethod
-    def get_sysinfo(cls,
-                    node=None,
-                    user=None):
+    def get_sysinfo(cls, node=None, user=None):
         data_platform = cm_systeminfo(node=node, user=user)
         return data_platform
 
     @classmethod
-    def get_benchmark(cls,
-                      sysinfo=True,
-                      tag=None,
-                      node=None,
-                      user=None,
-                      total=False,
-                      ):
+    def get_benchmark(
+        cls,
+        sysinfo=True,
+        tag=None,
+        node=None,
+        user=None,
+        total=False,
+    ):
         """prints out all timers in a convenient benchmark table
 
         Args:
@@ -557,13 +558,10 @@ class StopWatch(object):
 
         data_platform = cm_systeminfo(user=user, node=node)
         if sysinfo:
-            print(Printer.attribute(
-                data_platform,
-                output="table"
-            ))
+            print(Printer.attribute(data_platform, output="table"))
 
         benchmark_data = {
-            'sysinfo': data_platform,
+            "sysinfo": data_platform,
         }
 
         #
@@ -572,35 +570,37 @@ class StopWatch(object):
         timers = StopWatch.keys()
         total_time = 0.0
         if len(timers) > 0:
-
             data_timers = {}
             for timer in timers:
                 data_timers[timer] = {
-                    'start': time.strftime("%Y-%m-%d %H:%M:%S",
-                                           time.gmtime(
-                                               StopWatch.timer_start[timer])),
-                    'stop': time.strftime("%Y-%m-%d %H:%M:%S",
-                                          time.gmtime(
-                                              StopWatch.timer_end[timer])),
-                    'time': StopWatch.get(timer, digits=3),
-                    'sum': StopWatch.sum(timer, digits=3),
-                    'status': StopWatch.get_status(timer),
-                    'msg': StopWatch.get_message(timer),
-                    'timer': timer,
-                    'tag': tag or ''
+                    "start": time.strftime(
+                        "%Y-%m-%d %H:%M:%S", time.gmtime(StopWatch.timer_start[timer])
+                    ),
+                    "stop": time.strftime(
+                        "%Y-%m-%d %H:%M:%S", time.gmtime(StopWatch.timer_end[timer])
+                    ),
+                    "time": StopWatch.get(timer, digits=3),
+                    "sum": StopWatch.sum(timer, digits=3),
+                    "status": StopWatch.get_status(timer),
+                    "msg": StopWatch.get_message(timer),
+                    "timer": timer,
+                    "tag": tag or "",
                 }
                 total_time = total_time + StopWatch.get(timer)
 
             # print(Printer.attribute(data_timers, header=["Command", "Time/s"]))
 
-            if 'benchmark_start_stop' in data_timers:
-                del data_timers['benchmark_start_stop']
+            if "benchmark_start_stop" in data_timers:
+                del data_timers["benchmark_start_stop"]
 
             for key in data_timers:
-                if key != 'benchmark_start_stop' and data_timers[key]['status'] is None:
-                    data_timers[key]['status'] = "failed"
-                elif data_timers[key]['status'] is not None and data_timers[key]['status']:
-                    data_timers[key]['status'] = "ok"
+                if key != "benchmark_start_stop" and data_timers[key]["status"] is None:
+                    data_timers[key]["status"] = "failed"
+                elif (
+                    data_timers[key]["status"] is not None
+                    and data_timers[key]["status"]
+                ):
+                    data_timers[key]["status"] = "ok"
 
             if total:
                 print("Total:", total_time)
@@ -613,19 +613,21 @@ class StopWatch(object):
         return benchmark_data
 
     @classmethod
-    def benchmark(cls,
-                  sysinfo=True,
-                  timers=True,
-                  csv=True,
-                  prefix="# csv",
-                  tag=None,
-                  sum=True,
-                  node=None,
-                  user=None,
-                  version=None,
-                  attributes=None,
-                  total=False,
-                  filename=None):
+    def benchmark(
+        cls,
+        sysinfo=True,
+        timers=True,
+        csv=True,
+        prefix="# csv",
+        tag=None,
+        sum=True,
+        node=None,
+        user=None,
+        version=None,
+        attributes=None,
+        total=False,
+        filename=None,
+    ):
         """prints out all timers in a convenient benchmark table
 
         Args:
@@ -651,44 +653,43 @@ class StopWatch(object):
         data_platform = cm_systeminfo(user=user, node=node)
         if sysinfo:
             content = content + Printer.attribute(
-                data_platform,
-                order=["Machine Attribute", "Value"],
-                output="table"
+                data_platform, order=["Machine Attribute", "Value"], output="table"
             )
             content = content + "\n"
 
         if timers:
-
             #
             # PRINT TIMERS
             #
             timers = StopWatch.keys()
             total_time = 0.0
             if len(timers) > 0:
-
                 data_timers = {}
                 for timer in timers:
                     data_timers[timer] = {
-                        'start': time.strftime("%Y-%m-%d %H:%M:%S",
-                                               time.gmtime(
-                                                   StopWatch.timer_start[timer])),
-                        'time': StopWatch.get(timer, digits=3),
-                        'sum': StopWatch.sum(timer, digits=3),
-                        'status': StopWatch.get_status(timer),
-                        'msg': StopWatch.get_message(timer),
-                        'timer': timer,
-                        'tag': tag or ''
+                        "start": time.strftime(
+                            "%Y-%m-%d %H:%M:%S",
+                            time.gmtime(StopWatch.timer_start[timer]),
+                        ),
+                        "time": StopWatch.get(timer, digits=3),
+                        "sum": StopWatch.sum(timer, digits=3),
+                        "status": StopWatch.get_status(timer),
+                        "msg": StopWatch.get_message(timer),
+                        "timer": timer,
+                        "tag": tag or "",
                     }
                     try:
                         total_time = total_time + StopWatch.get(timer)
                     except:  # noqa: E722
                         pass
-                    for attribute in ["uname.node",
-                                      "user",
-                                      "uname.system",
-                                      "uname.machine",
-                                      "platform.version",
-                                      "sys.platform"]:
+                    for attribute in [
+                        "uname.node",
+                        "user",
+                        "uname.system",
+                        "uname.machine",
+                        "platform.version",
+                        "sys.platform",
+                    ]:
                         if attribute == "user" and user is not None:
                             data_timers[timer][attribute] = user
                         elif attribute == "uname.node" and node is not None:
@@ -701,14 +702,20 @@ class StopWatch(object):
 
                 # print(Printer.attribute(data_timers, header=["Command", "Time/s"]))
 
-                if 'benchmark_start_stop' in data_timers:
-                    del data_timers['benchmark_start_stop']
+                if "benchmark_start_stop" in data_timers:
+                    del data_timers["benchmark_start_stop"]
 
                 for key in data_timers:
-                    if key != 'benchmark_start_stop' and data_timers[key]['status'] is None:
-                        data_timers[key]['status'] = "failed"
-                    elif data_timers[key]['status'] is not None and data_timers[key]['status']:
-                        data_timers[key]['status'] = "ok"
+                    if (
+                        key != "benchmark_start_stop"
+                        and data_timers[key]["status"] is None
+                    ):
+                        data_timers[key]["status"] = "failed"
+                    elif (
+                        data_timers[key]["status"] is not None
+                        and data_timers[key]["status"]
+                    ):
+                        data_timers[key]["status"] = "ok"
 
                 if attributes is None:
                     order = [
@@ -722,7 +729,7 @@ class StopWatch(object):
                         "uname.node",
                         "user",
                         "uname.system",
-                        "platform.version"
+                        "platform.version",
                     ]
 
                     header = [
@@ -736,30 +743,18 @@ class StopWatch(object):
                         "Node",
                         "User",
                         "OS",
-                        "Version"
+                        "Version",
                     ]
                 elif attributes == "short":
-                    order = [
-                        "timer",
-                        "status",
-                        "time"
-                    ]
+                    order = ["timer", "status", "time"]
 
-                    header = [
-                        "Name",
-                        "Status",
-                        "Time"
-                    ]
+                    header = ["Name", "Status", "Time"]
                 else:
                     order = attributes
                     header = attributes
                 content = content + "\n"
                 content = content + Printer.write(
-                    data_timers,
-                    order=order,
-                    header=header,
-                    output="table"
-
+                    data_timers, order=order, header=header, output="table"
                 )
 
                 if total:
@@ -775,20 +770,14 @@ class StopWatch(object):
                         order = ["# csv"] + order
 
                         content = content + Printer.write(
-                            data_timers,
-                            order=order,
-                            header=header,
-                            output="csv"
+                            data_timers, order=order, header=header, output="csv"
                         )
                     else:
-
                         content = content + pprint.pformat(data_timers, indent=4)
                         content = content + "\n"
 
                         content = content + Printer.write(
-                            data_timers,
-                            order=order[1:],
-                            output="csv"
+                            data_timers, order=order[1:], output="csv"
                         )
                         content = content + "\n"
 
@@ -799,19 +788,24 @@ class StopWatch(object):
         if filename:
             writefile(filename, content)
 
-    def load(filename,
-             label=["name"], label_split_char=" ",
-             attributes=['timer',
-                         'status',
-                         'time',
-                         'sum',
-                         'start',
-                         'tag',
-                         'msg',
-                         'uname.node',
-                         'user',
-                         'uname.system',
-                         'platform.version']):
+    def load(
+        filename,
+        label=["name"],
+        label_split_char=" ",
+        attributes=[
+            "timer",
+            "status",
+            "time",
+            "sum",
+            "start",
+            "tag",
+            "msg",
+            "uname.node",
+            "user",
+            "uname.system",
+            "platform.version",
+        ],
+    ):
         """Loads data written to a file from the #csv lines.
         If the timer name has spaces in it, it must also have a label tag in which each lable is the name when
         splitting up the timer name. The list of attributes is the list specified plus the once generated from the
@@ -828,6 +822,7 @@ class StopWatch(object):
 
         """
         from cloudmesh.common.Shell import Shell
+
         data = []
         headers = []
         content = readfile(filename)
@@ -846,12 +841,10 @@ class StopWatch(object):
             entry = entry + label_tags
             data.append(entry)
 
-        return {"headers": headers,
-                "data": data}
+        return {"headers": headers, "data": data}
 
 
 class StopWatchBlock:
-
     def __init__(self, name, data=None, log=sys.stdout, mode="w"):
         self.name = name
         self.data = data
@@ -871,7 +864,10 @@ class StopWatchBlock:
         StopWatch.stop(self.name)
         entry = StopWatch.get(self.name)
         if self.data:
-            print(f"# {self.name}, {entry}, {self.start}, {self.stop}, {self.data}", file=self.log)
+            print(
+                f"# {self.name}, {entry}, {self.start}, {self.stop}, {self.data}",
+                file=self.log,
+            )
         else:
             print(f"# {self.name}, {entry}, {self.start}, {self.stop}", file=self.log)
         if self.is_file:

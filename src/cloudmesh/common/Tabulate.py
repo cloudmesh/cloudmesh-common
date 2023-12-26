@@ -85,8 +85,9 @@ class Printer:
                             field = result[key]
                             if type(field) == list:
                                 field = ", ".join(field)
-                            entry.append("\n".join(
-                                textwrap.wrap(str(field), _width[i])))
+                            entry.append(
+                                "\n".join(textwrap.wrap(str(field), _width[i]))
+                            )
                         except:  # noqa: E722
                             entry.append("")
                     else:
@@ -96,15 +97,16 @@ class Printer:
         return _results
 
     @staticmethod
-    def write(results,
-              order=None,
-              header=None,
-              output='table',
-              width=None,
-              humanize=False,
-              max_width=None,
-              sep='.'):
-
+    def write(
+        results,
+        order=None,
+        header=None,
+        output="table",
+        width=None,
+        humanize=False,
+        max_width=None,
+        sep=".",
+    ):
         width = width or max_width  # maxwidth is deprecated
 
         if header:
@@ -112,7 +114,7 @@ class Printer:
         elif order:
             header = list(order)
 
-        if output == 'table':
+        if output == "table":
             output = Printer.default()
 
         #
@@ -124,31 +126,26 @@ class Printer:
             _results = list(results)
 
         if output == "json":
-            return json.dumps(_results,
-                              # sort_keys=sort_keys,
-                              indent=4)
+            return json.dumps(
+                _results,
+                # sort_keys=sort_keys,
+                indent=4,
+            )
         elif output == "yaml":
-            return yaml.dump(convert_from_unicode(_results),
-                             default_flow_style=False)
+            return yaml.dump(convert_from_unicode(_results), default_flow_style=False)
         elif output == "dict":
             return _results
-        elif output == 'csv':
+        elif output == "csv":
             flat = flatten(_results, sep=sep)
 
-            return Printer.csv(flat,
-                               order=order,
-                               header=header,
-                               humanize=humanize,
-                               sort_keys=True)
+            return Printer.csv(
+                flat, order=order, header=header, humanize=humanize, sort_keys=True
+            )
 
-        _results = Printer.select(_results,
-                                  order=order,
-                                  width=width)
+        _results = Printer.select(_results, order=order, width=width)
 
-        if output in ['flat', 'html']:
-
+        if output in ["flat", "html"]:
             if order is not None:
-
                 flat = []
                 for element in results:
                     _element = {}
@@ -159,8 +156,8 @@ class Printer:
 
                 _results = flat
 
-        if output in ['flat']:
-            return (_results)
+        if output in ["flat"]:
+            return _results
 
         if header:
             return tabulate_printer(_results, tablefmt=output, headers=header)
@@ -183,17 +180,18 @@ class Printer:
         return results
 
     @staticmethod
-    def flatwrite(table,
-                  order=None,
-                  header=None,
-                  output="table",
-                  sort_keys=True,
-                  show_none="",
-                  humanize=None,
-                  sep=".",
-                  max_width=48,  # deprecated use width
-                  width=48,
-                  ):
+    def flatwrite(
+        table,
+        order=None,
+        header=None,
+        output="table",
+        sort_keys=True,
+        show_none="",
+        humanize=None,
+        sep=".",
+        max_width=48,  # deprecated use width
+        width=48,
+    ):
         """writes the information given in the table
 
         Args:
@@ -211,16 +209,15 @@ class Printer:
         Returns:
 
         """
-        width = width or max_width  # max_width is deprecated. thi is used for those still using it
+        width = (
+            width or max_width
+        )  # max_width is deprecated. thi is used for those still using it
 
         flat = flatten(table, sep=sep)
 
-        return Printer.write(flat,
-                             order=order,
-                             header=header,
-                             output=output,
-                             width=width
-                             )
+        return Printer.write(
+            flat, order=order, header=header, output=output, width=width
+        )
         """
         return Printer.write(flat,
                              sort_keys=sort_keys,
@@ -233,13 +230,16 @@ class Printer:
         """
 
     @classmethod
-    def attribute(cls, d,
-                  header=None,
-                  order=None,
-                  sort_keys=True,
-                  humanize=None,
-                  output="table",
-                  width=70):
+    def attribute(
+        cls,
+        d,
+        header=None,
+        order=None,
+        sort_keys=True,
+        humanize=None,
+        output="table",
+        width=70,
+    ):
         """prints a attribute/key value table
 
         Args:
@@ -278,17 +278,13 @@ class Printer:
             else:
                 x.append([key, str(d[key]) or ""])
 
-        if output == 'table':
+        if output == "table":
             output = Printer.default()
 
         return tabulate_printer(x, tablefmt=output, headers=header)
 
     @classmethod
-    def csv(cls, d,
-            order=None,
-            header=None,
-            humanize=None,
-            sort_keys=True):
+    def csv(cls, d, order=None, header=None, humanize=None, sort_keys=True):
         """prints a table in csv format
 
         Args:
@@ -314,7 +310,7 @@ class Printer:
             try:
                 tmp = str(d[element][key])
             except:  # noqa: E722
-                tmp = ' '
+                tmp = " "
             return tmp
 
         if d is None or d == {}:

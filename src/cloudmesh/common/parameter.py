@@ -3,7 +3,6 @@ from hostlist import expand_hostlist
 
 
 class Parameter(object):
-
     @staticmethod
     def parse(arguments, **kwargs):
         """parses arguments based on their kind and aplies Parameter.expand or
@@ -32,13 +31,13 @@ class Parameter(object):
         result = dotdict(arguments)
         if kwargs is not None:
             for k, value in kwargs.items():
-                if value == 'expand':
+                if value == "expand":
                     result[k] = Parameter.expand(result[k])
-                elif value == 'dict':
+                elif value == "dict":
                     result[k] = Parameter.expand(result[k])
                     result[k] = Parameter.arguments_to_dict(result[k])
-                elif value == 'str':
-                    result[k] = ' '.join(result[k])
+                elif value == "str":
+                    result[k] = " ".join(result[k])
         return result
 
     @staticmethod
@@ -55,13 +54,13 @@ class Parameter(object):
         if "," in values:
             found = values.split(",")
         elif "-" in values:
-            _from, _to = values.split('-')
+            _from, _to = values.split("-")
             upper = [chr(x) for x in range(65, 91)]
             lower = [chr(x) for x in range(97, 123)]
             all = upper + lower
             i_start = all.index(_from)
             i_end = all.index(_to)
-            found = all[i_start:i_end + 1]  # not sure why there is +1
+            found = all[i_start : i_end + 1]  # not sure why there is +1
         else:
             found = [values]
         return found
@@ -85,7 +84,6 @@ class Parameter(object):
             return [parameter]
 
         elif "[" in parameter:
-
             prefix, found = parameter.split("[", 1)
             found, postfix = found.split("]", 1)
 
@@ -119,9 +117,9 @@ class Parameter(object):
         if type(parameter) == list or parameter is None:
             return parameter
 
-        parameters = list(expand_hostlist(parameter,
-                                          allow_duplicates=False,
-                                          sort=False))
+        parameters = list(
+            expand_hostlist(parameter, allow_duplicates=False, sort=False)
+        )
 
         results = [t.split(sep, 1) for t in parameters]
         merge = []
@@ -133,7 +131,6 @@ class Parameter(object):
             return parameters
 
         elif len(merge) == len(parameters) + 1 and len(results[0]) == 2:
-
             prefix = results[0][0]
             _results = []
             for i in range(1, len(parameters)):
@@ -142,7 +139,6 @@ class Parameter(object):
             return parameters
 
         else:
-
             return parameters
 
     @staticmethod
@@ -179,11 +175,11 @@ class Parameter(object):
 
         for d in dicts:
             if type(d) == str:
-                value = d == 'True'
+                value = d == "True"
             elif name in d:
                 value = d[name]
             if type(value) == str:
-                value = value == 'True'
+                value = value == "True"
 
             if value:
                 return True

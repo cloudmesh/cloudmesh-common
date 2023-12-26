@@ -20,7 +20,8 @@ class Wifi:
 
     location = "/etc/wpa_supplicant/wpa_supplicant.conf"
 
-    template_key = textwrap.dedent("""
+    template_key = textwrap.dedent(
+        """
         ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
         update_config=1
         country={country}
@@ -29,9 +30,11 @@ class Wifi:
                 ssid="{ssid}"
                 key_mgmt=NONE
         }}
-    """)
+    """
+    )
 
-    template_psk = textwrap.dedent("""
+    template_psk = textwrap.dedent(
+        """
         ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
         update_config=1
         country=US
@@ -41,17 +44,15 @@ class Wifi:
                 psk="{password}"
                 key_mgmt=WPA-PSK
         }}
-    """)  # noqa: W293
+    """
+    )  # noqa: W293
 
     template = template_psk
 
     @staticmethod
-    def set(ssid=None,
-            password=None,
-            country="US",
-            psk=True,
-            location=location,
-            sudo=False):
+    def set(
+        ssid=None, password=None, country="US", psk=True, location=location, sudo=False
+    ):
         """Sets the wifi. Only works for psk based wifi
 
         Args:

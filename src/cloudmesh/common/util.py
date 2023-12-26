@@ -76,7 +76,7 @@ def exponential_backoff(fn, sleeptime_s_max=30 * 60):
         if fn():
             return True
         else:
-            print('Sleeping {} ms'.format(sleeptime_ms))
+            print("Sleeping {} ms".format(sleeptime_ms))
             time.sleep(sleeptime_ms / 1000.0)
             sleeptime_ms *= 2
 
@@ -96,14 +96,13 @@ def download(source, destination, force=False):
             exists
     """
     if os.path.isfile(destination) and not force:
-        Console.warning(f"File {destination} already exists. "
-                        "Skipping download ...")
+        Console.warning(f"File {destination} already exists. " "Skipping download ...")
     else:
-
         directory = os.path.dirname(destination)
         Path(directory).mkdir(parents=True, exist_ok=True)
         r = requests.get(source, allow_redirects=True)
-        open(destination, 'wb').write(r.content)
+        open(destination, "wb").write(r.content)
+
 
 def csv_to_list(csv_string, sep=","):
     """Converts a CSV table from a string to a list of lists
@@ -121,6 +120,7 @@ def csv_to_list(csv_string, sep=","):
     for row in reader:
         list_of_lists.append(row)
     return list_of_lists
+
 
 def search(lines, pattern):
     """return all lines that match the pattern
@@ -152,7 +152,7 @@ def grep(pattern, filename):
         #    return line
         return next((L for L in open(filename) if L.find(pattern) >= 0))
     except StopIteration:
-        return ''
+        return ""
 
 
 def is_local(host):
@@ -164,13 +164,14 @@ def is_local(host):
     Returns:
         True if the host is the localhost
     """
-    return host in ["127.0.0.1",
-                    "localhost",
-                    socket.gethostname(),
-                    # just in case socket.gethostname() does not work  we also try the following:
-                    platform.node(),
-                    socket.gethostbyaddr(socket.gethostname())[0]
-                    ]
+    return host in [
+        "127.0.0.1",
+        "localhost",
+        socket.gethostname(),
+        # just in case socket.gethostname() does not work  we also try the following:
+        platform.node(),
+        socket.gethostbyaddr(socket.gethostname())[0],
+    ]
 
 
 # noinspection PyPep8
@@ -181,7 +182,7 @@ def is_gitbash():
         True if gitbash
     """
     try:
-        exepath = os.environ['EXEPATH']
+        exepath = os.environ["EXEPATH"]
         return "Git" in exepath
     except:  # noqa: E722
         return False
@@ -199,9 +200,11 @@ def is_powershell():
     # bash.exe for git bash
     if platform.system() == "Windows":
         import psutil
-        return (psutil.Process(os.getppid()).name() == "powershell.exe")
+
+        return psutil.Process(os.getppid()).name() == "powershell.exe"
     else:
         return False
+
 
 def is_cmd_exe():
     """return True if you run in a Windows CMD
@@ -213,7 +216,7 @@ def is_cmd_exe():
         return False
     else:
         try:
-            return os.environ['OS'] == 'Windows_NT'
+            return os.environ["OS"] == "Windows_NT"
         except:  # noqa: E722
             return False
 
@@ -221,8 +224,8 @@ def is_cmd_exe():
 def path_expand(text, slashreplace=True):
     """returns a string with expanded variable.
 
-        :param text: the path to be expanded, which can include ~ and environment variables
-        :param text: string
+    :param text: the path to be expanded, which can include ~ and environment variables
+    :param text: string
 
     """
     result = os.path.expandvars(os.path.expanduser(text))
@@ -238,25 +241,25 @@ def path_expand(text, slashreplace=True):
 
 
 def convert_from_unicode(data):
-   """Converts unicode data to a string
+    """Converts unicode data to a string
 
-   Args:
-       data: the data to convert
+    Args:
+        data: the data to convert
 
-   Returns:
-       converted data
-   """
-   if isinstance(data, str):
-       return str(data)
-   elif isinstance(data, Mapping):
-       return dict(map(convert_from_unicode, data.items()))
-   elif isinstance(data, Iterable):
-       return type(data)(map(convert_from_unicode, data))
-   else:
-       return data
+    Returns:
+        converted data
+    """
+    if isinstance(data, str):
+        return str(data)
+    elif isinstance(data, Mapping):
+        return dict(map(convert_from_unicode, data.items()))
+    elif isinstance(data, Iterable):
+        return type(data)(map(convert_from_unicode, data))
+    else:
+        return data
 
 
-def yn_choice(message, default='y', tries=None):
+def yn_choice(message, default="y", tries=None):
     """asks for a yes/no question.
 
     Args:
@@ -265,27 +268,35 @@ def yn_choice(message, default='y', tries=None):
         default: the default answer
     """
     # http://stackoverflow.com/questions/3041986/python-command-line-yes-no-input"""
-    choices = 'Y/n' if default.lower() in ('y', 'yes') else 'y/N'
+    choices = "Y/n" if default.lower() in ("y", "yes") else "y/N"
     if tries is None:
         choice = input(f"{message} ({choices}) ")
-        values = ('y', 'yes', '') if default == 'y' else ('y', 'yes')
+        values = ("y", "yes", "") if default == "y" else ("y", "yes")
         return True if choice.strip().lower() in values else False
     else:
         while tries > 0:
             choice = input(f"{message} ({choices}) ('q' to discard)")
             choice = choice.strip().lower()
-            if choice in ['y', 'yes']:
+            if choice in ["y", "yes"]:
                 return True
-            elif choice in ['n', 'no', 'q']:
+            elif choice in ["n", "no", "q"]:
                 return False
             else:
                 print("Invalid input...")
                 tries -= 1
 
 
-def str_banner(txt=None, c="-", prefix="#", debug=True, label=None,
-               color="BLUE", padding=False,
-               figlet=False, font="big"):
+def str_banner(
+    txt=None,
+    c="-",
+    prefix="#",
+    debug=True,
+    label=None,
+    color="BLUE",
+    padding=False,
+    figlet=False,
+    font="big",
+):
     """prints a banner of the form with a frame of # around the txt::
 
     # --------------------------
@@ -310,7 +321,6 @@ def str_banner(txt=None, c="-", prefix="#", debug=True, label=None,
             output += prefix + " " + 70 * c + "\n"
 
         if txt is not None:
-
             if figlet:
                 txt = pyfiglet.figlet_format(txt, font=font)
 
@@ -323,9 +333,17 @@ def str_banner(txt=None, c="-", prefix="#", debug=True, label=None,
     return output
 
 
-def banner(txt=None, c="-", prefix="#", debug=True, label=None,
-           color="BLUE", padding=False,
-           figlet=False, font="big"):
+def banner(
+    txt=None,
+    c="-",
+    prefix="#",
+    debug=True,
+    label=None,
+    color="BLUE",
+    padding=False,
+    figlet=False,
+    font="big",
+):
     """prints a banner of the form with a frame of # around the txt::
 
     # --------------------------
@@ -342,8 +360,17 @@ def banner(txt=None, c="-", prefix="#", debug=True, label=None,
             the banner is larger
     """
 
-    output = str_banner(txt=txt, c=c, prefix=prefix, debug=debug, label=label,
-                        color=color, padding=padding, figlet=figlet, font=font)
+    output = str_banner(
+        txt=txt,
+        c=c,
+        prefix=prefix,
+        debug=debug,
+        label=label,
+        color=color,
+        padding=padding,
+        figlet=figlet,
+        font=font,
+    )
     Console.cprint(color, "", output)
 
 
@@ -417,8 +444,8 @@ def auto_create_version(class_name, version, filename="__init__.py"):
 
     """
     version_filename = Path(
-        "{classname}/{filename}".format(classname=class_name,
-                                        filename=filename))
+        "{classname}/{filename}".format(classname=class_name, filename=filename)
+    )
     with open(version_filename, "r") as f:
         content = f.read()
 
@@ -443,7 +470,7 @@ def auto_create_requirements(requirements):
     except:  # noqa: E722
         file_content = ""
 
-    setup_requirements = '\n'.join(requirements)
+    setup_requirements = "\n".join(requirements)
 
     if setup_requirements != file_content:
         with open("requirements.txt", "w") as text_file:
@@ -465,7 +492,7 @@ def copy_files(files_glob, source_dir, dest_dir):
             shutil.copy2(filename, dest_dir)
 
 
-def readfile(filename, mode='r', encoding=None):
+def readfile(filename, mode="r", encoding=None):
     """returns the content of a file
 
     Args:
@@ -477,7 +504,7 @@ def readfile(filename, mode='r', encoding=None):
     Returns:
 
     """
-    if mode != 'r' and mode != 'rb':
+    if mode != "r" and mode != "rb":
         Console.error(f"incorrect mode : expected 'r' or 'rb' given {mode}")
     else:
         content = None
@@ -503,11 +530,12 @@ def writefile(filename, content):
 
     """
     directory = os.path.dirname(filename)
-    if directory not in [None, '']:
+    if directory not in [None, ""]:
         os.makedirs(directory, exist_ok=True)
-    with open(path_expand(filename), 'w') as outfile:
+    with open(path_expand(filename), "w") as outfile:
         outfile.write(content)
         outfile.truncate()
+
 
 def appendfile(filename, content):
     """writes the content into the file
@@ -519,11 +547,11 @@ def appendfile(filename, content):
     Returns:
 
     """
-    with open(path_expand(filename), 'a') as outfile:
+    with open(path_expand(filename), "a") as outfile:
         outfile.write(content)
 
 
-def writefd(filename, content, mode='w', flags=os.O_RDWR | os.O_CREAT, mask=0o600):
+def writefd(filename, content, mode="w", flags=os.O_RDWR | os.O_CREAT, mask=0o600):
     """writes the content into the file and control permissions
 
     Args:
@@ -533,7 +561,7 @@ def writefd(filename, content, mode='w', flags=os.O_RDWR | os.O_CREAT, mask=0o60
         flags: the os flags that determine the permissions for the file
         mask: the mask that the permissions will be applied to
     """
-    if mode != 'w' and mode != 'wb':
+    if mode != "w" and mode != "wb":
         Console.error(f"incorrect mode : expected 'w' or 'wb' given {mode}")
 
     with os.fdopen(os.open(filename, flags, mask), mode) as outfile:
@@ -560,7 +588,7 @@ def sudo_readfile(filename, split=True, trim=False):
         result = result.rstrip()
 
     if split:
-        result = result.split('\n')
+        result = result.split("\n")
 
     return result
 
@@ -603,22 +631,22 @@ def generate_password(length=8, lower=True, upper=True, number=True):
 
 
 def str_bool(value):
-    return str(value).lower() in ['yes', '1', 'y', 'true', 't']
+    return str(value).lower() in ["yes", "1", "y", "true", "t"]
 
 
 def get_password(prompt):
     from cloudmesh.common.systeminfo import os_is_windows
+
     try:
         if os_is_windows() and is_gitbash():
             continuing = True
             while continuing:
-
                 sys.stdout.write(prompt)
                 sys.stdout.flush()
                 subprocess.check_call(["stty", "-echo"])
                 password = input()
                 subprocess.check_call(["stty", "echo"])
-                sys.stdout.write('Please retype the password:\n')
+                sys.stdout.write("Please retype the password:\n")
                 sys.stdout.flush()
                 subprocess.check_call(["stty", "-echo"])
                 password2 = input()
@@ -626,24 +654,20 @@ def get_password(prompt):
                 if password == password2:
                     continuing = False
                 else:
-                    Console.error('Passwords do not match\n')
+                    Console.error("Passwords do not match\n")
             return password
         else:
             continuing = True
             while continuing:
                 password = getpass(prompt)
-                password2 = getpass('Please retype the password:\n')
+                password2 = getpass("Please retype the password:\n")
                 if password == password2:
                     continuing = False
                 else:
-                    Console.error('Passwords do not match\n')
+                    Console.error("Passwords do not match\n")
             return password
     except KeyboardInterrupt:
         # Console.error('Detected Ctrl + C. Quitting...')
         if is_gitbash():
             subprocess.check_call(["stty", "echo"])
-        raise ValueError('Detected Ctrl + C. Quitting...')
-    
-
-
-
+        raise ValueError("Detected Ctrl + C. Quitting...")

@@ -63,8 +63,14 @@ class JobMultiHostScript:
                 job.Print()
 
     @staticmethod
-    def execute(script, name="script", hosts=None, executor=JobSet.ssh,
-                beginLine=None, endLine=None):
+    def execute(
+        script,
+        name="script",
+        hosts=None,
+        executor=JobSet.ssh,
+        beginLine=None,
+        endLine=None,
+    ):
         job = JobMultiHostScript(name, script, hosts, executor)
         job.run(beginLine, endLine)
 
@@ -107,7 +113,7 @@ class JobMultiHostScript:
             return
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     script = """
     # This is a comment
 
@@ -119,5 +125,6 @@ if __name__ == '__main__':
     """
 
     hosts = Parameter.expand("purple[01-02]")
-    result = JobMultiHostScript.execute(script, "script_name", hosts,
-                                        beginLine="# Task: pwd", endLine="# Task: uname")
+    result = JobMultiHostScript.execute(
+        script, "script_name", hosts, beginLine="# Task: pwd", endLine="# Task: uname"
+    )

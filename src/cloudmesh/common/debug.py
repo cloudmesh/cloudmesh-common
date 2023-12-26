@@ -31,20 +31,27 @@ def tracefunc(frame, event, arg, indent=[0]):
 
 
 # noinspection PyPep8Naming
-def VERBOSE(msg, label=None, color="BLUE", verbose=9, location=True,
-            secrets=["OS_PASSWORD",
-                     "OS_USERNAME",
-                     "client_secret",
-                     "client_id",
-                     "project_id",
-                     "AZURE_TENANT_ID",
-                     "AZURE_SUBSCRIPTION_ID",
-                     "AZURE_APPLICATION_ID",
-                     "AZURE_SECRET_KEY: TBD",
-                     "EC2_ACCESS_ID: TBD",
-                     "EC2_SECRET_KEY",
-                     "MONGO_PASSWORD"]
-            ):
+def VERBOSE(
+    msg,
+    label=None,
+    color="BLUE",
+    verbose=9,
+    location=True,
+    secrets=[
+        "OS_PASSWORD",
+        "OS_USERNAME",
+        "client_secret",
+        "client_id",
+        "project_id",
+        "AZURE_TENANT_ID",
+        "AZURE_SUBSCRIPTION_ID",
+        "AZURE_APPLICATION_ID",
+        "AZURE_SECRET_KEY: TBD",
+        "EC2_ACCESS_ID: TBD",
+        "EC2_SECRET_KEY",
+        "MONGO_PASSWORD",
+    ],
+):
     """Prints a data structure in verbose mode
 
     Args:
@@ -62,7 +69,6 @@ def VERBOSE(msg, label=None, color="BLUE", verbose=9, location=True,
 
     _verbose = int(Variables()["verbose"] or 0)
     if _verbose >= verbose:
-
         verbose_lock.acquire()
 
         if label is None:
@@ -84,12 +90,12 @@ def VERBOSE(msg, label=None, color="BLUE", verbose=9, location=True,
             for key in secrets:
                 if key in tmp:
                     tmp[key] = "********"
-            banner(lineno + " " + filename + hline + pformat(tmp),
-                   label=label,
-                   color=color)
+            banner(
+                lineno + " " + filename + hline + pformat(tmp), label=label, color=color
+            )
         else:
-            banner(lineno + " " + filename + hline + pformat(msg),
-                   label=label,
-                   color=color)
+            banner(
+                lineno + " " + filename + hline + pformat(msg), label=label, color=color
+            )
 
         verbose_lock.release()

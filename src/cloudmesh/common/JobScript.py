@@ -64,8 +64,7 @@ class JobScript:
     def __init__(self):
         self.script = None
 
-    def run(self, script=None, name="script", host=None, executor=JobSet.ssh,
-            **kwargs):
+    def run(self, script=None, name="script", host=None, executor=JobSet.ssh, **kwargs):
         # Prepare parameters
         if script is None:
             Console.error("The script is not defined, found None as content")
@@ -94,23 +93,24 @@ class JobScript:
                     line, tag = line.split("# tag:", 1)
                     tag = tag.strip()
                     line = line.strip()
-                jobs.add_directory({
-                    "script": name,
-                    "name": tag,
-                    "tag": tag,
-                    "line": counter,
-                    "host": host,
-                    "counter": counter,
-                    "command": line
-                })
+                jobs.add_directory(
+                    {
+                        "script": name,
+                        "name": tag,
+                        "tag": tag,
+                        "line": counter,
+                        "host": host,
+                        "counter": counter,
+                        "command": line,
+                    }
+                )
             counter = counter + 1
         jobs.run(parallel=1)
         self.job = jobs.job
         return self.job
 
     @staticmethod
-    def execute(script, name="script", host=None, executor=JobSet.ssh,
-                **kwargs):
+    def execute(script, name="script", host=None, executor=JobSet.ssh, **kwargs):
         job = JobScript()
         job.run(script=script, name=name, host=host, **kwargs)
         return job.array()
@@ -123,32 +123,40 @@ class JobScript:
         return [self.job[x] for x in self.job]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     #
     # Tow ways to run.
     #
 
     # Static method
-    result = JobScript.execute("""
+    result = JobScript.execute(
+        """
         # This is a comment
         pwd                             # tag: pwd
         uname -a
-    """)
-    print(Printer.write(
-        result,
-        order=["name", "command", "status", "stdout", "returncode"]))
+    """
+    )
+    print(
+        Printer.write(
+            result, order=["name", "command", "status", "stdout", "returncode"]
+        )
+    )
 
     # Variables
     job = JobScript()
-    job.run(name="variable script",
-            script="""
+    job.run(
+        name="variable script",
+        script="""
                 # This is a comment
                 pwd                    # tag: pwd
                 uname -a
-            """)
-    print(Printer.write(
-        job.array(),
-        order=["name", "command", "status", "stdout", "returncode"]))
+            """,
+    )
+    print(
+        Printer.write(
+            job.array(), order=["name", "command", "status", "stdout", "returncode"]
+        )
+    )
 
 #
 # Partial example output

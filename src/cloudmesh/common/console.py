@@ -10,12 +10,11 @@ from colorama import Fore, Back, Style
 
 colorama.init()
 
+
 def is_powershell():
-    
     # this function is better than the one in util
     # but not using that one since it is a circular import
-    return len(os.getenv('PSModulePath', '').split(os.pathsep)) >= 3 
-
+    return len(os.getenv("PSModulePath", "").split(os.pathsep)) >= 3
 
 
 def indent(text, indent=2, width=128):
@@ -30,10 +29,13 @@ def indent(text, indent=2, width=128):
 
     """
     return "\n".join(
-        textwrap.wrap(text,
-                      width=width,
-                      initial_indent=" " * indent,
-                      subsequent_indent=" " * indent))
+        textwrap.wrap(
+            text,
+            width=width,
+            initial_indent=" " * indent,
+            subsequent_indent=" " * indent,
+        )
+    )
 
 
 class Console(object):
@@ -61,39 +63,39 @@ class Console(object):
     debug = True
 
     theme_color = {
-        'HEADER': Fore.MAGENTA,
-        'BLACK': Fore.BLACK,
-        'CYAN': Fore.CYAN,
-        'WHITE': Fore.WHITE,
-        'BLUE': Fore.BLUE,
-        'OKBLUE': Fore.BLUE,
-        'OKGREEN': Fore.GREEN,
-        'GREEN': Fore.GREEN,
-        'FAIL': Fore.RED,
-        'WARNING': Fore.MAGENTA,
-        'RED': Fore.RED,
-        'ENDC': Style.RESET_ALL,
-        'BOLD': Style.BRIGHT,
-        'NORMAL': Style.NORMAL
+        "HEADER": Fore.MAGENTA,
+        "BLACK": Fore.BLACK,
+        "CYAN": Fore.CYAN,
+        "WHITE": Fore.WHITE,
+        "BLUE": Fore.BLUE,
+        "OKBLUE": Fore.BLUE,
+        "OKGREEN": Fore.GREEN,
+        "GREEN": Fore.GREEN,
+        "FAIL": Fore.RED,
+        "WARNING": Fore.MAGENTA,
+        "RED": Fore.RED,
+        "ENDC": Style.RESET_ALL,
+        "BOLD": Style.BRIGHT,
+        "NORMAL": Style.NORMAL
         # 'ENDC': '\033[0m',
         # 'BOLD': "\033[1m",
     }
 
     theme_bw = {
-        'HEADER': '',
-        'BLACK': '',
-        'CYAN': '',
-        'WHITE': '',
-        'BLUE': '',
-        'OKBLUE': '',
-        'OKGREEN': '',
-        'GREEN': '',
-        'FAIL': '',
-        'WARNING': '',
-        'RED': '',
-        'ENDC': '',
-        'BOLD': "",
-        'NORMAL': ""
+        "HEADER": "",
+        "BLACK": "",
+        "CYAN": "",
+        "WHITE": "",
+        "BLUE": "",
+        "OKBLUE": "",
+        "OKGREEN": "",
+        "GREEN": "",
+        "FAIL": "",
+        "WARNING": "",
+        "RED": "",
+        "ENDC": "",
+        "BOLD": "",
+        "NORMAL": "",
     }
 
     theme = theme_color
@@ -180,7 +182,7 @@ class Console(object):
         if name in Console.theme:
             return Console.theme[name]
         else:
-            return Console.theme['BLACK']
+            return Console.theme["BLACK"]
 
     @staticmethod
     def txt_msg(message, width=79):
@@ -241,9 +243,11 @@ class Console(object):
             text = ""
         if cls.color:
             if is_powershell():
-                print(Fore.RED + Back.WHITE + text + message + Console.theme_color['ENDC'])
+                print(
+                    Fore.RED + Back.WHITE + text + message + Console.theme_color["ENDC"]
+                )
             else:
-                cls.cprint('FAIL', text, str(message))
+                cls.cprint("FAIL", text, str(message))
         else:
             print(cls.txt_msg(text + str(message)))
 
@@ -273,7 +277,7 @@ class Console(object):
         else:
             text = ""
         if Console.color:
-            Console.cprint('FAIL', text, str(message))
+            Console.cprint("FAIL", text, str(message))
         else:
             print(Console.msg(text + str(message)))
 
@@ -296,9 +300,9 @@ class Console(object):
         """
         message = message or ""
         if Console.color:
-            Console.cprint('RED', 'DEBUG: ', message)
+            Console.cprint("RED", "DEBUG: ", message)
         else:
-            print(Console.msg('DEBUG: ' + message))
+            print(Console.msg("DEBUG: " + message))
 
     @staticmethod
     def info(message):
@@ -312,7 +316,7 @@ class Console(object):
         """
         message = message or ""
         if Console.color:
-            Console.cprint('OKBLUE', "INFO: ", message)
+            Console.cprint("OKBLUE", "INFO: ", message)
         else:
             print(Console.msg("INFO: " + message))
 
@@ -330,7 +334,13 @@ class Console(object):
         if Console.color:
             if is_powershell():
                 # fixes powershell problem https://github.com/nodejs/node/issues/14243
-                print(Fore.MAGENTA + Style.BRIGHT + "WARNING: " + message + Console.theme_color['ENDC'])
+                print(
+                    Fore.MAGENTA
+                    + Style.BRIGHT
+                    + "WARNING: "
+                    + message
+                    + Console.theme_color["ENDC"]
+                )
             else:
                 Console.cprint("WARNING", "WARNING: ", message)
         else:
@@ -348,7 +358,7 @@ class Console(object):
         """
         message = message or ""
         if Console.color:
-            Console.cprint('OKGREEN', "", message)
+            Console.cprint("OKGREEN", "", message)
         else:
             print(Console.msg(message))
 
@@ -367,10 +377,12 @@ class Console(object):
         message = message or ""
         prefix = prefix or ""
 
-        print(Console.theme_color[color] + prefix + message + Console.theme_color['ENDC'])
+        print(
+            Console.theme_color[color] + prefix + message + Console.theme_color["ENDC"]
+        )
 
     @staticmethod
-    def text(color='RED', prefix=None, message=None):
+    def text(color="RED", prefix=None, message=None):
         """returns a message in a given color
 
         Args:
@@ -383,7 +395,7 @@ class Console(object):
         """
         message = message or ""
         prefix = prefix or ""
-        return (Console.theme[color] + prefix + message + Console.theme['ENDC'])
+        return Console.theme[color] + prefix + message + Console.theme["ENDC"]
 
 
 #
@@ -407,9 +419,9 @@ if __name__ == "__main__":
     print(Console.color)
     Console.error("Error")
 
-    print(Fore.RED + 'some red text')
-    print(Back.GREEN + 'and with a green background')
-    print(Style.DIM + 'and in dim text')
+    print(Fore.RED + "some red text")
+    print(Back.GREEN + "and with a green background")
+    print(Style.DIM + "and in dim text")
     print(Fore.RESET + Back.RESET + Style.RESET_ALL)
-    print('back to normal now')
+    print("back to normal now")
     Console.line()
