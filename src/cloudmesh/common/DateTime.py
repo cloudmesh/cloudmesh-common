@@ -42,8 +42,8 @@ class DateTime(object):
 
     @staticmethod
     def utc_now():
-        return str(TIME.datetime.utcnow())
-
+        return str(TIME.datetime.now(datetime.UTC))
+        
     @staticmethod
     def natural(time):
         if type(time) == TIME.datetime:
@@ -67,6 +67,7 @@ class DateTime(object):
 
     @staticmethod
     def string(time):
+        # deprecated use get
         if type(time) == str:
             d = parser.parse(time)
         else:
@@ -74,8 +75,12 @@ class DateTime(object):
         return d
 
     @staticmethod
+    def get(str):
+        return parser
+
+    @staticmethod
     def delta(n):
-        return TIME.timedelta(seconds=n)
+        return str(TIME.timedelta(seconds=n))
 
     @staticmethod
     def utc(time):
@@ -98,13 +103,21 @@ class DateTime(object):
         )
         return local_dt.strftime(TIME_FORMAT) + " " + str(DateTime.timezone)
 
+    def datetime(str):
+        d = parser.parse(str)
 
+    @staticmethod
+    def add(one, two):
+        return DateTime.datetime(one) + DateTime.datetime(two)    
+    
 if __name__ == "__main__":
     start = DateTime.now()
-    stop = DateTime.now() + DateTime.delta(1)
+    stop = DateTime.add(DateTime.now(), DateTime.delta(1))
+
+    stop2 = DateTime.datetime(DateTime.now()), DateTime.datetime(DateTime.delta(2))
 
     print("START", start)
-    print("STOP", stop)
+    print("STOP", stop, stop2)
     print("HUMANIZE STOP", DateTime.humanize(stop - start))
     print("LOCAL", DateTime.local(start))
     print("UTC", DateTime.utc(start))
