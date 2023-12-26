@@ -42,7 +42,7 @@ class DateTime(object):
 
     @staticmethod
     def utc_now():
-        return str(TIME.datetime.now(datetime.UTC))
+        return str(TIME.datetime.now(TIME.UTC))
         
     @staticmethod
     def natural(time):
