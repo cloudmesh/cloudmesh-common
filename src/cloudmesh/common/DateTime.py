@@ -39,7 +39,7 @@ class DateTime(object):
     @staticmethod
     def now():
         return str(TIME.datetime.now())
-    
+
     @staticmethod
     def utc_now():
         return str(TIME.datetime.utcnow())
@@ -87,20 +87,10 @@ class DateTime(object):
 
     @staticmethod
     def utc_to_local(time):
-<<<<<<< HEAD
-        TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
-        utc = TIME.datetime.utcnow().strftime(TIME_FORMAT)
-        timestamp = calendar.timegm(
-            (TIME.datetime.strptime(utc, TIME_FORMAT)).timetuple()
-        )
-        local = TIME.datetime.fromtimestamp(timestamp).strftime(TIME_FORMAT)
-        return local + " " + str(DateTime.timezone)
-=======
         TIME_FORMAT = '%Y-%m-%d %H:%M:%S.%f'
         utc = TIME.datetime.strptime(str(time), TIME_FORMAT)
         local_dt = utc.replace(tzinfo=ZoneInfo('UTC')).astimezone(tzlocal.get_localzone())
         return local_dt.strftime(TIME_FORMAT) + " " + str(DateTime.timezone)
->>>>>>> 117453248a3f9136fa9720dddc7f0caba4bec3ba
 
 
 if __name__ == "__main__":
