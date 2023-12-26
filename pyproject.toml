@@ -62,7 +62,8 @@ dependencies = [
     "pyyaml",
     "psutil",
     "pywin32; platform_system == 'Windows'",
-    "pyuac; platform_system == 'Windows'"
+    "pyuac; platform_system == 'Windows'",
+    "tzlocal"
 ]
 
 [project.urls]
