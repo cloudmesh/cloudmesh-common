@@ -1,5 +1,6 @@
 UNAME=$(shell uname)
 VERSION=`head -1 VERSION`
+COMMAND := $(subst cloudmesh-,,$(package))
 
 define banner
 	@echo
@@ -18,6 +19,10 @@ source: welcome ## Install the package in source mode
 
 pip: welcome ## Install the package in pip mode
 	pip install -e . --config-settings editable_mode=strict
+
+
+readme:	
+	cms man readme -p --command=${COMMAND}
 
 ##############################################################################
 # CHECK
