@@ -87,9 +87,11 @@ class DateTime(object):
 
     @staticmethod
     def utc_to_local(time):
-        TIME_FORMAT = '%Y-%m-%d %H:%M:%S.%f'
+        TIME_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
         utc = TIME.datetime.strptime(str(time), TIME_FORMAT)
-        local_dt = utc.replace(tzinfo=ZoneInfo('UTC')).astimezone(tzlocal.get_localzone())
+        local_dt = utc.replace(tzinfo=ZoneInfo("UTC")).astimezone(
+            tzlocal.get_localzone()
+        )
         return local_dt.strftime(TIME_FORMAT) + " " + str(DateTime.timezone)
 
 

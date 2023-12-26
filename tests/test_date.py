@@ -18,7 +18,76 @@ from cloudmesh.common.DateTime import DateTime
 # ./cloudmesh-common/src/cloudmesh/common/StopWatch.py:from cloudmesh.common.DateTime import DateTime
 # ./cloudmesh-common/src/cloudmesh/common/Printer.py:from cloudmesh.common.DateTime import DateTime
 
+
 class TestDateTime:
+    def test_now(self):
+        HEADING()
+        now = DateTime.now()
+        print(now)
+        assert isinstance(now, str)
+
+    def test_utc_now(self):
+        HEADING()
+        utc_now = DateTime.utc_now()
+        print(utc_now)
+        assert isinstance(utc_now, str)
+
+    def test_natural(self):
+        HEADING()
+        time = "2019-08-03 21:34:14"
+        natural_time = DateTime.natural(time)
+        print(natural_time)
+        assert isinstance(natural_time, str)
+
+    def test_datetime(self):
+        HEADING()
+        time = "2019-08-03 21:34:14"
+        datetime = DateTime.datetime(time)
+        print(datetime)
+        assert isinstance(datetime, str)
+
+    def test_humanize(self):
+        HEADING()
+        time = "2019-08-03 21:34:14"
+        humanized_time = DateTime.humanize(time)
+        print(humanized_time)
+        assert isinstance(humanized_time, str)
+
+    def test_utc(self):
+        HEADING()
+        time = "2019-08-03 21:34:14"
+        utc_time = DateTime.utc(time)
+        print(utc_time)  # Print utc_time before assert
+        assert isinstance(utc_time, str)
+
+    # class failed:
+
+    def test_local(self):
+        HEADING()
+        time = "2019-08-03 21:34:14"
+        local_time = DateTime.local(time)
+        print(local_time)  # Print local_time before assert
+        assert isinstance(local_time, str)
+
+    def test_string(self):
+        HEADING()
+        time = "2019-08-03 21:34:14"
+        string_time = DateTime.string(time)
+        print(string_time)
+        assert isinstance(string_time, str)
+
+    def test_delta(self):
+        HEADING()
+        delta = DateTime.delta(1)
+        print(delta)
+        assert isinstance(delta, datetime.timedelta)
+
+    def test_words(self):
+        HEADING()
+        time = "2019-08-03 21:34:14"
+        words = DateTime.words(time)
+        print(words)
+        assert isinstance(words, str)
 
     def test_print(self):
         HEADING()
@@ -46,71 +115,3 @@ class TestDateTime:
         WORDS Sat 6 Aug 2019, 21:34:14 UTC
         TIMEZONE EST
         """
-
-
-    def test_now(self):
-        HEADING()
-        now = DateTime.now()
-        print(now)
-        assert isinstance(now, str)
-
-    def test_utc_now(self):
-        HEADING()
-        utc_now = DateTime.utc_now()
-        print(utc_now)
-        assert isinstance(utc_now, str)
-
-    def test_natural(self):
-        HEADING()
-        time = "2019-08-03 21:34:14"
-        natural_time = DateTime.natural(time)
-        print(natural_time)
-        assert isinstance(natural_time, str)
-
-    def test_words(self):
-        HEADING()
-        time = "2019-08-03 21:34:14"
-        words = DateTime.words(time)
-        print(words)
-        assert isinstance(words, str)
-
-    def test_datetime(self):
-        HEADING()
-        time = "2019-08-03 21:34:14"
-        datetime = DateTime.datetime(time)
-        print(datetime)
-        assert isinstance(datetime, str)
-
-    def test_humanize(self):
-        HEADING()
-        time = "2019-08-03 21:34:14"
-        humanized_time = DateTime.humanize(time)
-        print(humanized_time)
-        assert isinstance(humanized_time, str)
-
-    def test_string(self):
-        HEADING()
-        time = "2019-08-03 21:34:14"
-        string_time = DateTime.string(time)
-        print(string_time)
-        assert isinstance(string_time, str)
-
-    def test_delta(self):
-        HEADING()
-        delta = DateTime.delta(1)
-        print(delta)  
-        assert isinstance(delta, datetime.timedelta)
-
-    def test_utc(self):
-        HEADING()
-        time = "2019-08-03 21:34:14"
-        utc_time = DateTime.utc(time)
-        print(utc_time)  # Print utc_time before assert
-        assert isinstance(utc_time, str)
-
-    def test_local(self):
-        HEADING()
-        time = "2019-08-03 21:34:14"
-        local_time = DateTime.local(time)
-        print(local_time)  # Print local_time before assert
-        assert isinstance(local_time, str)
