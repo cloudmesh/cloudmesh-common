@@ -7,6 +7,8 @@
 import pytest
 from cloudmesh.common.util import HEADING
 from cloudmesh.common.DateTime import DateTime
+import datetime
+
 
 # ./cloudmesh-cc/tests/test_199_workflow_clean.py:from cloudmesh.common.DateTime import DateTime
 # ./cloudmesh-cc/src/cloudmesh/cc/labelmaker.py:from cloudmesh.common.DateTime import DateTime
@@ -42,9 +44,10 @@ class TestDateTime:
     def test_datetime(self):
         HEADING()
         time = "2019-08-03 21:34:14"
-        datetime = DateTime.datetime(time)
-        print(datetime)
-        assert isinstance(datetime, str)
+        d = DateTime.datetime(time)
+        print(d)
+        print(type(d))
+        assert isinstance(d, datetime.datetime)
 
     def test_humanize(self):
         HEADING()
@@ -80,7 +83,9 @@ class TestDateTime:
         HEADING()
         delta = DateTime.delta(1)
         print(delta)
-        assert isinstance(delta, datetime.timedelta)
+        print(type(delta))
+        assert delta == datetime.timedelta(seconds=1)
+        assert str(delta) == "0:00:01"
 
     def test_words(self):
         HEADING()
@@ -92,8 +97,9 @@ class TestDateTime:
     def test_print(self):
         HEADING()
 
-        start = DateTime.now()
-        stop = DateTime.now() + DateTime.delta(1)
+        start = DateTime.datetime(DateTime.now())
+
+        stop = start + DateTime.delta(2)
 
         print("START", start)
         print("STOP", stop)

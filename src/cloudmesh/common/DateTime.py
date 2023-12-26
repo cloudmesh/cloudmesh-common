@@ -43,7 +43,7 @@ class DateTime(object):
     @staticmethod
     def utc_now():
         return str(TIME.datetime.now(TIME.UTC))
-        
+
     @staticmethod
     def natural(time):
         if type(time) == TIME.datetime:
@@ -52,7 +52,11 @@ class DateTime(object):
 
     @staticmethod
     def words(time):
-        return TIME.datetime.strftime(time, "%a %w %b %Y, %H:%M:%S UTC")
+        if type(time) == TIME.datetime:
+            t = time
+        else:
+            t = DateTime.datetime(time)
+        return TIME.datetime.strftime(t, "%a %w %b %Y, %H:%M:%S UTC")
 
     @staticmethod
     def datetime(time):
@@ -67,20 +71,31 @@ class DateTime(object):
 
     @staticmethod
     def string(time):
-        # deprecated use get
-        if type(time) == str:
-            d = parser.parse(time)
+        if type(time) == TIME:
+            d = str(time)
         else:
-            d = time
-        return d
+            try:
+                d = parser.parse(time)
+            except:
+                d = DateTime.utc_to_local(time)
+        return str(d)
 
     @staticmethod
-    def get(str):
-        return parser
+    def get(time_str):
+        return parser.parse(time_str)
 
     @staticmethod
     def delta(n):
-        return str(TIME.timedelta(seconds=n))
+        """
+        Returns a timedelta object representing a time duration of `n` seconds.
+
+        Parameters:
+        n (int): The number of seconds for the time duration.
+
+        Returns:
+        timedelta: A timedelta object representing the time duration in datetime and not string format.
+        """
+        return TIME.timedelta(seconds=n)
 
     @staticmethod
     def utc(time):
@@ -103,13 +118,15 @@ class DateTime(object):
         )
         return local_dt.strftime(TIME_FORMAT) + " " + str(DateTime.timezone)
 
-    def datetime(str):
-        d = parser.parse(str)
+    def datetime(time_str):
+        d = parser.parse(time_str)
+        return d
 
     @staticmethod
     def add(one, two):
-        return DateTime.datetime(one) + DateTime.datetime(two)    
-    
+        return DateTime.datetime(DateTime.datetime(one)) + DateTime.datetime(two)
+
+
 if __name__ == "__main__":
     start = DateTime.now()
     stop = DateTime.add(DateTime.now(), DateTime.delta(1))
