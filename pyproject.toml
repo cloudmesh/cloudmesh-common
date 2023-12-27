@@ -75,4 +75,4 @@ Changelog = "https://github.com/cloudmesh/cloudmesh-common/blob/main/CHANGELOG.m
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["cloudmesh.common"]
+include = ["cloudmesh.common", "cloudmesh.common.*"]
