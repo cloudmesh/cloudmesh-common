@@ -37,8 +37,6 @@ if %errorlevel% neq 0 (
     echo cygwin is already installed.
 )
 
-refreshenv
-
 REM Countdown from 5
 echo cloudmesh has all required dependencies. Starting in 5 seconds...
 
@@ -47,5 +45,4 @@ for /l %%i in (5,-1,1) do (
     timeout /t 1 >nul
 )
 
-
-ENDLOCAL
+refreshenv
