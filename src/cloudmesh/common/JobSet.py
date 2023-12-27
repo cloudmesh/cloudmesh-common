@@ -94,20 +94,20 @@ class JobSet:
         hostname = platform.uname()[1]
         local = hostname == spec.host
 
-        if 'key' not in spec:
+        if "key" not in spec:
             spec.key = path_expand("~/.ssh/id_rsa.pub")
 
-        ssh = \
-            f'ssh' \
-            f' -o StrictHostKeyChecking=no' \
-            f' -o UserKnownHostsFile=/dev/null' \
-            f' -i {spec.key} {spec.host}'
+        ssh = (
+            f"ssh"
+            f" -o StrictHostKeyChecking=no"
+            f" -o UserKnownHostsFile=/dev/null"
+            f" -i {spec.key} {spec.host}"
+        )
 
         # result.stdout = result.stdout.decode("utf-8", "ignore")
 
         if "os" in spec:
-
-            if 'tmp' not in spec:
+            if "tmp" not in spec:
                 spec.tmp = "/tmp"
             tee = f"tee {spec.tmp}/cloudmesh.{spec.name}"
             if local:
@@ -122,13 +122,15 @@ class JobSet:
             if local:
                 command = f"{spec.command} "
             else:
-                command = f"{ssh} \'{spec.command}\'"
+                command = f"{ssh} '{spec.command}'"
             # print ("RUN check_output", command)
 
             try:
                 stderr = ""
                 returncode = 0
-                result = subprocess.check_output(command, shell=True, stderr=subprocess.PIPE)
+                result = subprocess.check_output(
+                    command, shell=True, stderr=subprocess.PIPE
+                )
             except subprocess.CalledProcessError as grepexc:
                 # print("Error Code", grepexc.returncode, grepexc.output)
                 result = "Command could not run | Error Code: ", grepexc.returncode
@@ -136,43 +138,47 @@ class JobSet:
                 stderr = grepexc.stderr
                 returncode = grepexc.returncode
 
-        return dict({
-            "name": spec.name,
-            "stdout": result,
-            "stderr": stderr,
-            "returncode": returncode,
-            "status": "defined"
-        })
+        return dict(
+            {
+                "name": spec.name,
+                "stdout": result,
+                "stderr": stderr,
+                "returncode": returncode,
+                "status": "defined",
+            }
+        )
 
     @staticmethod
     def execute(spec):
         result = subprocess.check_output(spec["command"], shell=True)
 
-        return dict({
-            "name": spec["name"],
-            "stdout": result,
-            "stderr": "",
-            "returncode": 0,
-            "status": "defined"
-        })
+        return dict(
+            {
+                "name": spec["name"],
+                "stdout": result,
+                "stderr": "",
+                "returncode": 0,
+                "status": "defined",
+            }
+        )
 
     @staticmethod
     def identity(entry_with_name):
-
-        return dict({
-            "name": entry_with_name["name"],
-            "stdout": "identity " + entry_with_name["name"],
-            "stderr": "",
-            "returncode": 0,
-            "status": "defined"
-        })
+        return dict(
+            {
+                "name": entry_with_name["name"],
+                "stdout": "identity " + entry_with_name["name"],
+                "stderr": "",
+                "returncode": 0,
+                "status": "defined",
+            }
+        )
 
     def add(self, spec, executor=None):
         name = spec["name"]
         self.job[name] = spec
         self.job[name]["status"] = "defined"
-        self.job[name]["executor"] = spec.get(
-            "executor") or executor or self.executor
+        self.job[name]["executor"] = spec.get("executor") or executor or self.executor
 
     def _run(self, spec):
         result = dict(spec)
@@ -184,7 +190,6 @@ class JobSet:
         return result
 
     def run(self, parallel=3):
-
         if len(self.job) == 0:
             res = None
         elif len(self.job) == 1:
@@ -201,7 +206,7 @@ class JobSet:
                 p.join()
 
             for entry in res:
-                name = entry['name']
+                name = entry["name"]
                 for a in entry:
                     self.job[name].update(entry)
 
@@ -227,16 +232,18 @@ class JobSet:
         return [self.job[x] for x in self.job]
 
 
-if __name__ == '__main__':
-    def command_execute(spec):
-        return dict({
-            "name": spec["name"],
-            "stdout": "command " + spec["command"],
-            "stderr": "",
-            "returncode": 0,
-            "status": "defined"
-        })
+if __name__ == "__main__":
 
+    def command_execute(spec):
+        return dict(
+            {
+                "name": spec["name"],
+                "stdout": "command " + spec["command"],
+                "stderr": "",
+                "returncode": 0,
+                "status": "defined",
+            }
+        )
 
     hostname = platform.uname()[1]
 
@@ -296,6 +303,8 @@ if __name__ == '__main__':
     t.add({"name": hostname, "host": hostname, "command": "uname -a"})
 
     t.run(parallel=3)
-    print(Printer.write(t.array(),
-                        order=["name", "command", "status", "stdout",
-                               "returncode"]))
+    print(
+        Printer.write(
+            t.array(), order=["name", "command", "status", "stdout", "returncode"]
+        )
+    )

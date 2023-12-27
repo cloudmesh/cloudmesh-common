@@ -53,10 +53,11 @@ from shlex import quote
 #        f(args)
 #    return new_f
 
+
 def windows_not_supported(f):
     """
-    This is a decorator function that checks if the current platform is Windows. 
-    If it is, it prints an error message and returns an empty string. 
+    This is a decorator function that checks if the current platform is Windows.
+    If it is, it prints an error message and returns an empty string.
     If it's not, it simply calls the decorated function with the provided arguments.
 
     Args:
@@ -65,6 +66,7 @@ def windows_not_supported(f):
     Returns:
         function: The decorated function which will either execute the original function or return an empty string based on the platform.
     """
+
     def wrapper(*args, **kwargs):
         host = get_platform()
         if host == "windows":
@@ -89,6 +91,7 @@ def NotImplementedInWindows():
     if sys.platform == "win32":
         Console.error(f"The method {__name__} is not implemented in Windows.")
         sys.exit()
+
 
 class Brew(object):
     """
@@ -182,40 +185,40 @@ class SubprocessError(Exception):
         self.stdout = stdout
 
     def __str__(self):
-            """
-            Returns a string representation of the Shell object.
+        """
+        Returns a string representation of the Shell object.
 
-            The string includes the command, exit code, stderr, and stdout (if available).
+        The string includes the command, exit code, stderr, and stdout (if available).
+
+        Returns:
+            str: A string representation of the Shell object.
+        """
+
+        def indent(lines, amount, ch=" "):
+            """indent the lines by multiples of ch
+
+            Args:
+                lines
+                amount
+                ch
 
             Returns:
-                str: A string representation of the Shell object.
+
             """
+            padding = amount * ch
+            return padding + ("\n" + padding).join(lines.split("\n"))
 
-            def indent(lines, amount, ch=' '):
-                """indent the lines by multiples of ch
+        cmd = " ".join(map(quote, self.cmd))
+        s = ""
+        s += "Command: %s\n" % cmd
+        s += "Exit code: %s\n" % self.returncode
 
-                Args:
-                    lines
-                    amount
-                    ch
+        if self.stderr:
+            s += "Stderr:\n" + indent(self.stderr, 4)
+        if self.stdout:
+            s += "Stdout:\n" + indent(self.stdout, 4)
 
-                Returns:
-
-                """
-                padding = amount * ch
-                return padding + ('\n' + padding).join(lines.split('\n'))
-
-            cmd = ' '.join(map(quote, self.cmd))
-            s = ''
-            s += 'Command: %s\n' % cmd
-            s += 'Exit code: %s\n' % self.returncode
-
-            if self.stderr:
-                s += 'Stderr:\n' + indent(self.stderr, 4)
-            if self.stdout:
-                s += 'Stdout:\n' + indent(self.stdout, 4)
-
-            return s
+        return s
 
 
 class Subprocess(object):
@@ -223,8 +226,9 @@ class Subprocess(object):
     instead you should use Shell.
     """
 
-    def __init__(self, cmd, cwd=None, stderr=subprocess.PIPE,
-                 stdout=subprocess.PIPE, env=None):
+    def __init__(
+        self, cmd, cwd=None, stderr=subprocess.PIPE, stdout=subprocess.PIPE, env=None
+    ):
         """execute the given command
 
         Args:
@@ -234,10 +238,9 @@ class Subprocess(object):
             stdout: the pipe for the stdoutput
             env
         """
-        Console.debug_msg('Running cmd: {}'.format(' '.join(map(quote, cmd))))
+        Console.debug_msg("Running cmd: {}".format(" ".join(map(quote, cmd))))
 
-        proc = subprocess.Popen(cmd, stderr=stderr, stdout=stdout, cwd=cwd,
-                                env=env)
+        proc = subprocess.Popen(cmd, stderr=stderr, stdout=stdout, cwd=cwd, env=env)
         stdout, stderr = proc.communicate()
 
         self.returncode = proc.returncode
@@ -245,8 +248,7 @@ class Subprocess(object):
         self.stdout = stdout
 
         if self.returncode != 0:
-            raise SubprocessError(cmd, self.returncode, self.stderr,
-                                  self.stdout)
+            raise SubprocessError(cmd, self.returncode, self.stderr, self.stdout)
 
 
 class Shell(object):
@@ -255,6 +257,8 @@ class Shell(object):
     """
 
     # Rest of the code...
+
+
 class Shell(object):
     """The shell class allowing us to conveniently access many operating system commands.
     TODO: This works well on Linux and OSX, but has not been tested much on Windows
@@ -263,11 +267,7 @@ class Shell(object):
     # TODO: we have not supported cygwin for a while
     # cygwin_path = 'bin'  # i copied fom C:\cygwin\bin
 
-    command = {
-        'windows': {},
-        'linux': {},
-        'darwin': {}
-    }
+    command = {"windows": {}, "linux": {}, "darwin": {}}
 
     # TODO
     #
@@ -302,7 +302,7 @@ class Shell(object):
         Raises:
         - IndexError: If the system's timezone cannot be determined and no default timezone is provided.
         """
-        
+
         # BUG we need to be able to pass the default from the cmdline
         host = get_platform()
         if host == "windows":
@@ -310,7 +310,9 @@ class Shell(object):
         else:
             # result = Shell.run("ls -l /etc/localtime").strip().split("/")
             try:
-                result = Shell.run("ls -l /etc/localtime").strip().split("zoneinfo")[1][1:]
+                result = (
+                    Shell.run("ls -l /etc/localtime").strip().split("zoneinfo")[1][1:]
+                )
                 return result
             except IndexError as e:
                 return default
@@ -329,11 +331,13 @@ class Shell(object):
 
         """
         try:
-            result = Shell.run('locale').split('\n')[0].split('_')[1].split('.')[0].lower()
+            result = (
+                Shell.run("locale").split("\n")[0].split("_")[1].split(".")[0].lower()
+            )
             return result
         except IndexError as e:
             Console.warning('Could not determine locale. Defaulting to "us"')
-            return 'us'
+            return "us"
 
     @staticmethod
     def ssh_enabled():
@@ -347,28 +351,30 @@ class Shell(object):
             try:
                 r = Shell.run("which sshd")
             except RuntimeError as e:
-                raise RuntimeError("You do not have OpenSSH installed. " 
-                                    "sudo apt-get install openssh-client openssh-server "
-                                    "Automatic installation will be implemented in future cloudmesh version.")
+                raise RuntimeError(
+                    "You do not have OpenSSH installed. "
+                    "sudo apt-get install openssh-client openssh-server "
+                    "Automatic installation will be implemented in future cloudmesh version."
+                )
             # the reason why we do it like this is because WSL
             # does not have sshd as a status. this works fine
             r = Shell.run("service ssh status | fgrep running").strip()
-            
+
             return len(r) > 0
         elif os_is_windows():
             # r = Shell.run("ps | grep -F ssh")
             # return "ssh" in r
-            processes = psutil.process_iter(attrs=['name'])
+            processes = psutil.process_iter(attrs=["name"])
             # Filter the processes for 'ssh'
-            ssh_processes = [p.info for p in processes if 'ssh' in p.info['name']]
+            ssh_processes = [p.info for p in processes if "ssh" in p.info["name"]]
             return len(ssh_processes) > 0
 
         elif os_is_mac():
             r = Shell.run("ps -ef")
             if "sshd" in r:
-                print('IT WORKS!!!!!')
+                print("IT WORKS!!!!!")
             else:
-                print('it doenst work :(')
+                print("it doenst work :(")
             return "sshd" in r
         return False
 
@@ -382,7 +388,7 @@ class Shell(object):
             encoding: the encoding
             service: a prefix to the stopwatch label
 
-        Returns: 
+        Returns:
 
         """
         _label = str(label)
@@ -393,7 +399,7 @@ class Shell(object):
         return str(result)
 
     @staticmethod
-    def run(command, exitcode="", encoding='utf-8', replace=True, timeout=None):
+    def run(command, exitcode="", encoding="utf-8", replace=True, timeout=None):
         """executes the command and returns the output as string
 
         Args:
@@ -415,23 +421,22 @@ class Shell(object):
 
         try:
             if timeout is not None:
-                r = subprocess.check_output(command,
-                                            stderr=subprocess.STDOUT,
-                                            shell=True,
-                                            timeout=timeout)
+                r = subprocess.check_output(
+                    command, stderr=subprocess.STDOUT, shell=True, timeout=timeout
+                )
             else:
-                r = subprocess.check_output(command,
-                                            stderr=subprocess.STDOUT,
-                                            shell=True)
+                r = subprocess.check_output(
+                    command, stderr=subprocess.STDOUT, shell=True
+                )
         except subprocess.CalledProcessError as e:
             raise RuntimeError(f"{e.returncode} {e.output.decode()}")
-        if encoding is None or encoding == 'utf-8':
-            return str(r, 'utf-8')
+        if encoding is None or encoding == "utf-8":
+            return str(r, "utf-8")
         else:
             return r
 
     @staticmethod
-    def run2(command, encoding='utf-8'):
+    def run2(command, encoding="utf-8"):
         """executes the command and returns the output as string. This command also
         allows execution of 32 bit commands.
 
@@ -442,7 +447,7 @@ class Shell(object):
         Returns:
 
         """
-        if platform.lower() == 'win32':
+        if platform.lower() == "win32":
             import ctypes
 
             class disable_file_system_redirection:
@@ -459,31 +464,25 @@ class Shell(object):
 
             with disable_file_system_redirection():
                 command = f"{command}"
-                r = subprocess.check_output(command,
-                                            stderr=subprocess.STDOUT,
-                                            shell=True)
-                if encoding is None or encoding == 'utf-8':
-                    return str(r, 'utf-8')
+                r = subprocess.check_output(
+                    command, stderr=subprocess.STDOUT, shell=True
+                )
+                if encoding is None or encoding == "utf-8":
+                    return str(r, "utf-8")
                 else:
                     return r
-        elif platform.lower() == 'linux' or platform.lower() == 'darwin':
+        elif platform.lower() == "linux" or platform.lower() == "darwin":
             command = f"{command}"
-            r = subprocess.check_output(command,
-                                        stderr=subprocess.STDOUT,
-                                        shell=True)
-            if encoding is None or encoding == 'utf-8':
-                return str(r, 'utf-8')
+            r = subprocess.check_output(command, stderr=subprocess.STDOUT, shell=True)
+            if encoding is None or encoding == "utf-8":
+                return str(r, "utf-8")
             else:
                 return r
 
     @classmethod
-    def execute(cls,
-                cmd,
-                arguments="",
-                shell=False,
-                cwd=None,
-                traceflag=True,
-                witherror=True):
+    def execute(
+        cls, cmd, arguments="", shell=False, cwd=None, traceflag=True, witherror=True
+    ):
         """Run Shell command
 
         Args:
@@ -505,9 +504,9 @@ class Shell(object):
         terminal = cls.terminal_type()
         # print cls.command
         os_command = [cmd]
-        if terminal in ['linux', 'windows']:
+        if terminal in ["linux", "windows"]:
             os_command = [cmd]
-        elif 'cygwin' in terminal:
+        elif "cygwin" in terminal:
             if not cls.command_exists(cmd):
                 print("ERROR: the command could not be found", cmd)
                 return
@@ -528,7 +527,7 @@ class Shell(object):
         # noinspection PyPep8
         try:
             if shell:
-                if platform.lower() == 'win32':
+                if platform.lower() == "win32":
                     import ctypes
 
                     class disable_file_system_redirection:
@@ -537,36 +536,32 @@ class Shell(object):
 
                         def __enter__(self):
                             self.old_value = ctypes.c_long()
-                            self.success = self._disable(
-                                ctypes.byref(self.old_value))
+                            self.success = self._disable(ctypes.byref(self.old_value))
 
                         def __exit__(self, type, value, traceback):
                             if self.success:
                                 self._revert(self.old_value)
 
                     if len(os_command) == 1:
-                        os_command = os_command[0].split(' ')
+                        os_command = os_command[0].split(" ")
                     with disable_file_system_redirection():
-                        result = subprocess.check_output(os_command,
-                                                         stderr=subprocess.STDOUT,
-                                                         shell=True,
-                                                         cwd=cwd)
+                        result = subprocess.check_output(
+                            os_command, stderr=subprocess.STDOUT, shell=True, cwd=cwd
+                        )
                 else:
                     result = subprocess.check_output(
-                        os_command,
-                        stderr=subprocess.STDOUT,
-                        shell=True,
-                        cwd=cwd)
+                        os_command, stderr=subprocess.STDOUT, shell=True, cwd=cwd
+                    )
             else:
                 result = subprocess.check_output(
                     os_command,
                     # shell=True,
                     stderr=subprocess.STDOUT,
-                    cwd=cwd)
+                    cwd=cwd,
+                )
         except:  # noqa: E722
             if witherror:
-                Console.error("problem executing subprocess",
-                              traceflag=traceflag)
+                Console.error("problem executing subprocess", traceflag=traceflag)
         if result is not None:
             result = result.strip().decode()
         return result
@@ -592,7 +587,7 @@ class Shell(object):
         if not os_is_windows():
             return False
         try:
-            r = Shell.run('choco --version')
+            r = Shell.run("choco --version")
             # no problem
             return True
         except RuntimeError:
@@ -608,9 +603,8 @@ class Shell(object):
         import pyuac
 
         if os_is_windows():
-
             try:
-                r = Shell.run('choco --version')
+                r = Shell.run("choco --version")
                 Console.ok("Chocolatey already installed")
                 return True
             except RuntimeError:
@@ -618,7 +612,7 @@ class Shell(object):
                 if not pyuac.isUserAdmin():
                     Console.error("Please run the terminal as administrator.")
                     return False
-                
+
                 # Get the full path of the current Python script
                 current_script_path = os.path.abspath(__file__)
 
@@ -626,35 +620,40 @@ class Shell(object):
                 script_directory = os.path.dirname(current_script_path)
 
                 # Join the script directory with "bin"
-                bin_directory = os.path.join(script_directory, 'bin')
-                print(f'Looking in {bin_directory} for install script...')
+                bin_directory = os.path.join(script_directory, "bin")
+                print(f"Looking in {bin_directory} for install script...")
 
                 # Command to install Chocolatey using the Command Prompt
-                chocolatey_install_command = fr'powershell Start-Process -Wait -FilePath {bin_directory}\win-setup.bat'
+                chocolatey_install_command = rf"powershell Start-Process -Wait -FilePath {bin_directory}\win-setup.bat"
                 print(chocolatey_install_command)
                 # Run the Chocolatey installation command using subprocess and capture output
-                completed_process = subprocess.run(chocolatey_install_command,
-                                                   shell=True, text=True,
-                                                   stdout=subprocess.PIPE,
-                                                   stderr=subprocess.PIPE)
-                if 'current directory is invalid' in str(completed_process):
-                    Console.error("You are currently standing in a non-existent directory.")
+                completed_process = subprocess.run(
+                    chocolatey_install_command,
+                    shell=True,
+                    text=True,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                )
+                if "current directory is invalid" in str(completed_process):
+                    Console.error(
+                        "You are currently standing in a non-existent directory."
+                    )
                     return False
                 print(completed_process)
                 Console.ok("Chocolatey installed")
                 return True
                 # try:
-                    # process = subprocess.run('choco --version')
-                    # Console.ok("Chocolatey installed")
-                    # return True
+                # process = subprocess.run('choco --version')
+                # Console.ok("Chocolatey installed")
+                # return True
                 # except subprocess.CalledProcessError:
-                    # Console.error("Chocolatey was not added to path. Close and reopen terminal and execute previous command again.")
-                    # return True
-                    # pass
+                # Console.error("Chocolatey was not added to path. Close and reopen terminal and execute previous command again.")
+                # return True
+                # pass
                 # except FileNotFoundError:
-                    # Console.error("Chocolatey was not added to path. Close and reopen terminal and execute previous command again.")
-                    # return True
-                    # pass
+                # Console.error("Chocolatey was not added to path. Close and reopen terminal and execute previous command again.")
+                # return True
+                # pass
         else:
             Console.error("chocolatey can only be installed in Windows")
             return False
@@ -674,14 +673,14 @@ class Shell(object):
             Console.error("Chocolatey not installed, or terminal needs to be reloaded.")
             return False
 
-        command = f'cmd.exe /K choco install {package} -y'
+        command = f"cmd.exe /K choco install {package} -y"
 
         process = subprocess.Popen(
             command,
             shell=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            universal_newlines=True  # Allows working with text output
+            universal_newlines=True,  # Allows working with text output
         )
 
         # Read and display the live output
@@ -691,7 +690,6 @@ class Shell(object):
         # Wait for the subprocess to complete
         process.wait()
         return True
-    
 
     @staticmethod
     def install_brew():
@@ -705,59 +703,57 @@ class Shell(object):
 
         # elevate()
 
-
         if not os_is_mac():
             Console.error("Homebrew can only be installed on mac")
             return False
-        
+
         try:
-            r = subprocess.check_output("brew --version",
-                                        stderr=subprocess.STDOUT,
-                                        shell=True)
+            r = subprocess.check_output(
+                "brew --version", stderr=subprocess.STDOUT, shell=True
+            )
             Console.ok("Homebrew already installed")
             return True
         except subprocess.CalledProcessError:
             Console.info("Installing Homebrew...")
 
-        
         content = """#!/bin/bash    
         pw="$(osascript -e 'Tell application "System Events" to display dialog "Please enter your macOS password to install Homebrew:" default answer "" with hidden answer' -e 'text returned of result' 2>/dev/null)" && echo "$pw"
         """
 
-        askpass = os.path.expanduser('~/pw.sh')
+        askpass = os.path.expanduser("~/pw.sh")
 
         if not os.path.isfile(askpass):
             writefile(askpass, content)
-        os.system('chmod +x ~/pw.sh')
-        
+        os.system("chmod +x ~/pw.sh")
+
         # command = 'NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
         command = f'osascript -e \'tell application "Terminal" to do script "/bin/bash -c \\"export SUDO_ASKPASS={askpass} ; export NONINTERACTIVE=1 ; $(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\\""\''
         print(command)
         # try:
         subprocess.run(command, shell=True, check=True)
-            # print("Homebrew installed successfully.")
+        # print("Homebrew installed successfully.")
         # except subprocess.CalledProcessError as e:
-            # print(f"Error while installing Homebrew: {e}")
+        # print(f"Error while installing Homebrew: {e}")
 
         while True:
             from time import sleep
+
             try:
-                r = subprocess.check_output("brew --version",
-                                            stderr=subprocess.STDOUT,
-                                            shell=True)
+                r = subprocess.check_output(
+                    "brew --version", stderr=subprocess.STDOUT, shell=True
+                )
                 Console.ok("Homebrew installed")
                 sleep(8)
                 return True
             except subprocess.CalledProcessError:
                 # print('Waiting', end=' ')
-                
+
                 sleep(2)
                 continue
                 # Console.error("Homebrew could not be installed.")
                 # return False
-        
+
         Shell.rm(askpass)
-            
 
     @staticmethod
     def is_root():
@@ -792,7 +788,7 @@ class Shell(object):
             # assert False, f"Directory {top} could not be deleted"
 
     @staticmethod
-    def dot2svg(filename, engine='dot'):
+    def dot2svg(filename, engine="dot"):
         """
         Converts a Graphviz DOT file to SVG format using the specified engine.
 
@@ -803,10 +799,7 @@ class Shell(object):
         Returns:
         None
         """
-        data = {
-            'engine': engine,
-            'file': filename.replace(".dot", "")
-        }
+        data = {"engine": engine, "file": filename.replace(".dot", "")}
         command = "{engine} -Tsvg {file}.dot > {file}.svg".format(**data)
         print(command)
         os.system(command)
@@ -844,10 +837,9 @@ class Shell(object):
             if result.host == "localhost":
                 _name = "."
 
-
         if _name.startswith("http"):
             result.path = _name
-            result.protocol = _name.split(':', 1)[0]
+            result.protocol = _name.split(":", 1)[0]
         elif _name.startswith("wsl:"):
             result.path = _name.replace("wsl:", "")
             # Abbreviations: replace ~ with home dir and ./ + / with pwd
@@ -855,7 +847,9 @@ class Shell(object):
                 if os_is_linux():
                     result.path = result.path.replace("~", f"/mnt/c/home/{result.user}")
                 else:
-                    result.path = result.path.replace("~", f"/mnt/c/Users/{result.user}")
+                    result.path = result.path.replace(
+                        "~", f"/mnt/c/Users/{result.user}"
+                    )
             elif not result.path.startswith("/"):
                 if os_is_windows():
                     pwd = pwd.replace("C:", "/mnt/c").replace("\\", "/")
@@ -913,7 +907,7 @@ class Shell(object):
         Returns:
 
         """
-        if not os.path.isabs(filename) and 'http' not in filename:
+        if not os.path.isabs(filename) and "http" not in filename:
             filename = Shell.map_filename(filename).path
         webbrowser.open(filename, new=2, autoraise=False)
 
@@ -921,11 +915,11 @@ class Shell(object):
     def fetch(filename=None, destination=None):
         """
         Fetches the content of a file specified by the filename and returns it.
-        
+
         Parameters:
         - filename (str): The path or URL of the file to fetch.
         - destination (str): The path where the fetched content should be saved (optional).
-        
+
         Returns:
         - str: The content of the fetched file.
         """
@@ -933,7 +927,7 @@ class Shell(object):
 
         content = None
 
-        if _filename.path.startswith('http'):
+        if _filename.path.startswith("http"):
             result = requests.get(_filename.path)
             content = result.text
 
@@ -957,10 +951,10 @@ class Shell(object):
         Returns:
             void: This function does not return any value.
         """
-        return f'echo -n -e \"\033]0;{name}\007\"'
+        return f'echo -n -e "\033]0;{name}\007"'
 
     @classmethod
-    def terminal(cls, command='pwd', title=None, kind=None):
+    def terminal(cls, command="pwd", title=None, kind=None):
         """starts a terminal and executes the command in that terminal
 
         Args:
@@ -974,16 +968,16 @@ class Shell(object):
         """
         # title nameing not implemented
         print(platform)
-        if platform == 'darwin':
+        if platform == "darwin":
             label = Shell.terminal_title(title)
 
             os.system(
-                f"osascript -e 'tell application \"Terminal\" to do script \"{command}\"'"
+                f'osascript -e \'tell application "Terminal" to do script "{command}"\''
             )
         elif platform == "linux":  # for ubuntu running gnome
             dist = os_platform.linux_distribution()[0]
-            linux_apps = {'ubuntu': 'gnome-terminal', 'debian': 'lxterminal'}
-            os.system(f"{linux_apps[dist]} -e \"bash -c \'{command}; exec $SHELL\'\"")
+            linux_apps = {"ubuntu": "gnome-terminal", "debian": "lxterminal"}
+            os.system(f"{linux_apps[dist]} -e \"bash -c '{command}; exec $SHELL'\"")
 
         elif platform == "win32":
             if kind is None:
@@ -991,17 +985,19 @@ class Shell(object):
                     kind = "gitbash"
             kind = kind.lower()
             if kind == "gitbash":
-                p = subprocess.Popen([r"C:\Program Files\Git\git-bash.exe",
-                                      "-c",
-                                      f"{command}"])
+                p = subprocess.Popen(
+                    [r"C:\Program Files\Git\git-bash.exe", "-c", f"{command}"]
+                )
                 return p.pid
             elif kind == "cmd":
                 Console.error(f"Command not implemented for {kind}")
             elif kind == "powershell":
                 Console.error(f"Command not implemented for {kind}")
             else:
-                Console.error("Git bash is not found, please make sure it "
-                              "is installed. Other terminals not supported.")
+                Console.error(
+                    "Git bash is not found, please make sure it "
+                    "is installed. Other terminals not supported."
+                )
                 raise NotImplementedError
         else:
             raise NotImplementedError
@@ -1020,22 +1016,20 @@ class Shell(object):
         """
         if cwd is None:
             cwd = os.getcwd()
-        process = subprocess.Popen(shlex.split(command), cwd=cwd,
-                                    stdout=subprocess.PIPE)
-        result = b''
+        process = subprocess.Popen(
+            shlex.split(command), cwd=cwd, stdout=subprocess.PIPE
+        )
+        result = b""
         while True:
             output = process.stdout.read(1)
-            if output == b'' and process.poll() is not None:
+            if output == b"" and process.poll() is not None:
                 break
             if output:
                 result = result + output
                 sys.stdout.write(output.decode("utf-8"))
                 sys.stdout.flush()
         rc = process.poll()
-        data = dotdict({
-            "status": rc,
-            "text": output.decode("utf-8")
-        })
+        data = dotdict({"status": rc, "text": output.decode("utf-8")})
         return data
 
     @staticmethod
@@ -1056,7 +1050,7 @@ class Shell(object):
         """
         python_version = sys.version_info[:3]
         v_string = [str(i) for i in python_version]
-        python_version_s = '.'.join(v_string)
+        python_version_s = ".".join(v_string)
 
         # pip_version = pip.__version__
         pip_version = Shell.pip("--version").split()[1]
@@ -1081,7 +1075,6 @@ class Shell(object):
         """
         return subprocess.check_output(*args, **kwargs)
 
-
     @classmethod
     def ls(cls, directory=".", match=None):
         """
@@ -1095,6 +1088,7 @@ class Shell(object):
             list: A list of filenames matching the given pattern (if provided) in the specified directory.
         """
         import re
+
         if match == None:
             files = os.listdir(directory)
         else:
@@ -1116,20 +1110,19 @@ class Shell(object):
             pass
         return name
 
-
     @classmethod
     # @NotImplementedInWindows
     def unix_ls(cls, *args):
-            """
-            Executes the linux 'ls' command with the given arguments.
+        """
+        Executes the linux 'ls' command with the given arguments.
 
-            Args:
-                *args: Additional arguments to be passed to the 'ls' command.
+        Args:
+            *args: Additional arguments to be passed to the 'ls' command.
 
-            Returns:
-                The output of the 'ls' command as a string.
-            """
-            return cls.execute('ls', args)
+        Returns:
+            The output of the 'ls' command as a string.
+        """
+        return cls.execute("ls", args)
 
     @staticmethod
     def ps(short=False, attributes=None):
@@ -1151,9 +1144,20 @@ class Shell(object):
                 if attributes is not None:
                     pinfo = proc.as_dict(attrs=attributes)
                 elif short:
-                    pinfo = proc.as_dict(attrs=['pid', 'name', 'cmdline', 'ppid', 'username',
-                                                'status', 'create_time', 'terminal', 'cwd',
-                                                'open_files'])
+                    pinfo = proc.as_dict(
+                        attrs=[
+                            "pid",
+                            "name",
+                            "cmdline",
+                            "ppid",
+                            "username",
+                            "status",
+                            "create_time",
+                            "terminal",
+                            "cwd",
+                            "open_files",
+                        ]
+                    )
                 else:
                     pinfo = proc.as_dict()
             except psutil.NoSuchProcess:
@@ -1176,7 +1180,7 @@ class Shell(object):
         Returns:
             The output of the bash command.
         """
-        return cls.execute('bash', args)
+        return cls.execute("bash", args)
 
     @classmethod
     # @NotImplementedInWindows
@@ -1190,7 +1194,7 @@ class Shell(object):
             The output of the 'brew' command.
         """
         NotImplementedInWindows()
-        return cls.execute('brew', args)
+        return cls.execute("brew", args)
 
     @classmethod
     # @NotImplementedInWindows
@@ -1207,7 +1211,7 @@ class Shell(object):
             content = readfile(args[0])
             return content
         else:
-            return cls.execute('cat', args)
+            return cls.execute("cat", args)
 
     @classmethod
     def git(cls, *args):
@@ -1219,7 +1223,7 @@ class Shell(object):
         Returns:
             The output of the git command execution.
         """
-        return cls.execute('git', args)
+        return cls.execute("git", args)
 
     # noinspection PyPep8Naming
     @classmethod
@@ -1236,7 +1240,7 @@ class Shell(object):
         if platform == "darwin":
             command = "/Applications/VirtualBox.app/Contents/MacOS/VBoxManage"
         else:
-            command = 'VBoxManage'
+            command = "VBoxManage"
         return cls.execute(command, args)
 
     @classmethod
@@ -1249,7 +1253,7 @@ class Shell(object):
         Returns:
             The result of executing blockdiag with the given arguments.
         """
-        return cls.execute('blockdiag', args)
+        return cls.execute("blockdiag", args)
 
     @classmethod
     def cm(cls, *args):
@@ -1261,11 +1265,10 @@ class Shell(object):
         Returns:
             None
         """
-        return cls.execute('cm', args)
-
+        return cls.execute("cm", args)
 
     @staticmethod
-    def cms(command, encoding='utf-8'):
+    def cms(command, encoding="utf-8"):
         """
         Executes a command using the 'cms' command-line tool.
 
@@ -1278,7 +1281,7 @@ class Shell(object):
 
         """
         return Shell.run("cms " + command, encoding=encoding)
-    
+
     @classmethod
     def cms_exec(cls, *args):
         """executes cms with the given arguments
@@ -1289,7 +1292,7 @@ class Shell(object):
         Returns:
             The output of the 'cms' command execution
         """
-        return cls.execute('cms', args)
+        return cls.execute("cms", args)
 
     @classmethod
     def cmsd(cls, *args):
@@ -1301,7 +1304,7 @@ class Shell(object):
         Returns:
             None
         """
-        return cls.execute('cmsd', args)
+        return cls.execute("cmsd", args)
 
     @classmethod
     def head(cls, filename=None, lines=10):
@@ -1315,7 +1318,7 @@ class Shell(object):
             str: The output of the head command.
         """
         filename = cls.map_filename(filename).path
-        r = Shell.run(f'head -n {lines} {filename}')
+        r = Shell.run(f"head -n {lines} {filename}")
         return r
 
     @classmethod
@@ -1328,7 +1331,7 @@ class Shell(object):
         Returns:
             The output of the keystone command.
         """
-        return cls.execute('keystone', args)
+        return cls.execute("keystone", args)
 
     @staticmethod
     def kill_pid(pid):
@@ -1344,7 +1347,7 @@ class Shell(object):
         Raises:
         subprocess.CalledProcessError: If the process is already down.
         """
-        if sys.platform == 'win32':
+        if sys.platform == "win32":
             try:
                 result = Shell.run(f"taskkill /IM {pid} /F")
             except Exception as e:
@@ -1353,7 +1356,7 @@ class Shell(object):
             try:
                 result = Shell.kill("-9", pid)
             except subprocess.CalledProcessError:
-                result = 'server is already down...'
+                result = "server is already down..."
         return result
 
     @classmethod
@@ -1369,7 +1372,7 @@ class Shell(object):
         """
         NotImplementedInWindows()
         # TODO: use tasklisk, compare to linux
-        return cls.execute('kill', args)
+        return cls.execute("kill", args)
 
     @classmethod
     def download(cls, source, destination, force=False, provider=None, chunk_size=128):
@@ -1400,25 +1403,31 @@ class Shell(object):
         if os.path.exists(destination) and not force:
             return destination
 
-        if provider == 'system':
+        if provider == "system":
             # First try wget
-            wget_return = os.system(f'wget -O {destination} {source}')
+            wget_return = os.system(f"wget -O {destination} {source}")
             if wget_return == 0:
-                Console.info('Used wget')
+                Console.info("Used wget")
                 return destination
             # Then curl
-            curl_return = os.system(f'curl -L -o {destination} {source}')
+            curl_return = os.system(f"curl -L -o {destination} {source}")
             if curl_return == 0:
-                Console.info('Used curl')
+                Console.info("Used curl")
                 return destination
         # Default is requests lib. If provider is None, or if provider == 'system'
         # but wget and curl fail, default here
         r = requests.get(source, stream=True, allow_redirects=True)
-        total_size = int(r.headers.get('content-length'))
+        total_size = int(r.headers.get("content-length"))
 
-        with open(destination, 'wb') as fd:
-            with tqdm(total=total_size, unit="B",
-                        unit_scale=True, desc=destination, initial=0, ascii=True) as pbar:
+        with open(destination, "wb") as fd:
+            with tqdm(
+                total=total_size,
+                unit="B",
+                unit_scale=True,
+                desc=destination,
+                initial=0,
+                ascii=True,
+            ) as pbar:
                 for chunk in r.iter_content(chunk_size=chunk_size):
                     fd.write(chunk)
                     pbar.update(len(chunk))
@@ -1435,7 +1444,7 @@ class Shell(object):
         Returns:
             None
         """
-        return cls.execute('mount', args)
+        return cls.execute("mount", args)
 
     @classmethod
     def umount(cls, *args):
@@ -1447,7 +1456,7 @@ class Shell(object):
         Returns:
             None
         """
-        return cls.execute('umount', args)
+        return cls.execute("umount", args)
 
     @classmethod
     def nova(cls, *args):
@@ -1459,7 +1468,7 @@ class Shell(object):
         Returns:
             The output of the 'nova' command execution.
         """
-        return cls.execute('nova', args)
+        return cls.execute("nova", args)
 
     @classmethod
     def ping(cls, host=None, count=1):
@@ -1473,11 +1482,11 @@ class Shell(object):
             str: the output of the ping command
         """
         r = None
-        option = '-n' if os_is_windows() else '-c'
-        parameters = "{option} {count} {host}".format(option=option,
-                                                        count=count,
-                                                        host=host)
-        r = Shell.run(f'ping {parameters}')
+        option = "-n" if os_is_windows() else "-c"
+        parameters = "{option} {count} {host}".format(
+            option=option, count=count, host=host
+        )
+        r = Shell.run(f"ping {parameters}")
         if r is None:
             Console.error("ping is not installed")
         return r
@@ -1504,7 +1513,7 @@ class Shell(object):
         Returns:
             The result of executing rackdiag with the given arguments.
         """
-        return cls.execute('rackdiag', args)
+        return cls.execute("rackdiag", args)
 
     @staticmethod
     def count_files(directory, recursive=False):
@@ -1557,7 +1566,7 @@ class Shell(object):
         Returns:
             None
         """
-        return cls.execute('rsync', args)
+        return cls.execute("rsync", args)
 
     @classmethod
     def scp(cls, *args):
@@ -1569,7 +1578,7 @@ class Shell(object):
         Returns:
             None
         """
-        return cls.execute('scp', args)
+        return cls.execute("scp", args)
 
     @classmethod
     # @NotImplementedInWindows
@@ -1587,7 +1596,7 @@ class Shell(object):
         """
         NotImplementedInWindows()
         # TODO: https://superuser.com/questions/1316317/is-there-a-windows-equivalent-to-the-unix-uniq
-        return cls.execute('sort', args)
+        return cls.execute("sort", args)
 
     @classmethod
     def sh(cls, *args):
@@ -1599,7 +1608,7 @@ class Shell(object):
         Returns:
             The output of the executed command as a string.
         """
-        return cls.execute('sh', args)
+        return cls.execute("sh", args)
 
     @classmethod
     def ssh(cls, *args):
@@ -1611,7 +1620,7 @@ class Shell(object):
         Returns:
             The output of the ssh command execution
         """
-        return cls.execute('ssh', args)
+        return cls.execute("ssh", args)
 
     @classmethod
     # @NotImplementedInWindows
@@ -1627,7 +1636,7 @@ class Shell(object):
         """
         NotImplementedInWindows()
         # TODO: https://stackoverflow.com/questions/9652720/how-to-run-sudo-command-in-windows
-        return cls.execute('sudo', args)
+        return cls.execute("sudo", args)
 
     @classmethod
     def tail(cls, filename=None, lines=10):
@@ -1641,7 +1650,7 @@ class Shell(object):
             str: The output of the tail command.
         """
         filename = cls.map_filename(filename).path
-        r = Shell.run(f'tail -n {lines} {filename}')
+        r = Shell.run(f"tail -n {lines} {filename}")
         return r
 
     @classmethod
@@ -1654,7 +1663,7 @@ class Shell(object):
         Returns:
             The output of the vagrant command execution
         """
-        return cls.execute('vagrant', args, shell=True)
+        return cls.execute("vagrant", args, shell=True)
 
     @classmethod
     def pandoc(cls, *args):
@@ -1666,7 +1675,7 @@ class Shell(object):
         Returns:
             The output of the pandoc command.
         """
-        return cls.execute('pandoc', args)
+        return cls.execute("pandoc", args)
 
     @classmethod
     def mongod(cls, *args):
@@ -1678,7 +1687,7 @@ class Shell(object):
         Returns:
             The output of the mongod command execution
         """
-        return cls.execute('mongod', args)
+        return cls.execute("mongod", args)
 
     @classmethod
     # @NotImplementedInWindows
@@ -1692,7 +1701,7 @@ class Shell(object):
             The output of the dialog command.
         """
         NotImplementedInWindows()
-        return cls.execute('dialog', args)
+        return cls.execute("dialog", args)
 
     @classmethod
     def pip(cls, *args):
@@ -1704,7 +1713,7 @@ class Shell(object):
         Returns:
             The output of the pip command execution
         """
-        return cls.execute('pip', args)
+        return cls.execute("pip", args)
 
     @classmethod
     def fgrep(cls, string=None, file=None):
@@ -1721,9 +1730,9 @@ class Shell(object):
 
         """
         if not os_is_windows():
-            r = Shell.run(f'fgrep {string} {file}')
+            r = Shell.run(f"fgrep {string} {file}")
         else:
-            r = Shell.run(f'grep -F {string} {file}')
+            r = Shell.run(f"grep -F {string} {file}")
         return r
 
     @classmethod
@@ -1742,7 +1751,7 @@ class Shell(object):
         >>> Shell.grep('pattern', 'file.txt')
         'line containing pattern'
         """
-        r = Shell.run(f'grep {string} {file}')
+        r = Shell.run(f"grep {string} {file}")
         return r
 
     @classmethod
@@ -1831,6 +1840,32 @@ class Shell(object):
                 result = result + [line]
         return result
 
+    @staticmethod
+    def replace_lines_between(lines, what_from, what_to, content):
+        """Replaces the content between the markers with the specified content.
+
+        Args:
+            lines (str): The multiline string to search within.
+            what_from (str): The starting marker.
+            what_to (str): The ending marker.
+            content (str): The content to replace the lines between the markers.
+
+        Returns:
+            str: The modified multiline string.
+        """
+        lines = lines.splitlines()
+        start_index = None
+        end_index = None
+        for i, line in enumerate(lines):
+            if what_from in line:
+                start_index = i
+            if what_to in line:
+                end_index = i
+                break
+        if start_index is not None and end_index is not None:
+            lines[start_index + 1 : end_index] = content.splitlines()
+        return "\n".join(lines)
+
     @classmethod
     def find_lines_between(cls, lines, what_from, what_to):
         """returns all lines that come between the markers
@@ -1880,15 +1915,15 @@ class Shell(object):
         """
         what = sys.platform
 
-        kind = 'UNDEFINED_TERMINAL_TYPE'
-        if 'linux' in what:
-            kind = 'linux'
-        elif 'darwin' in what:
-            kind = 'darwin'
-        elif 'cygwin' in what:
-            kind = 'cygwin'
-        elif what in ['windows', 'win32']:
-            kind = 'windows'
+        kind = "UNDEFINED_TERMINAL_TYPE"
+        if "linux" in what:
+            kind = "linux"
+        elif "darwin" in what:
+            kind = "darwin"
+        elif "cygwin" in what:
+            kind = "cygwin"
+        elif what in ["windows", "win32"]:
+            kind = "windows"
 
         return kind
 
@@ -1946,7 +1981,6 @@ class Shell(object):
                 pid = proc.pid
         return pid
 
-
     @classmethod
     def check_python(cls):
         """checks if the python version is supported
@@ -1958,13 +1992,14 @@ class Shell(object):
 
         v_string = [str(i) for i in python_version]
 
-        python_version_s = '.'.join(v_string)
+        python_version_s = ".".join(v_string)
 
         if python_version[0] == 2:
-
             print(
                 "You are running an unsupported version of python: {:}".format(
-                    python_version_s))
+                    python_version_s
+                )
+            )
 
             # python_version_s = '.'.join(v_string)
             # if (python_version[0] == 2) and (python_version[1] >= 7) and (python_version[2] >= 9):
@@ -1975,27 +2010,31 @@ class Shell(object):
             #    print("         We recommend you update your python")
 
         elif python_version[0] == 3:
-
-            if (python_version[0] == 3) and (python_version[1] >= 7) and (python_version[2] >= 0):
-
+            if (
+                (python_version[0] == 3)
+                and (python_version[1] >= 7)
+                and (python_version[2] >= 0)
+            ):
                 print(
                     "You are running a supported version of python: {:}".format(
-                        python_version_s))
+                        python_version_s
+                    )
+                )
             else:
                 print(
                     "WARNING: You are running an unsupported version of python: {:}".format(
-                        python_version_s))
+                        python_version_s
+                    )
+                )
                 print("         We recommend you update your python")
 
         # pip_version = pip.__version__
         python_version, pip_version = cls.get_python()
 
         if int(pip_version.split(".")[0]) >= 19:
-            print("You are running a supported version of pip: " + str(
-                pip_version))
+            print("You are running a supported version of pip: " + str(pip_version))
         else:
-            print("WARNING: You are running an old version of pip: " + str(
-                pip_version))
+            print("WARNING: You are running an old version of pip: " + str(pip_version))
             print("         We recommend you update your pip  with \n")
             print("             pip install -U pip\n")
 
@@ -2018,7 +2057,9 @@ class Shell(object):
             if os.path.isfile(source):  # If the source is a file
                 shutil.copy2(source, destination)
             elif os.path.isdir(source):  # If the source is a directory
-                shutil.copytree(source, os.path.join(destination, os.path.basename(source)))
+                shutil.copytree(
+                    source, os.path.join(destination, os.path.basename(source))
+                )
             else:
                 Console.error(f"'{source}' is neither a file nor a directory.")
         except Exception as e:
@@ -2065,17 +2106,19 @@ class Shell(object):
                 print("    source     :", s.path)
                 print("    destination:", d.path)
 
-            if s.protocol in ['http', 'https']:
-                command = f'curl {s.path} -o {d.path}'
+            if s.protocol in ["http", "https"]:
+                command = f"curl {s.path} -o {d.path}"
                 Shell.run(command)
-            elif s.protocol == 'scp':
-                Shell.run(f'scp {s.user}@{s.host}:{s.path} {d.path}')
-            elif s.protocol == 'ftp':
-                command = fr"curl -u {s.username}:{s.password} ftp://{s.ftp_path} -o {d.path}"
+            elif s.protocol == "scp":
+                Shell.run(f"scp {s.user}@{s.host}:{s.path} {d.path}")
+            elif s.protocol == "ftp":
+                command = (
+                    rf"curl -u {s.username}:{s.password} ftp://{s.ftp_path} -o {d.path}"
+                )
                 print(command)
                 Shell.run(command)
-            elif d.protocol == 'ftp':
-                command = fr"curl -T {s.path} ftp://{d.ftp_path} --user {d.username}:{d.password}"
+            elif d.protocol == "ftp":
+                command = rf"curl -T {s.path} ftp://{d.ftp_path} --user {d.username}:{d.password}"
                 print(command)
                 Shell.run(command)
             else:
@@ -2112,7 +2155,6 @@ class Shell(object):
                 Console.error(e, traceflag=True)
         return False
 
-
     def unzip(cls, source_filename, dest_dir):
         """Unzips a file into the destination directory.
 
@@ -2127,12 +2169,12 @@ class Shell(object):
             for member in zf.infolist():
                 # Path traversal defense copied from
                 # http://hg.python.org/cpython/file/tip/Lib/http/server.py#l789
-                words = member.filename.split('/')
+                words = member.filename.split("/")
                 path = path_expand(dest_dir)
                 for word in words[:-1]:
                     drive, word = os.path.splitdrive(word)
                     head, word = os.path.split(word)
-                    if word in (os.curdir, os.pardir, ''):
+                    if word in (os.curdir, os.pardir, ""):
                         continue
                     path = os.path.join(path, word)
                 zf.extract(member, path)
@@ -2156,7 +2198,7 @@ class Shell(object):
                 return True
 
             def run_edit_program(program, file):
-                cmd = f'''
+                cmd = f"""
                 osascript <<EOF
                 tell application "Terminal"
                     do script "{program} {file}"
@@ -2164,21 +2206,21 @@ class Shell(object):
                     set frontmost to true
                 end tell
                 EOF
-                '''
+                """
                 try:
                     subprocess.check_output(cmd, shell=True)
                 except:  # noqa: E722
                     pass
 
-            if try_program('aquamacs'):
+            if try_program("aquamacs"):
                 try:
                     subprocess.check_output(f"aquamacs {filename}", shell=True)
                 except:  # noqa: E722
                     pass
-            elif try_program('emacs'):
-                run_edit_program('emacs', filename)
+            elif try_program("emacs"):
+                run_edit_program("emacs", filename)
             else:
-                run_edit_program('nano', filename)
+                run_edit_program("nano", filename)
         elif os_is_linux():
             os.system(f'x-terminal-emulator -e "nano {filename}"')
         elif os_is_windows():
@@ -2196,7 +2238,7 @@ class Shell(object):
             The output of the lsb_release command.
         """
         NotImplementedInWindows()
-        return cls.execute('lsb_release', ['-a'])
+        return cls.execute("lsb_release", ["-a"])
 
     @classmethod
     def distribution(cls):
@@ -2216,8 +2258,7 @@ class Shell(object):
 
         machine = platform.lower()
 
-        result = {"platform": machine,
-                  "distribution": None}
+        result = {"platform": machine, "distribution": None}
 
         if machine == "linux":
             try:
@@ -2236,20 +2277,17 @@ class Shell(object):
                     for line in r.split():
                         if ":" in line:
                             attribute, value = line.split(":", 1)
-                            attribute = attribute.strip().replace(" ",
-                                                                  "_").lower()
+                            attribute = attribute.strip().replace(" ", "_").lower()
                             value = value.strip()
                             result[attribute] = value
-                    result["distribution"] = result["description"].split(" ")[
-                        0].lower()
+                    result["distribution"] = result["description"].split(" ")[0].lower()
                 except:  # noqa: E722
-                    Console.error(
-                        f"lsb_release not found for the platform {machine}")
+                    Console.error(f"lsb_release not found for the platform {machine}")
                     raise NotImplementedError
-        elif machine == 'darwin':
+        elif machine == "darwin":
             result["distribution"] = "macos"
             result["version"] = os_platform.mac_ver()[0]
-        elif machine == 'win32':
+        elif machine == "win32":
             result["distribution"] = "windows"
             result["version"] = os_platform.win_ver()[0]
         else:
@@ -2278,7 +2316,7 @@ class Shell(object):
         if os_is_linux():
             r = os.system(f"gopen {filename}")
         if os_is_mac():
-            command = f'open {filename}'
+            command = f"open {filename}"
             if program:
                 command += f' -a "{program}"'
             r = Shell.run(command)
@@ -2303,10 +2341,10 @@ class Shell(object):
             localuser = os.environ["USERNAME"]
         else:
             try:
-                localuser = os.environ['USER']
+                localuser = os.environ["USER"]
             except:
                 # docker image does not have user variable. so just do whoami
-                localuser = Shell.run('whoami')
+                localuser = Shell.run("whoami")
         return localuser
 
     @staticmethod
@@ -2343,7 +2381,7 @@ def main():
 
     print(Shell.terminal_type())
 
-    r = Shell.execute('pwd')  # copy line replace
+    r = Shell.execute("pwd")  # copy line replace
     print(r)
 
     # shell.list()
@@ -2359,10 +2397,10 @@ def main():
         print ("{:}".format(r))
         print ("---------------------")
     """
-    r = Shell.execute('ls', ["-l", "-a"])
+    r = Shell.execute("ls", ["-l", "-a"])
     print(r)
 
-    r = Shell.execute('ls', "-l -a")
+    r = Shell.execute("ls", "-l -a")
     print(r)
 
     if sys.platform != "win32":

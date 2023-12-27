@@ -14,13 +14,15 @@ from cloudmesh.common.util import readfile
 
 
 class Host(object):
-
-    def _print(results, output='table'):
-
-        if output in ['table', 'yaml']:
-            print(Printer.write(results,
-                                order=['host', 'success', 'stdout', 'stderr'],
-                                output=output))
+    def _print(results, output="table"):
+        if output in ["table", "yaml"]:
+            print(
+                Printer.write(
+                    results,
+                    order=["host", "success", "stdout", "stderr"],
+                    output=output,
+                )
+            )
         else:
             pprint(results)
 
@@ -49,11 +51,25 @@ class Host(object):
         return manager, workers
 
     @staticmethod
-    def config(hosts=None,
-               ips=None,
-               username=None,
-               key="~/.ssh/id_rsa"):
+    def config(hosts=None, ips=None, username=None, key="~/.ssh/id_rsa"):
+        """
+        Configures the SSH connection parameters for a set of hosts.
 
+        This method expands the hosts and IPs if they are not lists, checks if the number of hosts and IPs match,
+        and then creates the SSH configuration for each host.
+
+        Parameters:
+        hosts (str or list): A single host or a list of hosts to configure. If a string is provided, it is expanded into a list.
+        ips (str or list): A single IP or a list of IPs corresponding to the hosts. If a string is provided, it is expanded into a list.
+        username (str): The username to use for the SSH connections.
+        key (str): The path to the SSH key to use for the connections. Defaults to "~/.ssh/id_rsa".
+
+        Returns:
+        str: The SSH configuration for the hosts.
+
+        Raises:
+        ValueError: If the number of hosts and IPs provided do not match.
+        """
         if type(hosts) != list:
             _hosts = Parameter.expand(hosts)
         if ips is not None:
@@ -64,7 +80,6 @@ class Host(object):
 
         result = ""
         for i in range(0, len(_hosts)):
-
             host = _hosts[i]
 
             hostname = ""
@@ -75,17 +90,19 @@ class Host(object):
                 ip = _ips[i]
                 hostname = f"Hostname {ip}"
 
-            data = textwrap.dedent(f"""
+            data = textwrap.dedent(
+                f"""
             Host {host}
                 StrictHostKeyChecking no
                 LogLevel ERROR
                 UserKnownHostsFile /dev/null
                 IdentityFile {key}
                 {hostname}
-            """)
+            """
+            )
 
             if username:
-                data += (f"    {user}\n")
+                data += f"    {user}\n"
 
             result += data
         return result
@@ -129,13 +146,10 @@ class Host(object):
             else:
                 command = args.get("command")
 
-                result = subprocess.run(
-                    command,
-                    capture_output=True,
-                    shell=shell)
+                result = subprocess.run(command, capture_output=True, shell=shell)
 
                 result.stdout = result.stdout.decode("utf-8", "ignore").strip()
-                if result.stderr == b'':
+                if result.stderr == b"":
                     result.stderr = None
 
                 stderr = result.stderr
@@ -143,15 +157,15 @@ class Host(object):
                 stdout = result.stdout
 
             data = {
-                'host': args.get("host"),
-                'command': args.get("command"),
-                'execute': args.get("execute"),
-                'stdout': stdout,
-                'stderr': stderr,
-                'returncode': returncode,
-                'success': returncode == 0,
-                'date': DateTime.now(),
-                'cmd': " ".join(args.get("command"))
+                "host": args.get("host"),
+                "command": args.get("command"),
+                "execute": args.get("execute"),
+                "stdout": stdout,
+                "stderr": stderr,
+                "returncode": returncode,
+                "success": returncode == 0,
+                "date": DateTime.now(),
+                "cmd": " ".join(args.get("command")),
             }
         except Exception as e:
             print(e)
@@ -159,12 +173,9 @@ class Host(object):
         return data
 
     @staticmethod
-    def run(hosts=None,
-            command=None,
-            execute=None,
-            processors=3,
-            shell=False,
-            **kwargs):
+    def run(
+        hosts=None, command=None, execute=None, processors=3, shell=False, **kwargs
+    ):
         """Executes the command on all hosts. The key values
         specified in **kwargs will be replaced prior to the
         execution. Furthermore, {host} will be replaced with the
@@ -186,11 +197,15 @@ class Host(object):
         """
 
         hosts = Parameter.expand(hosts)
-        args = [{'command': [c.format(host=host, **kwargs) for c in command],
-                 'shell': shell,
-                 'host': host,
-                 'execute': execute,
-                 } for host in hosts]
+        args = [
+            {
+                "command": [c.format(host=host, **kwargs) for c in command],
+                "shell": shell,
+                "host": host,
+                "execute": execute,
+            }
+            for host in hosts
+        ]
 
         if "executor" not in args:
             _executor = Host._run
@@ -204,15 +219,17 @@ class Host(object):
         return res
 
     @staticmethod
-    def ssh(hosts=None,
-            command=None,
-            username=None,
-            key="~/.ssh/id_rsa",
-            processors=3,
-            dryrun=False,  # notused
-            executor=None,
-            verbose=False,  # not used
-            **kwargs):
+    def ssh(
+        hosts=None,
+        command=None,
+        username=None,
+        key="~/.ssh/id_rsa",
+        processors=3,
+        dryrun=False,  # notused
+        executor=None,
+        verbose=False,  # not used
+        **kwargs,
+    ):
         #
         # BUG: this code has a bug and does not deal with different
         #  usernames on the host to be checked.
@@ -233,32 +250,42 @@ class Host(object):
 
         key = path_expand(key)
 
-        ssh_command = ['ssh',
-                       '-o', 'StrictHostKeyChecking=no',
-                       '-o', 'UserKnownHostsFile=/dev/null',
-                       '-o', 'PreferredAuthentications=publickey',
-                       '-i', key,
-                       '{host}',
-                       f'{command}']
-        result = Host.run(hosts=hosts,
-                          command=ssh_command,
-                          execute=command,
-                          shell=False,
-                          executor=executor,
-                          **kwargs)
+        ssh_command = [
+            "ssh",
+            "-o",
+            "StrictHostKeyChecking=no",
+            "-o",
+            "UserKnownHostsFile=/dev/null",
+            "-o",
+            "PreferredAuthentications=publickey",
+            "-i",
+            key,
+            "{host}",
+            f"{command}",
+        ]
+        result = Host.run(
+            hosts=hosts,
+            command=ssh_command,
+            execute=command,
+            shell=False,
+            executor=executor,
+            **kwargs,
+        )
 
         return result
 
     @staticmethod
-    def put(hosts=None,
-            source=None,
-            destination=None,
-            username=None,
-            key="~/.ssh/id_rsa",
-            shell=False,
-            processors=3,
-            dryrun=False,
-            verbose=False):
+    def put(
+        hosts=None,
+        source=None,
+        destination=None,
+        username=None,
+        key="~/.ssh/id_rsa",
+        shell=False,
+        processors=3,
+        dryrun=False,
+        verbose=False,
+    ):
         """
         Args:
             command: the command to be executed
@@ -275,28 +302,32 @@ class Host(object):
 
         key = path_expand(key)
 
-        command = ['scp',
-                   "-o", "StrictHostKeyChecking=no",
-                   "-o", "UserKnownHostsFile=/dev/null",
-                   '-i', key,
-                   source,
-                   "{host}:{destination}"]
+        command = [
+            "scp",
+            "-o",
+            "StrictHostKeyChecking=no",
+            "-o",
+            "UserKnownHostsFile=/dev/null",
+            "-i",
+            key,
+            source,
+            "{host}:{destination}",
+        ]
 
         execute = f"cp {source} {destination}"
 
-        result = Host.run(hosts=hosts,
-                          command=command,
-                          execute=execute,
-                          destination=destination,
-                          shell=False)
+        result = Host.run(
+            hosts=hosts,
+            command=command,
+            execute=execute,
+            destination=destination,
+            shell=False,
+        )
 
         return result
 
     @staticmethod
-    def check(hosts=None,
-              username=None,
-              key="~/.ssh/id_rsa",
-              processors=3):
+    def check(hosts=None, username=None, key="~/.ssh/id_rsa", processors=3):
         #
         # BUG: this code has a bug and does not deal with different
         #  usernames on the host to be checked.
@@ -313,11 +344,13 @@ class Host(object):
         """
         hosts = Parameter.expand(hosts)
 
-        result = Host.ssh(hosts=hosts,
-                          command='hostname',
-                          username=username,
-                          key=key,
-                          processors=processors)
+        result = Host.ssh(
+            hosts=hosts,
+            command="hostname",
+            username=username,
+            key=key,
+            processors=processors,
+        )
 
         return result
 
@@ -333,25 +366,27 @@ class Host(object):
             a dict representing the result, if returncode=0 ping is
             successfully
         """
-        ip = args['ip']
-        count = str(args['count'])
-        
-        count_flag = '-n' if os_is_windows() else '-c'
+        ip = args["ip"]
+        count = str(args["count"])
+
+        count_flag = "-n" if os_is_windows() else "-c"
         if os_is_windows():
             # adding ipv4 enforce for windows
             # for some reason -4 is required or hosts
             # fail. we need ipv4
-            command = ['ping', '-4', ip, count_flag, count]
+            command = ["ping", "-4", ip, count_flag, count]
         else:
-            command = ['ping', count_flag, count, ip]
+            command = ["ping", count_flag, count, ip]
         # command = ['ping', '-4', ip, count_flag, count]
         result = subprocess.run(command, capture_output=True)
         try:
-            timers = result.stdout \
-                .decode("utf-8", "ignore") \
-                .split("round-trip min/avg/max/stddev =")[1] \
-                .replace('ms', '').strip() \
+            timers = (
+                result.stdout.decode("utf-8", "ignore")
+                .split("round-trip min/avg/max/stddev =")[1]
+                .replace("ms", "")
+                .strip()
                 .split("/")
+            )
             data = {
                 "host": ip,
                 "success": result.returncode == 0,
@@ -359,7 +394,7 @@ class Host(object):
                 "min": timers[0],
                 "avg": timers[1],
                 "max": timers[2],
-                "stddev": timers[3]
+                "stddev": timers[3],
             }
         except:  # noqa: E722
             data = {
@@ -386,7 +421,7 @@ class Host(object):
         hosts = Parameter.expand(hosts)
 
         # wrap ip and count into one list to be sent to Pool map
-        args = [{'ip': ip, 'count': count} for ip in hosts]
+        args = [{"ip": ip, "count": count} for ip in hosts]
 
         with Pool(processors) as p:
             res = p.map(Host._ping, args)
@@ -396,12 +431,14 @@ class Host(object):
         return res
 
     @staticmethod
-    def ssh_keygen(hosts=None,
-                   filename="~/.ssh/id_rsa",
-                   username=None,
-                   processors=3,
-                   dryrun=False,
-                   verbose=True):
+    def ssh_keygen(
+        hosts=None,
+        filename="~/.ssh/id_rsa",
+        username=None,
+        processors=3,
+        dryrun=False,
+        verbose=True,
+    ):
         """generates the keys on the specified hosts.
         this fonction does not work well as it still will aski if we overwrite.
 
@@ -418,26 +455,32 @@ class Host(object):
         """
         hosts = Parameter.expand(hosts)
         command = f'ssh-keygen -q -N "" -f {filename} <<< y'
-        result_keys = Host.ssh(hosts=hosts,
-                               command=command,
-                               username=username,
-                               dryrun=dryrun,
-                               processors=processors,
-                               executor=os.system)
+        result_keys = Host.ssh(
+            hosts=hosts,
+            command=command,
+            username=username,
+            dryrun=dryrun,
+            processors=processors,
+            executor=os.system,
+        )
         Host._print(result_keys)
-        result_keys = Host.ssh(hosts=hosts,
-                               processors=processors,
-                               command='cat .ssh/id_rsa.pub',
-                               username=username)
+        result_keys = Host.ssh(
+            hosts=hosts,
+            processors=processors,
+            command="cat .ssh/id_rsa.pub",
+            username=username,
+        )
         return result_keys
 
     @staticmethod
-    def gather_keys(username=None,
-                    hosts=None,
-                    filename="~/.ssh/id_rsa.pub",
-                    key="~/.ssh/id_rsa",
-                    processors=3,
-                    dryrun=False):
+    def gather_keys(
+        username=None,
+        hosts=None,
+        filename="~/.ssh/id_rsa.pub",
+        key="~/.ssh/id_rsa",
+        processors=3,
+        dryrun=False,
+    ):
         """returns in a list the keys of the specified hosts
 
         Args:
@@ -452,10 +495,12 @@ class Host(object):
         """
         names = Parameter.expand(hosts)
 
-        results_key = Host.ssh(hosts=names,
-                               command='cat ~/.ssh/id_rsa.pub',
-                               username=username,
-                               verbose=False)
+        results_key = Host.ssh(
+            hosts=names,
+            command="cat ~/.ssh/id_rsa.pub",
+            username=username,
+            verbose=False,
+        )
         # results_authorized = Host.ssh(hosts=names,
         #                              command='cat .ssh/id_rsa.pub',
         #                              username=username,
@@ -464,28 +509,28 @@ class Host(object):
         filename = path_expand(filename)
         content = readfile(filename).strip()
         localkey = {
-            'host': "localhost",
-            'command': [''],
-            'execute': "",
-            'stdout': content,
-            'stderr': None,
-            'returncode': True,
-            'success': True,
-            'date': DateTime.now()
+            "host": "localhost",
+            "command": [""],
+            "execute": "",
+            "stdout": content,
+            "stderr": None,
+            "returncode": True,
+            "success": True,
+            "date": DateTime.now(),
         }
         if results_key is None:  # and results_authorized is None:
             return ""
 
         # getting the output and also removing duplicates
 
-        keys = [localkey['stdout'].strip()]
+        keys = [localkey["stdout"].strip()]
         for element in results_key:
-            if element['stdout'] != '':
-                keys.append(element['stdout'].strip())
+            if element["stdout"] != "":
+                keys.append(element["stdout"].strip())
 
         output = list(set(keys))
 
-        output = '\n'.join(output)
+        output = "\n".join(output)
         print(output)
 
         return output

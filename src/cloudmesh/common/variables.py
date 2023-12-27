@@ -8,37 +8,37 @@ from cloudmesh.common.util import path_expand
 class Variables(object):
     """A class for managing and manipulating variables using a YAML-based storage.
 
-        Attributes:
-            filename (str): The path to the YAML file storing the variables.
-            data (YamlDB): An instance of the YamlDB class for YAML file manipulation.
+    Attributes:
+        filename (str): The path to the YAML file storing the variables.
+        data (YamlDB): An instance of the YamlDB class for YAML file manipulation.
 
-        Methods:
-            save(): Save changes to the YAML file.
-            get(key, default=None): Retrieve the value associated with a key.
-            __getitem__(key): Retrieve the value associated with a key using square bracket notation.
-            __setitem__(key, value): Set the value associated with a key using square bracket notation.
-            __delitem__(key): Delete the key-value pair associated with the specified key.
-            __contains__(item): Check if a key exists in the stored data.
-            __str__(): Return a string representation of the stored data.
-            __len__(): Return the number of key-value pairs in the stored data.
-            __add__(directory): Add key-value pairs from a dictionary-like object.
-            __sub__(keys): Remove key-value pairs for specified keys.
-            __iter__(): Return an iterator for keys in the stored data.
-            close(): Close the connection to the YAML file.
-            clear(): Clear all key-value pairs in the stored data.
-            dict(): Return the underlying dictionary used for storage.
-            parameter(attribute, position=0): Retrieve and expand a parameterized value.
-            boolean(key, value): Set a boolean value based on string representation.
+    Methods:
+        save(): Save changes to the YAML file.
+        get(key, default=None): Retrieve the value associated with a key.
+        __getitem__(key): Retrieve the value associated with a key using square bracket notation.
+        __setitem__(key, value): Set the value associated with a key using square bracket notation.
+        __delitem__(key): Delete the key-value pair associated with the specified key.
+        __contains__(item): Check if a key exists in the stored data.
+        __str__(): Return a string representation of the stored data.
+        __len__(): Return the number of key-value pairs in the stored data.
+        __add__(directory): Add key-value pairs from a dictionary-like object.
+        __sub__(keys): Remove key-value pairs for specified keys.
+        __iter__(): Return an iterator for keys in the stored data.
+        close(): Close the connection to the YAML file.
+        clear(): Clear all key-value pairs in the stored data.
+        dict(): Return the underlying dictionary used for storage.
+        parameter(attribute, position=0): Retrieve and expand a parameterized value.
+        boolean(key, value): Set a boolean value based on string representation.
 
-        Examples:
-            v = Variables()
-            print(v)
+    Examples:
+        v = Variables()
+        print(v)
 
-            v["gregor"] = "gregor"
-            assert "gregor" in v
-            del v["gregor"]
-            assert "gregor" not in v
-        """
+        v["gregor"] = "gregor"
+        assert "gregor" in v
+        del v["gregor"]
+        assert "gregor" not in v
+    """
 
     def __init__(self, filename=None):
         """Initialize the Variables instance.
@@ -69,7 +69,6 @@ class Variables(object):
         """
         return self.data.get(key, default)
 
-
     def __getitem__(self, key):
         """Retrieve the value associated with a key using square bracket notation.
 
@@ -96,7 +95,6 @@ class Variables(object):
         """
         # print("set", key, value)
         self.data[str(key)] = value
-
 
     def __delitem__(self, key):
         """Delete the key-value pair associated with the specified key.
@@ -189,7 +187,6 @@ class Variables(object):
         value = str(self.data[attribute])
         expand = Parameter.expand(value)[position]
         return expand
-
 
     def boolean(self, key, value):
         """Set a boolean value based on string representation.

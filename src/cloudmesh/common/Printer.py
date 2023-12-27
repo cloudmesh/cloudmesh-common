@@ -6,6 +6,7 @@ from cloudmesh.common.DateTime import DateTime
 from cloudmesh.common.FlatDict import flatten
 from cloudmesh.common.console import Console
 from cloudmesh.common.dotdict import dotdict
+
 # from prettytable import PrettyTable
 from cloudmesh.common.prettytable import PrettyTable
 from cloudmesh.common.util import convert_from_unicode
@@ -16,16 +17,18 @@ class Printer(object):
     """A simple Printer class with convenient methods to print dictionary, tables, csv, lists"""
 
     @classmethod
-    def flatwrite(cls, table,
-                      order=None,
-                      header=None,
-                      output="table",
-                      sort_keys=True,
-                      show_none="",
-                      humanize=None,
-                      sep=".",
-                      max_width=48
-                      ):
+    def flatwrite(
+        cls,
+        table,
+        order=None,
+        header=None,
+        output="table",
+        sort_keys=True,
+        show_none="",
+        humanize=None,
+        sep=".",
+        max_width=48,
+    ):
         """Writes the information given in the table.
 
         Args:
@@ -45,25 +48,28 @@ class Printer(object):
         """
         flat = flatten(table, sep=sep)
 
-        return Printer.write(flat,
-                                sort_keys=sort_keys,
-                                order=order,
-                                header=header,
-                                output=output,
-                                humanize=humanize,
-                                max_width=max_width
-                                )
+        return Printer.write(
+            flat,
+            sort_keys=sort_keys,
+            order=order,
+            header=header,
+            output=output,
+            humanize=humanize,
+            max_width=max_width,
+        )
 
     @classmethod
-    def write(cls, table,
-                  order=None,
-                  header=None,
-                  output="table",
-                  sort_keys=True,
-                  humanize=None,
-                  show_none="",
-                  max_width=48
-                  ):
+    def write(
+        cls,
+        table,
+        order=None,
+        header=None,
+        output="table",
+        sort_keys=True,
+        humanize=None,
+        show_none="",
+        max_width=48,
+    ):
         """writes the information given in the table
 
         Args:
@@ -89,42 +95,46 @@ class Printer(object):
         elif table is None:
             return None
         elif type(table) in [dict, dotdict]:
-            return cls.dict(table,
-                            order=order,
-                            header=header,
-                            output=output,
-                            sort_keys=sort_keys,
-                            humanize=humanize,
-                            show_none=show_none,
-                            max_width=max_width)
+            return cls.dict(
+                table,
+                order=order,
+                header=header,
+                output=output,
+                sort_keys=sort_keys,
+                humanize=humanize,
+                show_none=show_none,
+                max_width=max_width,
+            )
 
         elif type(table) == list:
-
-            return cls.list(table,
-                            order=order,
-                            header=header,
-                            output=output,
-                            sort_keys=sort_keys,
-                            humanize=humanize,
-                            show_none=show_none,
-                            max_width=max_width)
+            return cls.list(
+                table,
+                order=order,
+                header=header,
+                output=output,
+                sort_keys=sort_keys,
+                humanize=humanize,
+                show_none=show_none,
+                max_width=max_width,
+            )
         else:
             Console.error("unknown type {0}".format(type(table)))
 
     @classmethod
-    def list(cls,
-                 l,                 # noqa: E741
-                 order=None,
-                 header=None,
-                 output="table",
-                 sort_keys=True,
-                 humanize=None,
-                 show_none="",
-                 max_width=48
-                 ):
+    def list(
+        cls,
+        l,  # noqa: E741
+        order=None,
+        header=None,
+        output="table",
+        sort_keys=True,
+        humanize=None,
+        show_none="",
+        max_width=48,
+    ):
         """
         This method takes a list as input and formats it for printing in a tabular format.
-        
+
         Args:
             l (list): The input list to be formatted.
             order (list): The order in which the columns should be displayed.
@@ -134,35 +144,40 @@ class Printer(object):
             humanize (bool): Whether to humanize the values. Default is None.
             show_none (str): The string to display for None values. Default is "".
             max_width (int): The maximum width for a cell. Default is 48.
-        
+
         Returns:
             dict: A dictionary containing the formatted list.
         """
-        
+
         d = {}
         count = 0
         for entry in l:
             name = str(count)
             d[name] = entry
             count += 1
-        return cls.dict(d,
-                        order=order,
-                        header=header,
-                        sort_keys=sort_keys,
-                        output=output,
-                        humanize=humanize,
-                        show_none=show_none,
-                        max_width=max_width)
+        return cls.dict(
+            d,
+            order=order,
+            header=header,
+            sort_keys=sort_keys,
+            output=output,
+            humanize=humanize,
+            show_none=show_none,
+            max_width=max_width,
+        )
 
     @classmethod
-    def dict(cls, d,
-                 order=None,
-                 header=None,
-                 output="table",
-                 sort_keys=True,
-                 humanize=None,
-                 show_none="",
-                 max_width=48):
+    def dict(
+        cls,
+        d,
+        order=None,
+        header=None,
+        output="table",
+        sort_keys=True,
+        humanize=None,
+        show_none="",
+        max_width=48,
+    ):
         """
         Prints a dictionary in various output formats.
 
@@ -180,34 +195,36 @@ class Printer(object):
 
         Returns:
             str: The formatted dictionary based on the specified output format.
-            """
+        """
 
         if output in ["table", "filter"]:
             if d == {}:
                 return None
             else:
-                return cls.dict_table(d,
-                                      order=order,
-                                      header=header,
-                                      humanize=humanize,
-                                      sort_keys=sort_keys,
-                                      max_width=max_width)
+                return cls.dict_table(
+                    d,
+                    order=order,
+                    header=header,
+                    humanize=humanize,
+                    sort_keys=sort_keys,
+                    max_width=max_width,
+                )
         elif output == "html":  # does not work
             if d == []:
                 return "Empty data"
             else:
-                return cls.dict_html(d,
-                                     order=order,
-                                     header=header,
-                                     humanize=humanize,
-                                     sort_keys=sort_keys,
-                                     max_width=max_width)
+                return cls.dict_html(
+                    d,
+                    order=order,
+                    header=header,
+                    humanize=humanize,
+                    sort_keys=sort_keys,
+                    max_width=max_width,
+                )
         elif output == "csv":
-            return cls.csv(d,
-                           order=order,
-                           header=header,
-                           humanize=humanize,
-                           sort_keys=sort_keys)
+            return cls.csv(
+                d, order=order, header=header, humanize=humanize, sort_keys=sort_keys
+            )
         elif output == "json":
             return json.dumps(d, sort_keys=sort_keys, indent=4)
         elif output == "yaml":
@@ -218,8 +235,7 @@ class Printer(object):
             return "UNKNOWN FORMAT. Please use table, csv, json, yaml, dict."
 
     @classmethod
-    def csv(cls, d, order=None, header=None, humanize=None,
-            sort_keys=True):
+    def csv(cls, d, order=None, header=None, humanize=None, sort_keys=True):
         """prints a table in csv format
 
         Args:
@@ -244,7 +260,7 @@ class Printer(object):
             try:
                 tmp = str(d[element][key])
             except:  # noqa: E722
-                tmp = ' '
+                tmp = " "
             return tmp
 
         if d is None or d == {}:
@@ -281,31 +297,39 @@ class Printer(object):
         return table
 
     @classmethod
-    def dict_html(cls, d,
-                  order=None,
-                  header=None,
-                  sort_keys=True,
-                  show_none="",
-                  humanize=None,
-                  max_width=48):
-        x = Printer.dict_table(d,
-                               order=order,
-                               header=header,
-                               sort_keys=sort_keys,
-                               show_none=show_none,
-                               humanize=humanize,
-                               max_width=max_width)
+    def dict_html(
+        cls,
+        d,
+        order=None,
+        header=None,
+        sort_keys=True,
+        show_none="",
+        humanize=None,
+        max_width=48,
+    ):
+        x = Printer.dict_table(
+            d,
+            order=order,
+            header=header,
+            sort_keys=sort_keys,
+            show_none=show_none,
+            humanize=humanize,
+            max_width=max_width,
+        )
 
         return x.get_html_string()
 
     @classmethod
-    def dict_table(cls, d,
-                   order=None,
-                   header=None,
-                   sort_keys=True,
-                   show_none="",
-                   humanize=None,
-                   max_width=48):
+    def dict_table(
+        cls,
+        d,
+        order=None,
+        header=None,
+        sort_keys=True,
+        show_none="",
+        humanize=None,
+        max_width=48,
+    ):
         """prints a pretty table from an dict of dicts
 
         Args:
@@ -341,7 +365,7 @@ class Printer(object):
                     tmp = DateTime.humanize(start - tmp)
                     # tmp = naturaltime(start - tmp)
             except:  # noqa: E722
-                tmp = ' '
+                tmp = " "
             return tmp
 
         if d is None or d == {}:
@@ -362,8 +386,9 @@ class Printer(object):
             if type(sort_keys) is str:
                 sorted_list = sorted(d, key=lambda x: d[x][sort_keys])
             elif type(sort_keys) == tuple:
-                sorted_list = sorted(d, key=lambda x: tuple(
-                    [d[x][sort_key] for sort_key in sort_keys]))
+                sorted_list = sorted(
+                    d, key=lambda x: tuple([d[x][sort_key] for sort_key in sort_keys])
+                )
             else:
                 sorted_list = d
         else:
@@ -379,9 +404,9 @@ class Printer(object):
         return x
 
     @classmethod
-    def attribute(cls, d, header=None, order=None, sort_keys=True,
-                  humanize=None,
-                  output="table"):
+    def attribute(
+        cls, d, header=None, order=None, sort_keys=True, humanize=None, output="table"
+    ):
         """prints a attribute/key value table
 
         Args:
@@ -427,7 +452,7 @@ class Printer(object):
             return cls.dict({output: d}, output=output)
 
     @classmethod
-    def print_list(cls, l, output='table'):    # noqa: E741
+    def print_list(cls, l, output="table"):  # noqa: E741
         """prints a list
 
         Args:
@@ -438,7 +463,7 @@ class Printer(object):
 
         """
 
-        def dict_from_list(l):   # noqa: E741
+        def dict_from_list(l):  # noqa: E741
             """returns a dict from a list for printing
 
             Args:
@@ -450,27 +475,27 @@ class Printer(object):
             d = dict([(idx, item) for idx, item in enumerate(l)])
             return d
 
-        if output == 'table':
+        if output == "table":
             x = PrettyTable(["Index", "Host"])
-            for (idx, item) in enumerate(l):
+            for idx, item in enumerate(l):
                 x.add_row([idx, item])
             x.align = "l"
             x.align["Index"] = "r"
             return x
-        elif output == 'csv':
+        elif output == "csv":
             return ",".join(l)
-        elif output == 'dict':
+        elif output == "dict":
             d = dict_from_list(l)
             return d
-        elif output == 'json':
+        elif output == "json":
             d = dict_from_list(l)
             result = json.dumps(d, indent=4)
             return result
-        elif output == 'yaml':
+        elif output == "yaml":
             d = dict_from_list(l)
             result = yaml.dump(d, default_flow_style=False)
             return result
-        elif output == 'txt':
+        elif output == "txt":
             return "\n".join(l)
 
     @classmethod
@@ -498,8 +523,7 @@ class Printer(object):
                 value_keys = list(value)
                 first_key = value_keys[0]
                 rest_keys = value_keys[1:]
-                x.add_row(
-                    [key, "{0} : {1}".format(first_key, value[first_key])])
+                x.add_row([key, "{0} : {1}".format(first_key, value[first_key])])
                 for element in rest_keys:
                     x.add_row(["", "{0} : {1}".format(element, value[element])])
             else:

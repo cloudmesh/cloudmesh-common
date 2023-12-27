@@ -42,6 +42,7 @@ class Sudo:
             Returns:
                 str: The output created by the write process.
     """
+
     @staticmethod
     def password(msg="sudo password: "):
         """Prompt the user for the sudo password.
@@ -85,8 +86,8 @@ class Sudo:
         result = subprocess.run(sudo_command, capture_output=True)
         os.system("sync")
         if decode:
-            result.stdout = result.stdout.decode('ascii')
-            result.stderr = result.stderr.decode('ascii')
+            result.stdout = result.stdout.decode("ascii")
+            result.stderr = result.stderr.decode("ascii")
 
         if debug:
             banner("stdout")
@@ -136,7 +137,6 @@ class Sudo:
         Returns:
             str: The output created by the write process.
         """
-
 
         os.system("sync")
         Sudo.password()

@@ -30,8 +30,13 @@ def LOGGER(filename):
     try:
         location = Location()
 
-        level = grep("loglevel:", location.file("cloudmesh_debug.yaml")) \
-            .strip().split(":")[1].strip().lower()
+        level = (
+            grep("loglevel:", location.file("cloudmesh_debug.yaml"))
+            .strip()
+            .split(":")[1]
+            .strip()
+            .lower()
+        )
 
         if level.upper() == "DEBUG":
             loglevel = logging.DEBUG
@@ -51,7 +56,8 @@ def LOGGER(filename):
     log.setLevel(loglevel)
 
     formatter = logging.Formatter(
-        'CM {0:>50}:%(lineno)s: %(levelname)6s - %(message)s'.format(name))
+        "CM {0:>50}:%(lineno)s: %(levelname)6s - %(message)s".format(name)
+    )
 
     # formatter = logging.Formatter(
     #    'CM {0:>50}: %(levelname)6s - %(module)s:%(lineno)s %funcName)s: %(message)s'.format(name))

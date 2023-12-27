@@ -11,7 +11,7 @@ from cloudmesh.common.util import writefile
 
 
 # noinspection PyPep8Naming
-class ssh_config(object):
+class ssh_config:
     """Managing the config in .ssh"""
 
     def __init__(self, filename=None):
@@ -39,7 +39,7 @@ class ssh_config(object):
                 attribute, value = line.split(" ", 1)
                 attribute = attribute.strip()
                 value = value.strip()
-                if attribute.lower() in ['host']:
+                if attribute.lower() in ["host"]:
                     found_names.append(value)
         return found_names
 
@@ -51,20 +51,22 @@ class ssh_config(object):
             return self.hosts
         with open(self.filename) as f:
             content = f.readlines()
-        content = [" ".join(x.split()).strip('\n').lstrip().split(' ', 1) for x in content]
+        content = [
+            " ".join(x.split()).strip("\n").lstrip().split(" ", 1) for x in content
+        ]
 
         # removes duplicated spaces, and splits in two fields, removes leading spaces
         hosts = {}
         host = "NA"
         for line in content:
-            if line[0].startswith('#') or line[0] == '':
+            if line[0].startswith("#") or line[0] == "":
                 pass  # ignore line
             else:
                 attribute = line[0]
                 value = line[1]
-                if attribute.lower().strip() in ['Host', 'host']:
+                if attribute.lower().strip() in ["Host", "host"]:
                     host = value
-                    hosts[host] = {'host': host}
+                    hosts[host] = {"host": host}
                 else:
                     # In case of special configuration lines, such as port
                     # forwarding,
@@ -119,9 +121,9 @@ class ssh_config(object):
 
         """
         if name in ["localhost"]:
-            r = '\n'.join(Shell.sh("-c", command).split()[-1:])
+            r = "\n".join(Shell.sh("-c", command).split()[-1:])
         else:
-            r = '\n'.join(Shell.ssh(name, command).split()[-1:])
+            r = "\n".join(Shell.ssh(name, command).split()[-1:])
         return r
 
     def local(self, command):
@@ -166,13 +168,15 @@ class ssh_config(object):
 
         writefile(filename, result)
 
-    def generate(self,
-                 host="india",
-                 hostname="india.futuresystems.org",
-                 identity="~/.ssh/id_rsa.pub",
-                 user=None,
-                 force=False,
-                 verbose=False):
+    def generate(
+        self,
+        host="india",
+        hostname="india.futuresystems.org",
+        identity="~/.ssh/id_rsa.pub",
+        user=None,
+        force=False,
+        verbose=False,
+    ):
         """adds a host to the config file with given parameters.  #TODO: make sure this is better documented
 
         Args:
@@ -190,12 +194,14 @@ class ssh_config(object):
             Console.error(f"{host} already in ~/.ssh/config", traceflag=False)
             return ""
         else:
-            entry = dedent(f"""
+            entry = dedent(
+                f"""
             Host {host}
                 Hostname {hostname}
                 User {user}
                 IdentityFile {identity}
-            """)
+            """
+            )
         try:
             with open(self.filename, "a") as config_ssh:
                 config_ssh.write(entry)

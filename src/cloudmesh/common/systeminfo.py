@@ -30,7 +30,7 @@ def os_is_linux():
         bool: True is linux
     """
     try:
-        content = readfile('/etc/os-release')
+        content = readfile("/etc/os-release")
         return platform.system() == "Linux" and "raspbian" not in content
     except:  # noqa: E722
         return False
@@ -53,7 +53,7 @@ def os_is_pi():
         bool: True is Raspberry OS
     """
     try:
-        content = readfile('/etc/os-release')
+        content = readfile("/etc/os-release")
         return platform.system() == "Linux" and "raspbian" in content
     except:  # noqa: E722
         return False
@@ -63,7 +63,10 @@ def has_window_manager():
     if os_is_mac() or os_is_windows():
         return True
     else:
-        return "GNOME_TERMINAL_SCREEN" in os.environ or "GNOME_TERMINAL_SERVICE" in os.environ
+        return (
+            "GNOME_TERMINAL_SCREEN" in os.environ
+            or "GNOME_TERMINAL_SERVICE" in os.environ
+        )
 
 
 def sys_user():
@@ -103,8 +106,8 @@ def get_platform():
     elif sys.platform == "win32":
         return "windows"
     try:
-        content = readfile('/etc/os-release')
-        if sys.platform == 'linux' and "raspbian" in content:
+        content = readfile("/etc/os-release")
+        if sys.platform == "linux" and "raspbian" in content:
             return "raspberry"
         else:
             return sys.platform
@@ -160,46 +163,50 @@ def systeminfo(info=None, user=None, node=None):
     except:  # noqa: E722
         pass
 
-    data = OrderedDict({
-        'cpu': description.strip(),
-        'cpu_count': multiprocessing.cpu_count(),
-        'cpu_threads': multiprocessing.cpu_count(),
-        'cpu_cores': cores,
-        'uname.system': uname.system,
-        'uname.node': uname.node,
-        'uname.release': uname.release,
-        'uname.version': uname.version,
-        'uname.machine': uname.machine,
-        'uname.processor': uname.processor,
-        'sys.platform': sys.platform,
-        'python': sys.version,
-        'python.version': sys.version.split(" ", 1)[0],
-        'python.pip': pip.__version__,
-        'user': sys_user(),
-        'mem.percent': str(mem.percent) + " %",
-        'frequency': frequency
-    })
-    for attribute in ["total",
-                      "available",
-                      "used",
-                      "free",
-                      "active",
-                      "inactive",
-                      "wired"
-                      ]:
+    data = OrderedDict(
+        {
+            "cpu": description.strip(),
+            "cpu_count": multiprocessing.cpu_count(),
+            "cpu_threads": multiprocessing.cpu_count(),
+            "cpu_cores": cores,
+            "uname.system": uname.system,
+            "uname.node": uname.node,
+            "uname.release": uname.release,
+            "uname.version": uname.version,
+            "uname.machine": uname.machine,
+            "uname.processor": uname.processor,
+            "sys.platform": sys.platform,
+            "python": sys.version,
+            "python.version": sys.version.split(" ", 1)[0],
+            "python.pip": pip.__version__,
+            "user": sys_user(),
+            "mem.percent": str(mem.percent) + " %",
+            "frequency": frequency,
+        }
+    )
+    for attribute in [
+        "total",
+        "available",
+        "used",
+        "free",
+        "active",
+        "inactive",
+        "wired",
+    ]:
         try:
-            data[f"mem.{attribute}"] = \
-                humanize.naturalsize(getattr(mem, attribute), binary=True)
+            data[f"mem.{attribute}"] = humanize.naturalsize(
+                getattr(mem, attribute), binary=True
+            )
         except:  # noqa: E722
             pass
     # svmem(total=17179869184, available=6552825856, percent=61.9,
 
-    if data['sys.platform'] == 'darwin':
-        data['platform.version'] = platform.mac_ver()[0]
-    elif data['sys.platform'] == 'win32':
-        data['platform.version'] = platform.win32_ver()
+    if data["sys.platform"] == "darwin":
+        data["platform.version"] = platform.mac_ver()[0]
+    elif data["sys.platform"] == "win32":
+        data["platform.version"] = platform.win32_ver()
     else:
-        data['platform.version'] = uname.version
+        data["platform.version"] = uname.version
 
     try:
         release_files = Path("/etc").glob("*release")

@@ -68,7 +68,7 @@ def flatme(d):
     return o
 
 
-def flatten(d, parent_key='', sep='__'):
+def flatten(d, parent_key="", sep="__"):
     """flattens the dict into a one dimensional dictionary
 
     Args:
@@ -299,17 +299,19 @@ class FlatDict(dict):
         elif type(content) == dict:
             self.loadd(content=content, sep=".")
         elif os.path.isfile(str(content)):
-            print ("file")
+            print("file")
             self.loadf(filename=content, sep=".")
         elif type(content) == str:
             self.loads(content=content, sep=".")
         else:
             config = None
             self.__init__(config, sep=sep)
-        e = expand_config_parameters(flat=self.__dict__,
-                                     expand_yaml=True,
-                                     expand_os=self.expand_os,
-                                     expand_cloudmesh=self.expand_cloudmesh or self.expand_cm)
+        e = expand_config_parameters(
+            flat=self.__dict__,
+            expand_yaml=True,
+            expand_os=self.expand_os,
+            expand_cloudmesh=self.expand_cloudmesh or self.expand_cm,
+        )
         self.__dict__ = e
 
     def apply_in_string(self, content):
@@ -398,8 +400,7 @@ class FlatDict2(object):
         return dict_obj
 
 
-def read_config_parameters(filename=None,
-                           d=None):
+def read_config_parameters(filename=None, d=None):
     """This file reads in configuration parameters defined in a yaml file and
     produces a flattend dict. It reads in the yaml date from a filename and/or
     a string.  If both are specified the data in the filename will be read first
@@ -538,12 +539,14 @@ def read_config_parameters_from_dict(content=None, d=None):
     return config
 
 
-def expand_config_parameters(flat=None,
-                             expand_yaml=True,
-                             expand_os=True,
-                             expand_cloudmesh=True,
-                             debug=False,
-                             depth=100):
+def expand_config_parameters(
+    flat=None,
+    expand_yaml=True,
+    expand_os=True,
+    expand_cloudmesh=True,
+    debug=False,
+    depth=100,
+):
     """expands all variables in the flat dict if they are specified in the values of the flatdict.
 
     Args:
@@ -588,7 +591,7 @@ def expand_config_parameters(flat=None,
 
         if expand_yaml:
             found = True
-            for i in range (0,depth):
+            for i in range(0, depth):
                 for variable in flat.keys():
                     name = "{" + variable + "}"
                     value = flat[variable]
@@ -596,7 +599,6 @@ def expand_config_parameters(flat=None,
                         if debug:
                             print("found", variable, "->", value)
                         txt = txt.replace(name, str(value))
-
 
         if "{os." in values and expand_os:
             for variable in os.environ:
@@ -648,7 +650,7 @@ def expand_config_parameters(flat=None,
     return config
 
 
-'''
+"""
 
 
 def main():
@@ -736,4 +738,4 @@ def main():
 if __name__ == "__main__":
     main()
 
-'''
+"""

@@ -39,10 +39,10 @@ class DateTime(object):
     @staticmethod
     def now():
         return str(TIME.datetime.now())
-    
+
     @staticmethod
     def utc_now():
-        return str(TIME.datetime.utcnow())
+        return str(TIME.datetime.now(TIME.UTC))
 
     @staticmethod
     def natural(time):
@@ -52,7 +52,11 @@ class DateTime(object):
 
     @staticmethod
     def words(time):
-        return TIME.datetime.strftime(time, "%a %w %b %Y, %H:%M:%S UTC")
+        if type(time) == TIME.datetime:
+            t = time
+        else:
+            t = DateTime.datetime(time)
+        return TIME.datetime.strftime(t, "%a %w %b %Y, %H:%M:%S UTC")
 
     @staticmethod
     def datetime(time):
@@ -67,14 +71,30 @@ class DateTime(object):
 
     @staticmethod
     def string(time):
-        if type(time) == str:
-            d = parser.parse(time)
+        if type(time) == TIME:
+            d = str(time)
         else:
-            d = time
-        return d
+            try:
+                d = parser.parse(time)
+            except:
+                d = DateTime.utc_to_local(time)
+        return str(d)
+
+    @staticmethod
+    def get(time_str):
+        return parser.parse(time_str)
 
     @staticmethod
     def delta(n):
+        """
+        Returns a timedelta object representing a time duration of `n` seconds.
+
+        Parameters:
+        n (int): The number of seconds for the time duration.
+
+        Returns:
+        timedelta: A timedelta object representing the time duration in datetime and not string format.
+        """
         return TIME.timedelta(seconds=n)
 
     @staticmethod
@@ -87,18 +107,34 @@ class DateTime(object):
 
     @staticmethod
     def utc_to_local(time):
-        TIME_FORMAT = '%Y-%m-%d %H:%M:%S.%f'
+        if "." in str(time):
+            TIME_FORMAT = "%Y-%m-%d %H:%M:%S.%f"
+        else:
+            TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+
         utc = TIME.datetime.strptime(str(time), TIME_FORMAT)
-        local_dt = utc.replace(tzinfo=ZoneInfo('UTC')).astimezone(tzlocal.get_localzone())
+        local_dt = utc.replace(tzinfo=ZoneInfo("UTC")).astimezone(
+            tzlocal.get_localzone()
+        )
         return local_dt.strftime(TIME_FORMAT) + " " + str(DateTime.timezone)
+
+    def datetime(time_str):
+        d = parser.parse(time_str)
+        return d
+
+    @staticmethod
+    def add(one, two):
+        return DateTime.datetime(DateTime.datetime(one)) + DateTime.datetime(two)
 
 
 if __name__ == "__main__":
     start = DateTime.now()
-    stop = DateTime.now() + DateTime.delta(1)
+    stop = DateTime.add(DateTime.now(), DateTime.delta(1))
+
+    stop2 = DateTime.datetime(DateTime.now()), DateTime.datetime(DateTime.delta(2))
 
     print("START", start)
-    print("STOP", stop)
+    print("STOP", stop, stop2)
     print("HUMANIZE STOP", DateTime.humanize(stop - start))
     print("LOCAL", DateTime.local(start))
     print("UTC", DateTime.utc(start))

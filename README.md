@@ -131,13 +131,9 @@ from cloudmesh.common.StopWatch import StopWatch
 import time
 
 StopWatch.start("a")
-
 time.sleep(3)
-
 StopWatch.stop("a")
-
 StopWatch.status("a", True)
-
 StopWatch.benchmark()
 ```
 
