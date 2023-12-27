@@ -595,7 +595,7 @@ class Shell(object):
             r = Shell.run('choco --version')
             # no problem
             return True
-        except subprocess.CalledProcessError:
+        except RuntimeError:
             return False
 
     @staticmethod
@@ -613,7 +613,7 @@ class Shell(object):
                 r = Shell.run('choco --version')
                 Console.ok("Chocolatey already installed")
                 return True
-            except subprocess.CalledProcessError:
+            except RuntimeError:
                 Console.msg("Installing chocolatey...")
                 if not pyuac.isUserAdmin():
                     Console.error("Please run the terminal as administrator.")
