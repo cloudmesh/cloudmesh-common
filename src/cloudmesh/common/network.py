@@ -2,20 +2,20 @@ import socket
 
 
 class PortGenerator:
-    class PortGenerator:
-        def __init__(self, base_port):
-            """
-            Initializes a PortGenerator object.
+    def __init__(self, base_port):
+        """
+        Initializes a PortGenerator object.
 
-            Parameters:
-            - base_port (int): The starting port number.
+        Parameters:
+        - base_port (int): The starting port number.
 
-            Attributes:
-            - base_port (int): The starting port number.
-            - last (int): The last generated port number.
-            """
-            self.base_port = base_port
+        Attributes:
+        - base_port (int): The starting port number.
+        - last (int): The last generated port number.
+        """
+        self.base_port = base_port
 
+    @staticmethod
     def is_port_available(self, port):
         """
         Check if a given port is available in use.
@@ -36,6 +36,7 @@ class PortGenerator:
             print(f"Port {port} is available")
             return True
 
+    @staticmethod
     def get_port(self, port=None, n=100):
         """
         Returns an available port within a specified range starting from a port if specified.
