@@ -1,6 +1,5 @@
 import socket
 
-
 class PortGenerator:
     def __init__(self, base_port):
         """
@@ -11,11 +10,9 @@ class PortGenerator:
 
         Attributes:
         - base_port (int): The starting port number.
-        - last (int): The last generated port number.
         """
         self.base_port = base_port
 
-    @staticmethod
     def is_port_available(self, port):
         """
         Check if a given port is available in use.
@@ -36,26 +33,14 @@ class PortGenerator:
             print(f"Port {port} is available")
             return True
 
-    @staticmethod
     def get_port(self, port=None, n=100):
         """
         Returns an available port within a specified range starting from a port if specified.
         If not specified we will search from the base port
-
-        Args:
-            port (int, optional): The starting port number. If not provided, the base port will be used.
-            n (int, optional): The number of ports to check for availability.
-
-        Returns:
-            int: An available port number.
-
-        Raises:
-            Exception: If no available port is found within the specified range.
         """
-        port = self.port if port is None else port
+        port = self.base_port if port is None else port
         for i in range(0, n):
             if self.is_port_available(port):
                 return port
             port += 1
-        raise Exception(f"Could not find available port in range {self.last} - {port}")
-
+        raise Exception(f"Could not find available port in range {self.base_port} - {port}")
