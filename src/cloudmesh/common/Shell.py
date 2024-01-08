@@ -579,6 +579,40 @@ class Shell(object):
         """
         return seperator.join(textwrap.dedent(script).strip().splitlines())
 
+    def find_process(name):
+        """ find a process by name
+
+        :param name: the name of the process
+        :return: A list of dicts in which the attributes pid, command,
+                 and created are available and the name matches
+                 the specified name argument.
+
+        TODO: at one point this should be moved to cloudmesh.common
+
+        Return a list of processes matching 'name'.
+        """
+
+        processes = None
+        for p in psutil.process_iter():
+            found = None
+            try:
+                found = p.name()
+            except (psutil.AccessDenied, psutil.ZombieProcess):
+                pass
+            except psutil.NoSuchProcess:
+                continue
+            if name == found:
+                if processes is None:
+                    processes = []
+                processes.append(
+                    {
+                        "pid": p.pid,
+                        "command": " ".join(p.cmdline()),
+                        "created": p.create_time()
+                    })
+        return processes
+
+
     @staticmethod
     def is_choco_installed():
         """return true if chocolatey windows package manager is installed
