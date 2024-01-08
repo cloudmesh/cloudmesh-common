@@ -1334,6 +1334,43 @@ class Shell(object):
         return cls.execute("keystone", args)
 
     @staticmethod
+    def find_process(name):
+        """
+        Find a process by name.
+
+        Args:
+            name (str): The name of the process.
+
+        Returns:
+            list: A list of dictionaries containing the attributes 'pid', 'command',
+                    and 'created' for each process that matches the specified name.
+
+        Example:
+            >>> find_process("python")
+            [{'pid': 1234, 'command': 'python script.py', 'created': 1634567890}]
+        """
+        processes = None
+        for p in psutil.process_iter():
+            found = None
+            try:
+                found = p.name()
+            except (psutil.AccessDenied, psutil.ZombieProcess):
+                pass
+            except psutil.NoSuchProcess:
+                continue
+            if name == found:
+                if processes is None:
+                    processes = []
+                processes.append(
+                    {
+                        "pid": p.pid,
+                        "command": " ".join(p.cmdline()),
+                        "created": p.create_time(),
+                    }
+                )
+        return processes
+
+    @staticmethod
     def kill_pid(pid):
         """
         Kills a process with the given PID.

@@ -109,7 +109,7 @@ class Test_shell(object):
         if os_is_windows() and github_action:
             pytest.skip('not supported')
         Benchmark.Start()
-        filename = 'cloudmesh/common/console.py'
+        filename = 'src/cloudmesh/common/console.py'
         Shell.open(filename)
         Benchmark.Stop()
         assert True  # has to be a visual test!

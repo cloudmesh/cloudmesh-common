@@ -162,9 +162,8 @@ class TestShell:
         file = path_expand('requirements.txt')
         r = Shell.head(file)
         Benchmark.Stop()
-        assert 'tqdm' in r
-        assert 'rich' in r
-        assert 'tabulate' in r
+        assert 'humanize' in r
+        assert 'oyaml' in r
         r = Shell.head('requirements.txt', lines=1)
         assert 'cloudmesh-sys' not in r
 
