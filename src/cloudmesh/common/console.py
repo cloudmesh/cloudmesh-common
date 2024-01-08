@@ -362,7 +362,7 @@ class Console(object):
         message = message or ""
         prefix = prefix or ""
         #RichConsole.print(prefix + message, style=color.lower())
-        c = Console.theme[color]
+        c = Console.theme[color.upper()]
         RichConsole.print(prefix + message, style=c)
 
 
