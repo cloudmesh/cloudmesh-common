@@ -376,7 +376,7 @@ class Console(object):
         if isinstance(message, Text):
             RichConsole.print(prefix, message, sep="")
         else:
-            RichConsole.print(prefix + message, style=color.lower())
+            RichConsole.print(prefix + message, style=Console.theme_color[color])
 
     @staticmethod
     def text(color="RED", prefix=None, message=None):
