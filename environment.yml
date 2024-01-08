@@ -1,6 +1,6 @@
 name: cloudmesh-common
 dependencies:
-  - colorama
+  - rich
   - humanize
   - oyaml
   - psutil
