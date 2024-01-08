@@ -292,7 +292,6 @@ def str_banner(
     prefix="#",
     debug=True,
     label=None,
-    color="BLUE",
     padding=False,
     figlet=False,
     font="big",
@@ -339,7 +338,7 @@ def banner(
     prefix="#",
     debug=True,
     label=None,
-    color="BLUE",
+    color="blue",
     padding=False,
     figlet=False,
     font="big",
@@ -366,12 +365,11 @@ def banner(
         prefix=prefix,
         debug=debug,
         label=label,
-        color=color,
         padding=padding,
         figlet=figlet,
         font=font,
     )
-    Console.cprint(color, "", output)
+    Console.cprint(output, color, "")
 
 
 # noinspection PyPep8Naming

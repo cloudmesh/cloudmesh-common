@@ -7,6 +7,7 @@ import traceback
 # from colorama import Fore, Back, Style
 
 from rich.console import Console as RichConsole
+from rich.text import Text
 # from cloudmesh.common.variables import Variables
 
 # colorama.init()
@@ -276,7 +277,7 @@ class Console(object):
             #         Fore.RED + Back.WHITE + text + message + Console.theme_color["ENDC"]
             #     )
             # else:
-            cls.cprint(cls.theme_color["FAIL"], text, str(message))
+            cls.cprint(str(message), cls.theme_color["FAIL"], text)
         else:
             print(cls.txt_msg(text + str(message)))
 
@@ -306,7 +307,7 @@ class Console(object):
         else:
             text = ""
         if Console.color:
-            Console.cprint("FAIL", text, str(message))
+            Console.cprint(str(message), "FAIL", text)
         else:
             Console.msg(text + str(message))
 
@@ -329,7 +330,7 @@ class Console(object):
         """
         message = message or ""
         if Console.color:
-            Console.cprint("RED", "DEBUG: ", message)
+            Console.cprint(message, "RED", "DEBUG: ")
         else:
             Console.msg("DEBUG: " + message)
 
@@ -362,7 +363,7 @@ class Console(object):
         """
         message = message or ""
         if Console.color:
-            Console.cprint(Console.theme_color["WARNING"], "WARNING: ", message)
+            Console.cprint(message, Console.theme_color["WARNING"], "WARNING: ")
         else:
             Console.msg("WARNING: " + message)
 
@@ -378,12 +379,12 @@ class Console(object):
         """
         message = message or ""
         if Console.color:
-            Console.cprint(Console.theme_color["OKGREEN"], "", message)
+            Console.cprint(message, Console.theme_color["OKGREEN"], "")
         else:
             Console.msg(message)
 
     @staticmethod
-    def cprint(color="BLUE", prefix="", message=""):
+    def cprint(message, color="BLUE", prefix=""):
         """prints a message in a given color
 
         Args:
@@ -400,8 +401,10 @@ class Console(object):
         # print(
             # Console.theme_color[color] + prefix + message + Console.theme_color["ENDC"]
         # )
-        
-        RichConsole.print(prefix + message, style=color.lower())
+        if isinstance(message, Text):
+            RichConsole.print(prefix, message, sep="")
+        else:
+            RichConsole.print(prefix + message, style=color.lower())
 
     @staticmethod
     def text(color="RED", prefix=None, message=None):
@@ -417,7 +420,8 @@ class Console(object):
         """
         message = message or ""
         prefix = prefix or ""
-        return Console.theme[color] + prefix + message + Console.theme["ENDC"]
+        return Text(prefix + message, style=color.lower())
+        # return Console.theme[color] + prefix + message + Console.theme["ENDC"]
     
     @staticmethod
     def background(msg, background_color="white", text_color="black"):
