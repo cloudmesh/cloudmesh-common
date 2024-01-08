@@ -4,11 +4,7 @@ import textwrap
 import traceback
 
 from rich.console import Console as RichConsole
-<<<<<<< HEAD
 from rich.text import Text
-=======
-
->>>>>>> d494901d0d4648dac7a87d65e4776e2bde51ff57
 # from cloudmesh.common.variables import Variables
 
 RichConsole = RichConsole()
