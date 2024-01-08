@@ -4,9 +4,11 @@ import textwrap
 import traceback
 
 from rich.console import Console as RichConsole
+
 # from cloudmesh.common.variables import Variables
 
 RichConsole = RichConsole()
+
 
 def is_powershell():
     # this function is better than the one in util
@@ -73,8 +75,9 @@ class Console(object):
         "RED": "red",
         "ENDC": "default",
         "BOLD": "bold",
-        "NORMAL": "default"
+        "NORMAL": "default",
     }
+
     if is_powershell():
         for key in theme_color:
             theme_color[key] = "bold " + theme_color[key]
@@ -358,7 +361,10 @@ class Console(object):
         """
         message = message or ""
         prefix = prefix or ""
-        RichConsole.print(prefix + message, style=color.lower())
+        #RichConsole.print(prefix + message, style=color.lower())
+        c = Console.theme[color]
+        RichConsole.print(prefix + message, style=c)
+
 
     @staticmethod
     def text(color="RED", prefix=None, message=None):
@@ -375,7 +381,7 @@ class Console(object):
         message = message or ""
         prefix = prefix or ""
         return Console.theme[color] + prefix + message + Console.theme["ENDC"]
-    
+
     @staticmethod
     def background(msg, background_color="white", text_color="black"):
         """prints a message in a given background color
