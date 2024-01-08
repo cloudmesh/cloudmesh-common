@@ -3,13 +3,8 @@ import os
 import textwrap
 import traceback
 
-# import colorama
-# from colorama import Fore, Back, Style
-
 from rich.console import Console as RichConsole
 # from cloudmesh.common.variables import Variables
-
-# colorama.init()
 
 RichConsole = RichConsole()
 
@@ -64,25 +59,6 @@ class Console(object):
     color = True
     debug = True
 
-    # old_theme_color = {
-    #     "HEADER": Fore.MAGENTA,
-    #     "BLACK": Fore.BLACK,
-    #     "CYAN": Fore.CYAN,
-    #     "WHITE": Fore.WHITE,
-    #     "BLUE": Fore.BLUE,
-    #     "OKBLUE": Fore.BLUE,
-    #     "OKGREEN": Fore.GREEN,
-    #     "GREEN": Fore.GREEN,
-    #     "FAIL": Fore.RED,
-    #     "WARNING": Fore.MAGENTA,
-    #     "RED": Fore.RED,
-    #     "ENDC": Style.RESET_ALL,
-    #     "BOLD": Style.BRIGHT,
-    #     "NORMAL": Style.NORMAL
-    #     # 'ENDC': '\033[0m',
-    #     # 'BOLD': "\033[1m",
-    # }
-
     theme_color = {
         "HEADER": "magenta",
         "BLACK": "black",
@@ -98,8 +74,6 @@ class Console(object):
         "ENDC": "default",
         "BOLD": "bold",
         "NORMAL": "default"
-        # 'ENDC': '\033[0m',
-        # 'BOLD': "\033[1m",
     }
     if is_powershell():
         for key in theme_color:
@@ -145,25 +119,19 @@ class Console(object):
 
         print(columns * c)
 
-    # noinspection PyPep8Naming
     def red(msg):
-        # print(Fore.RED + msg + Style.RESET_ALL)
         RichConsole.print(msg, style="red")
 
-    # noinspection PyPep8Naming
     def green(msg):
-        # print(Fore.GREEN + msg + Style.RESET_ALL)
         RichConsole.print(msg, style="green")
 
-    # noinspection PyPep8Naming
     def blue(msg):
-        # print(Fore.BLUE + msg + Style.RESET_ALL)
         RichConsole.print(msg, style="blue")
 
     @staticmethod
     def init():
         """initializes the Console"""
-        # colorama.init()
+        pass
 
     @staticmethod
     def terminate():
@@ -271,11 +239,6 @@ class Console(object):
         else:
             text = ""
         if cls.color:
-            # if is_powershell():
-            #     print(
-            #         Fore.RED + Back.WHITE + text + message + Console.theme_color["ENDC"]
-            #     )
-            # else:
             cls.cprint(cls.theme_color["FAIL"], text, str(message))
         else:
             print(cls.txt_msg(text + str(message)))
@@ -345,7 +308,6 @@ class Console(object):
         """
         message = message or ""
         if Console.color:
-            # Console.cprint("OKBLUE", "INFO: ", message)
             RichConsole.print(f"INFO: {message}", style=Console.theme_color["BLUE"])
         else:
             Console.msg("INFO: " + message)
@@ -396,11 +358,6 @@ class Console(object):
         """
         message = message or ""
         prefix = prefix or ""
-
-        # print(
-            # Console.theme_color[color] + prefix + message + Console.theme_color["ENDC"]
-        # )
-        
         RichConsole.print(prefix + message, style=color.lower())
 
     @staticmethod
@@ -455,12 +412,10 @@ if __name__ == "__main__":
     print(Console.color)
     Console.error("Error")
 
-    # print(Fore.RED + "some red text")
     Console.red("some red text")
-    # print(Back.GREEN + "and with a green background")
+
     Console.background("and with a green background", background_color="green")
     RichConsole.print("and in dim text", style="dim")
-    # print(Fore.RESET + Back.RESET + Style.RESET_ALL)
-    # print("back to normal now")
+
     Console.msg("back to normal now")
     Console.line()
