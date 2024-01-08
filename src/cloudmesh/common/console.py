@@ -367,8 +367,6 @@ class Console(object):
         message = message or ""
         prefix = prefix or ""
         #RichConsole.print(prefix + message, style=color.lower())
-        c = Console.theme[color.upper()]
-        RichConsole.print(prefix + message, style=c)
 
         # print(
             # Console.theme_color[color] + prefix + message + Console.theme_color["ENDC"]
@@ -376,7 +374,8 @@ class Console(object):
         if isinstance(message, Text):
             RichConsole.print(prefix, message, sep="")
         else:
-            RichConsole.print(prefix + message, style=Console.theme_color[color.upper()])
+            c = Console.theme[color.upper()]
+            RichConsole.print(prefix + message, style=c)
 
     @staticmethod
     def text(color="RED", prefix=None, message=None):
