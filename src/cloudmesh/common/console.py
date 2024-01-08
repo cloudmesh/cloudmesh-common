@@ -133,7 +133,7 @@ class Console(object):
 
     @staticmethod
     def init():
-        """initializes the Console"""
+        """deprecated: is no longer needed"""
         pass
 
     @staticmethod
