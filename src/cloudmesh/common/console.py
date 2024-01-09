@@ -76,6 +76,7 @@ class Console(object):
         "ENDC": "default",
         "BOLD": "bold",
         "NORMAL": "default",
+        "MAGENTA": "magenta"
     }
 
     if is_powershell():
@@ -98,6 +99,7 @@ class Console(object):
         "ENDC": "",
         "BOLD": "",
         "NORMAL": "",
+        "MAGENTA": ""
     }
 
     theme = theme_color
