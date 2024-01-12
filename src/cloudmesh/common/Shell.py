@@ -2192,6 +2192,7 @@ class Shell(object):
                 Console.error(e, traceflag=True)
         return False
 
+    @classmethod
     def unzip(cls, source_filename, dest_dir):
         """Unzips a file into the destination directory.
 
