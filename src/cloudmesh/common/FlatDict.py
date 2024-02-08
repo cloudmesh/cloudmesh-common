@@ -251,7 +251,7 @@ class FlatDict(dict):
     # Modified idea from
     # https://stackoverflow.com/questions/50607128/creating-a-nested-dictionary-from-a-flattened-dictionary
     def unflatten(self):
-        """unflattens the falt dict bac to a regular dict
+        """unflattens the falt dict back to a regular dict
 
         Returns:
         """
@@ -299,7 +299,7 @@ class FlatDict(dict):
         elif type(content) == dict:
             self.loadd(content=content, sep=".")
         elif os.path.isfile(str(content)):
-            print("file")
+            # print("file")
             self.loadf(filename=content, sep=".")
         elif type(content) == str:
             self.loads(content=content, sep=".")
