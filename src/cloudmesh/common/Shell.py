@@ -621,8 +621,27 @@ class Shell(object):
 
                 # Join the script directory with "bin"
                 bin_directory = os.path.join(script_directory, "bin")
-                print(f"Looking in {bin_directory} for install script...")
 
+                print(f"Looking in {bin_directory} for install script...")
+                # Check if the bin_directory exists
+                if not os.path.exists(bin_directory):
+                    Console.info("dir does not exist? downloading script...")
+                    # Create the directories if they don't exist
+                    os.makedirs(bin_directory, exist_ok=True)
+
+                    # If it doesn't exist, download the script from the URL
+                    url = "https://raw.githubusercontent.com/cloudmesh/cloudmesh-common/main/src/cloudmesh/common/bin/win-setup.bat"
+                    response = requests.get(url)
+
+                    # Check if the request was successful
+                    if response.status_code == 200:
+                        # If it was, save the script to a file
+                        with open(rf"{bin_directory}\win-setup.bat", "w") as file:
+                            file.write(response.text)
+                    else:
+                        # If the request was not successful, print an error message and return
+                        Console.error("Failed to download the script.")
+                        return False
                 # Command to install Chocolatey using the Command Prompt
                 chocolatey_install_command = rf"powershell Start-Process -Wait -FilePath {bin_directory}\win-setup.bat"
                 print(chocolatey_install_command)
@@ -639,6 +658,12 @@ class Shell(object):
                         "You are currently standing in a non-existent directory."
                     )
                     return False
+                # Check if the command failed
+                if completed_process.returncode != 0:
+                    # If it failed, print an error message and return False
+                    Console.error(f"Failed: {completed_process.stderr}")
+                    return False
+
                 print(completed_process)
                 Console.ok("Chocolatey installed")
                 return True
@@ -2192,6 +2217,7 @@ class Shell(object):
                 Console.error(e, traceflag=True)
         return False
 
+    @classmethod
     def unzip(cls, source_filename, dest_dir):
         """Unzips a file into the destination directory.
 

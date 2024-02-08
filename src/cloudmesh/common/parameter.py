@@ -1,5 +1,6 @@
 from cloudmesh.common.dotdict import dotdict
 from hostlist import expand_hostlist
+from itertools import product
 
 
 class Parameter(object):
@@ -212,3 +213,18 @@ class Parameter(object):
             return text.split(sep, 1)
         else:
             return None, text
+
+    @staticmethod
+    def permutate(data):
+        """returns a list of all permutations of the dict
+
+        Args:
+            data: the dict
+
+        Returns:
+            list of dicts
+        """
+        keys = data.keys()
+        values = data.values()
+        permutations = [dict(zip(keys, v)) for v in product(*values)]
+        return permutations
