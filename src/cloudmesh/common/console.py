@@ -244,11 +244,6 @@ class Console(object):
         else:
             text = ""
         if cls.color:
-            # if is_powershell():
-            #     print(
-            #         Fore.RED + Back.WHITE + text + message + Console.theme_color["ENDC"]
-            #     )
-            # else:
             cls.cprint(str(message), cls.theme_color["FAIL"], text)
         else:
             print(cls.txt_msg(text + str(message)))
@@ -376,8 +371,7 @@ class Console(object):
         if isinstance(message, Text):
             RichConsole.print(prefix, message, sep="")
         else:
-            c = Console.theme[color.upper()]
-            RichConsole.print(prefix + message, style=c)
+            RichConsole.print(prefix + message, style=color)
 
     @staticmethod
     def text(color="RED", prefix=None, message=None):
