@@ -16,8 +16,8 @@ installation documentation.
 
 |  | Links |
 |---------------|-------|
-| Documentation | <https://cloudmesh.github.io/cloudmesh-cloud> |
-| Code | <https://github.com/cloudmesh/cloudmesh-cloud> |
+| Documentation | <https://cloudmesh.github.io/cloudmesh-manual/autoapi/cloudmeshcommon/cloudmesh/index.html#module-cloudmesh-common.cloudmesh> |
+| Code | <https://github.com/cloudmesh/cloudmesh-common> |
 | Installation Instructions | <https://github.com/cloudmesh/get> |
 
 ## Highlighted features
@@ -25,6 +25,11 @@ installation documentation.
 This library contains a number of useful functions and APIs that we highlight
 here. They are used to interact with the system and provide a number of
 functions to implement command line programs and shells.
+
+The intention of cloudmesh-common is to provide convenience to the user
+with even simpler Python functions than those built-in, giving
+richer output messages, more concise file operations, and other
+goodies.
 
 ## Console
 
@@ -45,6 +50,10 @@ Console.ok("this is an ok message printed in green")
 
 We have lots of shell commands that call linux commands, but also have a
 convenient execution command that returns the results in a string.
+
+Shell functions such as `run` tend to work cross-platform (including
+Windows), but it is up to the user to ensure that commands and software
+are available on the system beforehand.
 
 For more information we like you to inspect the source code:
 
@@ -86,13 +95,15 @@ entries as tables, csv, json, yaml. The dictionaries can even be hierarchical.
 Let us assume we have 
 
 ```python
+from cloudmesh.common.Printer import Printer
+
 data = [
     {
         "name": "Gregor",
         "address": {
             "street": "Funny Lane 11",
             "city": "Cloudville"
-        {
+        }
     },
     {
         "name": "Albert",
@@ -107,12 +118,22 @@ data = [
 Then we can print it nicely with 
 
 ```python
-print(Printer.flatwrite(self.data,
+print(Printer.flatwrite(data,
                     sort_keys=["name"],
                     order=["name", "address.street", "address.city"],
                     header=["Name", "Street", "City"],
                     output="table")
           )
+```
+
+Output:
+```bash
++--------+------------------+------------+
+| Name   | Street           | City       |
++--------+------------------+------------+
+| Gregor | Funny Lane 11    | Cloudville |
+| Albert | Memory Lane 1901 | Cloudnine  |
++--------+------------------+------------+
 ```
 
 Other formats such as csv, json, dict are also supported.
@@ -121,6 +142,9 @@ In addition we have also printers for printing attribute lists. Please consult
 the source code.
 
 ## StopWatch
+
+StopWatch is meant for benchmarking program runtimes, including 
+custom user-set sections of such programs.
 
 See: https://colab.research.google.com/drive/1tG7IcP-XMQiNVxU05yazKQYciQ9GpMat#scrollTo=TZAjATZiQh4q&uniqifier=1 for an example
 
@@ -163,7 +187,6 @@ Benchmark.print()
 
 * See also: [cloudmesh.common.StopWatch](https://github.com/cloudmesh/cloudmesh-common/blob/main/cloudmesh/common/StopWatch.py)
 
-    
 
 ## dotdict
 
@@ -173,7 +196,7 @@ Benchmark.print()
 One dimensional Dictionaries in dot format. 
 
 ```python
-from cloudmesh.common.dotdict import doctict
+from cloudmesh.common.dotdict import dotdict
 
 # convert a simple dict to a dotdict
 d = dotdict({"name": "Gregor"})
@@ -183,6 +206,8 @@ print(d.name)
 ```
 
 ## ssh
+
+Allows for a robust configuration of secure-shell (remote access to hosts)
 
 * [cloudmesh.common.ssh](https://github.com/cloudmesh/cloudmesh-common/blob/main/cloudmesh/common/ssh)
 
@@ -198,12 +223,19 @@ Very useful functions are included in util
 
 Especially useful are
 
-  * generating passwords
-  * banners
-  * yn_choices
-  * path_expansion
-  * grep (simple line matching)
-  * HEADING() which without parameter identifies the name of the function and 
+  * `generate_password` 
+    * generates a random password from letters and numbers
+  * `banner` and `str_banner`
+    * outputs a prominent message in the console for debugging and cohesiveness
+  * `yn_choice`
+    * to ask the user "yes" or "no" and account for various answers like "Y"
+  * `path_expand`
+    * to automatically replace path symbols such as `~` with the home dir
+    * works cross-platform across OS's
+  * `grep`
+    * simple line matching but as a python method
+  * `HEADING`
+    * which, without parameter, identifies the name of the function and 
   prints its name within a banner
 
 ## Changes
