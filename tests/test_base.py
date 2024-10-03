@@ -20,16 +20,17 @@ class Test_Base:
         HEADING()
         cloudmesh = Base()
         expected_path = os.path.expanduser("~/.cloudmesh")
+        expected_path = os.path.normpath(expected_path)
         assert cloudmesh.path == expected_path
-        assert cloudmesh.config == f"{expected_path}/cloudmesh.yaml"
+        assert cloudmesh.config == os.path.normpath(f"{expected_path}/cloudmesh.yaml")
 
     def test_custom_path(self):
         HEADING()
-        custom_path = "./tmp/.cloudmesh"
+        custom_path = os.path.normpath("./tmp/.cloudmesh")
         cloudmesh = Base(path=custom_path)
         assert cloudmesh.path == custom_path
-        assert cloudmesh.config == f"{custom_path}/cloudmesh.yaml"
-        shutil.rmtree("./tmp")
+        assert cloudmesh.config == os.path.normpath(f"{custom_path}/cloudmesh.yaml")
+        shutil.rmtree(os.path.normpath("./tmp"))
 
     def test_environment_variable_path(self):
         HEADING()
