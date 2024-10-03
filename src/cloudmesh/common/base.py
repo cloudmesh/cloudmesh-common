@@ -43,7 +43,9 @@ class Base:
         # Expand the tilde (~) to the user's home directory path
         self.path = os.path.expanduser(self.path)
 
-        self.config = os.path.join(self.path, "cloudmesh.yaml")
+        self.path = os.path.normpath(self.path)
+
+        self.config = os.path.normpath(os.path.join(self.path, "cloudmesh.yaml"))
         if create:
             self.create()
 

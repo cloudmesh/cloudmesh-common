@@ -14,6 +14,7 @@ OS we have on the team.
 import os
 import os.path
 from pathlib import Path
+import getpass
 
 import pytest
 from cloudmesh.common.Benchmark import Benchmark
@@ -61,7 +62,7 @@ class TestShell:
     def test_map_filename(self):
         HEADING()
         Benchmark.Start()
-        user = os.path.basename(os.environ["HOME"])
+        user = getpass.getuser()
         if os_is_windows():
             pwd = os.getcwd().replace("C:","/mnt/c").replace("\\","/")
         else:
@@ -107,7 +108,7 @@ class TestShell:
             else:
                 assert result.path == f'C:\\home\\{user}\\cm'
         else:
-            assert result.path == f'C:\\Users\\{user}\\cm'
+            assert result.path == f'{Path.home()}\\cm'
 
         result = Shell.map_filename(name='scp:user@host:~/cm')
         assert result.user == "user"
