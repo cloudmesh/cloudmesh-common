@@ -26,17 +26,17 @@ class Test_Base:
 
     def test_custom_path(self):
         HEADING()
-        custom_path = "./tmp/.cloudmesh" if os.name != "nt" else r"tmp\.cloudmesh"
+        custom_path = "tmp/.cloudmesh" if os.name != "nt" else r"tmp\.cloudmesh"
         cloudmesh = Base(path=custom_path)
         assert cloudmesh.path == custom_path
         assert cloudmesh.config == f"{custom_path}/cloudmesh.yaml" if os.name != "nt" else fr"{custom_path}\cloudmesh.yaml"
         shutil.rmtree("./tmp")
 
-    def test_environment_variable_path(self):
+    def test_environment_variable_path(self, monkeypatch):
         HEADING()
-        os.environ["CLOUDMESH_CONFIG_DIR"] = "./tmp/.cloudmesh"
+        monkeypatch.setenv("CLOUDMESH_CONFIG_DIR", "./tmp/.cloudmesh")
         cloudmesh = Base()
-        assert cloudmesh.path == "./tmp/.cloudmesh" if os.name != "nt" else r"tmp\.cloudmesh"
+        assert cloudmesh.path == "tmp/.cloudmesh" if os.name != "nt" else r"tmp\.cloudmesh"
         assert cloudmesh.config == f"{cloudmesh.path}/cloudmesh.yaml" if os.name != "nt" else fr"{cloudmesh.path}\cloudmesh.yaml"
         shutil.rmtree("./tmp")
         del os.environ["CLOUDMESH_CONFIG_DIR"]
