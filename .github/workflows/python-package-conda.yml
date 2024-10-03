@@ -78,14 +78,14 @@ jobs:
       run: |
         python -m venv ENV3
 
-    # - name: Lint with flake8
-    #   run: |
-    #     .\ENV3\Scripts\activate.ps1
-    #     pip install flake8
-    #     # stop the build if there are Python syntax errors or undefined names
-    #     flake8 --exclude deprecated . --count --select=E9,F63,F7,F82 --show-source --statistics
-    #     # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-    #     flake8 --exclude deprecated . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Lint with flake8
+      run: |
+        .\ENV3\Scripts\activate.ps1
+        pip install flake8
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 --exclude deprecated . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 --exclude deprecated . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
     - name: Install current Python library
       run: |
