@@ -19,25 +19,25 @@ class Test_Base:
     def test_default_path_in_home(self):
         HEADING()
         cloudmesh = Base()
-        expected_path = os.path.expanduser("~/.cloudmesh")
-        expected_path = os.path.normpath(expected_path)
+        expected_path = os.path.normpath(os.path.expanduser("~/.cloudmesh"))
+
         assert cloudmesh.path == expected_path
-        assert cloudmesh.config == os.path.normpath(f"{expected_path}/cloudmesh.yaml")
+        assert cloudmesh.config == f"{expected_path}/cloudmesh.yaml" if os.name != "nt" else fr"{expected_path}\cloudmesh.yaml"
 
     def test_custom_path(self):
         HEADING()
-        custom_path = os.path.normpath("./tmp/.cloudmesh")
+        custom_path = "./tmp/.cloudmesh" if os.name != "nt" else r"tmp\.cloudmesh"
         cloudmesh = Base(path=custom_path)
         assert cloudmesh.path == custom_path
-        assert cloudmesh.config == os.path.normpath(f"{custom_path}/cloudmesh.yaml")
-        shutil.rmtree(os.path.normpath("./tmp"))
+        assert cloudmesh.config == f"{custom_path}/cloudmesh.yaml" if os.name != "nt" else fr"{custom_path}\cloudmesh.yaml"
+        shutil.rmtree("./tmp")
 
     def test_environment_variable_path(self):
         HEADING()
         os.environ["CLOUDMESH_CONFIG_DIR"] = "./tmp/.cloudmesh"
         cloudmesh = Base()
-        assert cloudmesh.path == "./tmp/.cloudmesh"
-        assert cloudmesh.config == f"{cloudmesh.path}/cloudmesh.yaml"
+        assert cloudmesh.path == "./tmp/.cloudmesh" if os.name != "nt" else r"tmp\.cloudmesh"
+        assert cloudmesh.config == f"{cloudmesh.path}/cloudmesh.yaml" if os.name != "nt" else fr"{cloudmesh.path}\cloudmesh.yaml"
         shutil.rmtree("./tmp")
         del os.environ["CLOUDMESH_CONFIG_DIR"]
 
@@ -52,6 +52,6 @@ class Test_Base:
         cloudmesh = Base()
         print(cloudmesh.path)
         assert cloudmesh.path == ".cloudmesh"
-        assert cloudmesh.config == ".cloudmesh/cloudmesh.yaml"
+        assert cloudmesh.config == ".cloudmesh/cloudmesh.yaml" if os.name != "nt" else r".cloudmesh\cloudmesh.yaml"
         os.chdir(cwd)
         shutil.rmtree("/tmp/test")

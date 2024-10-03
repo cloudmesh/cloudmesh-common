@@ -1165,6 +1165,10 @@ class Shell(object):
         """
         found = []
         for proc in psutil.process_iter():
+            if proc.name() == "WUDFHost.exe":
+                # Windows fatal exception: access violation
+                continue
+        
             try:
                 if attributes is not None:
                     pinfo = proc.as_dict(attrs=attributes)
@@ -1185,7 +1189,7 @@ class Shell(object):
                     )
                 else:
                     pinfo = proc.as_dict()
-            except psutil.NoSuchProcess:
+            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
                 pass
             else:
                 found.append(pinfo)

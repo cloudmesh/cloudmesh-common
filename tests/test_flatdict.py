@@ -214,7 +214,7 @@ class Test_Flatdict:
         HEADING()
 
         config = FlatDict(expand=["os.", "cm.", "cloudmesh."])
-        config .load("tests/config.in.yaml")
+        config.loadf("tests/config.in.yaml")
 
         print("config:")
         pprint(dict(config))
