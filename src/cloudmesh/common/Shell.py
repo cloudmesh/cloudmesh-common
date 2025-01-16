@@ -643,7 +643,7 @@ class Shell(object):
                         Console.error("Failed to download the script.")
                         return False
                 # Command to install Chocolatey using the Command Prompt
-                chocolatey_install_command = rf'powershell Start-Process -Wait -FilePath "{bin_directory}\win-setup.bat"'
+                chocolatey_install_command = rf"powershell Start-Process -Wait -FilePath '{bin_directory}\win-setup.bat'"
                 print(chocolatey_install_command)
                 # Run the Chocolatey installation command using subprocess and capture output
                 completed_process = subprocess.run(
