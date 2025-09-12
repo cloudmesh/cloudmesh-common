@@ -1063,18 +1063,16 @@ class Shell(object):
         process = subprocess.Popen(
             shlex.split(command), cwd=cwd, stdout=subprocess.PIPE
         )
-        result = b""
-        while True:
-            output = process.stdout.read(1)
-            if output == b"" and process.poll() is not None:
-                break
-            if output:
-                result = result + output
-                sys.stdout.write(output.decode("utf-8"))
-                sys.stdout.flush()
-        rc = process.poll()
-        data = dotdict({"status": rc, "text": output.decode("utf-8")})
-        return data
+        
+        output_lines = []
+        for line in iter(process.stdout.readline, b''):
+            sys.stdout.write(line.decode("utf-8"))
+            sys.stdout.flush()
+            output_lines.append(line)
+        
+        rc = process.wait()
+        full_output = b"".join(output_lines).decode("utf-8")
+        return dotdict({"status": rc, "text": full_output})
 
     @staticmethod
     def calculate_disk_space(directory):
