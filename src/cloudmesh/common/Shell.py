@@ -27,6 +27,7 @@ from cloudmesh.common.util import is_gitbash
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.util import readfile
 from cloudmesh.common.util import writefile
+from cloudmesh.common.util import yn_choice
 from tqdm import tqdm
 
 import shlex
@@ -613,6 +614,24 @@ class Shell(object):
                     Console.error("Please run the terminal as administrator.")
                     return False
 
+                # is this a good idea?
+                #see if chocolatey exists.
+                programdata = os.environ.get("ProgramData", r"C:\ProgramData")
+                target = os.path.join(programdata, "chocolatey")
+                # Safety guard: only allow deletes inside ProgramData
+                pd_abs = os.path.abspath(programdata)
+                tgt_abs = os.path.abspath(target)
+                if not tgt_abs.lower().startswith(pd_abs.lower()):
+                    sys.exit("Refusing to delete a path outside ProgramData.")
+                if os.path.isdir(target):
+                    if yn_choice("Chocolatey seems to exist already! Delete it?"):
+                        shutil.rmtree(tgt_abs)
+                    else:
+                        sys.exit("Not deleting chocolatey because the user said not to.")
+                #
+                #
+                #
+                
                 # Get the full path of the current Python script
                 current_script_path = os.path.abspath(__file__)
 
@@ -1044,16 +1063,18 @@ class Shell(object):
         process = subprocess.Popen(
             shlex.split(command), cwd=cwd, stdout=subprocess.PIPE
         )
-        
-        output_lines = []
-        for line in iter(process.stdout.readline, b''):
-            sys.stdout.write(line.decode("utf-8"))
-            sys.stdout.flush()
-            output_lines.append(line)
-        
-        rc = process.wait()
-        full_output = b"".join(output_lines).decode("utf-8")
-        return dotdict({"status": rc, "text": full_output})
+        result = b""
+        while True:
+            output = process.stdout.read(1)
+            if output == b"" and process.poll() is not None:
+                break
+            if output:
+                result = result + output
+                sys.stdout.write(output.decode("utf-8"))
+                sys.stdout.flush()
+        rc = process.poll()
+        data = dotdict({"status": rc, "text": output.decode("utf-8")})
+        return data
 
     @staticmethod
     def calculate_disk_space(directory):
