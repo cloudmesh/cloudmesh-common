@@ -54,8 +54,8 @@ def craete_location(host):
 
 
 
-@pytest.mark.skipif(not Shell.ssh_enabled(), reason="SSH is not enabled")
-@pytest.mark.skipif(github_action, reason='GitHub Runner uses Azure and Azure does not have an ssh key set up!')
+@pytest.mark.skipif(github_action or not Shell.ssh_enabled(),
+                    reason="SSH is not enabled, or, this test is running in GitHub Actions")
 @pytest.mark.incremental
 class TestSsh:
 
