@@ -613,24 +613,6 @@ class Shell(object):
                 if not pyuac.isUserAdmin():
                     Console.error("Please run the terminal as administrator.")
                     return False
-
-                # is this a good idea?
-                #see if chocolatey exists.
-                programdata = os.environ.get("ProgramData", r"C:\ProgramData")
-                target = os.path.join(programdata, "chocolatey")
-                # Safety guard: only allow deletes inside ProgramData
-                pd_abs = os.path.abspath(programdata)
-                tgt_abs = os.path.abspath(target)
-                if not tgt_abs.lower().startswith(pd_abs.lower()):
-                    sys.exit("Refusing to delete a path outside ProgramData.")
-                if os.path.isdir(target):
-                    if yn_choice("Chocolatey seems to exist already! Delete it?"):
-                        shutil.rmtree(tgt_abs)
-                    else:
-                        sys.exit("Not deleting chocolatey because the user said not to.")
-                #
-                #
-                #
                 
                 # Get the full path of the current Python script
                 current_script_path = os.path.abspath(__file__)
