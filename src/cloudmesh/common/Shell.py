@@ -27,7 +27,6 @@ from cloudmesh.common.util import is_gitbash
 from cloudmesh.common.util import path_expand
 from cloudmesh.common.util import readfile
 from cloudmesh.common.util import writefile
-from cloudmesh.common.util import yn_choice
 from tqdm import tqdm
 
 import shlex
@@ -613,7 +612,7 @@ class Shell(object):
                 if not pyuac.isUserAdmin():
                     Console.error("Please run the terminal as administrator.")
                     return False
-                
+
                 # Get the full path of the current Python script
                 current_script_path = os.path.abspath(__file__)
 
